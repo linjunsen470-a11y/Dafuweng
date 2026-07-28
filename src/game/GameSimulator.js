@@ -1,7 +1,6 @@
 import { AIPlayer } from './AIPlayer.js';
 import { GameState } from './GameState.js';
-import { TileType } from './BoardData.js';
-import { eventManager } from './EventManager.js';
+import { GameEngine } from './GameEngine.js';
 
 export class GameSimulator {
   constructor({ seed = 1, mapId = 'city-loop', maxRounds = 40 } = {}) {
@@ -12,6 +11,7 @@ export class GameSimulator {
       { profileIndex: 2, name: '模拟丙', isAI: true, aiDifficulty: 'HARD' },
       { profileIndex: 3, name: '模拟丁', isAI: true, aiDifficulty: 'HARD' }
     ], 20000, { mapId, maxRounds });
+    this.engine = new GameEngine(this.state);
   }
 
   run() {
@@ -60,46 +60,16 @@ export class GameSimulator {
 
   resolveArrival(player) {
     const tile = this.state.getTile(player.currentTile);
-    const property = this.state.propertyManager.getProperty(tile.id);
-    if (tile.type === TileType.PROPERTY) {
-      if (property.owner === null && AIPlayer.evaluateLandPurchase(player, tile)) {
-        player.cash -= tile.price;
-        this.state.propertyManager.buyProperty(tile.id, player.id);
-      } else if (property.owner === player.id && AIPlayer.evaluateLandUpgrade(player, tile, property.level)) {
-        player.cash -= tile.buildCost;
-        this.state.propertyManager.upgradeProperty(tile.id);
-      } else if (property.owner !== null && property.owner !== player.id
-        && player.godType !== 'FORTUNE' && !player.rentShieldActiveThisTurn) {
-        const owner = this.state.players[property.owner];
-        const toll = this.state.propertyManager.calculateToll(tile.id, this.state.newsEffect);
-        player.cash -= toll;
-        owner.cash += toll;
-      }
-    } else if (tile.type === TileType.CARD_SHOP) {
-      player.cardPoints += 60;
-    } else if (tile.type === TileType.BANK) {
-      player.cash += Math.max(0, Math.round(player.cash * 0.1));
-    } else if (tile.type === TileType.PRISON) {
-      player.jailTurns = 2;
-    } else if (tile.type === TileType.HOSPITAL) {
-      player.hospitalTurns = 1;
-    } else if (tile.type === TileType.CHANCE) {
-      const event = eventManager.drawChanceCard();
-      player.cash += event.isGain ? event.amount : -event.amount;
-    } else if (tile.type === TileType.GOD_FORTUNE) {
-      player.godType = tile.id === 28 ? 'LUCK' : 'FORTUNE';
-      player.godTurns = 3;
-    } else if (tile.type === TileType.GOD_MISFORTUNE) {
-      player.godType = 'MISFORTUNE';
-      player.godTurns = 3;
-    } else if (tile.type === TileType.GOD_EARTH) {
-      player.godType = 'EARTH';
-      player.godTurns = 3;
-    } else if (tile.type === TileType.GOD_BAD) {
-      player.godType = 'BAD';
-      player.godTurns = 3;
+    const landing = this.engine.inspectLanding(player, tile.id);
+    if (landing.kind === 'PURCHASE' && AIPlayer.evaluateLandPurchase(player, tile)) {
+      this.engine.purchaseProperty(player, tile.id);
+    } else if (landing.kind === 'UPGRADE' && AIPlayer.evaluateLandUpgrade(player, tile, landing.property.level)) {
+      this.engine.upgradeProperty(player, tile.id);
+    } else if (landing.kind === 'RENT') {
+      this.engine.settleRent(player, tile.id);
+    } else if (landing.kind === 'SPECIAL') {
+      this.engine.resolveSpecialLanding(player, tile.id);
     }
     this.state.checkBankrupt(player);
   }
 }
-

@@ -8,7 +8,6 @@ import { audioManager } from './engine/AudioManager.js';
 import { GameState, GamePhase } from './game/GameState.js';
 import { TileType, PLAYER_PROFILES } from './game/BoardData.js';
 import { AIPlayer } from './game/AIPlayer.js';
-import { eventManager } from './game/EventManager.js';
 import { GameEngine } from './game/GameEngine.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
@@ -430,197 +429,71 @@ class GameController {
 
   async handleTileArrival(tileIndex) {
     const curPlayer = this.gameState.getCurrentPlayer();
-    const tileData = this.gameState.getTile(tileIndex);
-    const prop = this.gameState.propertyManager.getProperty(tileIndex);
-
     this.gameState.phase = GamePhase.ACTION_MODAL;
-
-    if (tileData.type === TileType.PROPERTY) {
-      if (prop.owner === null) {
-        if (curPlayer.isAI) {
-          if (AIPlayer.evaluateLandPurchase(curPlayer, tileData)) {
-            this.buyLand(tileIndex, curPlayer);
-          } else {
-            this.gameState.addLog(`🤖 ${curPlayer.name} 评估资金风险，放弃购买【${tileData.name}】。`);
-          }
-          this.finishTurn();
-        } else {
-          this.dialogUI.showLandPurchase({
-            tileData,
-            currentLevel: 0,
-            player: curPlayer,
-            onBuy: () => {
-              this.buyLand(tileIndex, curPlayer);
-              this.finishTurn();
-            },
-            onPass: () => this.finishTurn()
-          });
-        }
-      } else if (prop.owner === curPlayer.id) {
-        if (prop.level < 3) {
-          if (curPlayer.isAI) {
-            if (AIPlayer.evaluateLandUpgrade(curPlayer, tileData, prop.level)) {
-              this.upgradeLand(tileIndex, curPlayer);
-            }
-            this.finishTurn();
-          } else {
-            this.dialogUI.showLandPurchase({
-              tileData,
-              currentLevel: prop.level,
-              player: curPlayer,
-              onUpgrade: () => {
-                this.upgradeLand(tileIndex, curPlayer);
-                this.finishTurn();
-              },
-              onPass: () => this.finishTurn()
-            });
-          }
-        } else {
-          this.gameState.addLog(`🏢 ${curPlayer.name} 视察自家【${tileData.name}】(顶级豪华大楼)。`);
-          this.finishTurn();
-        }
-      } else {
-        const ownerPlayer = this.gameState.players[prop.owner];
-
-        if (curPlayer.godType === 'FORTUNE' || curPlayer.rentShieldActiveThisTurn) {
-          this.gameState.addLog(`🧙‍♂️ ${curPlayer.name} ${curPlayer.godType === 'FORTUNE' ? '财神' : '福神'}庇护，免除【${tileData.name}】过路费！`, 'gold');
-        } else if (curPlayer.skillName === '股市高手' && this.gameState.rng.next() < 0.25) {
-          this.gameState.addLog(`💎 ${curPlayer.name} 凭借【股市高手】人脉手腕，巧妙化解了【${tileData.name}】过路费！`, 'gold');
-        } else {
-          let toll = this.gameState.propertyManager.calculateToll(tileIndex, this.gameState.newsEffect);
-          if (curPlayer.godType === 'MISFORTUNE') {
-            toll *= 2;
-          }
-          if (ownerPlayer && ownerPlayer.skillName === '土地公庇护') {
-            toll = Math.round(toll * 1.2);
-          }
-
-          curPlayer.cash -= toll;
-          ownerPlayer.cash += toll;
-
-          this.audioManager.playCoinSound();
-          this.gameState.addLog(`💸 ${curPlayer.name} 停留在 ${ownerPlayer.name} 的【${tileData.name}】，支付过路费 $${toll.toLocaleString()}！`, 'danger');
-          this.gameState.checkBankrupt(curPlayer);
-        }
-        this.finishTurn();
+    const landing = this.gameEngine.inspectLanding(curPlayer, tileIndex);
+    if (landing.kind === 'PURCHASE') {
+      if (curPlayer.isAI) {
+        if (AIPlayer.evaluateLandPurchase(curPlayer, landing.tile)) this.buyLand(tileIndex, curPlayer);
+        else this.gameState.addLog(`🤖 ${curPlayer.name} 放弃购买【${landing.tile.name}】。`);
+        return this.finishTurn();
       }
-    } else if (tileData.type === TileType.CARD_SHOP) {
-      const bonusPts = curPlayer.skillName === '疾风忍术' ? 120 : 60;
-      curPlayer.cardPoints += bonusPts;
-      this.audioManager.playCardSpell();
-      this.gameState.addLog(`🃏 ${curPlayer.name} 踩中【${tileData.name}】，获得 ${bonusPts} 卡片积分！`, 'accent');
-      this.finishTurn();
-    } else if (tileData.type === TileType.BANK) {
-      const bonus = Math.round(curPlayer.cash * 0.1);
-      curPlayer.cash += bonus;
-      this.audioManager.playCoinSound();
-      this.gameState.addLog(`🏦 ${curPlayer.name} 踩中【${tileData.name}】，获得 10% 存款利息 $${bonus.toLocaleString()}！`, 'gold');
-      this.finishTurn();
-    } else if (tileData.type === TileType.PRISON) {
-      curPlayer.jailTurns = 2;
-      this.gameState.addLog(`🚔 ${curPlayer.name} 入狱，暂停行动 2 回合！`, 'danger');
-      this.finishTurn();
-    } else if (tileData.type === TileType.HOSPITAL) {
-      curPlayer.hospitalTurns = 1;
-      this.gameState.addLog(`🏥 ${curPlayer.name} 入院疗养，暂停行动 1 回合！`, 'danger');
-      this.finishTurn();
-    } else if (tileData.type === TileType.CHANCE) {
-      const card = eventManager.drawChanceCard();
-      if (card.isGain || curPlayer.skillName === '自然之福') {
-        const gainAmount = Math.abs(card.amount);
-        curPlayer.cash += gainAmount;
-        this.audioManager.playCoinSound();
-        this.gameState.addLog(`❓ 命运卡【${card.title}】：${card.desc}，获得 $${gainAmount.toLocaleString()}！`, 'gold');
-      } else if (curPlayer.negativeImmuneActiveThisTurn) {
-        this.gameState.addLog(`🍀 ${curPlayer.name} 的好运护符抵消了【${card.title}】。`, 'gold');
-      } else {
-        curPlayer.cash -= card.amount;
-        this.gameState.addLog(`❓ 命运卡【${card.title}】：${card.desc}，损失 $${card.amount.toLocaleString()}！`, 'danger');
-        this.gameState.checkBankrupt(curPlayer);
-      }
-      this.finishTurn();
-    } else if (tileData.type === TileType.GOD_FORTUNE) {
-      curPlayer.godType = tileIndex === 28 ? 'LUCK' : 'FORTUNE';
-      curPlayer.godTurns = curPlayer.skillName === '石油大亨' ? 4 : 3;
-      this.pawnManager.updateGodAura(curPlayer.id, curPlayer.godType);
-      this.gameState.addLog(curPlayer.godType === 'LUCK'
-        ? `🌟 建造精灵陪伴 ${curPlayer.name}，未来 ${curPlayer.godTurns} 回合免费建造！`
-        : `🧙‍♂️ 免租精灵陪伴 ${curPlayer.name}，未来 ${curPlayer.godTurns} 回合免过路费！`, 'gold');
-      this.finishTurn();
-    } else if (tileData.type === TileType.GOD_MISFORTUNE) {
-      curPlayer.godType = 'MISFORTUNE';
-      curPlayer.godTurns = curPlayer.skillName === '石油大亨' ? 4 : 3;
-      this.pawnManager.updateGodAura(curPlayer.id, 'MISFORTUNE');
-      this.gameState.addLog(`👻 穷神降临附体 ${curPlayer.name}！未来 ${curPlayer.godTurns} 回合过路费加倍！`, 'danger');
-      this.finishTurn();
-    } else if (tileData.type === TileType.GOD_EARTH) {
-      curPlayer.godType = 'EARTH';
-      curPlayer.godTurns = curPlayer.skillName === '石油大亨' ? 4 : 3;
-      this.pawnManager.updateGodAura(curPlayer.id, 'EARTH');
-      this.gameState.addLog(`⛰️ 土地公降临附体 ${curPlayer.name}！所经土地直接免费夺取！`, 'gold');
-      this.finishTurn();
-    } else if (tileData.type === TileType.GOD_BAD) {
-      curPlayer.godType = 'BAD';
-      curPlayer.godTurns = 3;
-      this.pawnManager.updateGodAura(curPlayer.id, 'BAD');
-      this.gameState.addLog(`📉 衰神缠身 ${curPlayer.name}！未来 3 回合买地失败，步数减半！`, 'danger');
-      this.finishTurn();
-    } else if (tileData.type === TileType.STOCK) {
-      this.gameState.addLog(`📈 ${curPlayer.name} 到达【证券交易所】。`, 'accent');
-      if (!curPlayer.isAI) {
-        await new Promise(resolve => this.stockUI.show(resolve));
-      }
-      this.finishTurn();
-    } else {
-      this.finishTurn();
+      return this.dialogUI.showLandPurchase({
+        tileData: landing.tile,
+        currentLevel: 0,
+        player: curPlayer,
+        onBuy: () => { this.buyLand(tileIndex, curPlayer); this.finishTurn(); },
+        onPass: () => this.finishTurn()
+      });
     }
+    if (landing.kind === 'UPGRADE') {
+      if (curPlayer.isAI) {
+        if (AIPlayer.evaluateLandUpgrade(curPlayer, landing.tile, landing.property.level)) this.upgradeLand(tileIndex, curPlayer);
+        return this.finishTurn();
+      }
+      return this.dialogUI.showLandPurchase({
+        tileData: landing.tile,
+        currentLevel: landing.property.level,
+        player: curPlayer,
+        onUpgrade: () => { this.upgradeLand(tileIndex, curPlayer); this.finishTurn(); },
+        onPass: () => this.finishTurn()
+      });
+    }
+    if (landing.kind === 'OWN_MAX') {
+      this.gameState.addLog(`🏢 ${curPlayer.name} 视察顶级地产【${landing.tile.name}】。`);
+      return this.finishTurn();
+    }
+    if (landing.kind === 'RENT') {
+      const result = this.gameEngine.settleRent(curPlayer, tileIndex);
+      if (result.amount > 0) this.audioManager.playCoinSound();
+      return this.finishTurn();
+    }
+
+    const result = this.gameEngine.resolveSpecialLanding(curPlayer, tileIndex);
+    if (result.type === 'CARD_POINTS') this.audioManager.playCardSpell();
+    if (result.type === 'CASH_GAINED' || result.type === 'CASH_LOST') this.audioManager.playCoinSound();
+    if (result.type === 'STATUS_APPLIED') this.pawnManager.updateGodAura(curPlayer.id, result.status);
+    if (result.type === 'OPEN_STOCK' && !curPlayer.isAI) {
+      await new Promise(resolve => this.stockUI.show(resolve));
+    }
+    this.finishTurn();
   }
 
   buyLand(tileIndex, player) {
-    if (player.godType === 'BAD') {
-      this.gameState.addLog(`📉 ${player.name} 衰神附体，买地失败！`, 'danger');
-      return;
-    }
-
-    const tileData = this.gameState.getTile(tileIndex);
-    let price = tileData.price;
-    if (player.godType === 'LUCK') {
-      price = 0; // 福神完全免费
-    } else if (player.skillName === '商业奇才') {
-      price = Math.round(price * 0.85);
-    }
-
-    if (player.cash >= price) {
-      player.cash -= price;
-      this.gameState.propertyManager.buyProperty(tileIndex, player.id);
+    const result = this.gameEngine.purchaseProperty(player, tileIndex);
+    if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex);
       this.audioManager.playBuildSound();
-      this.gameState.addLog(`🏗️ ${player.name} 成功购买【${tileData.name}】(花费 $${price.toLocaleString()})！`, 'success');
     }
+    return result;
   }
 
   upgradeLand(tileIndex, player) {
-    if (player.godType === 'BAD') {
-      this.gameState.addLog(`📉 ${player.name} 衰神附体，升级建筑失败！`, 'danger');
-      return;
-    }
-
-    const tileData = this.gameState.getTile(tileIndex);
-    const prop = this.gameState.propertyManager.getProperty(tileIndex);
-    let cost = tileData.buildCost;
-    if (player.godType === 'LUCK') {
-      cost = 0; // 福神升级完全免费
-    } else if (player.skillName === '商业奇才') {
-      cost = Math.round(cost * 0.85);
-    }
-
-    if (player.cash >= cost && prop.level < 3) {
-      player.cash -= cost;
-      this.gameState.propertyManager.upgradeProperty(tileIndex);
-      this.boardBuilder.updateBuildingMesh(tileIndex, prop.level, player.colorHex);
+    const result = this.gameEngine.upgradeProperty(player, tileIndex);
+    if (result.success) {
+      this.boardBuilder.updateBuildingMesh(tileIndex, result.level, player.colorHex);
       this.audioManager.playBuildSound();
-      this.gameState.addLog(`✨ ${player.name} 将【${tileData.name}】升级至 LV ${prop.level} 建筑(花费 $${cost.toLocaleString()})！`, 'gold');
     }
+    return result;
   }
 
   async handleCardUsage(cardId, cardIndex, targetOverride = null) {
