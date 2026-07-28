@@ -241,15 +241,24 @@ export class PawnManager {
   }
 
   // 沿路径跳跃移动动画（支持正向与反向，并实时同步回到 GameState）
-  async movePawnAlongPath(playerIndex, steps, direction, gameState, onStepCallback) {
+  async movePawnAlongPath(playerIndex, steps, direction, gameState, onStepCallback, mapRuntime = null, onRouteChoice = null) {
     const pawn = this.pawns[playerIndex];
     if (!pawn) return;
 
     let current = pawn.currentTile;
 
     for (let i = 0; i < steps; i++) {
-      const boardSize = this.boardBuilder.tilePositions.length;
-      current = (current + direction + boardSize) % boardSize;
+      if (mapRuntime) {
+        const options = mapRuntime.getNextOptions(current, direction);
+        if (!options.length) break;
+        current = options.length > 1 && onRouteChoice
+          ? await onRouteChoice(options, current, steps - i)
+          : options[0];
+        if (!options.includes(current)) current = options[0];
+      } else {
+        const boardSize = this.boardBuilder.tilePositions.length;
+        current = (current + direction + boardSize) % boardSize;
+      }
       pawn.currentTile = current;
       gameState.players[playerIndex].currentTile = current;
 

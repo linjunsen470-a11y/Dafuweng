@@ -37,6 +37,7 @@ describe('GameState rules', () => {
   });
 
   it('round-trips a versioned snapshot including RNG state', () => {
+    state.setMap('island-fork');
     state.players[0].cash = 7777;
     state.propertyManager.buyProperty(3, 0);
     state.rng.next();
@@ -45,6 +46,7 @@ describe('GameState rules', () => {
     restored.restoreSnapshot(snapshot);
     expect(restored.players[0].cash).toBe(7777);
     expect(restored.propertyManager.getProperty(3).owner).toBe(0);
+    expect(restored.mapId).toBe('island-fork');
     expect(restored.rng.next()).toBe(state.rng.next());
   });
 
@@ -57,4 +59,3 @@ describe('GameState rules', () => {
     expect(state.winReason).toBe('NET_WORTH');
   });
 });
-

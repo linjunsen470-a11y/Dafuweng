@@ -6,7 +6,7 @@ import { Dice3D } from './engine/Dice3D.js';
 import { audioManager } from './engine/AudioManager.js';
 
 import { GameState, GamePhase } from './game/GameState.js';
-import { BOARD_TILES, TileType, PLAYER_PROFILES } from './game/BoardData.js';
+import { TileType, PLAYER_PROFILES } from './game/BoardData.js';
 import { AIPlayer } from './game/AIPlayer.js';
 import { eventManager } from './game/EventManager.js';
 import { GameEngine } from './game/GameEngine.js';
@@ -145,8 +145,10 @@ class GameController {
 
     const mode = document.getElementById('game-mode').value;
     this.gameState.setupGame(playerConfigs, this.selectedInitialCash, {
-      maxRounds: mode === 'QUICK' ? 24 : 40
+      maxRounds: mode === 'QUICK' ? 24 : 40,
+      mapId: document.getElementById('map-select').value
     });
+    this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
     this.pawnManager.createPlayerPawns(playerConfigs);
     this.uiRenderer.renderHUD();
 
@@ -213,6 +215,7 @@ class GameController {
 
   restoreGame(snapshot) {
     this.gameEngine.restore(snapshot);
+    this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
     const setupScreen = document.getElementById('setup-screen');
     setupScreen.classList.remove('active');
     setupScreen.classList.add('hidden');
@@ -388,22 +391,32 @@ class GameController {
         } else {
           prop.hasObstacle = false;
           this.boardBuilder.setObstacleMesh(currentTileIdx, false);
-          this.gameState.addLog(`🚧 ${curPlayer.name} 被路障拦截，被迫在【${BOARD_TILES[currentTileIdx].name}】停下！`, 'danger');
+          this.gameState.addLog(`🚧 ${curPlayer.name} 被路障拦截，被迫在【${this.gameState.getTile(currentTileIdx).name}】停下！`, 'danger');
           return true;
         }
       }
 
       // 土地公附体状态：所经之处直接免费强占地皮！
-      if (curPlayer.godType === 'EARTH' && BOARD_TILES[currentTileIdx].type === TileType.PROPERTY) {
+      if (curPlayer.godType === 'EARTH' && this.gameState.getTile(currentTileIdx).type === TileType.PROPERTY) {
         if (prop.owner !== curPlayer.id) {
           prop.owner = curPlayer.id;
           if (prop.level === 0) prop.level = 1;
           this.boardBuilder.updateBuildingMesh(currentTileIdx, prop.level, curPlayer.colorHex);
-          this.gameState.addLog(`⛰️ ${curPlayer.name} 土地公神威显赫，直接占领了【${BOARD_TILES[currentTileIdx].name}】！`, 'gold');
+          this.gameState.addLog(`⛰️ ${curPlayer.name} 地契精灵生效，直接占领了【${this.gameState.getTile(currentTileIdx).name}】！`, 'gold');
         }
       }
 
       return false;
+    }, this.gameState.mapRuntime, async (options) => {
+      if (curPlayer.isAI) return AIPlayer.chooseRoute(curPlayer, options, this.gameState);
+      const choice = await this.dialogUI.chooseTarget({
+        title: '前方出现岔路，请选择路线',
+        options: options.map(tileId => {
+          const tile = this.gameState.getTile(tileId);
+          return { id: tileId, label: tile.name, description: tile.desc || '继续前进' };
+        })
+      });
+      return choice === null ? options[0] : Number(choice);
     });
 
     this.uiRenderer.renderHUD();
@@ -413,7 +426,7 @@ class GameController {
 
   async handleTileArrival(tileIndex) {
     const curPlayer = this.gameState.getCurrentPlayer();
-    const tileData = BOARD_TILES[tileIndex];
+    const tileData = this.gameState.getTile(tileIndex);
     const prop = this.gameState.propertyManager.getProperty(tileIndex);
 
     this.gameState.phase = GamePhase.ACTION_MODAL;
@@ -565,7 +578,7 @@ class GameController {
       return;
     }
 
-    const tileData = BOARD_TILES[tileIndex];
+    const tileData = this.gameState.getTile(tileIndex);
     let price = tileData.price;
     if (player.godType === 'LUCK') {
       price = 0; // 福神完全免费
@@ -588,7 +601,7 @@ class GameController {
       return;
     }
 
-    const tileData = BOARD_TILES[tileIndex];
+    const tileData = this.gameState.getTile(tileIndex);
     const prop = this.gameState.propertyManager.getProperty(tileIndex);
     let cost = tileData.buildCost;
     if (player.godType === 'LUCK') {
@@ -640,7 +653,7 @@ class GameController {
       this.gameState.propertyManager.getProperty(targetTile).hasObstacle = true;
       this.boardBuilder.setObstacleMesh(targetTile, true);
       consume();
-      this.gameState.addLog(`🚧 ${curPlayer.name} 在前方【${BOARD_TILES[targetTile].name}】放置了路障！`, 'danger');
+      this.gameState.addLog(`🚧 ${curPlayer.name} 在【${this.gameState.getTile(targetTile).name}】放置了路障！`, 'danger');
       this.uiRenderer.renderHUD();
     } else if (cardId === 'TURN_AROUND') {
       const target = this.gameState.players[Number(targetId)];
@@ -660,7 +673,7 @@ class GameController {
         prop.level--;
         const owner = this.gameState.players[prop.owner];
         this.boardBuilder.updateBuildingMesh(targetTile, prop.level, owner?.colorHex);
-        this.gameState.addLog(`💣 ${curPlayer.name} 使用【拆房卡】，成功拆除【${BOARD_TILES[targetTile].name}】1层建筑！`, 'danger');
+        this.gameState.addLog(`💣 ${curPlayer.name} 使用【拆房卡】，成功拆除【${this.gameState.getTile(targetTile).name}】1层建筑！`, 'danger');
       } else {
         this.gameState.addLog(`💣 当前停留位置无可拆除房屋！`, 'accent');
       }
@@ -677,11 +690,11 @@ class GameController {
     } else if (cardId === 'STEAL_LAND') {
       const targetTile = Number(targetId);
       const prop = this.gameState.propertyManager.getProperty(targetTile);
-      if (BOARD_TILES[targetTile].type === TileType.PROPERTY) {
+      if (this.gameState.getTile(targetTile).type === TileType.PROPERTY) {
         prop.owner = curPlayer.id;
         if (prop.level === 0) prop.level = 1;
         this.boardBuilder.updateBuildingMesh(targetTile, prop.level, curPlayer.colorHex);
-        this.gameState.addLog(`🚩 ${curPlayer.name} 使用【强占卡】，强行将【${BOARD_TILES[targetTile].name}】夺为己有！`, 'gold');
+        this.gameState.addLog(`🚩 ${curPlayer.name} 使用【强占卡】，强行将【${this.gameState.getTile(targetTile).name}】夺为己有！`, 'gold');
       }
       consume();
       this.uiRenderer.renderHUD();
@@ -733,16 +746,21 @@ class GameController {
       this.uiRenderer.renderHUD();
     } else if (cardId === 'TELEPORT') {
       const targetTile = Number(targetId);
-      let steps = (targetTile - curPlayer.currentTile + BOARD_TILES.length) % BOARD_TILES.length;
+      const projected = this.gameState.mapRuntime.projectPath(
+        curPlayer.currentTile,
+        10,
+        curPlayer.direction || 1
+      );
+      const steps = projected.indexOf(targetTile) + 1;
       consume();
       this.gameState.addLog(`🌀 ${curPlayer.name} 发动跃迁卡。`, 'accent');
-      await this.doMovePlayer(steps);
+      if (steps > 0) await this.doMovePlayer(steps);
     } else if (cardId === 'CLEAR_ROAD') {
       const targetTile = Number(targetId);
       this.gameState.propertyManager.getProperty(targetTile).hasObstacle = false;
       this.boardBuilder.setObstacleMesh(targetTile, false);
       consume();
-      this.gameState.addLog(`🚜 ${curPlayer.name} 清除了【${BOARD_TILES[targetTile].name}】的路障。`, 'success');
+      this.gameState.addLog(`🚜 ${curPlayer.name} 清除了【${this.gameState.getTile(targetTile).name}】的路障。`, 'success');
       this.uiRenderer.renderHUD();
     } else if (cardId === 'BEAR_CARD') {
       this.gameState.stockMarket.forceStockSurge(String(targetId), false);

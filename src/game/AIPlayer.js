@@ -1,5 +1,3 @@
-import { BOARD_TILES } from './BoardData.js';
-
 export class AIPlayer {
   static evaluateLandPurchase(aiPlayer, landData) {
     const reserveByDifficulty = { EASY: 2500, NORMAL: 1200, HARD: 500 };
@@ -32,9 +30,15 @@ export class AIPlayer {
         // 在首回合，不盲目无脑使用遥控骰子，除非能踩中高价值金地或神仙格子
         const allowGeneralUse = gameState.round > 1 && gameState.rng.next() < 0.4;
         
-        for (let step = 1; step <= 6; step++) {
-          const targetTileIdx = (aiPlayer.currentTile + step) % BOARD_TILES.length;
-          const tile = BOARD_TILES[targetTileIdx];
+        const path = gameState.mapRuntime.projectPath(
+          aiPlayer.currentTile,
+          6,
+          aiPlayer.direction || 1,
+          options => this.chooseRoute(aiPlayer, options, gameState)
+        );
+        for (let step = 1; step <= path.length; step++) {
+          const targetTileIdx = path[step - 1];
+          const tile = gameState.getTile(targetTileIdx);
           if (tile && tile.type === 'PROPERTY') {
             const prop = gameState.propertyManager.getProperty(targetTileIdx);
             if (!prop || prop.owner === null) {
@@ -69,5 +73,22 @@ export class AIPlayer {
       }
     }
     return null;
+  }
+
+  static chooseRoute(aiPlayer, options, gameState) {
+    const score = (tileId) => {
+      const tile = gameState.getTile(tileId);
+      const property = gameState.propertyManager.getProperty(tileId);
+      if (!tile) return -100;
+      if (tile.type === 'GOD_FORTUNE' || tile.type === 'GOD_EARTH') return 80;
+      if (tile.type === 'GOD_MISFORTUNE' || tile.type === 'GOD_BAD') return -80;
+      if (tile.type === 'PROPERTY' && property?.owner === null && aiPlayer.cash > (tile.price || 0) + 1200) return 50;
+      if (tile.type === 'PROPERTY' && property?.owner !== null && property.owner !== aiPlayer.id) {
+        return -gameState.propertyManager.calculateToll(tileId, gameState.newsEffect);
+      }
+      if (tile.type === 'CARD_SHOP') return 25;
+      return 0;
+    };
+    return [...options].sort((a, b) => score(b) - score(a))[0];
   }
 }

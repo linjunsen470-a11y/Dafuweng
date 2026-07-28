@@ -3,6 +3,8 @@ import { PropertyManager } from './PropertyManager.js';
 import { stockMarket } from './StockMarket.js';
 import { eventManager } from './EventManager.js';
 import { SeededRandom } from './SeededRandom.js';
+import { getMapDefinition } from './MapData.js';
+import { MapRuntime } from './MapRuntime.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -33,6 +35,17 @@ export class GameState {
     this.logHistory = [];
     this.winner = null;
     this.winReason = null;
+    this.setMap('city-loop');
+  }
+
+  setMap(mapId) {
+    this.mapId = getMapDefinition(mapId).id;
+    this.mapDefinition = getMapDefinition(this.mapId);
+    this.mapRuntime = new MapRuntime(this.mapDefinition);
+  }
+
+  getTile(tileId) {
+    return this.mapRuntime.getTile(tileId);
   }
 
   setupGame(playerConfigs, initialCash = 20000, options = {}) {
@@ -40,6 +53,7 @@ export class GameState {
     this.maxRounds = options.maxRounds || this.maxRounds || 40;
     this.currentPlayerIndex = 0;
     this.phase = GamePhase.PRE_ROLL_ACTION;
+    this.setMap(options.mapId || this.mapId || 'city-loop');
     this.propertyManager = new PropertyManager();
     this.stockMarket.reset();
     this.newsEffect = null;
@@ -215,7 +229,7 @@ export class GameState {
     });
     this.propertyManager.properties.forEach((prop, tileIndex) => {
       if (prop.owner !== player.id) return;
-      const tile = BOARD_TILES[tileIndex];
+      const tile = this.getTile(tileIndex) || BOARD_TILES[tileIndex];
       value += (tile.price || 0) + (tile.buildCost || 0) * prop.level;
     });
     return Math.round(value);
@@ -244,6 +258,7 @@ export class GameState {
       phase: this.phase,
       round: this.round,
       maxRounds: this.maxRounds,
+      mapId: this.mapId,
       currentPlayerIndex: this.currentPlayerIndex,
       players: structuredClone(this.players),
       properties: structuredClone([...this.propertyManager.properties.entries()]),
@@ -258,6 +273,7 @@ export class GameState {
     this.phase = snapshot.phase;
     this.round = snapshot.round;
     this.maxRounds = snapshot.maxRounds;
+    this.setMap(snapshot.mapId || 'city-loop');
     this.currentPlayerIndex = snapshot.currentPlayerIndex;
     this.players = structuredClone(snapshot.players);
     this.propertyManager.properties = new Map(structuredClone(snapshot.properties));

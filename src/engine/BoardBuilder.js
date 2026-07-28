@@ -73,6 +73,7 @@ export class BoardBuilder {
     baseMesh.position.set(0, -0.35, 0);
     baseMesh.receiveShadow = true;
     this.scene3D.scene.add(baseMesh);
+    this.baseMesh = baseMesh;
 
     // 边缘金色条
     const borderGeo = new THREE.BoxGeometry(this.halfBoard * 2.18, 0.2, this.halfBoard * 2.18);
@@ -84,6 +85,7 @@ export class BoardBuilder {
     const borderMesh = new THREE.Mesh(borderGeo, borderMat);
     borderMesh.position.set(0, -0.05, 0);
     this.scene3D.scene.add(borderMesh);
+    this.borderMesh = borderMesh;
   }
 
   createTiles() {
@@ -120,6 +122,25 @@ export class BoardBuilder {
       // 应用自定义生成的贴图与 Canvas 贴图
       this.applyTileTextures(tileMesh, tileData);
     });
+  }
+
+  applyMapDefinition(mapDefinition) {
+    if (!mapDefinition) return;
+    mapDefinition.tiles.forEach((tileData, index) => {
+      const mesh = this.tileMeshes[index];
+      if (!mesh) return;
+      this.applyTileTextures(mesh, tileData);
+      mesh.userData.tileData = tileData;
+      const isFork = (tileData.next || []).length > 1;
+      const topMaterial = mesh.material[2];
+      if (topMaterial?.isMeshStandardMaterial) {
+        topMaterial.emissive?.set(isFork ? 0x00bcd4 : 0x000000);
+        topMaterial.emissiveIntensity = isFork ? 0.22 : 0;
+      }
+    });
+    const island = mapDefinition.theme === 'ISLAND';
+    this.baseMesh?.material.color.set(island ? '#123c4a' : '#1e272e');
+    this.borderMesh?.material.color.set(island ? '#00d2d3' : '#ffaa00');
   }
 
   applyTileTextures(tileMesh, tileData) {

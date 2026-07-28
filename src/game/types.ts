@@ -80,6 +80,7 @@ export interface GameSnapshotV1 {
   phase: GamePhase;
   round: number;
   maxRounds: number;
+  mapId: string;
   currentPlayerIndex: number;
   players: unknown[];
   properties: Array<[number, unknown]>;
@@ -87,4 +88,3 @@ export interface GameSnapshotV1 {
   newsEffect: null | { id: string; remainingRounds: number };
   logHistory: unknown[];
 }
-

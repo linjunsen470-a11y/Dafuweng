@@ -1,4 +1,4 @@
-import { BOARD_TILES, TileType } from './BoardData.js';
+import { TileType } from './BoardData.js';
 import { cardManager } from './CardManager.js';
 
 export class CardRules {
@@ -36,34 +36,40 @@ export class CardRules {
       }));
     }
     if (card.id === 'OBSTACLE') {
-      const targets = [];
-      for (let step = -10; step <= 10; step++) {
-        if (step === 0) continue;
-        const id = (player.currentTile + step + BOARD_TILES.length) % BOARD_TILES.length;
+      const reachable = this.gameState.mapRuntime.getReachable(player.currentTile, 10, [1, -1]);
+      const unique = new Map();
+      reachable.forEach(({ id, distance, direction }) => {
         const prop = this.gameState.propertyManager.getProperty(id);
-        if (!prop?.hasObstacle) targets.push({ id, label: BOARD_TILES[id].name, description: `${step > 0 ? '前方' : '后方'} ${Math.abs(step)} 格` });
-      }
-      return targets;
+        if (!prop?.hasObstacle && !unique.has(id)) {
+          unique.set(id, {
+            id,
+            label: this.gameState.getTile(id).name,
+            description: `${direction > 0 ? '前方' : '后方'} ${distance} 格`
+          });
+        }
+      });
+      return [...unique.values()];
     }
     if (card.id === 'CLEAR_ROAD') {
-      return BOARD_TILES.filter(tile => this.gameState.propertyManager.getProperty(tile.id)?.hasObstacle)
+      return this.gameState.mapDefinition.tiles.filter(tile => this.gameState.propertyManager.getProperty(tile.id)?.hasObstacle)
         .map(tile => ({ id: tile.id, label: tile.name }));
     }
     if (card.id === 'TELEPORT') {
-      return Array.from({ length: 9 }, (_, i) => {
-        const step = i + 2;
-        const id = (player.currentTile + step) % BOARD_TILES.length;
-        return { id, label: BOARD_TILES[id].name, description: `前方 ${step} 格` };
-      });
+      const path = this.gameState.mapRuntime.projectPath(player.currentTile, 10, player.direction || 1);
+      return path.slice(1).map((id, index) => ({
+        id,
+        label: this.gameState.getTile(id).name,
+        description: `沿默认路线前进 ${index + 2} 格`
+      }));
     }
     if (card.id === 'DEMOLISH') {
-      return BOARD_TILES.filter(tile => {
+      return this.gameState.mapDefinition.tiles.filter(tile => {
         const prop = this.gameState.propertyManager.getProperty(tile.id);
         return tile.type === TileType.PROPERTY && prop?.owner !== null && prop.owner !== player.id && prop.level > 0;
       }).map(tile => ({ id: tile.id, label: tile.name, description: `LV ${this.gameState.propertyManager.getProperty(tile.id).level}` }));
     }
     if (card.id === 'STEAL_LAND') {
-      return BOARD_TILES.filter(tile => {
+      return this.gameState.mapDefinition.tiles.filter(tile => {
         const prop = this.gameState.propertyManager.getProperty(tile.id);
         return tile.type === TileType.PROPERTY && prop?.owner !== null && prop.owner !== player.id;
       }).map(tile => ({ id: tile.id, label: tile.name, description: `所有者：${this.gameState.players[this.gameState.propertyManager.getProperty(tile.id).owner]?.name}` }));
@@ -71,4 +77,3 @@ export class CardRules {
     return [];
   }
 }
-
