@@ -1,0 +1,132 @@
+export class UIRenderer {
+  constructor(gameState) {
+    this.gameState = gameState;
+    this.initDOMReferences();
+  }
+
+  initDOMReferences() {
+    this.hudLayer = document.getElementById('hud-layer');
+    this.setupScreen = document.getElementById('setup-screen');
+    this.roundCount = document.getElementById('round-count');
+    this.newsTickerText = document.getElementById('news-ticker-text');
+    this.playersList = document.getElementById('players-list');
+    this.turnIndicator = document.getElementById('turn-indicator');
+    this.logMessages = document.getElementById('log-messages');
+    this.cardCountBadge = document.getElementById('card-count-badge');
+    this.btnRoll = document.getElementById('btn-roll');
+  }
+
+  renderHUD() {
+    if (this.gameState.phase === 'SETUP') {
+      this.setupScreen.classList.add('active');
+      this.hudLayer.classList.add('hidden');
+      return;
+    }
+
+    this.setupScreen.classList.remove('active');
+    this.hudLayer.classList.remove('hidden');
+
+    this.roundCount.textContent = this.gameState.round;
+
+    this.renderPlayersList();
+
+    const curPlayer = this.gameState.getCurrentPlayer();
+    if (curPlayer) {
+      if (curPlayer.isAI) {
+        this.turnIndicator.innerHTML = `
+          <span style="color:${curPlayer.color}">●</span> 🤖 <strong>${curPlayer.name}</strong> 正在思考与行动中...
+        `;
+        this.btnRoll.style.opacity = '0.5';
+        this.btnRoll.style.pointerEvents = 'none';
+      } else {
+        this.turnIndicator.innerHTML = `
+          <span style="color:${curPlayer.color}">●</span> 👤 <strong>你的回合</strong>：请点击【掷骰子】或按 [空格键]！
+        `;
+        const canRoll = this.gameState.phase === 'PRE_ROLL_ACTION';
+        this.btnRoll.style.opacity = canRoll ? '1' : '0.5';
+        this.btnRoll.style.pointerEvents = canRoll ? 'all' : 'none';
+      }
+      this.cardCountBadge.textContent = curPlayer.cards ? curPlayer.cards.length : 0;
+    }
+
+    this.renderLogs();
+  }
+
+  renderPlayersList() {
+    this.playersList.innerHTML = '';
+    this.gameState.players.forEach((player) => {
+      const isCur = player.id === this.gameState.currentPlayerIndex;
+      const card = document.createElement('div');
+      card.className = `player-card ${isCur ? 'active-turn' : ''} ${player.isBankrupt ? 'bankrupt' : ''}`;
+
+      const netWorth = this.gameState.calculateNetWorth(player);
+
+      let buffHtml = '';
+      if (player.godType === 'FORTUNE') {
+        buffHtml += `<span class="buff-tag buff-god-gold">🧙‍♂️ 免租精灵(${Math.max(1, player.godTurns)}T)</span>`;
+      } else if (player.godType === 'LUCK') {
+        buffHtml += `<span class="buff-tag" style="background:#00d2d3;color:#fff;">🌟 建造精灵(${Math.max(1, player.godTurns)}T)</span>`;
+      } else if (player.godType === 'EARTH') {
+        buffHtml += `<span class="buff-tag" style="background:#2ed573;color:#fff;">⛰️ 土地公(${player.godTurns}T)</span>`;
+      } else if (player.godType === 'MISFORTUNE') {
+        buffHtml += `<span class="buff-tag buff-god-poor">👻 穷神(${player.godTurns}T)</span>`;
+      } else if (player.godType === 'BAD') {
+        buffHtml += `<span class="buff-tag" style="background:#ff4757;color:#fff;">📉 衰神(${player.godTurns}T)</span>`;
+      }
+
+      if (player.turtleTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#10ac84;color:#fff;">🐢 乌龟(${player.turtleTurns}T)</span>`;
+      }
+      if (player.vehicle === 'CAR') {
+        buffHtml += `<span class="buff-tag" style="background:#ff9f43;color:#fff;">🏎️ 汽车</span>`;
+      }
+      if (player.jailTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#ff4757;color:#fff;">🚔 监狱(${player.jailTurns}T)</span>`;
+      }
+      if (player.rentShieldTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#0984e3;color:#fff;">🛡️ 免租(${player.rentShieldTurns}T)</span>`;
+      }
+      if (player.negativeImmuneTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#00b894;color:#fff;">🍀 免疫(${player.negativeImmuneTurns}T)</span>`;
+      }
+
+      const avatarMarkup = player.avatarAtlas
+        ? `<span class="player-avatar-atlas" role="img" aria-label="${player.name}" style="background-image:url('${player.avatarAtlas}');background-position:${player.avatarPosition}"></span>`
+        : player.avatarImg
+        ? `<img src="${player.avatarImg}" class="player-avatar-img" alt="${player.name}">`
+        : `<span class="player-avatar">${player.avatar}</span>`;
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="player-name-group">
+            ${avatarMarkup}
+            <div>
+              <div class="player-name" style="color:${player.color}">${player.name}</div>
+              <div class="player-skill-badge" title="${player.skillDesc || ''}">⚡ ${player.skillName || '技能特长'}</div>
+            </div>
+          </div>
+          <span class="player-tag">${player.isAI ? '🤖 AI' : '👤 玩家'}</span>
+        </div>
+        <div class="cash-display">$${player.cash.toLocaleString()}</div>
+        <div class="player-details">
+          <span>总资产: $${netWorth.toLocaleString()}</span>
+          <span>卡片积分: ${player.cardPoints}</span>
+        </div>
+        <div class="buff-icons">${buffHtml}</div>
+      `;
+
+      this.playersList.appendChild(card);
+    });
+  }
+
+  renderLogs() {
+    this.logMessages.innerHTML = '';
+    this.gameState.logHistory.forEach(item => {
+      const el = document.createElement('div');
+      el.className = `log-item ${item.type}`;
+      el.textContent = `[${item.time}] ${item.msg}`;
+      this.logMessages.appendChild(el);
+    });
+    this.logMessages.scrollTop = this.logMessages.scrollHeight;
+  }
+}

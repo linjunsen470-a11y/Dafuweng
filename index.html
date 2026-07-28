@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 大富翁：富翁帝国 (Q版卡通版)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/style.css">
+</head>
+<body>
+  <!-- 3D Canvas 容器 -->
+  <div id="game-container"></div>
+
+  <!-- 游戏启动与设置界面 -->
+  <div id="setup-screen" class="overlay-screen active">
+    <div class="glass-card setup-box">
+      <div class="logo-area">
+        <div class="game-badge">3D CARTOON MONOPOLY</div>
+        <h1>富翁帝国 <span>3D</span></h1>
+        <p>Q版卡通经典大富翁 · 地产升级 · 道具卡片 · 动态股市 · 破产清算</p>
+      </div>
+
+      <div class="setup-section">
+        <h3><span class="icon">👥</span> 玩家与电脑 AI 设置</h3>
+        <div class="player-config-list" id="player-config-list">
+          <!-- 动态渲染 4 位玩家选择 -->
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h3><span class="icon">💰</span> 初始对局资金</h3>
+        <div class="cash-options">
+          <button class="cash-btn" data-cash="10000">$10,000 (快速对局)</button>
+          <button class="cash-btn active" data-cash="20000">$20,000 (经典对局)</button>
+          <button class="cash-btn" data-cash="50000">$50,000 (富豪大决战)</button>
+        </div>
+      </div>
+
+      <div class="setup-section setup-options-grid">
+        <label>参与人数
+          <select id="player-count">
+            <option value="2">2 人</option>
+            <option value="3">3 人</option>
+            <option value="4" selected>4 人</option>
+          </select>
+        </label>
+        <label>对局模式
+          <select id="game-mode">
+            <option value="STANDARD" selected>标准局 · 40 轮</option>
+            <option value="QUICK">快速局 · 24 轮</option>
+          </select>
+        </label>
+        <label>电脑难度
+          <select id="ai-difficulty">
+            <option value="EASY">轻松</option>
+            <option value="NORMAL" selected>标准</option>
+            <option value="HARD">困难</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="setup-actions">
+        <button id="start-game-btn" class="btn-primary btn-large">
+          <span class="btn-glow"></span>
+          开启富翁之旅 🚀
+        </button>
+        <button id="load-auto-save-btn" class="btn-secondary hidden">继续上次对局</button>
+        <button id="load-manual-save-btn" class="btn-secondary hidden">读取手动存档</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏内主 HUD 界面 -->
+  <div id="hud-layer" class="hud-layer hidden">
+    <!-- 顶栏：轮次、天气/时间、大事件广播条 -->
+    <header class="top-bar">
+      <div class="round-badge">
+        <span class="label">ROUND</span>
+        <span id="round-count" class="value">1</span>
+      </div>
+      
+      <div class="news-ticker">
+        <span class="ticker-tag">⚡ 实时新闻</span>
+        <div class="ticker-content" id="news-ticker-text">富翁帝国市商业地段火热竞标中！股市行情大好！</div>
+      </div>
+
+      <div class="top-actions">
+        <button id="btn-toggle-audio" class="icon-btn" title="切换音效">🔊</button>
+        <button id="btn-reset-view" class="icon-btn" title="复位3D视角">🎥</button>
+        <button id="btn-save-game" class="icon-btn" title="手动存档">💾</button>
+      </div>
+    </header>
+
+    <!-- 左侧：玩家信息面板 -->
+    <aside class="left-panel">
+      <div class="players-container" id="players-list">
+        <!-- 玩家状态卡片动态渲染 -->
+      </div>
+    </aside>
+
+    <!-- 右下角：回合操作核心控制区 -->
+    <div class="control-panel">
+      <div class="current-turn-banner" id="turn-indicator">
+        <!-- 轮到谁掷骰子 -->
+      </div>
+
+      <div class="action-buttons">
+        <button id="btn-roll" class="btn-action btn-roll">
+          <span class="dice-icon">🎲</span>
+          <span class="action-text">掷骰子</span>
+        </button>
+
+        <button id="btn-use-card" class="btn-action btn-card">
+          <span class="btn-icon">🃏</span>
+          <span class="action-text">卡片包</span>
+          <span id="card-count-badge" class="badge">0</span>
+        </button>
+
+        <button id="btn-stock-market" class="btn-action btn-stock">
+          <span class="btn-icon">📈</span>
+          <span class="action-text">股市大盘</span>
+        </button>
+
+        <button id="btn-card-shop" class="btn-action btn-shop">
+          <span class="btn-icon">🏬</span>
+          <span class="action-text">道具商店</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 底部：日志历史 -->
+    <div class="log-panel" id="log-panel">
+      <div class="log-header">
+        <span>📜 对局日志</span>
+        <button id="btn-clear-log" class="text-btn">清空</button>
+      </div>
+      <div class="log-messages" id="log-messages"></div>
+    </div>
+  </div>
+
+  <!-- 地产买卖/升级交互弹窗 -->
+  <div id="modal-land" class="modal hidden">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h2 id="land-modal-title">到达地产</h2>
+        <span class="close-modal" id="land-modal-close">&times;</span>
+      </div>
+      <div class="land-details">
+        <div class="land-preview" id="land-preview-box">
+          <div class="land-level-badge" id="land-level-badge">LV 0 空地</div>
+          <div class="land-name" id="land-name">金金融街 1号</div>
+        </div>
+        <div class="land-stats">
+          <div class="stat-row">
+            <span>基础价格:</span>
+            <strong id="land-price">$1,000</strong>
+          </div>
+          <div class="stat-row">
+            <span>当前过路费:</span>
+            <strong id="land-toll" class="highlight-green">$200</strong>
+          </div>
+          <div class="stat-row">
+            <span>升级后过路费:</span>
+            <strong id="land-next-toll" class="highlight-gold">$600</strong>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions" id="land-modal-actions">
+        <button id="btn-land-buy" class="btn-primary">购买地产</button>
+        <button id="btn-land-upgrade" class="btn-primary">升级建筑</button>
+        <button id="btn-land-pass" class="btn-secondary">放弃操作</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 股市交易弹窗 -->
+  <div id="modal-stock" class="modal hidden">
+    <div class="glass-card modal-box large-modal">
+      <div class="modal-header">
+        <h2>📈 帝国证券交易所</h2>
+        <span class="close-modal" id="stock-modal-close">&times;</span>
+      </div>
+      <div class="stock-content">
+        <div class="stock-list" id="stock-list-container">
+          <!-- 动态股票列表 -->
+        </div>
+        <div class="stock-detail-panel">
+          <h3 id="stock-selected-name">选择股票查看走势</h3>
+          <div class="stock-chart-box">
+            <canvas id="stock-chart" width="400" height="180"></canvas>
+          </div>
+          <div class="stock-trade-controls" id="stock-trade-controls">
+            <div class="holding-info">
+              <span>持有数量: <strong id="stock-holding-count">0</strong> 股</span>
+              <span>买入均价: <strong id="stock-holding-avg">$0</strong></span>
+            </div>
+            <div class="trade-inputs">
+              <input type="number" id="stock-trade-amount" name="trade-amount" aria-label="交易股数" value="10" min="1" step="10">
+              <button id="btn-stock-buy" class="btn-primary btn-sm">买入</button>
+              <button id="btn-stock-sell" class="btn-danger btn-sm">卖出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 道具商店弹窗 -->
+  <div id="modal-shop" class="modal hidden">
+    <div class="glass-card modal-box large-modal">
+      <div class="modal-header">
+        <h2>🏬 道具卡片商店</h2>
+        <div class="user-points-badge">卡片点数: <span id="shop-user-points">0</span> PTS</div>
+        <span class="close-modal" id="shop-modal-close">&times;</span>
+      </div>
+      <div class="shop-card-grid" id="shop-card-grid">
+        <!-- 动态卡片列表 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 使用卡片/背包弹窗 -->
+  <div id="modal-inventory" class="modal hidden">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h2>🃏 我的卡片包</h2>
+        <span class="close-modal" id="inventory-modal-close">&times;</span>
+      </div>
+      <div class="inventory-card-grid" id="inventory-card-grid">
+        <!-- 玩家手头卡片 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 遥控骰子选择点数弹窗 -->
+  <div id="modal-remote-dice" class="modal hidden">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h2>🎯 遥控骰子：请选择前进步数</h2>
+      </div>
+      <div class="dice-selection-grid">
+        <button class="dice-choice-btn" data-val="1">1 步</button>
+        <button class="dice-choice-btn" data-val="2">2 步</button>
+        <button class="dice-choice-btn" data-val="3">3 步</button>
+        <button class="dice-choice-btn" data-val="4">4 步</button>
+        <button class="dice-choice-btn" data-val="5">5 步</button>
+        <button class="dice-choice-btn" data-val="6">6 步</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 胜负/游戏结束弹窗 -->
+  <div id="modal-victory" class="modal hidden">
+    <div class="glass-card modal-box victory-box">
+      <div class="crown-icon">👑</div>
+      <h1 id="winner-name">大富翁诞生！</h1>
+      <p id="winner-desc">恭喜获得富翁帝国的终极统治权！</p>
+      <div class="winner-stats" id="winner-stats"></div>
+      <button id="btn-restart" class="btn-primary btn-large">再来一局 🔄</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
