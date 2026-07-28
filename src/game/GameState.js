@@ -222,17 +222,41 @@ export class GameState {
   }
 
   calculateNetWorth(player) {
-    let value = player.cash;
+    return this.calculateAssetBreakdown(player).total;
+  }
+
+  calculateAssetBreakdown(player) {
+    let stockValue = 0;
     Object.entries(player.stocks || {}).forEach(([stockId, holding]) => {
       const stock = this.stockMarket.stocks.find(s => s.id === stockId);
-      if (stock) value += holding.shares * stock.price;
+      if (stock) stockValue += holding.shares * stock.price;
     });
+    let landValue = 0;
+    let buildingValue = 0;
+    let propertyCount = 0;
     this.propertyManager.properties.forEach((prop, tileIndex) => {
       if (prop.owner !== player.id) return;
       const tile = this.getTile(tileIndex) || BOARD_TILES[tileIndex];
-      value += (tile.price || 0) + (tile.buildCost || 0) * prop.level;
+      propertyCount++;
+      landValue += tile.price || 0;
+      buildingValue += (tile.buildCost || 0) * prop.level;
     });
-    return Math.round(value);
+    const total = Math.round(player.cash + stockValue + landValue + buildingValue);
+    return {
+      cash: Math.round(player.cash),
+      stockValue: Math.round(stockValue),
+      landValue: Math.round(landValue),
+      buildingValue: Math.round(buildingValue),
+      propertyCount,
+      cardCount: player.cards?.length || 0,
+      total
+    };
+  }
+
+  getRankings() {
+    return this.players
+      .map(player => ({ player, assets: this.calculateAssetBreakdown(player) }))
+      .sort((a, b) => b.assets.total - a.assets.total);
   }
 
   checkWinCondition(force = false) {

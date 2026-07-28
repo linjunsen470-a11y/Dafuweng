@@ -15,6 +15,7 @@ import { UIRenderer } from './ui/UIRenderer.js';
 import { StockUI } from './ui/StockUI.js';
 import { ShopUI } from './ui/ShopUI.js';
 import { DialogUI } from './ui/DialogUI.js';
+import { AssetUI } from './ui/AssetUI.js';
 
 class GameController {
   constructor() {
@@ -31,6 +32,7 @@ class GameController {
     this.stockUI = new StockUI(this.gameState, this.audioManager, () => this.uiRenderer.renderHUD());
     this.shopUI = new ShopUI(this.gameState, this.audioManager, (cardId, idx) => this.handleCardUsage(cardId, idx), () => this.uiRenderer.renderHUD());
     this.dialogUI = new DialogUI(this.audioManager);
+    this.assetUI = new AssetUI(this.gameState);
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
@@ -182,6 +184,8 @@ class GameController {
       this.gameState.addLog(result.success ? '💾 手动存档成功。' : `⚠️ ${result.msg}`, result.success ? 'success' : 'danger');
       this.uiRenderer.renderHUD();
     };
+
+    document.getElementById('btn-assets').onclick = () => this.assetUI.show();
 
     document.getElementById('btn-stock-market').onclick = () => {
       if (!this.canOpenPlayerAction()) return;
@@ -794,7 +798,7 @@ class GameController {
     if (this.gameState.checkWinCondition()) {
       this.dialogUI.showVictory(this.gameState.winner, () => {
         window.location.reload();
-      });
+      }, this.gameState);
       return;
     }
 
@@ -807,7 +811,7 @@ class GameController {
       this.gameEngine.autoSave();
       this.uiRenderer.renderHUD();
       if (transition?.gameOver && this.gameState.winner) {
-        this.dialogUI.showVictory(this.gameState.winner, () => window.location.reload());
+        this.dialogUI.showVictory(this.gameState.winner, () => window.location.reload(), this.gameState);
       } else {
         this.checkAITurn();
       }

@@ -963,6 +963,36 @@ body, html {
   padding: 9px;
 }
 
+.asset-modal-box {
+  width: min(980px, 92vw);
+}
+
+.asset-table-wrap {
+  overflow-x: auto;
+}
+
+.asset-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.asset-table th,
+.asset-table td {
+  padding: 12px 10px;
+  text-align: right;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  white-space: nowrap;
+}
+
+.asset-table th:nth-child(2),
+.asset-table td:nth-child(2) {
+  text-align: left;
+}
+
+.asset-table tbody tr:first-child {
+  background: rgba(255, 190, 0, 0.12);
+}
+
 /* ===== 原创 Q 版头像与卡片贴图视觉 ===== */
 .player-avatar-img {
   width: 44px;

@@ -131,10 +131,21 @@ export class DialogUI {
     });
   }
 
-  showVictory(winner, onRestart) {
+  showVictory(winner, onRestart, gameState = null) {
     this.victoryModal.classList.remove('hidden');
     document.getElementById('winner-name').textContent = `👑 大富翁诞生: ${winner.name}`;
     document.getElementById('winner-desc').textContent = `恭喜获胜！最终现金 $${winner.cash.toLocaleString()}`;
+    const stats = document.getElementById('winner-stats');
+    if (gameState) {
+      const assets = gameState.calculateAssetBreakdown(winner);
+      stats.innerHTML = `
+        <span>现金：$${assets.cash.toLocaleString()}</span>
+        <span>土地：$${assets.landValue.toLocaleString()} · 建筑：$${assets.buildingValue.toLocaleString()}</span>
+        <span>股票：$${assets.stockValue.toLocaleString()} · 地产 ${assets.propertyCount} 处</span>
+        <strong>最终总资产：$${assets.total.toLocaleString()}</strong>
+        <span>${gameState.winReason === 'NET_WORTH' ? `达到 ${gameState.maxRounds} 轮上限，按总资产结算` : '其他玩家均已破产'}</span>
+      `;
+    }
 
     this.audioManager.playVictory();
 

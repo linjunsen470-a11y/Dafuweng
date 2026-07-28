@@ -97,6 +97,7 @@
         <button id="btn-toggle-audio" class="icon-btn" title="切换音效">🔊</button>
         <button id="btn-reset-view" class="icon-btn" title="复位3D视角">🎥</button>
         <button id="btn-save-game" class="icon-btn" title="手动存档">💾</button>
+        <button id="btn-assets" class="icon-btn" title="资产排名">🏆</button>
       </div>
     </header>
 
@@ -266,6 +267,23 @@
       <p id="winner-desc">恭喜获得富翁帝国的终极统治权！</p>
       <div class="winner-stats" id="winner-stats"></div>
       <button id="btn-restart" class="btn-primary btn-large">再来一局 🔄</button>
+    </div>
+  </div>
+
+  <div id="modal-assets" class="modal hidden">
+    <div class="glass-card modal-box asset-modal-box">
+      <div class="modal-header">
+        <h2>🏆 实时资产排名</h2>
+        <span class="close-modal" id="asset-modal-close">&times;</span>
+      </div>
+      <div class="asset-table-wrap">
+        <table class="asset-table">
+          <thead>
+            <tr><th>#</th><th>玩家</th><th>现金</th><th>土地</th><th>建筑</th><th>股票</th><th>地产数</th><th>总资产</th></tr>
+          </thead>
+          <tbody id="asset-ranking-body"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 

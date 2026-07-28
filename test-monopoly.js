@@ -113,6 +113,15 @@ async function runTest() {
     await page.waitForSelector('#modal-inventory.hidden', { timeout: 3000 });
     console.log('✅ Inventory modal closed.');
 
+    console.log('\n--- Step 6b: Testing Asset Ranking Modal ---');
+    await page.click('#btn-assets');
+    await page.waitForSelector('#modal-assets:not(.hidden)', { timeout: 3000 });
+    const assetRows = await page.$$('#asset-ranking-body tr');
+    if (assetRows.length !== 4) throw new Error(`Expected 4 asset rows, got ${assetRows.length}`);
+    await page.click('#asset-modal-close');
+    await page.waitForSelector('#modal-assets.hidden', { timeout: 3000 });
+    console.log('✅ Asset ranking modal rendered all players.');
+
     console.log('\n--- Step 7: Testing Dice Roll (Click & Space bar) and Movement & AI Turns ---');
     console.log('Clicking "掷骰子" button for Player 1 turn...');
     await page.click('#btn-roll');
