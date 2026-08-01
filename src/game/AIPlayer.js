@@ -1,31 +1,92 @@
+import { cardManager } from './CardManager.js';
+import { MAX_PROPERTY_LEVEL } from './GameRules.js';
+
 export class AIPlayer {
-  static evaluateLandPurchase(aiPlayer, landData) {
+  static evaluateLandPurchase(aiPlayer, landData, gameState = null) {
     const reserveByDifficulty = { EASY: 2500, NORMAL: 1200, HARD: 500 };
     const safetyReserve = reserveByDifficulty[aiPlayer.aiDifficulty] ?? 1200;
-    if (aiPlayer.cash - landData.price >= safetyReserve) {
-      return true;
-    }
-    return false;
+    if (aiPlayer.cash - landData.price < safetyReserve) return false;
+    if (!gameState) return true;
+    const groupTiles = gameState.mapDefinition.tiles.filter(tile => tile.group && tile.group === landData.group);
+    const ownedInGroup = groupTiles.filter(tile => gameState.propertyManager.getProperty(tile.id)?.owner === aiPlayer.id).length;
+    const groupPressure = groupTiles.length ? ownedInGroup / groupTiles.length : 0;
+    const baseRent = landData.tolls?.[0] || 0;
+    const valueScore = baseRent / Math.max(1, landData.price);
+    return landData.large || groupPressure >= 0.34 || valueScore >= 0.13 || aiPlayer.cash > landData.price * 2.2;
   }
 
-  static evaluateLandUpgrade(aiPlayer, landData, currentLevel) {
-    if (currentLevel >= 3) return false;
+  static evaluateLandUpgrade(aiPlayer, landData, currentLevel, gameState = null) {
+    if (currentLevel >= MAX_PROPERTY_LEVEL) return false;
     const upgradeCost = landData.buildCost || 600;
     const reserveByDifficulty = { EASY: 3000, NORMAL: 1800, HARD: 800 };
     const safetyReserve = reserveByDifficulty[aiPlayer.aiDifficulty] ?? 1800;
-    if (aiPlayer.cash - upgradeCost >= safetyReserve) {
-      return true;
-    }
-    return false;
+    if (aiPlayer.cash - upgradeCost < safetyReserve) return false;
+    const currentRent = landData.tolls?.[currentLevel] || 0;
+    const nextRent = landData.tolls?.[currentLevel + 1] || currentRent;
+    const roi = (nextRent - currentRent) / Math.max(1, upgradeCost);
+    const opponents = gameState?.players?.filter(player => !player.isBankrupt && player.id !== aiPlayer.id).length || 1;
+    return landData.large || roi * opponents >= 0.45 || aiPlayer.cash > upgradeCost * 3;
   }
 
-  static decideCardUsage(aiPlayer, gameState) {
+  static decideCardPurchase(aiPlayer, gameEngine) {
+    const heat = gameEngine?.state?.gameMode === 'HEAT';
+    const preferred = heat
+      ? ['NUKES', 'MISSILE', 'MINE', 'HIBERNATE', 'TURTLE', 'OBSTACLE', 'REMOTE_DICE']
+      : ['REMOTE_DICE', 'SUMMON_GOD', 'RENT_SHIELD', 'LAND_BUY', 'CASH_TAX', 'DEMOLISH', 'MISSILE', 'NUKES', 'TURTLE', 'OBSTACLE', 'IMMUNITY_CARD', 'CAR_CARD'];
+    if (aiPlayer.cards.length >= 8) return null;
+    for (const cardId of preferred) {
+      const card = cardManager.getCardById(cardId);
+      const cost = gameEngine.getCardCost(aiPlayer, card);
+      if (aiPlayer.cardPoints >= cost) return { cardId };
+    }
+    return null;
+  }
+
+  static decideCardUsage(aiPlayer, gameState, gameEngine = null) {
     if (!aiPlayer.cards || aiPlayer.cards.length === 0) return null;
+    const legal = cardId => !gameEngine || gameEngine.getCardAction(aiPlayer, cardId).enabled;
+    const has = cardId => aiPlayer.cards.includes(cardId) && legal(cardId);
+
+    if (has('BANISH_GOD') && ['MISFORTUNE', 'BAD', 'DEMON', 'GREAT_POOR', 'SMALL_POOR'].includes(aiPlayer.godType)) {
+      return { cardId: 'BANISH_GOD' };
+    }
+    if (has('IMMUNITY_CARD') && (aiPlayer.jailTurns > 0 || aiPlayer.hospitalTurns > 0)) {
+      return { cardId: 'IMMUNITY_CARD' };
+    }
+    if (has('SUMMON_GOD') && !aiPlayer.godType) return { cardId: 'SUMMON_GOD' };
+    if (has('HIBERNATE')) return { cardId: 'HIBERNATE' };
+    if (has('CLEANSE') && (aiPlayer.turtleTurns > 0 || ['MISFORTUNE', 'BAD'].includes(aiPlayer.godType))) {
+      return { cardId: 'CLEANSE' };
+    }
+    if (has('FORTUNE_GOD') && !aiPlayer.godType) return { cardId: 'FORTUNE_GOD' };
+    if (has('CAR_CARD') && aiPlayer.vehicle !== 'CAR') return { cardId: 'CAR_CARD' };
+    if (has('RENT_SHIELD') && aiPlayer.rentShieldTurns <= 0) return { cardId: 'RENT_SHIELD' };
+    if (has('IMMUNITY') && aiPlayer.negativeImmuneTurns <= 0) return { cardId: 'IMMUNITY' };
+
+    const averageCash = gameState.players.filter(player => !player.isBankrupt)
+      .reduce((sum, player, _, players) => sum + player.cash / players.length, 0);
+    if (has('EQUAL_WEALTH') && aiPlayer.cash < averageCash * 0.65) return { cardId: 'EQUAL_WEALTH' };
+
+    const targetedPriority = ['MISSILE', 'NUKES', 'LAND_BUY', 'SWAP_LAND', 'SLEEPWALK', 'STEAL_LAND', 'DEMOLISH', 'CASH_TAX', 'TURTLE', 'OBSTACLE', 'MINE', 'BEAR_CARD', 'TURN_AROUND', 'GIFT_CARD'];
+    for (const cardId of targetedPriority) {
+      if (!has(cardId)) continue;
+      const action = gameEngine?.getCardAction(aiPlayer, cardId);
+      const targets = action?.targets || [];
+      if (!targets.length) continue;
+      let target = targets[0];
+      if (['CASH_TAX', 'TURTLE', 'TURN_AROUND'].includes(cardId)) {
+        target = [...targets].sort((a, b) =>
+          (gameState.players[Number(b.id)]?.cash || 0) - (gameState.players[Number(a.id)]?.cash || 0))[0];
+      }
+      if (['STEAL_LAND', 'DEMOLISH'].includes(cardId)) {
+        target = [...targets].sort((a, b) =>
+          gameState.propertyManager.calculateToll(Number(b.id), gameState.newsEffect)
+          - gameState.propertyManager.calculateToll(Number(a.id), gameState.newsEffect))[0];
+      }
+      return { cardId, targetId: target.id };
+    }
 
     for (const cardId of aiPlayer.cards) {
-      if (cardId === 'FORTUNE_GOD' && !aiPlayer.godType) {
-        return { cardId };
-      }
       if (cardId === 'REMOTE_DICE') {
         // 在首回合，不盲目无脑使用遥控骰子，除非能踩中高价值金地或神仙格子
         const allowGeneralUse = gameState.round > 1 && gameState.rng.next() < 0.4;
@@ -57,20 +118,20 @@ export class AIPlayer {
   }
 
   static decideStockAction(aiPlayer, stockMarket) {
-    if (aiPlayer.cash > 15000) {
-      const cheapStock = stockMarket.stocks.find(s => s.price < 80);
-      if (cheapStock) {
-        return { action: 'BUY', stockId: cheapStock.id, shares: 20 };
+    for (const [stockId, holding] of Object.entries(aiPlayer.stocks || {})) {
+      const stock = stockMarket.stocks.find(item => item.id === stockId);
+      if (!stock || !holding?.shares) continue;
+      const returnRate = (stock.price - holding.avgPrice) / Math.max(1, holding.avgPrice);
+      if (returnRate >= 0.18 || returnRate <= -0.16 || aiPlayer.cash < 3000) {
+        return { action: 'SELL', stockId, shares: holding.shares };
       }
     }
-
-    if (aiPlayer.cash < 2000) {
-      for (const stockId in aiPlayer.stocks) {
-        const holding = aiPlayer.stocks[stockId];
-        if (holding && holding.shares > 0) {
-          return { action: 'SELL', stockId, shares: holding.shares };
-        }
-      }
+    if (aiPlayer.cash > 12000) {
+      const candidates = stockMarket.stocks
+        .filter(stock => stock.change >= -2)
+        .sort((a, b) => (b.change - a.change) || (a.price - b.price));
+      const stock = candidates[0];
+      if (stock) return { action: 'BUY', stockId: stock.id, shares: Math.max(5, Math.min(30, Math.floor((aiPlayer.cash - 8000) / stock.price))) };
     }
     return null;
   }
@@ -82,11 +143,20 @@ export class AIPlayer {
       if (!tile) return -100;
       if (tile.type === 'GOD_FORTUNE' || tile.type === 'GOD_EARTH') return 80;
       if (tile.type === 'GOD_MISFORTUNE' || tile.type === 'GOD_BAD') return -80;
-      if (tile.type === 'PROPERTY' && property?.owner === null && aiPlayer.cash > (tile.price || 0) + 1200) return 50;
-      if (tile.type === 'PROPERTY' && property?.owner !== null && property.owner !== aiPlayer.id) {
+      if ((tile.type === 'PROPERTY' || tile.type === 'BIG_PROPERTY') && property?.owner === null && aiPlayer.cash > (tile.price || 0) + 1200) {
+        const groupOwned = gameState.mapDefinition.tiles.filter(item => item.group === tile.group
+          && gameState.propertyManager.getProperty(item.id)?.owner === aiPlayer.id).length;
+        return (tile.large ? 90 : 50) + groupOwned * 22;
+      }
+      if ((tile.type === 'PROPERTY' || tile.type === 'BIG_PROPERTY') && property?.owner !== null && property.owner !== aiPlayer.id) {
+        const owner = gameState.players[property.owner];
+        if (gameState.gameMode === 'TEAM' && owner?.teamId === aiPlayer.teamId) return 30;
         return -gameState.propertyManager.calculateToll(tileId, gameState.newsEffect);
       }
       if (tile.type === 'CARD_SHOP') return 25;
+      if (tile.type === 'BANK' && aiPlayer.cash > 10000) return 28;
+      if (tile.type === 'LOTTERY' && gameState.lottery.pot > 5000) return 20;
+      if (tile.type === 'MAGIC_HOUSE') return 35;
       return 0;
     };
     return [...options].sort((a, b) => score(b) - score(a))[0];

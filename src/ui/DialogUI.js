@@ -1,5 +1,7 @@
 import confetti from 'canvas-confetti';
 
+import { MAX_PROPERTY_LEVEL } from '../game/GameRules.js';
+
 export class DialogUI {
   constructor(audioManager) {
     this.audioManager = audioManager;
@@ -19,6 +21,7 @@ export class DialogUI {
 
     const titleEl = document.getElementById('land-modal-title');
     const badgeEl = document.getElementById('land-level-badge');
+    const buildingArtEl = document.getElementById('land-building-art');
     const nameEl = document.getElementById('land-name');
     const priceEl = document.getElementById('land-price');
     const tollEl = document.getElementById('land-toll');
@@ -26,12 +29,13 @@ export class DialogUI {
     const actionsEl = document.getElementById('land-modal-actions');
 
     titleEl.textContent = `到达: ${tileData.name}`;
-    badgeEl.textContent = currentLevel === 0 ? 'LV 0 已拥有空地' : `LV ${currentLevel} 建筑`;
+    badgeEl.textContent = currentLevel === 0 ? 'LV 0 待开发空地' : `LV ${currentLevel} 建筑`;
+    buildingArtEl.style.backgroundPosition = `${Math.min(currentLevel, MAX_PROPERTY_LEVEL) * 25}% 0%`;
     nameEl.textContent = tileData.name;
     priceEl.textContent = `$${tileData.price.toLocaleString()}`;
 
     const currentToll = tileData.tolls[currentLevel] || tileData.tolls[0];
-    const nextToll = tileData.tolls[Math.min(currentLevel + 1, 3)];
+    const nextToll = tileData.tolls[Math.min(currentLevel + 1, MAX_PROPERTY_LEVEL)];
 
     tollEl.textContent = `$${currentToll.toLocaleString()}`;
     nextTollEl.textContent = `$${nextToll.toLocaleString()}`;
@@ -56,7 +60,7 @@ export class DialogUI {
         onBuy();
       };
       actionsEl.appendChild(btnBuy);
-    } else if (currentLevel < 3 && onUpgrade) {
+    } else if (currentLevel < MAX_PROPERTY_LEVEL && onUpgrade) {
       let finalCost = tileData.buildCost;
       if (player && player.skillName === '商业奇才') {
         finalCost = Math.round(tileData.buildCost * 0.85);
@@ -134,16 +138,20 @@ export class DialogUI {
   showVictory(winner, onRestart, gameState = null) {
     this.victoryModal.classList.remove('hidden');
     document.getElementById('winner-name').textContent = `👑 大富翁诞生: ${winner.name}`;
-    document.getElementById('winner-desc').textContent = `恭喜获胜！最终现金 $${winner.cash.toLocaleString()}`;
+    const teamText = gameState?.winningTeamId !== null && gameState?.winningTeamId !== undefined
+      ? `队伍 ${gameState.winningTeamId} 获胜！`
+      : '恭喜获胜！';
+    document.getElementById('winner-desc').textContent = `${teamText} 最终现金 $${winner.cash.toLocaleString()}`;
     const stats = document.getElementById('winner-stats');
     if (gameState) {
       const assets = gameState.calculateAssetBreakdown(winner);
       stats.innerHTML = `
         <span>现金：$${assets.cash.toLocaleString()}</span>
+        <span>存款：$${assets.deposit.toLocaleString()}</span>
         <span>土地：$${assets.landValue.toLocaleString()} · 建筑：$${assets.buildingValue.toLocaleString()}</span>
         <span>股票：$${assets.stockValue.toLocaleString()} · 地产 ${assets.propertyCount} 处</span>
         <strong>最终总资产：$${assets.total.toLocaleString()}</strong>
-        <span>${gameState.winReason === 'NET_WORTH' ? `达到 ${gameState.maxRounds} 轮上限，按总资产结算` : '其他玩家均已破产'}</span>
+        <span>${['NET_WORTH', 'TEAM_NET_WORTH'].includes(gameState.winReason) ? `达到 ${gameState.maxRounds} 轮上限，按总资产结算` : gameState.winReason === 'LORD_DEFEATED' ? '领主已经破产，挑战者获胜' : '其他玩家或队伍均已破产'}</span>
       `;
     }
 

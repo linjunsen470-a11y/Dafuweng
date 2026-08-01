@@ -7,16 +7,24 @@ export class PawnManager {
     this.boardBuilder = boardBuilder;
     this.pawns = [];
     this.godAuraMeshes = new Map();
+    this.boardGodMeshes = new Map();
   }
 
   createPlayerPawns(playerConfigs) {
+    this.clearPawns();
     playerConfigs.forEach((cfg, index) => {
-      const profile = PLAYER_PROFILES[index % PLAYER_PROFILES.length];
+      const profile = PLAYER_PROFILES.find(item => item.id === cfg.profileIndex)
+        || PLAYER_PROFILES[index % PLAYER_PROFILES.length];
       const group = new THREE.Group();
 
       // 创建精致 Q 版 3D 角色模型
-      const characterMesh = this.createDetailedCharacter(index, profile);
+      const characterMesh = this.createDetailedCharacter(profile.id, profile);
       group.add(characterMesh);
+
+      const standee = this.createCharacterStandee(profile, () => {
+        characterMesh.visible = false;
+      });
+      group.add(standee);
 
       // 角色脚下炫彩 3D 光圈底座
       const ringGeo = new THREE.RingGeometry(0.8, 1.0, 32);
@@ -33,7 +41,7 @@ export class PawnManager {
 
       // 头顶 3D 悬浮名字标牌
       const namePlate = this.createNamePlate(cfg.name || profile.name, profile.color);
-      namePlate.position.y = 2.4;
+      namePlate.position.y = 2.72;
       group.add(namePlate);
 
       const startPos = this.boardBuilder.tilePositions[0];
@@ -46,6 +54,8 @@ export class PawnManager {
         id: index,
         mesh: group,
         characterMesh: characterMesh,
+        standee,
+        ring,
         currentTile: 0,
         targetPos: group.position.clone()
       });
@@ -58,10 +68,81 @@ export class PawnManager {
         this.pawns.forEach((pawn, idx) => {
           if (pawn.characterMesh) {
             pawn.characterMesh.position.y = Math.sin(time + idx * 1.5) * 0.08;
+            pawn.characterMesh.rotation.y = Math.sin(time * 0.35 + idx) * 0.08;
+            if (pawn.standee) {
+              pawn.standee.position.y = 1.35 + Math.sin(time + idx * 1.5) * 0.045;
+              pawn.standee.material.rotation = Math.sin(time * 0.55 + idx) * 0.025;
+            }
+            const pulse = 0.78 + Math.sin(time * 1.6 + idx) * 0.18;
+            pawn.ring.material.opacity = pulse;
+            pawn.ring.rotation.z += 0.006;
           }
         });
       }
     });
+  }
+
+  clearPawns() {
+    this.pawns.forEach(pawn => this.scene3D.scene.remove(pawn.mesh));
+    this.boardGodMeshes.forEach(mesh => this.scene3D.scene.remove(mesh));
+    this.pawns = [];
+    this.godAuraMeshes.clear();
+    this.boardGodMeshes.clear();
+  }
+
+  createCharacterStandee(profile, onReady) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 320;
+    canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const sprite = new THREE.Sprite(material);
+    sprite.position.y = 1.35;
+    sprite.scale.set(1.78, 2.22, 1);
+
+    const drawFrame = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = profile.color;
+      ctx.beginPath();
+      ctx.roundRect(8, 8, 304, 384, 42);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+      ctx.lineWidth = 10;
+      ctx.stroke();
+      texture.needsUpdate = true;
+    };
+    drawFrame();
+
+    const image = new Image();
+    image.onload = () => {
+      const col = profile.id % 4;
+      const row = Math.floor(profile.id / 4);
+      const cellWidth = image.width / 4;
+      const cellHeight = image.height / 3;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(8, 8, 304, 384, 42);
+      ctx.clip();
+      ctx.drawImage(image, col * cellWidth, row * cellHeight, cellWidth, cellHeight, 8, 8, 304, 384);
+      const gradient = ctx.createLinearGradient(0, 250, 0, 392);
+      gradient.addColorStop(0, 'rgba(8,12,30,0)');
+      gradient.addColorStop(1, 'rgba(8,12,30,0.34)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(8, 8, 304, 384);
+      ctx.restore();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.roundRect(8, 8, 304, 384, 42);
+      ctx.stroke();
+      texture.needsUpdate = true;
+      onReady?.();
+    };
+    image.src = '/assets/characters-v2-atlas.webp';
+    return sprite;
   }
 
   createDetailedCharacter(index, profile) {
@@ -178,7 +259,7 @@ export class PawnManager {
       const mask = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.2, 0.2), maskMat);
       mask.position.set(0, 1.2, 0.3);
       charGroup.add(mask);
-    } else {
+    } else if (profId === 5) {
       // 🌴 6. 米娅
       const outfitMat = new THREE.MeshStandardMaterial({ color: '#ff7f50', roughness: 0.5 });
       const faceMat = new THREE.MeshStandardMaterial({ color: '#fab1a0', roughness: 0.5 });
@@ -200,7 +281,77 @@ export class PawnManager {
         feather.rotation.z = (i - 1) * 0.3;
         charGroup.add(feather);
       });
+    } else {
+      const palettes = {
+        6: ['#8b5a2b', '#f6b93b'],
+        7: ['#0984e3', '#ffffff'],
+        8: ['#e84393', '#ffd700'],
+        9: ['#ff7675', '#74b9ff'],
+        10: ['#2d3436', '#d63031'],
+        11: ['#6c5ce7', '#ffeaa7']
+      };
+      const [mainColor, accentColor] = palettes[profId] || ['#00b894', '#ffffff'];
+      const bodyMat = new THREE.MeshStandardMaterial({ color: mainColor, roughness: 0.38 });
+      const accentMat = new THREE.MeshStandardMaterial({ color: accentColor, roughness: 0.25, metalness: profId === 8 ? 0.45 : 0.05 });
+      const faceMat = new THREE.MeshStandardMaterial({ color: '#ffd7b5', roughness: 0.55 });
+
+      const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 0.55, 6, 14), bodyMat);
+      body.position.y = 0.65;
+      body.castShadow = true;
+      charGroup.add(body);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 20, 20), faceMat);
+      head.position.y = 1.35;
+      head.castShadow = true;
+      charGroup.add(head);
+
+      if (profId === 6) {
+        const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.07, 24), accentMat);
+        brim.position.y = 1.68;
+        const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.44, 0.36, 18), accentMat);
+        crown.position.y = 1.84;
+        charGroup.add(brim, crown);
+      } else if (profId === 7) {
+        const cap = new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), accentMat);
+        cap.position.y = 1.6;
+        const visor = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.07, 0.25), accentMat);
+        visor.position.set(0, 1.56, 0.38);
+        charGroup.add(cap, visor);
+      } else if (profId === 8) {
+        const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.42, 0.28, 5), accentMat);
+        crown.position.y = 1.78;
+        crown.rotation.y = Math.PI / 5;
+        const skirt = new THREE.Mesh(new THREE.ConeGeometry(0.62, 0.8, 20), bodyMat);
+        skirt.position.y = 0.42;
+        charGroup.add(crown, skirt);
+      } else if (profId === 9) {
+        [-0.43, 0.43].forEach((x, side) => {
+          const candy = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 12), side ? accentMat : bodyMat);
+          candy.position.set(x, 1.48, 0);
+          charGroup.add(candy);
+        });
+      } else if (profId === 10) {
+        const helmet = new THREE.Mesh(new THREE.ConeGeometry(0.5, 0.42, 6), accentMat);
+        helmet.position.y = 1.72;
+        const sword = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.15, 0.08), accentMat);
+        sword.position.set(0.55, 0.78, 0);
+        sword.rotation.z = -0.28;
+        charGroup.add(helmet, sword);
+      } else if (profId === 11) {
+        const curl = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.06, 8, 18, Math.PI * 1.5), accentMat);
+        curl.position.set(0, 1.72, 0.1);
+        curl.rotation.x = Math.PI / 2;
+        const bib = new THREE.Mesh(new THREE.CircleGeometry(0.24, 18), accentMat);
+        bib.position.set(0, 0.75, 0.43);
+        charGroup.add(curl, bib);
+      }
     }
+
+    const eyeMat = new THREE.MeshBasicMaterial({ color: '#202630' });
+    [-0.14, 0.14].forEach(x => {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), eyeMat);
+      eye.position.set(x, 1.34, 0.39);
+      charGroup.add(eye);
+    });
 
     return charGroup;
   }
@@ -277,10 +428,21 @@ export class PawnManager {
   animateHop(mesh, targetPos) {
     return new Promise((resolve) => {
       const startPos = mesh.position.clone();
-      const duration = 220; // ms
+      const duration = this.animateHopDuration || 220; // ms
       const startTime = performance.now();
+      let completed = false;
+      const finish = () => {
+        if (completed) return;
+        completed = true;
+        mesh.position.copy(targetPos);
+        mesh.rotation.z = 0;
+        mesh.scale.set(1, 1, 1);
+        resolve();
+      };
+      const watchdog = setTimeout(finish, duration + 1200);
 
       const update = () => {
+        if (completed) return;
         const elapsed = performance.now() - startTime;
         const progress = Math.min(elapsed / duration, 1.0);
 
@@ -289,17 +451,32 @@ export class PawnManager {
 
         const jumpHeight = 1.3;
         mesh.position.y = startPos.y + Math.sin(progress * Math.PI) * jumpHeight;
+        mesh.rotation.z = Math.sin(progress * Math.PI * 2) * 0.08;
+        const squash = Math.sin(progress * Math.PI);
+        mesh.scale.set(1 + squash * 0.06, 1 - squash * 0.05, 1 + squash * 0.06);
 
         if (progress < 1.0) {
           requestAnimationFrame(update);
         } else {
-          mesh.position.copy(targetPos);
-          resolve();
+          clearTimeout(watchdog);
+          finish();
         }
       };
 
       update();
     });
+  }
+
+  async animatePlayerStep(playerIndex, tileId, duration = 220) {
+    const pawn = this.pawns[playerIndex];
+    const tilePosition = this.boardBuilder.tilePositions[tileId];
+    if (!pawn || !tilePosition) return;
+    pawn.currentTile = tileId;
+    const target = tilePosition.clone().add(this.getPawnOffset(playerIndex));
+    const original = this.animateHopDuration;
+    this.animateHopDuration = duration;
+    await this.animateHop(pawn.mesh, target);
+    this.animateHopDuration = original;
   }
 
   syncFromGameState(gameState) {
@@ -311,6 +488,41 @@ export class PawnManager {
       pawn.mesh.position.copy(tilePosition).add(this.getPawnOffset(player.id));
       this.updateGodAura(player.id, player.godType);
       if (player.isBankrupt) this.setBankrupt(player.id);
+    });
+    this.syncBoardGods(gameState.boardGods || []);
+  }
+
+  syncBoardGods(boardGods) {
+    const activeIds = new Set(boardGods.map(god => god.id));
+    this.boardGodMeshes.forEach((mesh, id) => {
+      if (!activeIds.has(id)) {
+        this.scene3D.scene.remove(mesh);
+        this.boardGodMeshes.delete(id);
+      }
+    });
+    const colors = { FORTUNE: 0xffd700, MISFORTUNE: 0x2d3436, ANGEL: 0xffffff, DEMON: 0x8e44ad };
+    boardGods.forEach((god, index) => {
+      let group = this.boardGodMeshes.get(god.id);
+      if (!group) {
+        group = new THREE.Group();
+        const orb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.5, 18, 14),
+          new THREE.MeshStandardMaterial({ color: colors[god.type] || 0x74b9ff, emissive: colors[god.type] || 0x74b9ff, emissiveIntensity: 0.42 })
+        );
+        orb.position.y = 1.25;
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(0.72, 0.07, 12, 28),
+          new THREE.MeshBasicMaterial({ color: colors[god.type] || 0x74b9ff })
+        );
+        ring.position.y = 1.25;
+        ring.rotation.x = Math.PI / 2;
+        group.add(orb, ring);
+        group.userData.phase = index * 1.7;
+        this.scene3D.scene.add(group);
+        this.boardGodMeshes.set(god.id, group);
+      }
+      const tilePosition = this.boardBuilder.tilePositions[god.tileId];
+      if (tilePosition) group.position.copy(tilePosition).add(new THREE.Vector3(0, 0.2, 0));
     });
   }
 
@@ -326,9 +538,11 @@ export class PawnManager {
 
     if (!godType) return;
 
-    let auraColor = 0xffd700; // 金光 (财神)
-    if (godType === 'LUCK') auraColor = 0x00e5ff; // 蓝耀 (福神)
-    else if (godType === 'MISFORTUNE') auraColor = 0x2d3436; // 幽黑 (穷神)
+    let auraColor = 0xffd700; // 金光 (财神 / 大财神)
+    if (godType === 'LUCK' || godType === 'FORTUNE' || godType === 'GREAT_FORTUNE' || godType === 'SMALL_FORTUNE') auraColor = 0xffd700;
+    else if (godType === 'ANGEL') auraColor = 0xffffff; // 圣白光 (天使)
+    else if (godType === 'DEMON') auraColor = 0x8e44ad; // 紫黑 (恶魔)
+    else if (godType === 'MISFORTUNE' || godType === 'GREAT_POOR' || godType === 'SMALL_POOR') auraColor = 0x2d3436; // 幽黑 (穷神)
     else if (godType === 'BAD') auraColor = 0xd63031; // 警红 (衰神)
     else if (godType === 'EARTH') auraColor = 0x00b894; // 碧绿 (土地公)
 

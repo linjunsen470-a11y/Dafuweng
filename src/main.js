@@ -15,6 +15,7 @@ import { StockUI } from './ui/StockUI.js';
 import { ShopUI } from './ui/ShopUI.js';
 import { DialogUI } from './ui/DialogUI.js';
 import { AssetUI } from './ui/AssetUI.js';
+import { MinimapUI } from './ui/MinimapUI.js';
 
 class GameController {
   constructor() {
@@ -28,17 +29,54 @@ class GameController {
     this.dice3D = new Dice3D(this.scene3D);
 
     this.uiRenderer = new UIRenderer(this.gameState);
-    this.stockUI = new StockUI(this.gameState, this.audioManager, () => this.uiRenderer.renderHUD());
-    this.shopUI = new ShopUI(this.gameState, this.audioManager, (cardId, idx) => this.handleCardUsage(cardId, idx), () => this.uiRenderer.renderHUD());
+    this.stockUI = new StockUI(this.gameState, this.audioManager, () => this.uiRenderer.renderHUD(), this.gameEngine);
+    this.shopUI = new ShopUI(this.gameState, this.audioManager, (cardId, idx) => this.handleCardUsage(cardId, idx), () => this.uiRenderer.renderHUD(), this.gameEngine);
     this.dialogUI = new DialogUI(this.audioManager);
     this.assetUI = new AssetUI(this.gameState);
+    this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
+    this.syncedAssetRevision = -1;
+    this.actionSpeed = 1;
+    this.gameEngine.subscribe(event => this.applyDomainEvent(event));
 
     this.renderSetupScreen();
     this.bindHUDButtons();
     this.bindKeyboardAndCanvasClick();
+  }
+
+  applyDomainEvent(event) {
+    if (event.type === 'OBSTACLE_CHANGED') {
+      this.boardBuilder.setObstacleMesh(event.tileId, event.active);
+    } else if (event.type === 'OBSTACLE_CONSUMED') {
+      this.boardBuilder.setObstacleMesh(event.tileId, false);
+    } else if (event.type === 'MINE_PLACED') {
+      this.boardBuilder.setMineMesh(event.tileId, true);
+    } else if (event.type === 'MINE_EXPLODED') {
+      this.boardBuilder.setMineMesh(event.tileId, false);
+    } else if (event.type === 'PROPERTY_CHANGED' || (event.type === 'ASSET_LIQUIDATED' && event.tileId !== undefined)) {
+      const property = this.gameState.propertyManager.getProperty(event.tileId);
+      const owner = property?.owner === null ? null : this.gameState.players[property?.owner];
+      this.boardBuilder.updateBuildingMesh(event.tileId, property?.level || 0, owner?.colorHex);
+    } else if (event.type === 'STATUS_CHANGED') {
+      this.pawnManager.updateGodAura(event.playerId, event.status);
+    } else if (event.type === 'BOARD_GOD_COLLECTED') {
+      this.pawnManager.updateGodAura(event.playerId, event.godType);
+      this.pawnManager.syncBoardGods(this.gameState.boardGods);
+    } else if (event.type === 'PLAYER_BANKRUPT') {
+      this.pawnManager.setBankrupt(event.playerId);
+    }
+  }
+
+  syncBoardAssets(force = false) {
+    if (!force && this.syncedAssetRevision === this.gameState.assetRevision) return;
+    this.gameState.propertyManager.properties.forEach((property, tileId) => {
+      const owner = property.owner === null ? null : this.gameState.players[property.owner];
+      this.boardBuilder.updateBuildingMesh(tileId, property.level, owner?.colorHex);
+      this.boardBuilder.setObstacleMesh(tileId, property.hasObstacle);
+    });
+    this.syncedAssetRevision = this.gameState.assetRevision;
   }
 
   renderSetupScreen() {
@@ -146,11 +184,16 @@ class GameController {
 
     const mode = document.getElementById('game-mode').value;
     this.gameState.setupGame(playerConfigs, this.selectedInitialCash, {
-      maxRounds: mode === 'QUICK' ? 24 : 40,
-      mapId: document.getElementById('map-select').value
+      maxRounds: mode === 'QUICK' ? 24 : mode === 'HEAT' ? 30 : 40,
+      mapId: document.getElementById('map-select').value,
+      mode,
+      teams: mode === 'TEAM',
+      initialDeposit: Number(document.getElementById('initial-deposit').value || 0)
     });
     this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
+    this.minimapUI.setMap(this.gameState.mapDefinition);
     this.pawnManager.createPlayerPawns(playerConfigs);
+    this.pawnManager.syncBoardGods(this.gameState.boardGods);
     this.uiRenderer.renderHUD();
 
     this.checkAITurn();
@@ -170,6 +213,47 @@ class GameController {
     document.getElementById('btn-reset-view').onclick = () => {
       this.scene3D.resetCamera();
     };
+    document.getElementById('btn-map-overview').onclick = () => this.scene3D.showOverview();
+    document.getElementById('btn-rotate-left').onclick = () => this.scene3D.rotateView(-1);
+    document.getElementById('btn-rotate-right').onclick = () => this.scene3D.rotateView(1);
+    document.getElementById('btn-follow-view').onclick = () => {
+      const current = this.gameState.getCurrentPlayer();
+      const position = current && this.boardBuilder.tilePositions[current.currentTile];
+      if (position) this.scene3D.focusOnPosition(position);
+    };
+    document.getElementById('btn-toggle-minimap').onclick = () => this.minimapUI.toggle();
+
+    document.getElementById('btn-weather').onclick = () => {
+      const weather = this.scene3D.cycleWeather();
+      const labels = {
+        CLEAR: ['☀️', '晴朗'],
+        RAIN: ['🌧️', '细雨'],
+        SNOW: ['❄️', '飘雪'],
+        STORM: ['⛈️', '雷暴']
+      };
+      const [icon, label] = labels[weather];
+      const button = document.getElementById('btn-weather');
+      button.textContent = icon;
+      button.title = `切换天气：${label}`;
+      this.gameState.addLog(`${icon} 天气切换为${label}。`, 'accent');
+      this.uiRenderer.renderHUD();
+    };
+
+    document.getElementById('btn-time-of-day').onclick = () => {
+      const timeOfDay = this.scene3D.cycleTimeOfDay();
+      const labels = {
+        DAY: ['🌤️', '白天'],
+        SUNSET: ['🌇', '黄昏'],
+        NIGHT: ['🌙', '夜晚']
+      };
+      const [icon, label] = labels[timeOfDay];
+      const button = document.getElementById('btn-time-of-day');
+      button.textContent = icon;
+      button.title = `切换时间：${label}`;
+      this.boardBuilder.setNightMode(timeOfDay === 'NIGHT');
+      this.gameState.addLog(`${icon} 场景时间切换为${label}。`, 'accent');
+      this.uiRenderer.renderHUD();
+    };
 
     document.getElementById('btn-save-game').onclick = () => {
       if (this.gameState.phase !== GamePhase.PRE_ROLL_ACTION || this.isProcessingAction) {
@@ -177,14 +261,11 @@ class GameController {
         this.uiRenderer.renderHUD();
         return;
       }
-      const name = window.prompt('请输入存档名称', '我的富翁对局');
-      if (name === null) return;
-      const result = this.gameEngine.saveManual(name || '我的富翁对局');
-      this.gameState.addLog(result.success ? '💾 手动存档成功。' : `⚠️ ${result.msg}`, result.success ? 'success' : 'danger');
-      this.uiRenderer.renderHUD();
+      this.showPauseMenu();
     };
 
     document.getElementById('btn-assets').onclick = () => this.assetUI.show();
+    document.getElementById('btn-pause-game').onclick = () => this.showPauseMenu();
 
     document.getElementById('btn-stock-market').onclick = () => {
       if (!this.canOpenPlayerAction()) return;
@@ -205,6 +286,66 @@ class GameController {
       this.gameState.logHistory = [];
       this.uiRenderer.renderHUD();
     };
+    document.getElementById('btn-resume-game').onclick = () => this.hidePauseMenu();
+    document.querySelectorAll('.speed-btn').forEach(button => {
+      button.onclick = () => {
+        this.actionSpeed = Number(button.dataset.speed);
+        this.dice3D.speed = this.actionSpeed;
+        document.querySelectorAll('.speed-btn').forEach(item => item.classList.toggle('active', item === button));
+      };
+    });
+    document.getElementById('btn-return-menu').onclick = () => this.returnToMenu();
+  }
+
+  showPauseMenu() {
+    if (this.isProcessingAction || this.gameState.phase === GamePhase.GAME_OVER) return;
+    const paused = this.gameEngine.execute({ type: 'PAUSE_GAME', playerId: this.gameState.currentPlayerIndex });
+    if (!paused.success) return;
+    document.getElementById('modal-pause').classList.remove('hidden');
+    this.renderSaveSlots();
+  }
+
+  hidePauseMenu() {
+    this.gameEngine.execute({ type: 'RESUME_GAME', playerId: this.gameState.currentPlayerIndex });
+    document.getElementById('modal-pause').classList.add('hidden');
+    this.uiRenderer.renderHUD();
+  }
+
+  renderSaveSlots() {
+    const container = document.getElementById('save-slot-list');
+    container.innerHTML = '';
+    this.gameEngine.saves.listSlots().forEach(slot => {
+      const row = document.createElement('div');
+      row.className = 'save-slot-row';
+      const label = slot.occupied
+        ? `${slot.snapshot.saveName || `存档 ${slot.slotId}`} · 第 ${slot.snapshot.round} 轮`
+        : `空存档槽 ${slot.slotId}`;
+      row.innerHTML = `<span>${label}</span>
+        <button class="btn-primary btn-sm slot-save">保存</button>
+        <button class="btn-secondary btn-sm slot-load" ${slot.occupied ? '' : 'disabled'}>读取</button>
+        <button class="btn-danger btn-sm slot-delete" ${slot.occupied ? '' : 'disabled'}>删除</button>`;
+      row.querySelector('.slot-save').onclick = () => {
+        const snapshot = this.gameState.createSnapshot();
+        if (snapshot.phase === 'PAUSED') {
+          snapshot.phase = snapshot.phaseBeforePause || 'PRE_ROLL_ACTION';
+          snapshot.phaseBeforePause = null;
+        }
+        this.gameEngine.saves.saveSlot(slot.slotId, snapshot, `手动存档 ${slot.slotId}`);
+        this.renderSaveSlots();
+      };
+      row.querySelector('.slot-load').onclick = () => {
+        const loaded = this.gameEngine.saves.loadSlot(slot.slotId);
+        if (loaded.success) {
+          document.getElementById('modal-pause').classList.add('hidden');
+          this.restoreGame(loaded.snapshot);
+        }
+      };
+      row.querySelector('.slot-delete').onclick = () => {
+        this.gameEngine.saves.deleteSlot(slot.slotId);
+        this.renderSaveSlots();
+      };
+      container.appendChild(row);
+    });
   }
 
   canOpenPlayerAction() {
@@ -216,9 +357,33 @@ class GameController {
       && !player.isBankrupt;
   }
 
+  returnToMenu() {
+    document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
+    this.gameState.propertyManager.properties.forEach((property, tileId) => {
+      this.boardBuilder.updateBuildingMesh(tileId, 0, null);
+      this.boardBuilder.setObstacleMesh(tileId, false);
+    });
+    this.pawnManager.clearPawns();
+    this.gameState.players = [];
+    this.gameState.pendingMove = null;
+    this.gameState.pendingDebt = null;
+    this.gameState.winner = null;
+    this.gameState.winReason = null;
+    this.gameState.phase = GamePhase.SETUP;
+    this.isProcessingAction = false;
+    const setup = document.getElementById('setup-screen');
+    setup.style.display = '';
+    setup.classList.remove('hidden');
+    setup.classList.add('active');
+    setup.setAttribute('aria-hidden', 'false');
+    document.getElementById('hud-layer').classList.add('hidden');
+    this.renderSetupScreen();
+  }
+
   restoreGame(snapshot) {
     this.gameEngine.restore(snapshot);
     this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
+    this.minimapUI.setMap(this.gameState.mapDefinition);
     const setupScreen = document.getElementById('setup-screen');
     setupScreen.classList.remove('active');
     setupScreen.classList.add('hidden');
@@ -232,13 +397,7 @@ class GameController {
     }));
     this.pawnManager.createPlayerPawns(configs);
     this.pawnManager.syncFromGameState(this.gameState);
-    this.gameState.propertyManager.properties.forEach((prop, tileIndex) => {
-      if (prop.owner !== null) {
-        const owner = this.gameState.players[prop.owner];
-        this.boardBuilder.updateBuildingMesh(tileIndex, prop.level, owner?.colorHex);
-      }
-      if (prop.hasObstacle) this.boardBuilder.setObstacleMesh(tileIndex, true);
-    });
+    this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
     this.checkAITurn();
   }
@@ -288,12 +447,12 @@ class GameController {
     if (this.gameState.phase === GamePhase.GAME_OVER) return;
 
     const curPlayer = this.gameState.getCurrentPlayer();
-    if (curPlayer && curPlayer.isAI && !curPlayer.isBankrupt) {
+    if (curPlayer && (curPlayer.isAI || curPlayer.isSleepwalkingThisTurn) && !curPlayer.isBankrupt) {
       this.isProcessingAction = true;
       this.uiRenderer.renderHUD();
       setTimeout(() => {
         this.runAITurn(curPlayer);
-      }, 800);
+      }, Math.round(800 / this.actionSpeed));
     } else {
       this.isProcessingAction = false;
       this.uiRenderer.renderHUD();
@@ -303,37 +462,43 @@ class GameController {
   async runAITurn(aiPlayer) {
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
 
-    const cardDecision = AIPlayer.decideCardUsage(aiPlayer, this.gameState);
-    if (cardDecision && cardDecision.cardId === 'REMOTE_DICE' && cardDecision.diceVal
-      && this.gameEngine.getCardAction(aiPlayer, cardDecision.cardId).enabled) {
-      this.gameState.addLog(`🤖 ${aiPlayer.name} 使用【遥控骰子】，指定行走 ${cardDecision.diceVal} 步！`, 'accent');
-      const idx = aiPlayer.cards.indexOf('REMOTE_DICE');
-      if (idx !== -1) aiPlayer.cards.splice(idx, 1);
-      await this.doMovePlayer(cardDecision.diceVal);
+    if (aiPlayer.isSleepwalkingThisTurn) {
+      await this.doRollDice();
       return;
     }
-    if (cardDecision?.cardId === 'FORTUNE_GOD'
-      && this.gameEngine.getCardAction(aiPlayer, cardDecision.cardId).enabled) {
-      await this.handleCardUsage(cardDecision.cardId, aiPlayer.cards.indexOf(cardDecision.cardId));
+
+    const purchaseDecision = AIPlayer.decideCardPurchase(aiPlayer, this.gameEngine);
+    if (purchaseDecision) {
+      this.gameEngine.execute({
+        type: 'BUY_CARD',
+        playerId: aiPlayer.id,
+        payload: { cardId: purchaseDecision.cardId }
+      });
     }
 
-    if (aiPlayer.aiDifficulty === 'HARD') {
-      const tacticalCard = ['CASH_TAX', 'TURTLE', 'TURN_AROUND', 'BEAR_CARD']
-        .find(cardId => aiPlayer.cards.includes(cardId) && this.gameEngine.getCardAction(aiPlayer, cardId).enabled);
-      if (tacticalCard) {
-        const legalAction = this.gameEngine.getCardAction(aiPlayer, tacticalCard);
-        const target = legalAction.targets[0]?.id;
-        await this.handleCardUsage(tacticalCard, aiPlayer.cards.indexOf(tacticalCard), target);
-      }
+    const cardDecision = AIPlayer.decideCardUsage(aiPlayer, this.gameState, this.gameEngine);
+    if (cardDecision && cardDecision.cardId === 'REMOTE_DICE' && cardDecision.diceVal
+      && this.gameEngine.getCardAction(aiPlayer, cardDecision.cardId).enabled) {
+      const result = this.gameEngine.execute({
+        type: 'USE_CARD',
+        playerId: aiPlayer.id,
+        payload: { cardId: cardDecision.cardId, value: cardDecision.diceVal }
+      });
+      if (result.success) await this.doRollDice(result.followUp.steps);
+      return;
+    }
+    if (cardDecision) {
+      await this.handleCardUsage(cardDecision.cardId, aiPlayer.cards.indexOf(cardDecision.cardId), cardDecision.targetId ?? null);
+      if (cardDecision.cardId === 'TELEPORT') return;
     }
 
     const stockDecision = AIPlayer.decideStockAction(aiPlayer, this.gameState.stockMarket);
     if (stockDecision) {
-      if (stockDecision.action === 'BUY') {
-        this.gameState.stockMarket.buyStock(aiPlayer, stockDecision.stockId, stockDecision.shares);
-      } else if (stockDecision.action === 'SELL') {
-        this.gameState.stockMarket.sellStock(aiPlayer, stockDecision.stockId, stockDecision.shares);
-      }
+      this.gameEngine.execute({
+        type: `${stockDecision.action}_STOCK`,
+        playerId: aiPlayer.id,
+        payload: { stockId: stockDecision.stockId, shares: stockDecision.shares }
+      });
     }
 
     await this.doRollDice();
@@ -342,85 +507,77 @@ class GameController {
   async doRollDice(specifiedDiceVal = null) {
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
     this.isProcessingAction = true;
-    this.gameState.phase = GamePhase.ROLLING;
-    this.uiRenderer.renderHUD();
-
-    this.audioManager.playDiceRoll();
-
     const curPlayer = this.gameState.getCurrentPlayer();
     let diceVal = specifiedDiceVal;
+    let dice = specifiedDiceVal ? [specifiedDiceVal] : null;
+    if (specifiedDiceVal && curPlayer.godType === 'BAD') {
+      diceVal = Math.max(1, Math.ceil(diceVal / 2));
+      dice = [diceVal];
+    }
 
     if (!diceVal) {
-      if (curPlayer.moveLimitThisTurn === 1) {
-        diceVal = 1; // 乌龟状态强行只能走 1 步
-      } else {
-        diceVal = this.gameState.rng.int(1, 6);
-        if (curPlayer.vehicle === 'CAR') {
-          // 汽车可掷 2~3 颗骰子累加步数
-          const bonusRoll = this.gameState.rng.int(2, 13);
-          diceVal += bonusRoll;
-        }
+      const roll = this.gameEngine.execute({ type: 'ROLL_DICE', playerId: curPlayer.id });
+      if (!roll.success) {
+        this.isProcessingAction = false;
+        return;
       }
+      diceVal = roll.steps;
+      dice = roll.dice;
     }
-    if (curPlayer.godType === 'BAD') diceVal = Math.max(1, Math.ceil(diceVal / 2));
+    this.uiRenderer.renderHUD();
+    this.audioManager.playDiceRoll();
 
     const pawnPos = this.boardBuilder.tilePositions[curPlayer.currentTile];
     this.scene3D.focusOnPosition(pawnPos);
 
-    await this.dice3D.roll(Math.min(diceVal, 6), pawnPos.clone().add(new THREE.Vector3(0, 4, 0)));
+    await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
 
-    this.gameState.addLog(`🎲 ${curPlayer.name} 掷出了 ${diceVal} 点！`, 'gold');
+    const diceDetail = dice.length > 1 ? `（${dice.join(' + ')}）` : '';
+    this.gameState.addLog(`🎲 ${curPlayer.name} 掷出了 ${diceVal} 点${diceDetail}！`, 'gold');
 
     await this.doMovePlayer(diceVal);
   }
 
   async doMovePlayer(steps) {
-    this.gameState.phase = GamePhase.MOVING;
     const curPlayer = this.gameState.getCurrentPlayer();
-    const direction = curPlayer.direction || 1;
-
-    await this.pawnManager.movePawnAlongPath(curPlayer.id, steps, direction, this.gameState, (currentTileIdx) => {
-      if (currentTileIdx === 0) {
-        curPlayer.cash += 2000;
-        this.audioManager.playCoinSound();
-        this.gameState.addLog(`🚩 ${curPlayer.name} 经过起点，领取补贴奖金 $2,000！`, 'gold');
-      }
-
-      // 疾风忍术：内置 30% 概率无视路障。
-      const prop = this.gameState.propertyManager.getProperty(currentTileIdx);
-      if (prop && prop.hasObstacle) {
-        if (curPlayer.skillName === '疾风忍术' && this.gameState.rng.next() < 0.3) {
-          this.gameState.addLog(`🥷 ${curPlayer.name} 触发【疾风忍术】，施展轻功跳过了路障！`, 'accent');
-        } else {
-          prop.hasObstacle = false;
-          this.boardBuilder.setObstacleMesh(currentTileIdx, false);
-          this.gameState.addLog(`🚧 ${curPlayer.name} 被路障拦截，被迫在【${this.gameState.getTile(currentTileIdx).name}】停下！`, 'danger');
-          return true;
-        }
-      }
-
-      // 土地公附体状态：所经之处直接免费强占地皮！
-      if (curPlayer.godType === 'EARTH' && this.gameState.getTile(currentTileIdx).type === TileType.PROPERTY) {
-        if (prop.owner !== curPlayer.id) {
-          prop.owner = curPlayer.id;
-          if (prop.level === 0) prop.level = 1;
-          this.boardBuilder.updateBuildingMesh(currentTileIdx, prop.level, curPlayer.colorHex);
-          this.gameState.addLog(`⛰️ ${curPlayer.name} 地契精灵生效，直接占领了【${this.gameState.getTile(currentTileIdx).name}】！`, 'gold');
-        }
-      }
-
-      return false;
-    }, this.gameState.mapRuntime, async (options) => {
-      if (curPlayer.isAI) return AIPlayer.chooseRoute(curPlayer, options, this.gameState);
-      const choice = await this.dialogUI.chooseTarget({
-        title: '前方出现岔路，请选择路线',
-        options: options.map(tileId => {
-          const tile = this.gameState.getTile(tileId);
-          return { id: tileId, label: tile.name, description: tile.desc || '继续前进' };
-        })
-      });
-      return choice === null ? options[0] : Number(choice);
+    const started = this.gameEngine.execute({
+      type: 'BEGIN_MOVE',
+      playerId: curPlayer.id,
+      payload: { steps, source: 'DICE' }
     });
+    if (!started.success) return;
+
+    while (this.gameState.pendingMove) {
+      let result = this.gameEngine.execute({ type: 'ADVANCE_MOVE', playerId: curPlayer.id });
+      if (result.type === 'ROUTE_CHOICE_REQUIRED') {
+        this.boardBuilder.setRouteChoices(result.options);
+        this.minimapUI.setRouteChoices(result.options);
+        const selected = curPlayer.isSleepwalkingThisTurn
+          ? this.gameState.rng.pick(result.options)
+          : curPlayer.isAI
+            ? AIPlayer.chooseRoute(curPlayer, result.options, this.gameState)
+          : await this.dialogUI.chooseTarget({
+              title: '前方出现岔路，请选择路线',
+              options: result.options.map(tileId => ({
+                id: tileId,
+                label: this.gameState.getTile(tileId).name,
+                description: this.gameState.getTile(tileId).desc || '继续前进'
+              }))
+            });
+        result = this.gameEngine.execute({
+          type: 'ADVANCE_MOVE',
+          playerId: curPlayer.id,
+          payload: { nextTileId: selected ?? result.options[0] }
+        });
+        this.boardBuilder.setRouteChoices();
+        this.minimapUI.setRouteChoices();
+      }
+      if (!result.success) break;
+      await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, Math.round(220 / (this.actionSpeed || 1)));
+      const stepPosition = this.boardBuilder.tilePositions[result.tileId];
+      if (stepPosition) this.scene3D.focusOnPosition(stepPosition);
+      if (result.events.some(event => event.type === 'START_BONUS_GRANTED')) this.audioManager.playCoinSound();
+    }
 
     this.uiRenderer.renderHUD();
 
@@ -429,11 +586,10 @@ class GameController {
 
   async handleTileArrival(tileIndex) {
     const curPlayer = this.gameState.getCurrentPlayer();
-    this.gameState.phase = GamePhase.ACTION_MODAL;
     const landing = this.gameEngine.inspectLanding(curPlayer, tileIndex);
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
-        if (AIPlayer.evaluateLandPurchase(curPlayer, landing.tile)) this.buyLand(tileIndex, curPlayer);
+        if (AIPlayer.evaluateLandPurchase(curPlayer, landing.tile, this.gameState)) this.buyLand(tileIndex, curPlayer);
         else this.gameState.addLog(`🤖 ${curPlayer.name} 放弃购买【${landing.tile.name}】。`);
         return this.finishTurn();
       }
@@ -447,7 +603,7 @@ class GameController {
     }
     if (landing.kind === 'UPGRADE') {
       if (curPlayer.isAI) {
-        if (AIPlayer.evaluateLandUpgrade(curPlayer, landing.tile, landing.property.level)) this.upgradeLand(tileIndex, curPlayer);
+        if (AIPlayer.evaluateLandUpgrade(curPlayer, landing.tile, landing.property.level, this.gameState)) this.upgradeLand(tileIndex, curPlayer);
         return this.finishTurn();
       }
       return this.dialogUI.showLandPurchase({
@@ -462,24 +618,124 @@ class GameController {
       this.gameState.addLog(`🏢 ${curPlayer.name} 视察顶级地产【${landing.tile.name}】。`);
       return this.finishTurn();
     }
+    if (landing.kind === 'MORTGAGED') {
+      this.gameState.addLog(`🏦 【${landing.tile.name}】处于抵押状态，本次不收取租金。`, 'accent');
+      return this.finishTurn();
+    }
     if (landing.kind === 'RENT') {
-      const result = this.gameEngine.settleRent(curPlayer, tileIndex);
+      const result = this.gameEngine.execute({ type: 'SETTLE_RENT', playerId: curPlayer.id, payload: { tileId: tileIndex } });
       if (result.amount > 0) this.audioManager.playCoinSound();
+      if (result.type === 'DEBT_REQUIRED') await this.resolvePendingDebt(curPlayer);
       return this.finishTurn();
     }
 
-    const result = this.gameEngine.resolveSpecialLanding(curPlayer, tileIndex);
-    if (result.type === 'CARD_POINTS') this.audioManager.playCardSpell();
+    const result = this.gameEngine.execute({ type: 'RESOLVE_LANDING', playerId: curPlayer.id, payload: { tileId: tileIndex } });
+    if (['CARD_POINTS', 'COUPON_COLLECTED', 'CARD_GAINED'].includes(result.type)) this.audioManager.playCardSpell();
     if (result.type === 'CASH_GAINED' || result.type === 'CASH_LOST') this.audioManager.playCoinSound();
+    if (result.type === 'MONSTER_ATTACK') this.triggerExplosionVFX();
     if (result.type === 'STATUS_APPLIED') this.pawnManager.updateGodAura(curPlayer.id, result.status);
     if (result.type === 'OPEN_STOCK' && !curPlayer.isAI) {
       await new Promise(resolve => this.stockUI.show(resolve));
     }
+    if (result.type === 'OPEN_BANK') {
+      await this.handleBankVisit(curPlayer, tileIndex);
+    }
+    if (result.type === 'LOTTERY_OFFER') {
+      await this.handleLotteryVisit(curPlayer, tileIndex, result);
+    }
+    if (result.type === 'MAGIC_OFFER') {
+      await this.handleMagicVisit(curPlayer, tileIndex, result);
+    }
     this.finishTurn();
   }
 
+  async handleBankVisit(player, tileId) {
+    if (player.isAI) {
+      const amount = Math.max(0, player.cash - 8000);
+      if (amount) this.gameEngine.execute({
+        type: 'BANK_TRANSFER', playerId: player.id,
+        payload: { tileId, direction: 'DEPOSIT', amount }
+      });
+      return;
+    }
+    const cash = player.cash;
+    const deposit = player.deposit || 0;
+    const options = [
+      { id: 'DEPOSIT:0.25', label: '存入 25% 现金', description: `$${Math.floor(cash * 0.25).toLocaleString()}` },
+      { id: 'DEPOSIT:0.5', label: '存入 50% 现金', description: `$${Math.floor(cash * 0.5).toLocaleString()}` },
+      { id: 'DEPOSIT:1', label: '存入全部现金', description: `$${cash.toLocaleString()}` },
+      { id: 'WITHDRAW:0.25', label: '取出 25% 存款', description: `$${Math.floor(deposit * 0.25).toLocaleString()}` },
+      { id: 'WITHDRAW:0.5', label: '取出 50% 存款', description: `$${Math.floor(deposit * 0.5).toLocaleString()}` },
+      { id: 'WITHDRAW:1', label: '取出全部存款', description: `$${deposit.toLocaleString()}` }
+    ];
+    const choice = await this.dialogUI.chooseTarget({ title: '银行：调整现金与存款', options });
+    if (choice === null) return;
+    const [direction, ratioText] = String(choice).split(':');
+    const ratio = Number(ratioText);
+    const amount = Math.floor((direction === 'DEPOSIT' ? cash : deposit) * ratio);
+    if (amount > 0) this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, direction, amount } });
+    this.uiRenderer.renderHUD();
+  }
+
+  async handleLotteryVisit(player, tileId, offer) {
+    if (player.cash < offer.ticketPrice) return;
+    const number = player.isAI
+      ? this.gameState.rng.int(1, 10)
+      : await this.dialogUI.chooseTarget({
+          title: `乐透奖池 $${offer.pot.toLocaleString()}：选择号码`,
+          options: Array.from({ length: 10 }, (_, index) => ({ id: index + 1, label: `${index + 1} 号`, description: `票价 $${offer.ticketPrice}` }))
+        });
+    if (number === null) return;
+    this.gameEngine.execute({ type: 'BUY_LOTTERY', playerId: player.id, payload: { tileId, number } });
+    this.uiRenderer.renderHUD();
+  }
+
+  async handleMagicVisit(player, tileId, offer) {
+    const magicId = player.isAI
+      ? (player.cash < 5000 ? 'CASH_RAIN' : 'PROPERTY_BOOM')
+      : await this.dialogUI.chooseTarget({ title: '魔法屋：选择全局魔法', options: offer.options });
+    if (magicId === null) return;
+    this.gameEngine.execute({ type: 'CAST_MAGIC', playerId: player.id, payload: { tileId, magicId } });
+    this.syncBoardAssets(true);
+    this.uiRenderer.renderHUD();
+  }
+
+  async resolvePendingDebt(player) {
+    if (!this.gameState.pendingDebt) return;
+    if (player.isAI) {
+      this.gameEngine.execute({ type: 'AUTO_SETTLE_DEBT', playerId: player.id });
+      return;
+    }
+    while (this.gameState.pendingDebt && !player.isBankrupt) {
+      const legal = this.gameEngine.getLegalActions(player.id).filter(action => action.enabled);
+      if (player.cash >= this.gameState.pendingDebt.amountDue) {
+        this.gameEngine.execute({ type: 'PAY_DEBT', playerId: player.id });
+        break;
+      }
+      const options = legal.map((action, index) => ({
+        id: index,
+        label: action.type === 'AUTO_SETTLE_DEBT' ? '自动处置资产'
+          : action.type === 'DECLARE_BANKRUPTCY' ? '宣布破产'
+          : action.type === 'SELL_BUILDING' ? `出售建筑：${this.gameState.getTile(action.tileId).name}`
+          : action.type === 'MORTGAGE_PROPERTY' ? `抵押地产：${this.gameState.getTile(action.tileId).name}`
+          : action.type === 'SELL_STOCK' ? `卖出全部股票：${action.stockId}`
+          : action.type,
+        description: `当前现金 $${player.cash.toLocaleString()} / 欠款 $${this.gameState.pendingDebt.amountDue.toLocaleString()}`
+      }));
+      const choice = await this.dialogUI.chooseTarget({ title: '现金不足，请处置资产', options });
+      const action = legal[choice === null ? legal.findIndex(item => item.type === 'AUTO_SETTLE_DEBT') : Number(choice)];
+      if (!action) continue;
+      const payload = action.type === 'SELL_STOCK'
+        ? { stockId: action.stockId, shares: action.shares }
+        : { tileId: action.tileId };
+      this.gameEngine.execute({ type: action.type, playerId: player.id, payload });
+    }
+    this.syncBoardAssets();
+    this.uiRenderer.renderHUD();
+  }
+
   buyLand(tileIndex, player) {
-    const result = this.gameEngine.purchaseProperty(player, tileIndex);
+    const result = this.gameEngine.execute({ type: 'PURCHASE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex } });
     if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex);
       this.audioManager.playBuildSound();
@@ -488,12 +744,34 @@ class GameController {
   }
 
   upgradeLand(tileIndex, player) {
-    const result = this.gameEngine.upgradeProperty(player, tileIndex);
+    const result = this.gameEngine.execute({ type: 'UPGRADE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex } });
     if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, result.level, player.colorHex);
       this.audioManager.playBuildSound();
     }
     return result;
+  }
+
+  triggerCardVFX(cardId) {
+    const card = this.gameState.getCardById ? this.gameState.getCardById(cardId) : null;
+    const cardImg = card?.cardImg || `/assets/card_${cardId.toLowerCase()}.svg`;
+    const cardName = card?.name || cardId;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'vfx-card-overlay';
+    overlay.innerHTML = `
+      <img src="${cardImg}" class="vfx-card-img" alt="${cardName}">
+      <div class="vfx-spell-title">✨ 【${cardName}】 发动！</div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.remove(), 1300);
+  }
+
+  triggerExplosionVFX() {
+    const flash = document.createElement('div');
+    flash.className = 'vfx-explosion-flash';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 800);
   }
 
   async handleCardUsage(cardId, cardIndex, targetOverride = null) {
@@ -514,155 +792,44 @@ class GameController {
       if (targetId === null) return;
     }
 
-    const consume = () => {
-      const liveIndex = curPlayer.cards.indexOf(cardId);
-      if (liveIndex !== -1) curPlayer.cards.splice(liveIndex, 1);
+    const activate = async (value = null) => {
+      this.triggerCardVFX(cardId);
+      if (['MISSILE', 'NUKES', 'MINE', 'DEMOLISH'].includes(cardId)) {
+        this.triggerExplosionVFX();
+      }
+
+      const result = this.gameEngine.execute({
+        type: 'USE_CARD',
+        playerId: curPlayer.id,
+        payload: { cardId, targetId, value }
+      });
+      if (!result.success) {
+        this.gameState.addLog(`⚠️ 卡片未发动：${result.reason}`, 'danger');
+        this.uiRenderer.renderHUD();
+        return;
+      }
+      this.audioManager.playCardSpell();
+      this.uiRenderer.renderHUD();
+      if (result.followUp?.mode === 'ROLL') {
+        await this.doRollDice(result.followUp.steps);
+      } else if (result.followUp?.mode === 'TELEPORT') {
+        const moved = this.gameEngine.execute({
+          type: 'TELEPORT_PLAYER',
+          playerId: curPlayer.id,
+          payload: { tileId: result.followUp.tileId }
+        });
+        if (moved.success) {
+          await this.pawnManager.animatePlayerStep(curPlayer.id, moved.tileId, Math.round(220 / (this.actionSpeed || 1)));
+          await this.handleTileArrival(moved.tileId);
+        }
+      }
     };
 
-    if (cardId === 'REMOTE_DICE') {
-      this.dialogUI.showRemoteDice((val) => {
-        consume();
-        this.gameState.addLog(`🎯 ${curPlayer.name} 发动【遥控骰子】，指定前进行走 ${val} 步！`, 'accent');
-        this.doRollDice(val);
-      });
-    } else if (cardId === 'OBSTACLE') {
-      const targetTile = Number(targetId);
-      this.gameState.propertyManager.getProperty(targetTile).hasObstacle = true;
-      this.boardBuilder.setObstacleMesh(targetTile, true);
-      consume();
-      this.gameState.addLog(`🚧 ${curPlayer.name} 在【${this.gameState.getTile(targetTile).name}】放置了路障！`, 'danger');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'TURN_AROUND') {
-      const target = this.gameState.players[Number(targetId)];
-      target.direction = (target.direction || 1) * -1;
-      consume();
-      this.gameState.addLog(`🔄 ${curPlayer.name} 令 ${target.name} 掉转了行走方向！`, 'accent');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'RED_BULL') {
-      this.gameState.stockMarket.forceStockSurge(String(targetId), true);
-      consume();
-      this.gameState.addLog(`📈 ${curPlayer.name} 使用【红霸卡】，指定股票上涨 10%！`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'DEMOLISH') {
-      const targetTile = Number(targetId);
-      const prop = this.gameState.propertyManager.getProperty(targetTile);
-      if (prop && prop.level > 0) {
-        prop.level--;
-        const owner = this.gameState.players[prop.owner];
-        this.boardBuilder.updateBuildingMesh(targetTile, prop.level, owner?.colorHex);
-        this.gameState.addLog(`💣 ${curPlayer.name} 使用【拆房卡】，成功拆除【${this.gameState.getTile(targetTile).name}】1层建筑！`, 'danger');
-      } else {
-        this.gameState.addLog(`💣 当前停留位置无可拆除房屋！`, 'accent');
-      }
-      consume();
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'EQUAL_WEALTH') {
-      const activePlayers = this.gameState.players.filter(p => !p.isBankrupt);
-      const totalCash = activePlayers.reduce((acc, p) => acc + p.cash, 0);
-      const avgCash = Math.round(totalCash / activePlayers.length);
-      activePlayers.forEach(p => p.cash = avgCash);
-      consume();
-      this.gameState.addLog(`⚖️ ${curPlayer.name} 使用【均富卡】，场上所有玩家现金重新平分为 $${avgCash.toLocaleString()}！`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'STEAL_LAND') {
-      const targetTile = Number(targetId);
-      const prop = this.gameState.propertyManager.getProperty(targetTile);
-      if (this.gameState.getTile(targetTile).type === TileType.PROPERTY) {
-        prop.owner = curPlayer.id;
-        if (prop.level === 0) prop.level = 1;
-        this.boardBuilder.updateBuildingMesh(targetTile, prop.level, curPlayer.colorHex);
-        this.gameState.addLog(`🚩 ${curPlayer.name} 使用【强占卡】，强行将【${this.gameState.getTile(targetTile).name}】夺为己有！`, 'gold');
-      }
-      consume();
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'FORTUNE_GOD') {
-      curPlayer.godType = 'LUCK';
-      curPlayer.godTurns = 3;
-      this.pawnManager.updateGodAura(curPlayer.id, 'LUCK');
-      consume();
-      this.gameState.addLog(`🌟 ${curPlayer.name} 召唤建造精灵，未来 3 回合免费建造！`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'TURTLE') {
-      const target = this.gameState.players[Number(targetId)];
-      target.turtleTurns = 3;
-      consume();
-      this.gameState.addLog(`🐢 ${curPlayer.name} 对 ${target.name} 发动迟缓卡，持续 3 回合！`, 'danger');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'CAR_CARD') {
-      curPlayer.vehicle = 'CAR';
-      consume();
-      this.gameState.addLog(`🏎️ ${curPlayer.name} 使用【汽车卡】，装备豪华赛车，投掷骰子步数翻倍！`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'CLEANSE') {
-      curPlayer.turtleTurns = 0;
-      if (curPlayer.godType === 'MISFORTUNE' || curPlayer.godType === 'BAD') {
-        curPlayer.godType = null;
-        curPlayer.godTurns = 0;
-        this.pawnManager.updateGodAura(curPlayer.id, null);
-      }
-      consume();
-      this.gameState.addLog(`✨ ${curPlayer.name} 清除了所有负面状态。`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'RENT_SHIELD') {
-      curPlayer.rentShieldTurns = 2;
-      consume();
-      this.gameState.addLog(`🛡️ ${curPlayer.name} 获得 2 回合免租护盾。`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'CASH_TAX') {
-      const target = this.gameState.players[Number(targetId)];
-      const amount = target.negativeImmuneActiveThisTurn
-        ? 0
-        : Math.min(2500, Math.max(0, Math.round(target.cash * 0.12)));
-      target.cash -= amount;
-      curPlayer.cash += amount;
-      consume();
-      this.gameState.checkBankrupt(target);
-      this.gameState.addLog(amount > 0
-        ? `🧾 ${curPlayer.name} 从 ${target.name} 收取 $${amount.toLocaleString()}。`
-        : `🍀 ${target.name} 的好运护符抵消了消费税。`, amount > 0 ? 'danger' : 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'TELEPORT') {
-      const targetTile = Number(targetId);
-      const projected = this.gameState.mapRuntime.projectPath(
-        curPlayer.currentTile,
-        10,
-        curPlayer.direction || 1
-      );
-      const steps = projected.indexOf(targetTile) + 1;
-      consume();
-      this.gameState.addLog(`🌀 ${curPlayer.name} 发动跃迁卡。`, 'accent');
-      if (steps > 0) await this.doMovePlayer(steps);
-    } else if (cardId === 'CLEAR_ROAD') {
-      const targetTile = Number(targetId);
-      this.gameState.propertyManager.getProperty(targetTile).hasObstacle = false;
-      this.boardBuilder.setObstacleMesh(targetTile, false);
-      consume();
-      this.gameState.addLog(`🚜 ${curPlayer.name} 清除了【${this.gameState.getTile(targetTile).name}】的路障。`, 'success');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'BEAR_CARD') {
-      this.gameState.stockMarket.forceStockSurge(String(targetId), false);
-      consume();
-      this.gameState.addLog(`📉 ${curPlayer.name} 令指定股票下跌 10%。`, 'danger');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'IMMUNITY') {
-      curPlayer.negativeImmuneTurns = 3;
-      consume();
-      this.gameState.addLog(`🍀 ${curPlayer.name} 获得 3 回合负面免疫。`, 'gold');
-      this.uiRenderer.renderHUD();
-    } else if (cardId === 'GIFT_CARD') {
-      const target = this.gameState.players[Number(targetId)];
-      if (target.cards.length && curPlayer.cards.length > 1) {
-        const own = curPlayer.cards.find(id => id !== cardId);
-        const other = this.gameState.rng.pick(target.cards);
-        curPlayer.cards[curPlayer.cards.indexOf(own)] = other;
-        target.cards[target.cards.indexOf(other)] = own;
-      }
-      consume();
-      this.gameState.addLog(`🎁 ${curPlayer.name} 与 ${target.name} 交换了礼券。`, 'accent');
-      this.uiRenderer.renderHUD();
-    } else {
-      this.gameState.addLog('⚠️ 该卡片效果尚未注册。', 'danger');
+    if (cardId === 'REMOTE_DICE' && targetOverride === null) {
+      this.dialogUI.showRemoteDice(value => activate(value));
+      return;
     }
+    await activate(cardId === 'REMOTE_DICE' ? targetOverride : null);
   }
 
   finishTurn() {
@@ -670,25 +837,30 @@ class GameController {
 
     if (this.gameState.checkWinCondition()) {
       this.dialogUI.showVictory(this.gameState.winner, () => {
-        window.location.reload();
+        this.returnToMenu();
       }, this.gameState);
       return;
     }
 
     setTimeout(() => {
-      const transition = this.gameState.nextTurn();
+      const transition = this.gameEngine.execute({
+        type: 'END_TURN',
+        playerId: this.gameState.currentPlayerIndex
+      }).transition;
+      this.syncBoardAssets();
       this.gameState.players.forEach(player => {
         this.pawnManager.updateGodAura(player.id, player.godType);
         if (player.isBankrupt) this.pawnManager.setBankrupt(player.id);
       });
+      this.pawnManager.syncBoardGods(this.gameState.boardGods);
       this.gameEngine.autoSave();
       this.uiRenderer.renderHUD();
       if (transition?.gameOver && this.gameState.winner) {
-        this.dialogUI.showVictory(this.gameState.winner, () => window.location.reload(), this.gameState);
+        this.dialogUI.showVictory(this.gameState.winner, () => this.returnToMenu(), this.gameState);
       } else {
         this.checkAITurn();
       }
-    }, 800);
+    }, Math.round(800 / this.actionSpeed));
   }
 }
 

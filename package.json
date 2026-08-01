@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "node test-monopoly.js"
+    "test:e2e": "node test-monopoly.js",
+    "verify": "npm run typecheck && npm test && npm run build",
+    "verify:full": "npm run verify && npm run test:e2e"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.2",

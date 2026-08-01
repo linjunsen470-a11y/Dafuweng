@@ -1,11 +1,12 @@
 import { cardManager } from '../game/CardManager.js';
 
 export class ShopUI {
-  constructor(gameState, audioManager, onUseCardCallback, onUpdateHUD) {
+  constructor(gameState, audioManager, onUseCardCallback, onUpdateHUD, gameEngine = null) {
     this.gameState = gameState;
     this.audioManager = audioManager;
     this.onUseCardCallback = onUseCardCallback;
     this.onUpdateHUD = onUpdateHUD;
+    this.gameEngine = gameEngine;
 
     this.shopModal = document.getElementById('modal-shop');
     this.shopGrid = document.getElementById('shop-card-grid');
@@ -46,10 +47,9 @@ export class ShopUI {
     this.shopGrid.innerHTML = '';
 
     cardManager.getAllCards().forEach(card => {
-      let finalCost = card.cost;
-      if (curPlayer.skillName === '商业奇才') {
-        finalCost = Math.round(card.cost * 0.85);
-      }
+      const finalCost = this.gameEngine
+        ? this.gameEngine.getCardCost(curPlayer, card)
+        : (curPlayer.skillName === '商业奇才' ? Math.round(card.cost * 0.85) : card.cost);
 
       const item = document.createElement('div');
       item.className = 'shop-card-item';
@@ -67,17 +67,22 @@ export class ShopUI {
       `;
 
       item.querySelector('.btn-buy-card').addEventListener('click', () => {
-        if (curPlayer.cardPoints >= finalCost) {
-          curPlayer.cardPoints -= finalCost;
-          curPlayer.cards.push(card.id);
+        const result = this.gameEngine
+          ? this.gameEngine.execute({ type: 'BUY_CARD', playerId: curPlayer.id, payload: { cardId: card.id } })
+          : { success: curPlayer.cardPoints >= finalCost };
+        if (result.success) {
+          if (!this.gameEngine) {
+            curPlayer.cardPoints -= finalCost;
+            curPlayer.cards.push(card.id);
+          }
           this.audioManager.playCardSpell();
-          this.gameState.addLog(`🛒 ${curPlayer.name} 消费 ${finalCost} 积分兑换了【${card.name}】！`, 'accent');
           this.renderShop();
           if (this.onUpdateHUD) {
             this.onUpdateHUD();
           }
         } else {
-          alert('卡片积分不足！踩中卡片屋可免费补充积分。');
+          this.gameState.addLog('⚠️ 卡片积分不足，踩中卡片屋可补充积分。', 'danger');
+          if (this.onUpdateHUD) this.onUpdateHUD();
         }
       });
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+    <defs>
+      <linearGradient id="bg_baroque" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#2ed573" />
+        <stop offset="100%" stop-color="#26de81" />
+      </linearGradient>
+      <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
+      </filter>
+    </defs>
+    <rect width="200" height="200" rx="40" fill="url(#bg_baroque)" />
+    <circle cx="100" cy="100" r="75" fill="#ffffff" opacity="0.2"/>
+    <circle cx="100" cy="90" r="55" fill="#ffffff" filter="url(#shadow)"/>
+    <text x="100" y="112" font-size="64" text-anchor="middle">👳‍♂️</text>
+    <rect x="20" y="152" width="160" height="32" rx="16" fill="rgba(0,0,0,0.4)"/>
+    <text x="100" y="174" font-size="16" font-weight="900" font-family="Noto Sans SC, sans-serif" fill="#ffffff" text-anchor="middle">巴洛克</text>
+  </svg>

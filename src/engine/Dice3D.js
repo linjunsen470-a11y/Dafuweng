@@ -108,14 +108,15 @@ export class Dice3D {
     });
   }
 
-  roll(targetValue, startPos = new THREE.Vector3(0, 8, 0)) {
+  roll(targetValue, startPos = new THREE.Vector3(0, 8, 0), diceValues = null) {
     return new Promise((resolve) => {
       this.mesh.position.copy(startPos);
       this.mesh.visible = true;
       this.mesh.scale.set(0.1, 0.1, 0.1);
 
       const startTime = performance.now();
-      const duration = 1000;
+      const speed = this.speed || 1;
+      const duration = 1000 / speed;
 
       const targetEuler = this.targetRotations[targetValue] || this.targetRotations[1];
       const extraSpinX = (Math.floor(Math.random() * 3) + 3) * Math.PI * 2;
@@ -142,7 +143,11 @@ export class Dice3D {
           requestAnimationFrame(animateRoll);
         } else {
           // 显示大屏点数 Overlay
-          this.overlayValEl.textContent = `${targetValue} 点`;
+          const values = diceValues?.length ? diceValues : [targetValue];
+          const total = values.reduce((sum, value) => sum + value, 0);
+          this.overlayValEl.textContent = values.length > 1
+            ? `${values.join(' + ')} = ${total} 点`
+            : `${total} 点`;
           this.overlayEl.style.opacity = '1';
           this.overlayEl.style.transform = 'translate(-50%, -50%) scale(1.1)';
 
@@ -151,7 +156,7 @@ export class Dice3D {
             this.overlayEl.style.opacity = '0';
             this.overlayEl.style.transform = 'translate(-50%, -50%) scale(0.5)';
             resolve(targetValue);
-          }, 600);
+          }, 600 / speed);
         }
       };
 

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" width="240" height="320">
+    <defs>
+      <linearGradient id="card_bg_NUKES" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1e272e" />
+        <stop offset="100%" stop-color="#0984e3" />
+      </linearGradient>
+      <linearGradient id="gold_border" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffaa00" />
+        <stop offset="100%" stop-color="#fffa65" />
+      </linearGradient>
+    </defs>
+    <rect width="240" height="320" rx="20" fill="url(#card_bg_NUKES)" stroke="url(#gold_border)" stroke-width="6"/>
+    <rect x="15" y="15" width="210" height="290" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <circle cx="120" cy="120" r="60" fill="#ff9f43" opacity="0.3"/>
+    <circle cx="120" cy="120" r="48" fill="#ff9f43" opacity="0.8"/>
+    <text x="120" y="138" font-size="56" text-anchor="middle">☢️</text>
+    <rect x="25" y="220" width="190" height="40" rx="10" fill="rgba(0,0,0,0.6)"/>
+    <text x="120" y="247" font-size="20" font-weight="900" font-family="Noto Sans SC, sans-serif" fill="#fffa65" text-anchor="middle">核弹卡</text>
+    <text x="120" y="285" font-size="14" font-family="Outfit, sans-serif" fill="#00d2d3" text-anchor="middle">ITEM CARD</text>
+  </svg>

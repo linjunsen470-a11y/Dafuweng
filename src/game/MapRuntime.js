@@ -2,10 +2,25 @@ export class MapRuntime {
   constructor(definition) {
     this.definition = definition;
     this.tiles = new Map(definition.tiles.map(tile => [tile.id, tile]));
-    this.predecessors = new Map(definition.tiles.map(tile => [tile.id, []]));
-    definition.tiles.forEach(tile => {
-      (tile.next || []).forEach(nextId => this.predecessors.get(nextId)?.push(tile.id));
+    this.edgeOverrides = new Map();
+    this.rebuildPredecessors();
+  }
+
+  rebuildPredecessors() {
+    this.predecessors = new Map(this.definition.tiles.map(tile => [tile.id, []]));
+    this.definition.tiles.forEach(tile => {
+      this.getForwardOptions(tile.id).forEach(nextId => this.predecessors.get(nextId)?.push(tile.id));
     });
+  }
+
+  getForwardOptions(tileId) {
+    return this.edgeOverrides.get(tileId) || this.getTile(tileId)?.next || [];
+  }
+
+  setNextOptions(tileId, options = null) {
+    if (options?.length) this.edgeOverrides.set(Number(tileId), [...options]);
+    else this.edgeOverrides.delete(Number(tileId));
+    this.rebuildPredecessors();
   }
 
   getTile(tileId) {
@@ -14,7 +29,7 @@ export class MapRuntime {
 
   getNextOptions(tileId, direction = 1) {
     const options = direction >= 0
-      ? this.getTile(tileId)?.next || []
+      ? this.getForwardOptions(tileId)
       : this.predecessors.get(tileId) || [];
     return [...options];
   }

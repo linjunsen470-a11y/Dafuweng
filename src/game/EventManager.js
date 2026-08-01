@@ -134,5 +134,3 @@ export class EventManager {
     return CHANCE_CARDS[Math.floor(this.random() * CHANCE_CARDS.length)];
   }
 }
-
-export const eventManager = new EventManager();

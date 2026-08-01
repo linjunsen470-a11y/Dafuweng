@@ -1,8 +1,9 @@
 export class StockUI {
-  constructor(gameState, audioManager, onUpdateHUD) {
+  constructor(gameState, audioManager, onUpdateHUD, gameEngine = null) {
     this.gameState = gameState;
     this.audioManager = audioManager;
     this.onUpdateHUD = onUpdateHUD;
+    this.gameEngine = gameEngine;
     this.selectedStockId = 'TECH';
 
     this.modal = document.getElementById('modal-stock');
@@ -141,7 +142,9 @@ export class StockUI {
   handleBuy() {
     const curPlayer = this.gameState.getCurrentPlayer();
     const shares = parseInt(this.tradeAmountInput.value, 10) || 10;
-    const res = this.gameState.stockMarket.buyStock(curPlayer, this.selectedStockId, shares);
+    const res = this.gameEngine
+      ? this.gameEngine.execute({ type: 'BUY_STOCK', playerId: curPlayer.id, payload: { stockId: this.selectedStockId, shares } })
+      : this.gameState.stockMarket.buyStock(curPlayer, this.selectedStockId, shares);
 
     if (res.success) {
       this.audioManager.playCoinSound();
@@ -151,14 +154,17 @@ export class StockUI {
         this.onUpdateHUD();
       }
     } else {
-      alert(res.msg);
+      this.gameState.addLog(`⚠️ ${res.msg}`, 'danger');
+      if (this.onUpdateHUD) this.onUpdateHUD();
     }
   }
 
   handleSell() {
     const curPlayer = this.gameState.getCurrentPlayer();
     const shares = parseInt(this.tradeAmountInput.value, 10) || 10;
-    const res = this.gameState.stockMarket.sellStock(curPlayer, this.selectedStockId, shares);
+    const res = this.gameEngine
+      ? this.gameEngine.execute({ type: 'SELL_STOCK', playerId: curPlayer.id, payload: { stockId: this.selectedStockId, shares } })
+      : this.gameState.stockMarket.sellStock(curPlayer, this.selectedStockId, shares);
 
     if (res.success) {
       this.audioManager.playCoinSound();
@@ -168,7 +174,8 @@ export class StockUI {
         this.onUpdateHUD();
       }
     } else {
-      alert(res.msg);
+      this.gameState.addLog(`⚠️ ${res.msg}`, 'danger');
+      if (this.onUpdateHUD) this.onUpdateHUD();
     }
   }
 }

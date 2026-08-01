@@ -1,7 +1,7 @@
 import { BOARD_TILES, TileType, PLAYER_PROFILES } from './BoardData.js';
 import { PropertyManager } from './PropertyManager.js';
-import { stockMarket } from './StockMarket.js';
-import { eventManager } from './EventManager.js';
+import { StockMarket } from './StockMarket.js';
+import { EventManager } from './EventManager.js';
 import { SeededRandom } from './SeededRandom.js';
 import { getMapDefinition } from './MapData.js';
 import { MapRuntime } from './MapRuntime.js';
@@ -15,6 +15,9 @@ export const GamePhase = {
   MOVING: 'MOVING',
   LANDING_ACTION: 'LANDING_ACTION',
   ACTION_MODAL: 'LANDING_ACTION',
+  ROUTE_CHOICE: 'ROUTE_CHOICE',
+  DEBT_SETTLEMENT: 'DEBT_SETTLEMENT',
+  PAUSED: 'PAUSED',
   TURN_END: 'TURN_END',
   GAME_OVER: 'GAME_OVER'
 };
@@ -27,14 +30,23 @@ export class GameState {
     this.currentPlayerIndex = 0;
     this.players = [];
     this.propertyManager = new PropertyManager();
-    this.stockMarket = stockMarket;
+    this.stockMarket = new StockMarket();
+    this.eventManager = new EventManager();
     this.rng = new SeededRandom(seed);
     this.stockMarket.setRandomSource(() => this.rng.next());
-    eventManager.setRandomSource(() => this.rng.next());
+    this.eventManager.setRandomSource(() => this.rng.next());
     this.newsEffect = null; // { id, remainingRounds }
     this.logHistory = [];
     this.winner = null;
     this.winReason = null;
+    this.assetRevision = 0;
+    this.pendingMove = null;
+    this.pendingDebt = null;
+    this.phaseBeforePause = null;
+    this.gameMode = 'STANDARD';
+    this.lottery = { pot: 2000, tickets: [], lastNumber: null };
+    this.boardGods = [];
+    this.mechanismState = { activeRoute: 0 };
     this.setMap('city-loop');
   }
 
@@ -42,6 +54,9 @@ export class GameState {
     this.mapId = getMapDefinition(mapId).id;
     this.mapDefinition = getMapDefinition(this.mapId);
     this.mapRuntime = new MapRuntime(this.mapDefinition);
+    if (this.propertyManager) {
+      this.propertyManager.init(this.mapDefinition.tiles);
+    }
   }
 
   getTile(tileId) {
@@ -54,11 +69,18 @@ export class GameState {
     this.currentPlayerIndex = 0;
     this.phase = GamePhase.PRE_ROLL_ACTION;
     this.setMap(options.mapId || this.mapId || 'city-loop');
-    this.propertyManager = new PropertyManager();
+    this.propertyManager.init(this.mapDefinition.tiles);
     this.stockMarket.reset();
     this.newsEffect = null;
     this.winner = null;
     this.winReason = null;
+    this.assetRevision = 0;
+    this.pendingMove = null;
+    this.pendingDebt = null;
+    this.phaseBeforePause = null;
+    this.gameMode = options.mode || 'STANDARD';
+    this.lottery = { pot: 2000, tickets: [], lastNumber: null };
+    this.mechanismState = { activeRoute: 0 };
 
     this.players = playerConfigs.map((cfg, idx) => {
       const profile = PLAYER_PROFILES[cfg.profileIndex !== undefined ? cfg.profileIndex : (idx % PLAYER_PROFILES.length)];
@@ -66,6 +88,22 @@ export class GameState {
       if (profile.skillName === '土地公庇护') {
         cash += 3000;
       }
+      if (profile.skillName === '牛仔冲锋') {
+        cash += 2000;
+      }
+      if (profile.skillName === '石油大亨') {
+        cash += 3000;
+      }
+
+      let cardPoints = 120;
+      if (profile.skillName === '商业神童') {
+        cardPoints += 80;
+      }
+      if (profile.skillName === '石油大亨') {
+        cardPoints += 80;
+      }
+      const startingCards = ['REMOTE_DICE', 'OBSTACLE', 'TURN_AROUND'];
+      if (profile.skillName === '石油大亨') startingCards.push('LAND_BUY');
 
       return {
         id: idx,
@@ -82,8 +120,9 @@ export class GameState {
         skillName: profile.skillName,
         skillDesc: profile.skillDesc,
         cash: cash,
-        cardPoints: 120,
-        cards: ['REMOTE_DICE', 'OBSTACLE', 'TURN_AROUND'],
+        deposit: Math.max(0, Number(options.initialDeposit ?? 0)),
+        cardPoints,
+        cards: startingCards,
         stocks: {},
         currentTile: 0,
         direction: 1,
@@ -91,6 +130,12 @@ export class GameState {
         jailTurns: 0,
         hospitalTurns: 0,
         turtleTurns: 0,
+        hibernateTurns: 0,
+        sleepwalkTurns: 0,
+        isSleepwalkingThisTurn: false,
+        penaltyTransferTargetId: null,
+        teamId: options.teams ? (cfg.teamId ?? idx % 2) : idx,
+        isLord: this.gameMode === 'CHALLENGE' && idx === playerConfigs.length - 1,
         godType: null, // 'FORTUNE', 'LUCK', 'MISFORTUNE', 'BAD', 'EARTH'
         godTurns: 0,
         rentShieldTurns: 0,
@@ -99,16 +144,93 @@ export class GameState {
       };
     });
 
+    if (this.gameMode === 'CHALLENGE' && this.players.length > 1) {
+      const lord = this.players[this.players.length - 1];
+      lord.isAI = true;
+      lord.cash = Math.round(lord.cash * 1.6);
+      lord.deposit = Math.round(lord.deposit * 1.5);
+      lord.cards.push('IMMUNITY', 'MISSILE', 'RENT_SHIELD');
+      lord.teamId = 'LORD';
+      this.players.slice(0, -1).forEach(player => { player.teamId = 'CHALLENGERS'; });
+    }
+    if (this.gameMode === 'HEAT') {
+      this.players.forEach(player => {
+        player.deposit = 0;
+        player.cards = ['MISSILE', 'MINE', 'OBSTACLE', 'REMOTE_DICE'];
+        player.cardPoints = Math.max(player.cardPoints, 180);
+      });
+    }
+    this.initializeBoardGods();
+
     this.addLog(`🎮 《富翁帝国》原创对局开启！基础初始资金 $${initialCash.toLocaleString()}，祝大家日进斗金！`, 'gold');
     this.players.forEach(p => {
       if (p.skillName === '土地公庇护') {
         this.addLog(`🤠 ${p.name} 触发【土地公庇护】技能：获得额外 $3,000 开局创业金补贴！`, 'accent');
+      }
+      if (p.skillName === '牛仔冲锋') {
+        this.addLog(`🐎 ${p.name} 触发【牛仔冲锋】：获得额外 $2,000 开局资金。`, 'accent');
+      }
+      if (p.skillName === '商业神童') {
+        this.addLog(`👶 ${p.name} 触发【商业神童】：获得额外 80 点卡片积分。`, 'accent');
+      }
+      if (p.skillName === '石油大亨') {
+        this.addLog(`🛢️ ${p.name} 获得能源资本：额外 $3,000、80 点券与购地卡。`, 'accent');
       }
     });
   }
 
   getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
+  }
+
+  initializeBoardGods() {
+    const tileCount = this.mapDefinition.tiles.length;
+    const types = ['FORTUNE', 'MISFORTUNE', 'ANGEL', 'DEMON'];
+    this.boardGods = types.map((type, index) => ({
+      id: `BOARD_GOD_${index}`,
+      type,
+      tileId: this.mapDefinition.tiles[Math.floor((index + 1) * tileCount / (types.length + 1))]?.id ?? 0,
+      direction: index % 2 ? -1 : 1
+    }));
+  }
+
+  moveBoardGods() {
+    this.boardGods.forEach(god => {
+      const steps = this.rng.int(1, 3);
+      const path = this.mapRuntime.projectPath(god.tileId, steps, god.direction, options => this.rng.pick(options));
+      if (path.length) god.tileId = path[path.length - 1];
+      if (this.rng.next() < 0.12) god.direction *= -1;
+    });
+  }
+
+  checkBoardGodCollision(player) {
+    const god = this.boardGods.find(item => item.tileId === player.currentTile);
+    if (!god) return null;
+    player.godType = god.type;
+    const negative = ['MISFORTUNE', 'DEMON'].includes(god.type);
+    const baseTurns = 4;
+    player.godTurns = negative && player.skillName === '甜心庇佑' ? 2 : baseTurns;
+    const relocation = this.rng.pick(this.mapDefinition.tiles)?.id ?? this.mapDefinition.spawnTile;
+    god.tileId = relocation;
+    this.addLog(`🧚 ${player.name} 遇到巡游神明【${god.type}】，附身 ${player.godTurns} 回合！`, negative ? 'danger' : 'gold');
+    return god;
+  }
+
+  drawLottery() {
+    const number = this.rng.int(1, 10);
+    this.lottery.lastNumber = number;
+    const winners = this.lottery.tickets.filter(ticket => ticket.number === number)
+      .map(ticket => this.players[ticket.playerId])
+      .filter(player => player && !player.isBankrupt);
+    if (winners.length) {
+      const prize = Math.floor(this.lottery.pot / winners.length);
+      winners.forEach(player => { player.cash += prize; });
+      this.addLog(`🎰 乐透开奖 ${number} 号！${winners.map(player => player.name).join('、')} 各获得 $${prize.toLocaleString()}。`, 'gold');
+      this.lottery.pot = 2000;
+    } else {
+      this.addLog(`🎰 乐透开奖 ${number} 号无人命中，奖池累积至 $${this.lottery.pot.toLocaleString()}。`, 'accent');
+    }
+    this.lottery.tickets = [];
   }
 
   nextTurn() {
@@ -121,6 +243,10 @@ export class GameState {
         nextIdx = (nextIdx + 1) % this.players.length;
       }
       if (nextIdx <= previous) {
+        if (this.round >= this.maxRounds) {
+          this.checkWinCondition(true);
+          return { gameOver: true, skipped: [] };
+        }
         this.round++;
         this.onRoundEnd();
       }
@@ -142,6 +268,12 @@ export class GameState {
         attempts++;
         continue;
       }
+      if (cur.hibernateTurns > 0) {
+        cur.hibernateTurns--;
+        this.addLog(`❄️ ${cur.name} 仍在冬眠，剩余 ${cur.hibernateTurns} 回合，本回合跳过。`, 'danger');
+        attempts++;
+        continue;
+      }
       this.phase = GamePhase.PRE_ROLL_ACTION;
       return { gameOver: false, currentPlayer: cur };
     }
@@ -150,11 +282,13 @@ export class GameState {
   }
 
   tickPlayerStatuses(cur) {
+    cur.isSleepwalkingThisTurn = false;
     if (cur.godType) {
       cur.godTurns--;
-      if (cur.godTurns < 0) {
+      if (cur.godTurns <= 0) {
         this.addLog(`✨ ${cur.name} 的运势精灵效果结束。`, 'accent');
         cur.godType = null;
+        cur.godTurns = 0;
       }
     }
     if (cur.turtleTurns > 0) {
@@ -164,16 +298,31 @@ export class GameState {
     } else {
       cur.moveLimitThisTurn = null;
     }
-    cur.rentShieldActiveThisTurn = cur.rentShieldTurns > 0;
+    if (cur.sleepwalkTurns > 0) {
+      cur.isSleepwalkingThisTurn = true;
+      cur.sleepwalkTurns--;
+      this.addLog(`🌙 ${cur.name} 正在梦游：本回合自动行动并免付租金。`, 'accent');
+    }
+    cur.rentShieldActiveThisTurn = cur.rentShieldTurns > 0 || cur.isSleepwalkingThisTurn;
     if (cur.rentShieldActiveThisTurn) cur.rentShieldTurns--;
     cur.negativeImmuneActiveThisTurn = cur.negativeImmuneTurns > 0;
     if (cur.negativeImmuneActiveThisTurn) cur.negativeImmuneTurns--;
     if (cur.godType === 'MISFORTUNE' && !cur.negativeImmuneActiveThisTurn) {
       const penalty = Math.max(0, Math.round(cur.cash * 0.10));
-      cur.cash -= penalty;
-      this.addLog(`👻 破财精灵收取 ${cur.name} $${penalty.toLocaleString()}。`, 'danger');
-      this.checkBankrupt(cur);
+      const transferTarget = this.players.find(player => player.id === cur.penaltyTransferTargetId && !player.isBankrupt && player.id !== cur.id);
+      const recipient = transferTarget || cur;
+      if (transferTarget) {
+        cur.penaltyTransferTargetId = null;
+        this.addLog(`🎭 ${cur.name} 将破财惩罚转嫁给了 ${recipient.name}！`, 'gold');
+      }
+      recipient.cash -= penalty;
+      this.addLog(`👻 破财精灵收取 ${recipient.name} $${penalty.toLocaleString()}。`, 'danger');
+      this.checkBankrupt(recipient);
     }
+  }
+
+  get priceIndex() {
+    return Number((1.0 + Math.floor((this.round - 1) / 5) * 0.2).toFixed(1));
   }
 
   onRoundEnd() {
@@ -182,43 +331,116 @@ export class GameState {
       if (this.newsEffect.remainingRounds <= 0) this.newsEffect = null;
     }
     this.stockMarket.updateMarket();
-    this.addLog(`📈 第 ${this.round} 轮开始！股市大盘价格已实时刷新更新！`, 'accent');
+    this.moveBoardGods();
+    this.drawLottery();
+    if (this.round % 5 === 0) {
+      this.players.filter(player => !player.isBankrupt && player.deposit > 0).forEach(player => {
+        const interest = Math.round(player.deposit * 0.05);
+        player.deposit += interest;
+        this.addLog(`🏦 ${player.name} 获得五轮定期利息 $${interest.toLocaleString()}。`, 'gold');
+      });
+    }
+    this.addLog(`📈 第 ${this.round} 轮开始！【当前物价指数: ${this.priceIndex.toFixed(1)}x】股市大盘已刷新！`, 'accent');
 
-    const news = eventManager.triggerRandomNews(this);
+    const news = this.eventManager.triggerRandomNews(this);
     if (news) {
       this.addLog(`⚡ 新闻大事件：【${news.title}】 - ${news.desc}`, 'gold');
     }
   }
 
+  // 检查玩家撞击/经过他人时的神明碰撞转移
+  checkGodCollision(movingPlayer) {
+    if (!movingPlayer || movingPlayer.isBankrupt) return;
+    const sameTilePlayers = this.players.filter(p => !p.isBankrupt && p.id !== movingPlayer.id && p.currentTile === movingPlayer.currentTile);
+    sameTilePlayers.forEach(other => {
+      if (movingPlayer.godType && !other.godType) {
+        other.godType = movingPlayer.godType;
+        other.godTurns = movingPlayer.godTurns;
+        this.addLog(`✨ 擦肩而过！${movingPlayer.name} 的【${movingPlayer.godType}】转移到了 ${other.name} 身上！`, 'accent');
+        movingPlayer.godType = null;
+        movingPlayer.godTurns = 0;
+      } else if (!movingPlayer.godType && other.godType) {
+        movingPlayer.godType = other.godType;
+        movingPlayer.godTurns = other.godTurns;
+        this.addLog(`✨ 擦肩而过！${movingPlayer.name} 从 ${other.name} 身上染上了【${movingPlayer.godType}】！`, 'accent');
+        other.godType = null;
+        other.godTurns = 0;
+      }
+    });
+  }
+
   checkBankrupt(player) {
-    if (player.cash < 0 && !player.isBankrupt) {
-      let totalStockAssets = 0;
-      for (const stockId in player.stocks) {
-        const holding = player.stocks[stockId];
-        const stock = this.stockMarket.stocks.find(s => s.id === stockId);
-        if (holding && stock) {
-          totalStockAssets += holding.shares * stock.price;
-        }
-      }
-
-      if (player.cash + totalStockAssets >= 0) {
-        this.addLog(`⚠️ ${player.name} 现金不足，自动变卖股票资产抵债！`, 'danger');
-        for (const stockId in player.stocks) {
-          this.stockMarket.sellStock(player, stockId, player.stocks[stockId].shares);
-        }
-      } else {
-        player.isBankrupt = true;
-        this.addLog(`💥 破产公告：${player.name} 宣告破产退场！`, 'danger');
-
-        this.propertyManager.properties.forEach((prop) => {
-          if (prop.owner === player.id) {
-            prop.owner = null;
-            prop.level = 0;
-          }
-        });
-        this.checkWinCondition();
-      }
+    if (player.cash >= 0 || player.isBankrupt) {
+      return { bankrupt: player.isBankrupt, liquidations: [] };
     }
+
+    const liquidations = [];
+    if ((player.deposit || 0) > 0) {
+      const value = Math.min(player.deposit, Math.abs(player.cash));
+      player.deposit -= value;
+      player.cash += value;
+      liquidations.push({ kind: 'DEPOSIT', value });
+      if (player.cash >= 0) return { bankrupt: false, liquidations };
+    }
+    for (const stockId of Object.keys(player.stocks || {})) {
+      const holding = player.stocks[stockId];
+      if (!holding?.shares) continue;
+      const shares = holding.shares;
+      const result = this.stockMarket.sellStock(player, stockId, shares);
+      if (result.success) liquidations.push({ kind: 'STOCK', stockId, shares, value: result.revenue });
+      if (player.cash >= 0) break;
+    }
+
+    const owned = [...this.propertyManager.properties.entries()]
+      .filter(([, property]) => property.owner === player.id)
+      .sort((a, b) => b[1].level - a[1].level);
+
+    for (const [tileId, property] of owned) {
+      const tile = this.getTile(tileId) || BOARD_TILES[tileId];
+      while (player.cash < 0 && property.level > 0) {
+        property.level--;
+        const value = Math.round((tile.buildCost || 0) * 0.5);
+        player.cash += value;
+        liquidations.push({ kind: 'BUILDING', tileId, level: property.level, value });
+      }
+      if (player.cash >= 0) break;
+    }
+
+    for (const [tileId, property] of owned) {
+      if (player.cash >= 0) break;
+      if (property.owner !== player.id) continue;
+      const tile = this.getTile(tileId) || BOARD_TILES[tileId];
+      const value = Math.round((tile.price || 0) * 0.5);
+      property.owner = null;
+      property.level = 0;
+      property.isMortgaged = false;
+      property.mortgageValue = 0;
+      player.cash += value;
+      liquidations.push({ kind: 'PROPERTY', tileId, level: 0, value });
+    }
+
+    if (liquidations.length) {
+      this.assetRevision++;
+      const recovered = liquidations.reduce((sum, item) => sum + item.value, 0);
+      this.addLog(`⚠️ ${player.name} 自动清算资产，回笼 $${recovered.toLocaleString()}。`, 'danger');
+    }
+
+    if (player.cash < 0) {
+      player.isBankrupt = true;
+      player.cash = 0;
+      this.propertyManager.properties.forEach((property, tileId) => {
+        if (property.owner !== player.id) return;
+        property.owner = null;
+        property.level = 0;
+        property.isMortgaged = false;
+        property.mortgageValue = 0;
+        liquidations.push({ kind: 'PROPERTY', tileId, level: 0, value: 0 });
+      });
+      this.addLog(`💥 破产公告：${player.name} 宣告破产退场！`, 'danger');
+      this.checkWinCondition();
+    }
+
+    return { bankrupt: player.isBankrupt, liquidations };
   }
 
   calculateNetWorth(player) {
@@ -238,12 +460,14 @@ export class GameState {
       if (prop.owner !== player.id) return;
       const tile = this.getTile(tileIndex) || BOARD_TILES[tileIndex];
       propertyCount++;
-      landValue += tile.price || 0;
+      landValue += Math.max(0, (tile.price || 0) - (prop.isMortgaged ? (prop.mortgageValue || 0) : 0));
       buildingValue += (tile.buildCost || 0) * prop.level;
     });
-    const total = Math.round(player.cash + stockValue + landValue + buildingValue);
+    const deposit = Math.round(player.deposit || 0);
+    const total = Math.round(player.cash + deposit + stockValue + landValue + buildingValue);
     return {
       cash: Math.round(player.cash),
+      deposit,
       stockValue: Math.round(stockValue),
       landValue: Math.round(landValue),
       buildingValue: Math.round(buildingValue),
@@ -261,6 +485,48 @@ export class GameState {
 
   checkWinCondition(force = false) {
     const activePlayers = this.players.filter(p => !p.isBankrupt);
+    if (this.gameMode === 'CHALLENGE') {
+      const lord = this.players.find(player => player.isLord);
+      const challengers = this.players.filter(player => !player.isLord && !player.isBankrupt);
+      if (lord?.isBankrupt || challengers.length === 0 || force || this.round > this.maxRounds) {
+        this.phase = GamePhase.GAME_OVER;
+        if (lord?.isBankrupt) {
+          this.winner = challengers.sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0] || null;
+          this.winReason = 'LORD_DEFEATED';
+          this.winningTeamId = 'CHALLENGERS';
+        } else if (challengers.length === 0) {
+          this.winner = lord;
+          this.winReason = 'LORD_VICTORY';
+          this.winningTeamId = 'LORD';
+        } else {
+          const challengerAssets = challengers.reduce((sum, player) => sum + this.calculateNetWorth(player), 0);
+          this.winner = challengerAssets > this.calculateNetWorth(lord)
+            ? challengers.sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0]
+            : lord;
+          this.winningTeamId = this.winner?.isLord ? 'LORD' : 'CHALLENGERS';
+          this.winReason = 'TEAM_NET_WORTH';
+        }
+        return true;
+      }
+      return false;
+    }
+
+    const teamMode = this.gameMode === 'TEAM';
+    if (teamMode) {
+      const activeTeams = new Set(activePlayers.map(player => player.teamId));
+      if (activeTeams.size === 1 || force || this.round > this.maxRounds) {
+        this.phase = GamePhase.GAME_OVER;
+        const teamAssets = new Map();
+        activePlayers.forEach(player => teamAssets.set(player.teamId, (teamAssets.get(player.teamId) || 0) + this.calculateNetWorth(player)));
+        this.winningTeamId = [...teamAssets.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+        this.winner = activePlayers.filter(player => player.teamId === this.winningTeamId)
+          .sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0] || null;
+        this.winReason = activeTeams.size === 1 ? 'LAST_TEAM' : 'TEAM_NET_WORTH';
+        if (this.winner) this.addLog(`👑 队伍 ${this.winningTeamId} 获胜，代表玩家 ${this.winner.name}！`, 'gold');
+        return true;
+      }
+      return false;
+    }
     if (activePlayers.length === 1 || force || this.round > this.maxRounds) {
       this.phase = GamePhase.GAME_OVER;
       this.winner = [...activePlayers].sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0];
@@ -274,37 +540,84 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 1,
-      contentVersion: '2026.1',
+      version: 4,
+      contentVersion: '2026.2',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
       phase: this.phase,
       round: this.round,
       maxRounds: this.maxRounds,
+      gameMode: this.gameMode,
       mapId: this.mapId,
       currentPlayerIndex: this.currentPlayerIndex,
       players: structuredClone(this.players),
       properties: structuredClone([...this.propertyManager.properties.entries()]),
       stocks: structuredClone(this.stockMarket.stocks),
       newsEffect: structuredClone(this.newsEffect),
-      logHistory: structuredClone(this.logHistory)
+      logHistory: structuredClone(this.logHistory),
+      winnerId: this.winner?.id ?? null,
+      winReason: this.winReason,
+      pendingMove: structuredClone(this.pendingMove),
+      pendingDebt: structuredClone(this.pendingDebt),
+      phaseBeforePause: this.phaseBeforePause,
+      lottery: structuredClone(this.lottery),
+      boardGods: structuredClone(this.boardGods),
+      mechanismState: structuredClone(this.mechanismState),
+      winningTeamId: this.winningTeamId ?? null
     };
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || snapshot.version !== 1) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.phase = snapshot.phase;
     this.round = snapshot.round;
     this.maxRounds = snapshot.maxRounds;
+    this.gameMode = snapshot.gameMode || 'STANDARD';
     this.setMap(snapshot.mapId || 'city-loop');
     this.currentPlayerIndex = snapshot.currentPlayerIndex;
-    this.players = structuredClone(snapshot.players);
-    this.propertyManager.properties = new Map(structuredClone(snapshot.properties));
+    this.players = structuredClone(snapshot.players).map(player => ({
+      hibernateTurns: 0,
+      sleepwalkTurns: 0,
+      isSleepwalkingThisTurn: false,
+      penaltyTransferTargetId: null,
+      deposit: 0,
+      teamId: player.id,
+      isLord: false,
+      ...player
+    }));
+    this.propertyManager.properties = new Map(structuredClone(snapshot.properties).map(([tileId, property]) => [
+      tileId,
+      {
+        owner: null,
+        level: 0,
+        hasObstacle: false,
+        isMortgaged: false,
+        mortgageValue: 0,
+        ...property
+      }
+    ]));
     this.stockMarket.stocks = structuredClone(snapshot.stocks);
     this.newsEffect = structuredClone(snapshot.newsEffect);
     this.logHistory = structuredClone(snapshot.logHistory || []);
     this.rng.importState({ seed: snapshot.seed, state: snapshot.rngState });
+    this.winner = snapshot.winnerId === null || snapshot.winnerId === undefined
+      ? null
+      : this.players.find(player => player.id === snapshot.winnerId) || null;
+    this.winReason = snapshot.winReason || null;
+    this.pendingMove = structuredClone(snapshot.pendingMove || null);
+    this.pendingDebt = structuredClone(snapshot.pendingDebt || null);
+    this.phaseBeforePause = snapshot.phaseBeforePause || null;
+    this.lottery = structuredClone(snapshot.lottery || { pot: 2000, tickets: [], lastNumber: null });
+    this.boardGods = structuredClone(snapshot.boardGods || []);
+    if (!this.boardGods.length) this.initializeBoardGods();
+    this.mechanismState = structuredClone(snapshot.mechanismState || { activeRoute: 0 });
+    this.winningTeamId = snapshot.winningTeamId ?? null;
+    if (this.mechanismState.activeRoute) {
+      this.mapDefinition.tiles.filter(tile => (tile.next || []).length > 1).forEach(tile => {
+        this.mapRuntime.setNextOptions(tile.id, [tile.next[this.mechanismState.activeRoute % tile.next.length]]);
+      });
+    }
   }
 
   addLog(msg, type = 'normal') {

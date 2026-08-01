@@ -87,7 +87,7 @@ export class StockMarket {
     holding.shares += shares;
     holding.avgPrice = Math.round((prevTotal + totalCost) / holding.shares);
 
-    return { success: true, msg: `成功买入 ${stock.name} ${shares} 股！` };
+    return { success: true, cost: totalCost, msg: `成功买入 ${stock.name} ${shares} 股！` };
   }
 
   sellStock(player, stockId, shares) {
@@ -99,7 +99,9 @@ export class StockMarket {
       return { success: false, msg: '持仓股票数量不足' };
     }
 
-    const revenue = stock.price * shares;
+    let revenue = stock.price * shares;
+    if (player.skillName === '股市高手') revenue = Math.round(revenue * 1.15);
+    if (player.skillName === '剑道大师') revenue = Math.round(revenue * 1.10);
     player.cash += revenue;
     holding.shares -= shares;
 
@@ -107,8 +109,6 @@ export class StockMarket {
       delete player.stocks[stockId];
     }
 
-    return { success: true, msg: `成功抛售 ${stock.name} ${shares} 股，回笼资金 $${revenue.toLocaleString()}！` };
+    return { success: true, revenue, msg: `成功抛售 ${stock.name} ${shares} 股，回笼资金 $${revenue.toLocaleString()}！` };
   }
 }
-
-export const stockMarket = new StockMarket();

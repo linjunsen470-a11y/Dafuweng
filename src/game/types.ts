@@ -7,6 +7,9 @@ export type GamePhase =
   | 'PRE_ROLL_ACTION'
   | 'ROLLING'
   | 'MOVING'
+  | 'ROUTE_CHOICE'
+  | 'DEBT_SETTLEMENT'
+  | 'PAUSED'
   | 'LANDING_ACTION'
   | 'TURN_END'
   | 'GAME_OVER';
@@ -51,6 +54,12 @@ export interface TileDefinition {
   type: string;
   name: string;
   next?: TileId[];
+  position?: { x: number; z: number };
+  lot?: {
+    position: { x: number; z: number };
+    rotation: number;
+    size: { x: number; z: number };
+  };
   [key: string]: unknown;
 }
 
@@ -61,6 +70,18 @@ export interface MapDefinition {
   tiles: TileDefinition[];
   theme: string;
   musicId: string;
+  defaultDiceCount?: number;
+  passBonus?: number;
+  roadWidth?: number;
+  tileSize?: number;
+  bounds?: { minX: number; maxX: number; minZ: number; maxZ: number };
+  camera?: {
+    center: { x: number; z: number };
+    overviewDistance: number;
+    followHeight: number;
+    followDistance: number;
+  };
+  districts?: Array<{ id: string; name: string; color: string }>;
 }
 
 export interface CharacterDefinition {
@@ -88,3 +109,27 @@ export interface GameSnapshotV1 {
   newsEffect: null | { id: string; remainingRounds: number };
   logHistory: unknown[];
 }
+
+export interface GameSnapshotV2 extends Omit<GameSnapshotV1, 'version'> {
+  version: 2;
+  winnerId: PlayerId | null;
+  winReason: 'LAST_PLAYER' | 'NET_WORTH' | 'LAST_TEAM' | 'TEAM_NET_WORTH' | 'LORD_DEFEATED' | 'LORD_VICTORY' | null;
+}
+
+export interface GameSnapshotV3 extends Omit<GameSnapshotV2, 'version'> {
+  version: 3;
+  pendingMove: null | { playerId: PlayerId; remainingSteps: number; source: string; path: TileId[] };
+  pendingDebt: null | { debtorId: PlayerId; creditorId: PlayerId | null; amountDue: number; source: string };
+  phaseBeforePause: GamePhase | null;
+}
+
+export interface GameSnapshotV4 extends Omit<GameSnapshotV3, 'version'> {
+  version: 4;
+  gameMode: 'STANDARD' | 'QUICK' | 'TEAM' | 'CHALLENGE' | 'HEAT';
+  lottery: { pot: number; tickets: Array<{ playerId: PlayerId; number: number }>; lastNumber: number | null };
+  boardGods: Array<{ id: string; type: string; tileId: TileId; direction: number }>;
+  mechanismState: { activeRoute: number };
+  winningTeamId: string | number | null;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4;

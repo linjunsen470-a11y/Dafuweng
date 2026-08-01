@@ -24,6 +24,7 @@ export class AssetUI {
         <td><strong>${index + 1}</strong></td>
         <td><span style="color:${player.color}">●</span> ${player.name}</td>
         <td>$${assets.cash.toLocaleString()}</td>
+        <td>$${assets.deposit.toLocaleString()}</td>
         <td>$${assets.landValue.toLocaleString()}</td>
         <td>$${assets.buildingValue.toLocaleString()}</td>
         <td>$${assets.stockValue.toLocaleString()}</td>

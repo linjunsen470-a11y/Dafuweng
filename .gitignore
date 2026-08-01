@@ -4,4 +4,7 @@ dist/
 coverage/
 *.log
 test_step*.png
+.DS_Store
 
+# Local-only analysis and asset generation helpers
+/scripts/
