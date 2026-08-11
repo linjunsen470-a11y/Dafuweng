@@ -43,6 +43,7 @@ export class GameState {
     this.stockMarket.setRandomSource(() => this.rng.next());
     this.eventManager.setRandomSource(() => this.rng.next());
     this.newsEffect = null; // { id, remainingRounds }
+    this.newsHistory = [];
     this.logHistory = [];
     this.winner = null;
     this.winReason = null;
@@ -89,6 +90,7 @@ export class GameState {
     this.stockMarket.reset();
     this.companyManager.reset();
     this.newsEffect = null;
+    this.newsHistory = [];
     this.winner = null;
     this.winReason = null;
     this.assetRevision = 0;
@@ -400,6 +402,19 @@ export class GameState {
     const news = this.eventManager.triggerRandomNews(this);
     if (news) {
       this.addLog(`⚡ 新闻大事件：【${news.title}】 - ${news.desc}`, 'gold');
+      const entry = {
+        id: news.id,
+        title: news.title,
+        desc: news.desc,
+        category: news.category,
+        icon: news.icon,
+        tone: news.tone,
+        round: this.round,
+        impacts: structuredClone(news.impacts || [])
+      };
+      this.newsHistory.unshift(entry);
+      this.newsHistory = this.newsHistory.slice(0, 20);
+      this.pendingDomainEvents.push({ type: 'NEWS_FLASH', news: structuredClone(entry) });
     }
   }
 
@@ -665,8 +680,8 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 5,
-      contentVersion: '2026.3',
+      version: 6,
+      contentVersion: '2026.4',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
@@ -680,6 +695,7 @@ export class GameState {
       properties: structuredClone([...this.propertyManager.properties.entries()]),
       stocks: structuredClone(this.stockMarket.stocks),
       newsEffect: structuredClone(this.newsEffect),
+      newsHistory: structuredClone(this.newsHistory),
       logHistory: structuredClone(this.logHistory),
       winnerId: this.winner?.id ?? null,
       winReason: this.winReason,
@@ -703,7 +719,7 @@ export class GameState {
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4, 5].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5, 6].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
@@ -738,6 +754,7 @@ export class GameState {
     ]));
     this.stockMarket.stocks = structuredClone(snapshot.stocks);
     this.newsEffect = structuredClone(snapshot.newsEffect);
+    this.newsHistory = structuredClone(snapshot.newsHistory || []);
     this.logHistory = structuredClone(snapshot.logHistory || []);
     this.rng.importState({ seed: snapshot.seed, state: snapshot.rngState });
     this.winner = snapshot.winnerId === null || snapshot.winnerId === undefined

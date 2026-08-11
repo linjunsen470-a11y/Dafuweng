@@ -1,8 +1,10 @@
+import { captureNewsMetrics, getNewsPresentation, summarizeNewsImpact } from './NewsRules.js';
+
 /**
  * Random Events & God Attachment Manager
  */
 
-export const NEWS_EVENTS = [
+const RAW_NEWS_EVENTS = [
   {
     title: '房地产市场火爆',
     desc: '全城所有商业与住宅地产过路费临时翻倍！',
@@ -144,6 +146,11 @@ export const NEWS_EVENTS = [
   }
 ];
 
+export const NEWS_EVENTS = RAW_NEWS_EVENTS.map((event, index) => ({
+  ...getNewsPresentation(event, index),
+  ...event
+}));
+
 export const CHANCE_CARDS = [
   { title: '中头彩大奖', desc: '恭喜！买彩票中得一等奖金', amount: 2000, isGain: true },
   { title: '股票红利分配', desc: '持仓企业派发现金股息', amount: 1200, isGain: true },
@@ -207,8 +214,10 @@ export class EventManager {
   triggerRandomNews(gameState) {
     if (this.random() < 0.35) {
       const news = NEWS_EVENTS[Math.floor(this.random() * NEWS_EVENTS.length)];
+      const before = captureNewsMetrics(gameState);
       news.effect(gameState);
-      return news;
+      const after = captureNewsMetrics(gameState);
+      return { ...news, impacts: summarizeNewsImpact(before, after) };
     }
     return null;
   }

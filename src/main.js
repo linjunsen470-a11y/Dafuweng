@@ -349,6 +349,7 @@ class GameController {
     };
 
     document.getElementById('btn-assets').onclick = async () => (await this.getAssetUI()).show();
+    document.getElementById('btn-news-history').onclick = () => this.presentationUI.showNewsHistory(this.gameState.newsHistory);
     document.getElementById('btn-help').onclick = () => this.dialogUI.showHelp();
     document.getElementById('btn-market').onclick = () => this.showMarketBoard();
     document.getElementById('btn-pause-game').onclick = () => this.showPauseMenu();

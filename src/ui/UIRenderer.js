@@ -30,6 +30,12 @@ export class UIRenderer {
 
     this.roundCount.textContent = this.gameState.round;
     if (this.mapNameLabel) this.mapNameLabel.textContent = this.gameState.mapDefinition?.name || '财富地图';
+    if (this.newsTickerText) {
+      const latestNews = this.gameState.newsHistory?.[0];
+      this.newsTickerText.textContent = latestNews
+        ? `第 ${latestNews.round} 轮 · 【${latestNews.category}】${latestNews.title} — ${latestNews.desc}`
+        : '新闻中心在线：城市经济、地产与股市动态将在这里实时播报';
+    }
 
     this.renderPlayersList();
 

@@ -36,4 +36,15 @@ describe('SaveManager', () => {
     expect(saves.deleteSlot(2).success).toBe(true);
     expect(saves.loadSlot(2).success).toBe(false);
   });
+
+  it('writes V6 slots and still discovers legacy V5 slots', () => {
+    const storage = new MemoryStorage();
+    const saves = new SaveManager(storage);
+    expect(saves.saveSlot(1, { version: 6, round: 12 }, '新闻城')).toEqual({ success: true });
+    expect(JSON.parse(storage.getItem('fortune-empire:slot:v6:1'))).toMatchObject({ version: 6, round: 12 });
+
+    const legacyStorage = new MemoryStorage();
+    legacyStorage.setItem('fortune-empire:slot:v5:3', JSON.stringify({ version: 5, round: 7 }));
+    expect(new SaveManager(legacyStorage).loadSlot(3)).toEqual({ success: true, snapshot: { version: 5, round: 7 } });
+  });
 });

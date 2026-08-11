@@ -40,18 +40,18 @@ try {
   const saveButton = await page.$('#save-slot-list .save-slot-row .slot-save');
   await saveButton.click();
   const savedRound = await page.evaluate(() => {
-    const raw = localStorage.getItem('fortune-empire:slot:v5:1');
+    const raw = localStorage.getItem('fortune-empire:slot:v6:1');
     return raw ? JSON.parse(raw).round : null;
   });
-  if (savedRound !== 1) throw new Error('Offline V5 save slot was not persisted.');
+  if (savedRound !== 1) throw new Error('Offline V6 save slot was not persisted.');
 
   await page.reload({ waitUntil: 'domcontentloaded', timeout: 15000 });
   await page.waitForSelector('#setup-screen', { timeout: 5000 });
-  const persisted = await page.evaluate(() => Boolean(localStorage.getItem('fortune-empire:slot:v5:1')));
+  const persisted = await page.evaluate(() => Boolean(localStorage.getItem('fortune-empire:slot:v6:1')));
   const caches = await page.evaluate(() => window.caches.keys());
   if (!persisted || !caches.includes('fortune-empire-v5')) throw new Error('Offline refresh did not retain cache/save data.');
   if (failures.length) throw new Error(`PWA page errors: ${failures.join('; ')}`);
-  console.log('PWA install, offline launch, offline new game, V5 save, and offline refresh passed.');
+  console.log('PWA install, offline launch, offline new game, V6 save, and offline refresh passed.');
 } finally {
   await page.setOfflineMode(false).catch(() => {});
   await browser.close();

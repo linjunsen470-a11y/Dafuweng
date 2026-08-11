@@ -180,6 +180,42 @@ async function runTest() {
     await page.screenshot({ path: artifact('test_step_visual_weather.png') });
     console.log('✅ Snow, night lighting, park texture, and extended character models rendered.');
 
+    console.log('\n--- Step 3c: Testing city news broadcast and archive ---');
+    const newsFixture = {
+      id: 'NEWS_E2E',
+      title: '城市更新基金正式启动',
+      desc: '地产持有者获得建设补助，市场活力持续上升。',
+      category: '地产',
+      icon: '🏙️',
+      tone: 'property',
+      round: 3,
+      impacts: [
+        { icon: '💵', label: '林小满', detail: '现金 +$1,200', tone: 'gain' },
+        { icon: '🏘️', label: '城市建筑', detail: '总等级 +2', tone: 'gain' }
+      ]
+    };
+    await page.evaluate(async fixture => {
+      const { NewsUI } = await import('/src/ui/NewsUI.js');
+      window.__e2eNewsUI = new NewsUI();
+      window.__e2eNewsFixture = fixture;
+      window.__e2eNewsUI.show(fixture);
+    }, newsFixture);
+    await page.waitForSelector('.news-flash-overlay.is-visible .news-flash-card');
+    const newsImpactCount = await page.$$eval('.news-impact', elements => elements.length);
+    if (newsImpactCount !== 2) throw new Error(`Expected 2 news impacts, got ${newsImpactCount}`);
+    await page.screenshot({ path: artifact('test_step_news_flash.png') });
+    await page.click('.news-dismiss');
+    await page.waitForSelector('.news-flash-overlay', { hidden: true });
+    await page.evaluate(() => window.__e2eNewsUI.showHistory([window.__e2eNewsFixture]));
+    await page.waitForSelector('.news-history-overlay .news-history-item');
+    await page.screenshot({ path: artifact('test_step_news_history.png') });
+    await page.click('.news-history-close');
+    await page.waitForSelector('.news-history-overlay', { hidden: true });
+    await page.click('#btn-news-history');
+    await page.waitForSelector('.news-history-overlay .news-history-empty');
+    await page.click('.news-history-close');
+    console.log('✅ News broadcast, impact summary, ticker entry, and archive rendered.');
+
     console.log('\n--- Step 4: Testing Stock Market Modal ---');
     await page.click('#btn-stock-market');
     await page.waitForSelector('#modal-stock:not(.hidden)', { timeout: 3000 });
@@ -224,7 +260,7 @@ async function runTest() {
     await page.waitForSelector('#modal-assets.hidden', { timeout: 3000 });
     console.log('✅ Asset ranking modal rendered all players.');
 
-    console.log('\n--- Step 6c: Testing Pause, Speed, and V5 Save Slot ---');
+    console.log('\n--- Step 6c: Testing Pause, Speed, and V6 Save Slot ---');
     await page.click('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');

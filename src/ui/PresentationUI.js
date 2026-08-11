@@ -1,3 +1,5 @@
+import { NewsUI } from './NewsUI.js';
+
 const money = value => `$${Math.abs(Number(value) || 0).toLocaleString()}`;
 
 function playerFor(state, playerId) {
@@ -102,6 +104,7 @@ export class PresentationUI {
     this.cashHost = document.getElementById('presentation-cash-host');
     this.bannerToken = 0;
     this.turnTimer = null;
+    this.newsUI = new NewsUI();
   }
 
   isReducedMotion() {
@@ -237,6 +240,10 @@ export class PresentationUI {
   }
 
   presentDomainEvent(event, state) {
+    if (event.type === 'NEWS_FLASH') {
+      this.newsUI.show(event.news);
+      return;
+    }
     describePresentationEvent(event, state).forEach(cue => {
       if (cue.kind === 'toast') this.showToast(cue);
       else if (cue.kind === 'cash') this.showCash(cue);
@@ -249,5 +256,10 @@ export class PresentationUI {
     if (this.turnTimer) clearTimeout(this.turnTimer);
     this.turnTimer = null;
     [this.bannerHost, this.diceHost, this.toastStack, this.cashHost].forEach(host => host?.replaceChildren());
+    this.newsUI.close();
+  }
+
+  showNewsHistory(history) {
+    this.newsUI.showHistory(history);
   }
 }

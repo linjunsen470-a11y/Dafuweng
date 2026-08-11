@@ -1,8 +1,10 @@
 const AUTO_SAVE_KEY = 'fortune-empire:auto-save:v1';
 const MANUAL_SAVE_KEY = 'fortune-empire:manual-save:v1';
-const SLOT_PREFIX = 'fortune-empire:slot:v5:';
+const SLOT_PREFIX = 'fortune-empire:slot:v6:';
+const V5_SLOT_PREFIX = 'fortune-empire:slot:v5:';
 const V4_SLOT_PREFIX = 'fortune-empire:slot:v4:';
 const LEGACY_SLOT_PREFIX = 'fortune-empire:slot:v3:';
+const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6];
 
 class IndexedSaveMirror {
   constructor() {
@@ -90,6 +92,8 @@ export class SaveManager {
   loadSlot(slotId) {
     const current = this.read(`${SLOT_PREFIX}${slotId}`);
     if (current.success) return current;
+    const v5 = this.read(`${V5_SLOT_PREFIX}${slotId}`);
+    if (v5.success) return v5;
     const v4 = this.read(`${V4_SLOT_PREFIX}${slotId}`);
     return v4.success ? v4 : this.read(`${LEGACY_SLOT_PREFIX}${slotId}`);
   }
@@ -97,10 +101,10 @@ export class SaveManager {
   async loadSlotAsync(slotId) {
     const local = this.loadSlot(slotId);
     if (local.success) return local;
-    for (const prefix of [SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
+    for (const prefix of [SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
       try {
         const snapshot = await this.indexedMirror.get(`${prefix}${slotId}`);
-        if (snapshot && [1, 2, 3, 4, 5].includes(snapshot.version)) {
+        if (snapshot && SUPPORTED_VERSIONS.includes(snapshot.version)) {
           this.write(`${SLOT_PREFIX}${slotId}`, snapshot);
           return { success: true, snapshot };
         }
@@ -112,6 +116,7 @@ export class SaveManager {
   deleteSlot(slotId) {
     try {
       this.storage?.removeItem(`${SLOT_PREFIX}${slotId}`);
+      this.storage?.removeItem(`${V5_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V4_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${LEGACY_SLOT_PREFIX}${slotId}`);
       void this.indexedMirror.remove(`${SLOT_PREFIX}${slotId}`);
@@ -145,7 +150,7 @@ export class SaveManager {
       const raw = this.storage?.getItem(key);
       if (!raw) return { success: false, msg: '未找到存档' };
       const snapshot = JSON.parse(raw);
-      if (![1, 2, 3, 4, 5].includes(snapshot.version)) return { success: false, msg: '存档版本不兼容' };
+      if (!SUPPORTED_VERSIONS.includes(snapshot.version)) return { success: false, msg: '存档版本不兼容' };
       return { success: true, snapshot };
     } catch (error) {
       return { success: false, msg: `存档损坏：${error.message}` };
@@ -163,7 +168,7 @@ export class SaveManager {
   importSnapshot(data) {
     try {
       const snapshot = typeof data === 'string' ? JSON.parse(data) : data;
-      if (!snapshot || ![1, 2, 3, 4, 5].includes(snapshot.version)) {
+      if (!snapshot || !SUPPORTED_VERSIONS.includes(snapshot.version)) {
         return { success: false, msg: '存档版本不兼容' };
       }
       if (!Array.isArray(snapshot.players) || !Array.isArray(snapshot.properties)) {

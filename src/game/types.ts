@@ -239,4 +239,18 @@ export interface GameSnapshotV5 extends Omit<GameSnapshotV4, 'version'> {
   minigameState: null | Record<string, unknown>;
 }
 
-export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5;
+export interface GameSnapshotV6 extends Omit<GameSnapshotV5, 'version'> {
+  version: 6;
+  newsHistory: Array<{
+    id: string;
+    title: string;
+    desc: string;
+    category: string;
+    icon: string;
+    tone: string;
+    round: number;
+    impacts: Array<{ icon: string; label: string; detail: string; tone: string }>;
+  }>;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6;

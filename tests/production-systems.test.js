@@ -152,23 +152,25 @@ describe('production economy vertical slice', () => {
   });
 });
 
-describe('V5 persistence contract', () => {
-  it('round-trips all V5 systems and migrates a V4 snapshot with safe defaults', () => {
+describe('V6 persistence contract', () => {
+  it('round-trips production systems and news history while migrating V4 defaults', () => {
     const { state, engine, players } = setup();
     state.roadEntities.push({ id: 'R1', type: 'DOG', tileId: 4, ownerId: null });
     state.marketOffers.push({ id: 'O1', sellerId: 0, kind: 'CARD', contentId: 'REMOTE_DICE', price: 20 });
     state.propertyManager.buyProperty(1, players[0].id);
     engine.startAuction(players[0], 1, 500);
     state.minigameState = { playerId: players[0].id, gameId: 'HARBOR_SORT', tileId: 24, status: 'OPEN' };
+    state.newsHistory.push({ id: 'NEWS_2', title: '中央银行降息利好', desc: '补贴到账', category: '民生', icon: '🎁', tone: 'benefit', round: 3, impacts: [] });
     const snapshot = state.createSnapshot();
     const restored = new GameState({ seed: 1 });
     restored.restoreSnapshot(snapshot);
     expect(restored.createSnapshot()).toMatchObject({
-      version: 5,
+      version: 6,
       roadEntities: [{ id: 'R1' }],
       marketOffers: [{ id: 'O1' }],
       auction: { tileId: 1, highestBid: 0 },
-      minigameState: { gameId: 'HARBOR_SORT' }
+      minigameState: { gameId: 'HARBOR_SORT' },
+      newsHistory: [{ id: 'NEWS_2', round: 3 }]
     });
     const resumedEngine = new GameEngine(restored);
     expect(resumedEngine.execute({ type: 'PLACE_BID', playerId: 1, payload: { amount: 700 } })).toMatchObject({ success: true, completed: true });
@@ -182,7 +184,8 @@ describe('V5 persistence contract', () => {
     delete legacy.researchTasks;
     delete legacy.economicCycle;
     delete legacy.minigameState;
+    delete legacy.newsHistory;
     restored.restoreSnapshot(legacy);
-    expect(restored.createSnapshot()).toMatchObject({ version: 5, roadEntities: [], marketOffers: [], researchTasks: [] });
+    expect(restored.createSnapshot()).toMatchObject({ version: 6, roadEntities: [], marketOffers: [], researchTasks: [], newsHistory: [] });
   });
 });
