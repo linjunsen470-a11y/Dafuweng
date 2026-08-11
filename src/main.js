@@ -9,12 +9,10 @@ import { GameState, GamePhase } from './game/GameState.js';
 import { TileType, PLAYER_PROFILES } from './game/BoardData.js';
 import { AIPlayer } from './game/AIPlayer.js';
 import { GameEngine } from './game/GameEngine.js';
+import { BUILDINGS, ITEMS } from './game/ContentRegistry.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
-import { StockUI } from './ui/StockUI.js';
-import { ShopUI } from './ui/ShopUI.js';
 import { DialogUI } from './ui/DialogUI.js';
-import { AssetUI } from './ui/AssetUI.js';
 import { MinimapUI } from './ui/MinimapUI.js';
 
 class GameController {
@@ -29,10 +27,10 @@ class GameController {
     this.dice3D = new Dice3D(this.scene3D);
 
     this.uiRenderer = new UIRenderer(this.gameState);
-    this.stockUI = new StockUI(this.gameState, this.audioManager, () => this.uiRenderer.renderHUD(), this.gameEngine);
-    this.shopUI = new ShopUI(this.gameState, this.audioManager, (cardId, idx) => this.handleCardUsage(cardId, idx), () => this.uiRenderer.renderHUD(), this.gameEngine);
+    this.stockUI = null;
+    this.shopUI = null;
+    this.assetUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
-    this.assetUI = new AssetUI(this.gameState);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
 
     this.selectedInitialCash = 20000;
@@ -44,6 +42,38 @@ class GameController {
     this.renderSetupScreen();
     this.bindHUDButtons();
     this.bindKeyboardAndCanvasClick();
+    setTimeout(() => {
+      try {
+        if (!localStorage.getItem('fortune-empire:tutorial-seen')) this.dialogUI.showHelp(true);
+      } catch {}
+    }, 250);
+  }
+
+  async getStockUI() {
+    if (!this.stockUI) {
+      const { StockUI } = await import('./ui/StockUI.js');
+      this.stockUI = new StockUI(this.gameState, this.audioManager, () => this.uiRenderer.renderHUD(), this.gameEngine);
+    }
+    return this.stockUI;
+  }
+
+  async getShopUI() {
+    if (!this.shopUI) {
+      const { ShopUI } = await import('./ui/ShopUI.js');
+      this.shopUI = new ShopUI(this.gameState, this.audioManager, (contentId, idx, kind = 'CARD') => {
+        if (kind === 'ITEM') this.handleItemUsage(contentId);
+        else this.handleCardUsage(contentId, idx);
+      }, () => this.uiRenderer.renderHUD(), this.gameEngine);
+    }
+    return this.shopUI;
+  }
+
+  async getAssetUI() {
+    if (!this.assetUI) {
+      const { AssetUI } = await import('./ui/AssetUI.js');
+      this.assetUI = new AssetUI(this.gameState);
+    }
+    return this.assetUI;
   }
 
   applyDomainEvent(event) {
@@ -55,10 +85,15 @@ class GameController {
       this.boardBuilder.setMineMesh(event.tileId, true);
     } else if (event.type === 'MINE_EXPLODED') {
       this.boardBuilder.setMineMesh(event.tileId, false);
+    } else if (event.type === 'ROAD_ENTITY_CHANGED') {
+      const entity = this.gameState.roadEntities.find(item => item.tileId === event.tileId || item.id === event.entity?.id);
+      this.boardBuilder.setObstacleMesh(event.tileId ?? entity?.tileId, entity?.type === 'BARRIER');
+      this.boardBuilder.setMineMesh(event.tileId ?? entity?.tileId, entity?.type === 'MINE');
+      this.boardBuilder.setRoadEntityMesh(event.tileId ?? entity?.tileId, entity || null);
     } else if (event.type === 'PROPERTY_CHANGED' || (event.type === 'ASSET_LIQUIDATED' && event.tileId !== undefined)) {
       const property = this.gameState.propertyManager.getProperty(event.tileId);
       const owner = property?.owner === null ? null : this.gameState.players[property?.owner];
-      this.boardBuilder.updateBuildingMesh(event.tileId, property?.level || 0, owner?.colorHex);
+      this.boardBuilder.updateBuildingMesh(event.tileId, property?.level || 0, owner?.colorHex, property?.buildingType);
     } else if (event.type === 'STATUS_CHANGED') {
       this.pawnManager.updateGodAura(event.playerId, event.status);
     } else if (event.type === 'BOARD_GOD_COLLECTED') {
@@ -70,10 +105,23 @@ class GameController {
   }
 
   syncBoardAssets(force = false) {
+    const activeRoadTiles = new Set(this.gameState.roadEntities.filter(entity => !entity.data?.attachedPlayerId).map(entity => entity.tileId));
+    const renderedRoadTiles = new Set([
+      ...this.boardBuilder.roadEntityMeshes.keys(),
+      ...this.boardBuilder.obstacleMeshes.keys(),
+      ...(this.boardBuilder.mineMeshes?.keys() || [])
+    ]);
+    new Set([...activeRoadTiles, ...renderedRoadTiles]).forEach(tileId => {
+      const entity = this.gameState.roadEntities.find(item => item.tileId === tileId && !item.data?.attachedPlayerId);
+      const property = this.gameState.propertyManager.getProperty(tileId);
+      this.boardBuilder.setObstacleMesh(tileId, Boolean(property?.hasObstacle || entity?.type === 'BARRIER'));
+      this.boardBuilder.setMineMesh(tileId, Boolean(property?.hasMine || entity?.type === 'MINE'));
+      this.boardBuilder.setRoadEntityMesh(tileId, entity || null);
+    });
     if (!force && this.syncedAssetRevision === this.gameState.assetRevision) return;
     this.gameState.propertyManager.properties.forEach((property, tileId) => {
       const owner = property.owner === null ? null : this.gameState.players[property.owner];
-      this.boardBuilder.updateBuildingMesh(tileId, property.level, owner?.colorHex);
+      this.boardBuilder.updateBuildingMesh(tileId, property.level, owner?.colorHex, property.buildingType);
       this.boardBuilder.setObstacleMesh(tileId, property.hasObstacle);
     });
     this.syncedAssetRevision = this.gameState.assetRevision;
@@ -194,6 +242,7 @@ class GameController {
     this.minimapUI.setMap(this.gameState.mapDefinition);
     this.pawnManager.createPlayerPawns(playerConfigs);
     this.pawnManager.syncBoardGods(this.gameState.boardGods);
+    this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
     this.uiRenderer.renderHUD();
 
     this.checkAITurn();
@@ -203,6 +252,13 @@ class GameController {
     const btnRoll = document.getElementById('btn-roll');
     btnRoll.onclick = () => {
       this.triggerHumanRoll();
+    };
+    const diceCount = document.getElementById('dice-count-select');
+    diceCount.onchange = () => {
+      const player = this.gameState.getCurrentPlayer();
+      const result = this.gameEngine.execute({ type: 'SELECT_DICE_COUNT', playerId: player.id, payload: { count: Number(diceCount.value) } });
+      if (!result.success) this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
+      this.uiRenderer.renderHUD();
     };
 
     document.getElementById('btn-toggle-audio').onclick = () => {
@@ -264,22 +320,24 @@ class GameController {
       this.showPauseMenu();
     };
 
-    document.getElementById('btn-assets').onclick = () => this.assetUI.show();
+    document.getElementById('btn-assets').onclick = async () => (await this.getAssetUI()).show();
+    document.getElementById('btn-help').onclick = () => this.dialogUI.showHelp();
+    document.getElementById('btn-market').onclick = () => this.showMarketBoard();
     document.getElementById('btn-pause-game').onclick = () => this.showPauseMenu();
 
-    document.getElementById('btn-stock-market').onclick = () => {
+    document.getElementById('btn-stock-market').onclick = async () => {
       if (!this.canOpenPlayerAction()) return;
-      this.stockUI.show();
+      (await this.getStockUI()).show();
     };
 
-    document.getElementById('btn-card-shop').onclick = () => {
+    document.getElementById('btn-card-shop').onclick = async () => {
       if (!this.canOpenPlayerAction()) return;
-      this.shopUI.showShop();
+      (await this.getShopUI()).showShop();
     };
 
-    document.getElementById('btn-use-card').onclick = () => {
+    document.getElementById('btn-use-card').onclick = async () => {
       if (!this.canOpenPlayerAction()) return;
-      this.shopUI.showInventory();
+      (await this.getShopUI()).showInventory();
     };
 
     document.getElementById('btn-clear-log').onclick = () => {
@@ -294,7 +352,100 @@ class GameController {
         document.querySelectorAll('.speed-btn').forEach(item => item.classList.toggle('active', item === button));
       };
     });
+    const musicVolume = document.getElementById('music-volume');
+    const sfxVolume = document.getElementById('sfx-volume');
+    try {
+      musicVolume.value = localStorage.getItem('fortune-empire:music-volume') || musicVolume.value;
+      sfxVolume.value = localStorage.getItem('fortune-empire:sfx-volume') || sfxVolume.value;
+    } catch {}
+    this.audioManager.setMusicVolume(musicVolume.value);
+    this.audioManager.setSfxVolume(sfxVolume.value);
+    musicVolume.oninput = event => {
+      this.audioManager.setMusicVolume(event.target.value);
+      try { localStorage.setItem('fortune-empire:music-volume', event.target.value); } catch {}
+    };
+    sfxVolume.oninput = event => {
+      this.audioManager.setSfxVolume(event.target.value);
+      try { localStorage.setItem('fortune-empire:sfx-volume', event.target.value); } catch {}
+    };
     document.getElementById('btn-return-menu').onclick = () => this.returnToMenu();
+    document.getElementById('btn-export-save').onclick = () => this.exportCurrentSave();
+    document.getElementById('input-import-save').onchange = event => this.importSaveFile(event.target.files?.[0]);
+    document.getElementById('btn-reduce-motion').onclick = event => {
+      const active = document.documentElement.classList.toggle('reduce-motion');
+      event.currentTarget.textContent = `减少动态效果：${active ? '开' : '关'}`;
+      try { localStorage.setItem('fortune-empire:reduce-motion', active ? '1' : '0'); } catch {}
+    };
+    try {
+      if (localStorage.getItem('fortune-empire:reduce-motion') === '1') document.documentElement.classList.add('reduce-motion');
+    } catch {}
+  }
+
+  exportCurrentSave() {
+    const exported = this.gameEngine.saves.exportSnapshot(this.gameState.createSnapshot());
+    if (!exported.success) return;
+    const url = URL.createObjectURL(new Blob([exported.data], { type: 'application/json' }));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `fortune-empire-round-${this.gameState.round}.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async importSaveFile(file) {
+    if (!file) return;
+    const imported = this.gameEngine.saves.importSnapshot(await file.text());
+    if (!imported.success) {
+      this.gameState.addLog(`⚠️ ${imported.msg}`, 'danger');
+      return this.uiRenderer.renderHUD();
+    }
+    document.getElementById('modal-pause').classList.add('hidden');
+    this.restoreGame(imported.snapshot);
+  }
+
+  async showMarketBoard() {
+    if (!this.canOpenPlayerAction()) return;
+    const player = this.gameState.getCurrentPlayer();
+    const offers = this.gameState.marketOffers.filter(offer => offer.sellerId !== player.id).map(offer => ({
+      id: `ACCEPT:${offer.id}`,
+      label: `${offer.kind} · ${offer.contentId}`,
+      description: `$${offer.price.toLocaleString()} · 卖家 ${this.gameState.players[offer.sellerId]?.name}`
+    }));
+    const choice = await this.dialogUI.chooseTarget({
+      title: '财富公告板',
+      options: [
+        ...offers,
+        { id: 'CREATE:PROPERTY', label: '挂牌地产', description: '出售自己的一处地产' },
+        { id: 'CREATE:ITEM', label: '挂牌道具', description: '出售背包中的道具' },
+        { id: 'CREATE:CARD', label: '挂牌卡片', description: '出售背包中的策略卡' }
+      ]
+    });
+    if (choice === null) return;
+    if (String(choice).startsWith('ACCEPT:')) {
+      const result = this.gameEngine.execute({ type: 'ACCEPT_MARKET_OFFER', playerId: player.id, payload: { offerId: String(choice).slice(7) } });
+      if (!result.success) this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
+      return this.uiRenderer.renderHUD();
+    }
+    const kind = String(choice).split(':')[1];
+    let assets = [];
+    if (kind === 'PROPERTY') assets = [...this.gameState.propertyManager.properties.entries()]
+      .filter(([, property]) => property.owner === player.id)
+      .map(([id]) => ({ id, label: this.gameState.getTile(id).name, description: `估值 $${this.gameState.getTile(id).price.toLocaleString()}` }));
+    if (kind === 'ITEM') assets = player.items.map((id, index) => ({ id: `${index}:${id}`, label: ITEMS.find(item => item.id === id)?.name || id }));
+    if (kind === 'CARD') assets = player.cards.map((id, index) => ({ id: `${index}:${id}`, label: id }));
+    const assetChoice = await this.dialogUI.chooseTarget({ title: '选择挂牌内容', options: assets });
+    if (assetChoice === null) return;
+    const contentId = kind === 'PROPERTY' ? assetChoice : String(assetChoice).split(':').slice(1).join(':');
+    const basePrice = kind === 'PROPERTY' ? this.gameState.getTile(Number(contentId)).price
+      : kind === 'ITEM' ? (ITEMS.find(item => item.id === contentId)?.sellPrice || 20) * 20
+      : 1000;
+    const price = await this.dialogUI.chooseTarget({
+      title: '选择挂牌价格',
+      options: [0.75, 1, 1.25].map(rate => ({ id: Math.round(basePrice * rate), label: `$${Math.round(basePrice * rate).toLocaleString()}`, description: `${Math.round(rate * 100)}% 参考价` }))
+    });
+    if (price === null) return;
+    this.gameEngine.execute({ type: 'CREATE_MARKET_OFFER', playerId: player.id, payload: { kind, contentId, price } });
+    this.uiRenderer.renderHUD();
   }
 
   showPauseMenu() {
@@ -345,6 +496,11 @@ class GameController {
         this.renderSaveSlots();
       };
       container.appendChild(row);
+      if (!slot.occupied) {
+        void this.gameEngine.saves.loadSlotAsync(slot.slotId).then(loaded => {
+          if (loaded.success && document.body.contains(container)) this.renderSaveSlots();
+        });
+      }
     });
   }
 
@@ -358,6 +514,9 @@ class GameController {
   }
 
   returnToMenu() {
+    if (this.gameState.players.length && this.gameState.phase !== GamePhase.GAME_OVER
+      && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
+    this.audioManager.stopMusic();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
     this.gameState.propertyManager.properties.forEach((property, tileId) => {
       this.boardBuilder.updateBuildingMesh(tileId, 0, null);
@@ -397,6 +556,7 @@ class GameController {
     }));
     this.pawnManager.createPlayerPawns(configs);
     this.pawnManager.syncFromGameState(this.gameState);
+    this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
     this.checkAITurn();
@@ -465,6 +625,18 @@ class GameController {
     if (aiPlayer.isSleepwalkingThisTurn) {
       await this.doRollDice();
       return;
+    }
+
+    const vehicleLimit = aiPlayer.vehicle === 'MOTOR' ? 2 : ['CAR', 'ENGINEER'].includes(aiPlayer.vehicle) ? 3 : 1;
+    this.gameEngine.execute({ type: 'SELECT_DICE_COUNT', playerId: aiPlayer.id, payload: { count: vehicleLimit } });
+
+    const itemPurchase = AIPlayer.decideItemPurchase(aiPlayer, this.gameEngine);
+    if (itemPurchase) this.gameEngine.execute({ type: 'BUY_ITEM', playerId: aiPlayer.id, payload: { itemId: itemPurchase } });
+
+    const itemDecision = AIPlayer.decideItemUsage(aiPlayer, this.gameState, this.gameEngine);
+    if (itemDecision) {
+      const used = await this.handleItemUsage(itemDecision.itemId, itemDecision.targetId ?? null, itemDecision.value ?? null);
+      if (used?.followUp?.mode === 'ROLL' || used?.followUp?.mode === 'TELEPORT') return;
     }
 
     const purchaseDecision = AIPlayer.decideCardPurchase(aiPlayer, this.gameEngine);
@@ -589,15 +761,24 @@ class GameController {
     const landing = this.gameEngine.inspectLanding(curPlayer, tileIndex);
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
-        if (AIPlayer.evaluateLandPurchase(curPlayer, landing.tile, this.gameState)) this.buyLand(tileIndex, curPlayer);
+        const buildingType = landing.tile.type === TileType.BIG_PROPERTY ? AIPlayer.chooseCommercialBuilding(curPlayer, this.gameState) : null;
+        if (AIPlayer.evaluateLandPurchase(curPlayer, landing.tile, this.gameState)) this.buyLand(tileIndex, curPlayer, buildingType);
         else this.gameState.addLog(`🤖 ${curPlayer.name} 放弃购买【${landing.tile.name}】。`);
         return this.finishTurn();
+      }
+      let buildingType = null;
+      if (landing.tile.type === TileType.BIG_PROPERTY) {
+        buildingType = await this.dialogUI.chooseTarget({
+          title: '选择商业设施类型',
+          options: BUILDINGS.map(building => ({ id: building.id, label: `${building.icon} ${building.name}`, description: building.description }))
+        });
+        if (buildingType === null) return this.finishTurn();
       }
       return this.dialogUI.showLandPurchase({
         tileData: landing.tile,
         currentLevel: 0,
         player: curPlayer,
-        onBuy: () => { this.buyLand(tileIndex, curPlayer); this.finishTurn(); },
+        onBuy: () => { this.buyLand(tileIndex, curPlayer, buildingType); this.finishTurn(); },
         onPass: () => this.finishTurn()
       });
     }
@@ -613,6 +794,21 @@ class GameController {
         onUpgrade: () => { this.upgradeLand(tileIndex, curPlayer); this.finishTurn(); },
         onPass: () => this.finishTurn()
       });
+    }
+    if (landing.kind === 'LAB') {
+      const options = landing.researchOptions.map(item => ({
+        id: item.id,
+        label: `${item.icon} ${item.name}`,
+        description: `研发 ${item.researchRounds || 1} 轮 · ${item.description}`
+      }));
+      if (curPlayer.isAI) {
+        const item = options.at(-1);
+        if (item) this.gameEngine.execute({ type: 'START_RESEARCH', playerId: curPlayer.id, payload: { tileId: tileIndex, itemId: item.id } });
+      } else if (options.length) {
+        const itemId = await this.dialogUI.chooseTarget({ title: '研究所：选择研发项目', options });
+        if (itemId !== null) this.gameEngine.execute({ type: 'START_RESEARCH', playerId: curPlayer.id, payload: { tileId: tileIndex, itemId } });
+      }
+      return this.finishTurn();
     }
     if (landing.kind === 'OWN_MAX') {
       this.gameState.addLog(`🏢 ${curPlayer.name} 视察顶级地产【${landing.tile.name}】。`);
@@ -635,7 +831,8 @@ class GameController {
     if (result.type === 'MONSTER_ATTACK') this.triggerExplosionVFX();
     if (result.type === 'STATUS_APPLIED') this.pawnManager.updateGodAura(curPlayer.id, result.status);
     if (result.type === 'OPEN_STOCK' && !curPlayer.isAI) {
-      await new Promise(resolve => this.stockUI.show(resolve));
+      const stockUI = await this.getStockUI();
+      await new Promise(resolve => stockUI.show(resolve));
     }
     if (result.type === 'OPEN_BANK') {
       await this.handleBankVisit(curPlayer, tileIndex);
@@ -645,6 +842,9 @@ class GameController {
     }
     if (result.type === 'MAGIC_OFFER') {
       await this.handleMagicVisit(curPlayer, tileIndex, result);
+    }
+    if (result.type === 'MINIGAME_OFFER') {
+      await this.handleMinigameVisit(curPlayer, tileIndex, result);
     }
     this.finishTurn();
   }
@@ -691,11 +891,52 @@ class GameController {
   }
 
   async handleMagicVisit(player, tileId, offer) {
-    const magicId = player.isAI
-      ? (player.cash < 5000 ? 'CASH_RAIN' : 'PROPERTY_BOOM')
-      : await this.dialogUI.chooseTarget({ title: '魔法屋：选择全局魔法', options: offer.options });
-    if (magicId === null) return;
-    this.gameEngine.execute({ type: 'CAST_MAGIC', playerId: player.id, payload: { tileId, magicId } });
+    if (player.isAI) {
+      const decision = AIPlayer.chooseMagic(player, this.gameState);
+      this.gameEngine.execute({ type: 'RESOLVE_MAGIC', playerId: player.id, payload: { tileId, ...decision } });
+    } else {
+      const conditionId = await this.dialogUI.chooseTarget({ title: '魔法屋：选择目标条件', options: offer.conditions });
+      if (conditionId === null) return;
+      const effectId = await this.dialogUI.chooseTarget({ title: '魔法屋：选择施法结果', options: offer.effects });
+      if (effectId === null) return;
+      this.gameEngine.execute({ type: 'RESOLVE_MAGIC', playerId: player.id, payload: { tileId, conditionId, effectId } });
+    }
+    this.syncBoardAssets(true);
+    this.uiRenderer.renderHUD();
+  }
+
+  async handleMinigameVisit(player, tileId, offer) {
+    const score = player.isAI
+      ? this.gameState.rng.int(player.aiDifficulty === 'HARD' ? 65 : 35, player.aiDifficulty === 'EASY' ? 65 : 95)
+      : await this.dialogUI.playMinigame(offer.gameId);
+    this.gameEngine.execute({ type: 'SUBMIT_MINIGAME_RESULT', playerId: player.id, payload: { tileId, gameId: offer.gameId, score } });
+    this.uiRenderer.renderHUD();
+  }
+
+  async handleAuction() {
+    while (this.gameState.auction) {
+      const auction = this.gameState.auction;
+      const bidderId = auction.bidderOrder[auction.bidderIndex];
+      const bidder = this.gameState.players[bidderId];
+      const minimum = Math.max(auction.minimumBid, auction.highestBid + 100);
+      let amount = 0;
+      if (bidder.isAI) {
+        const tile = this.gameState.getTile(auction.tileId);
+        const ceiling = Math.min(bidder.cash - 1500, Math.round((tile.price || minimum) * (bidder.aiDifficulty === 'HARD' ? 1.15 : 0.85)));
+        amount = ceiling >= minimum ? minimum + this.gameState.rng.int(0, Math.min(500, ceiling - minimum)) : 0;
+      } else {
+        const choice = await this.dialogUI.chooseTarget({
+          title: `地产拍卖：${this.gameState.getTile(auction.tileId).name} · ${bidder.name} 出价`,
+          options: [
+            { id: 0, label: '放弃竞拍', description: `当前最高 $${auction.highestBid.toLocaleString()}` },
+            { id: minimum, label: `出价 $${minimum.toLocaleString()}`, description: `现金 $${bidder.cash.toLocaleString()}` },
+            { id: minimum + 500, label: `出价 $${(minimum + 500).toLocaleString()}`, description: '提高竞争门槛' }
+          ].filter(option => option.id === 0 || option.id <= bidder.cash)
+        });
+        amount = Number(choice || 0);
+      }
+      this.gameEngine.execute({ type: 'PLACE_BID', playerId: bidder.id, payload: { amount } });
+    }
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
   }
@@ -704,6 +945,7 @@ class GameController {
     if (!this.gameState.pendingDebt) return;
     if (player.isAI) {
       this.gameEngine.execute({ type: 'AUTO_SETTLE_DEBT', playerId: player.id });
+      if (this.gameState.auction) await this.handleAuction();
       return;
     }
     while (this.gameState.pendingDebt && !player.isBankrupt) {
@@ -730,14 +972,15 @@ class GameController {
         : { tileId: action.tileId };
       this.gameEngine.execute({ type: action.type, playerId: player.id, payload });
     }
+    if (this.gameState.auction) await this.handleAuction();
     this.syncBoardAssets();
     this.uiRenderer.renderHUD();
   }
 
-  buyLand(tileIndex, player) {
-    const result = this.gameEngine.execute({ type: 'PURCHASE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex } });
+  buyLand(tileIndex, player, buildingType = null) {
+    const result = this.gameEngine.execute({ type: 'PURCHASE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex, buildingType } });
     if (result.success) {
-      this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex);
+      this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex, result.buildingType);
       this.audioManager.playBuildSound();
     }
     return result;
@@ -746,7 +989,7 @@ class GameController {
   upgradeLand(tileIndex, player) {
     const result = this.gameEngine.execute({ type: 'UPGRADE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex } });
     if (result.success) {
-      this.boardBuilder.updateBuildingMesh(tileIndex, result.level, player.colorHex);
+      this.boardBuilder.updateBuildingMesh(tileIndex, result.level, player.colorHex, this.gameState.propertyManager.getProperty(tileIndex)?.buildingType);
       this.audioManager.playBuildSound();
     }
     return result;
@@ -772,6 +1015,46 @@ class GameController {
     flash.className = 'vfx-explosion-flash';
     document.body.appendChild(flash);
     setTimeout(() => flash.remove(), 800);
+  }
+
+  async handleItemUsage(itemId, targetOverride = null, valueOverride = null) {
+    const player = this.gameState.getCurrentPlayer();
+    const action = this.gameEngine.getItemAction(player, itemId);
+    if (!action.enabled) {
+      this.gameState.addLog(`⚠️ 道具未发动：${action.reason}`, 'danger');
+      this.uiRenderer.renderHUD();
+      return null;
+    }
+    let targetId = targetOverride;
+    if (action.targets?.length && targetId === null) {
+      targetId = await this.dialogUI.chooseTarget({ title: '选择道具目标', options: action.targets });
+      if (targetId === null) return null;
+    }
+    let value = valueOverride;
+    if (itemId === 'REMOTE_DICE_ITEM' && value === null) {
+      value = await this.dialogUI.chooseDiceValue();
+      if (value === null) return null;
+    }
+    if (['MISSILE_ITEM', 'NUCLEAR_MISSILE', 'MINE_ITEM'].includes(itemId)) this.triggerExplosionVFX();
+    const result = this.gameEngine.execute({ type: 'USE_ITEM', playerId: player.id, payload: { itemId, targetId, value } });
+    if (!result.success) {
+      this.gameState.addLog(`⚠️ 道具未发动：${result.reason}`, 'danger');
+      this.uiRenderer.renderHUD();
+      return result;
+    }
+    this.audioManager.playCardSpell();
+    this.syncBoardAssets(true);
+    this.uiRenderer.renderHUD();
+    if (result.followUp?.mode === 'ROLL') {
+      await this.doRollDice(result.followUp.steps);
+    } else if (result.followUp?.mode === 'TELEPORT') {
+      const moved = this.gameEngine.execute({ type: 'TELEPORT_PLAYER', playerId: player.id, payload: { tileId: result.followUp.tileId } });
+      if (moved.success) {
+        await this.pawnManager.animatePlayerStep(player.id, moved.tileId, Math.round(220 / (this.actionSpeed || 1)));
+        await this.handleTileArrival(moved.tileId);
+      }
+    }
+    return result;
   }
 
   async handleCardUsage(cardId, cardIndex, targetOverride = null) {
@@ -822,6 +1105,8 @@ class GameController {
           await this.pawnManager.animatePlayerStep(curPlayer.id, moved.tileId, Math.round(220 / (this.actionSpeed || 1)));
           await this.handleTileArrival(moved.tileId);
         }
+      } else if (result.followUp?.type === 'AUCTION_REQUESTED') {
+        await this.handleAuction();
       }
     };
 
@@ -842,7 +1127,8 @@ class GameController {
       return;
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
+      const previousPlayer = this.gameState.getCurrentPlayer();
       const transition = this.gameEngine.execute({
         type: 'END_TURN',
         playerId: this.gameState.currentPlayerIndex
@@ -858,6 +1144,10 @@ class GameController {
       if (transition?.gameOver && this.gameState.winner) {
         this.dialogUI.showVictory(this.gameState.winner, () => this.returnToMenu(), this.gameState);
       } else {
+        const nextPlayer = this.gameState.getCurrentPlayer();
+        if (previousPlayer && nextPlayer && !previousPlayer.isAI && !nextPlayer.isAI && previousPlayer.id !== nextPlayer.id) {
+          await this.dialogUI.showHotseatPass(nextPlayer);
+        }
         this.checkAITurn();
       }
     }, Math.round(800 / this.actionSpeed));
@@ -866,4 +1156,5 @@ class GameController {
 
 window.addEventListener('DOMContentLoaded', () => {
   new GameController();
+  import('./pwa.js').then(({ registerPWA }) => registerPWA());
 });

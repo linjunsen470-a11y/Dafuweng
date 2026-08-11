@@ -10,7 +10,10 @@ const FACILITY_TYPES = new Map([
   [29, TileType.MAGIC_HOUSE],
   [49, TileType.LOTTERY],
   [69, TileType.MAGIC_HOUSE],
-  [79, TileType.MECHANISM]
+  [79, TileType.MECHANISM],
+  [89, TileType.COMPANY],
+  [99, TileType.COMPANY],
+  [109, TileType.MINIGAME]
 ]);
 const GROUP_IDS = [
   'BAY_1', 'BAY_2', 'BAY_3',
@@ -140,7 +143,11 @@ const tiles = positions.map((position, id) => {
     const meta = {
       [TileType.LOTTERY]: { name: '山海乐透站', icon: '🎰', desc: '购买号码并参与每轮乐透开奖' },
       [TileType.MAGIC_HOUSE]: { name: '奇迹魔法屋', icon: '🔮', desc: '选择一项改变全局局势的魔法' },
-      [TileType.MECHANISM]: { name: '潮汐机关塔', icon: '⚙️', desc: '切换本轮岛屿岔路通行方向' }
+      [TileType.MECHANISM]: { name: '潮汐机关塔', icon: '⚙️', desc: '切换本轮岛屿岔路通行方向' },
+      [TileType.COMPANY]: id === 89
+        ? { name: '云端计算', icon: '💻', companyId: 'CLOUD_COMPUTE', desc: '数字服务收入进入公司账本' }
+        : { name: '峰岳材料', icon: '⛏️', companyId: 'SUMMIT_MATERIAL', desc: '材料业务收入进入公司账本' },
+      [TileType.MINIGAME]: { name: '云端游乐场', icon: '🎮', minigameId: 'SKY_COINS', desc: '完成小游戏赢取点券' }
     }[type];
     return { id, type, ...meta, position, next };
   }
@@ -176,7 +183,7 @@ export const GRAND_BAY_MAP = {
   name: '山海都市岛',
   spawnTile: 0,
   theme: 'GRAND_BAY',
-  musicId: 'island-breeze',
+  musicId: 'grand-bay',
   defaultDiceCount: 2,
   passBonus: 1200,
   roadWidth: 2.8,

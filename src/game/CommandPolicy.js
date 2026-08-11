@@ -1,4 +1,8 @@
-const PRE_ROLL_COMMANDS = new Set(['BUY_STOCK', 'BUY_CARD', 'USE_CARD', 'ROLL_DICE']);
+const PRE_ROLL_COMMANDS = new Set([
+  'BUY_STOCK', 'BUY_CARD', 'USE_CARD', 'ROLL_DICE', 'SELECT_DICE_COUNT',
+  'BUY_ITEM', 'SELL_INVENTORY', 'USE_ITEM', 'PLACE_ROAD_ENTITY',
+  'CREATE_MARKET_OFFER', 'ACCEPT_MARKET_OFFER', 'START_AUCTION'
+]);
 const LANDING_COMMANDS = new Set([
   'PURCHASE_PROPERTY',
   'UPGRADE_PROPERTY',
@@ -6,7 +10,11 @@ const LANDING_COMMANDS = new Set([
   'RESOLVE_LANDING',
   'BANK_TRANSFER',
   'BUY_LOTTERY',
-  'CAST_MAGIC'
+  'CAST_MAGIC',
+  'RESOLVE_MAGIC',
+  'START_RESEARCH',
+  'SUBMIT_MINIGAME_RESULT',
+  'CHOOSE_BUILDING_TYPE'
 ]);
 const DEBT_COMMANDS = new Set([
   'SELL_BUILDING',
@@ -21,6 +29,11 @@ export function validateCommand(state, player, command) {
   const type = command.type;
   if (player.isBankrupt && type !== 'END_TURN') return { success: false, reason: '破产玩家不能执行操作' };
   if (type === 'PAUSE_GAME' || type === 'RESUME_GAME') return null;
+  if (type === 'PLACE_BID' && state.phase === 'AUCTION') {
+    return state.auction?.bidderOrder?.[state.auction.bidderIndex] === player.id
+      ? null
+      : { success: false, reason: '尚未轮到该玩家出价' };
+  }
   if (player.id !== state.currentPlayerIndex) return { success: false, reason: '只能由当前玩家执行操作' };
 
   if (PRE_ROLL_COMMANDS.has(type) && state.phase !== 'PRE_ROLL_ACTION') {

@@ -7,6 +7,7 @@ class MemoryStorage {
   }
   setItem(key, value) { this.values.set(key, value); }
   getItem(key) { return this.values.get(key) ?? null; }
+  removeItem(key) { this.values.delete(key); }
 }
 
 describe('SaveManager', () => {
@@ -22,5 +23,17 @@ describe('SaveManager', () => {
     const saves = new SaveManager(storage);
     storage.setItem('fortune-empire:auto-save:v1', JSON.stringify({ version: 99 }));
     expect(saves.loadAuto().success).toBe(false);
+  });
+
+  it('manages three named V4 manual slots', () => {
+    const saves = new SaveManager(new MemoryStorage());
+    expect(saves.saveSlot(2, { version: 4, round: 9 }, '宝藏岛')).toEqual({ success: true });
+    expect(saves.listSlots()[1]).toMatchObject({
+      slotId: 2,
+      occupied: true,
+      snapshot: { version: 4, round: 9, saveName: '宝藏岛' }
+    });
+    expect(saves.deleteSlot(2).success).toBe(true);
+    expect(saves.loadSlot(2).success).toBe(false);
   });
 });

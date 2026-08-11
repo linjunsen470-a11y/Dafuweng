@@ -1,4 +1,6 @@
 import { cardManager } from '../game/CardManager.js';
+import { ITEMS } from '../game/ContentRegistry.js';
+import { CARD_CAPACITY, ITEM_CAPACITY } from '../game/InventoryManager.js';
 
 export class ShopUI {
   constructor(gameState, audioManager, onUseCardCallback, onUpdateHUD, gameEngine = null) {
@@ -88,13 +90,33 @@ export class ShopUI {
 
       this.shopGrid.appendChild(item);
     });
+
+    ITEMS.filter(item => item.cost !== null).forEach(tool => {
+      const item = document.createElement('div');
+      item.className = 'shop-card-item shop-tool-item';
+      item.innerHTML = `
+        <div class="card-icon">${tool.icon}</div>
+        <div class="card-title">${tool.name}</div>
+        <div class="card-desc">${tool.description}</div>
+        <div class="card-cost">${tool.cost} PTS · 道具</div>
+        <button class="btn-primary btn-sm btn-buy-tool">购买道具</button>
+      `;
+      item.querySelector('.btn-buy-tool').addEventListener('click', () => {
+        const result = this.gameEngine.execute({ type: 'BUY_ITEM', playerId: curPlayer.id, payload: { itemId: tool.id } });
+        if (result.success) this.audioManager.playCardSpell();
+        else this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
+        this.renderShop();
+        this.onUpdateHUD?.();
+      });
+      this.shopGrid.appendChild(item);
+    });
   }
 
   renderInventory() {
     const curPlayer = this.gameState.getCurrentPlayer();
     this.inventoryGrid.innerHTML = '';
 
-    if (!curPlayer.cards || curPlayer.cards.length === 0) {
+    if ((!curPlayer.cards || curPlayer.cards.length === 0) && (!curPlayer.items || curPlayer.items.length === 0)) {
       this.inventoryGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#aaa;padding:20px;">背包空空如也，快去卡片商店兑换吧！</div>';
       return;
     }
@@ -114,16 +136,48 @@ export class ShopUI {
         ${iconContent}
         <div class="card-title">${card.name}</div>
         <div class="card-desc">${card.desc}</div>
+        <div class="card-cost">卡片 ${curPlayer.cards.length}/${CARD_CAPACITY}</div>
         <button class="btn-primary btn-sm btn-use-card-action">使用卡片</button>
+        <button class="btn-secondary btn-sm btn-sell-card-action">出售</button>
       `;
 
       item.querySelector('.btn-use-card-action').addEventListener('click', () => {
         this.hideInventory();
         if (this.onUseCardCallback) {
-          this.onUseCardCallback(cardId, index);
+          this.onUseCardCallback(cardId, index, 'CARD');
         }
       });
+      item.querySelector('.btn-sell-card-action').addEventListener('click', () => {
+        this.gameEngine.execute({ type: 'SELL_INVENTORY', playerId: curPlayer.id, payload: { kind: 'CARD', contentId: cardId } });
+        this.renderInventory();
+        this.onUpdateHUD?.();
+      });
 
+      this.inventoryGrid.appendChild(item);
+    });
+
+    curPlayer.items?.forEach((itemId, index) => {
+      const tool = ITEMS.find(item => item.id === itemId);
+      if (!tool) return;
+      const item = document.createElement('div');
+      item.className = 'shop-card-item shop-tool-item';
+      item.innerHTML = `
+        <div class="card-icon">${tool.icon}</div>
+        <div class="card-title">${tool.name}</div>
+        <div class="card-desc">${tool.description}</div>
+        <div class="card-cost">道具 ${curPlayer.items.length}/${ITEM_CAPACITY}</div>
+        <button class="btn-primary btn-sm btn-use-tool-action">使用道具</button>
+        <button class="btn-secondary btn-sm btn-sell-tool-action">出售 ${tool.sellPrice} PTS</button>
+      `;
+      item.querySelector('.btn-use-tool-action').onclick = () => {
+        this.hideInventory();
+        this.onUseCardCallback?.(itemId, index, 'ITEM');
+      };
+      item.querySelector('.btn-sell-tool-action').onclick = () => {
+        this.gameEngine.execute({ type: 'SELL_INVENTORY', playerId: curPlayer.id, payload: { kind: 'ITEM', contentId: itemId } });
+        this.renderInventory();
+        this.onUpdateHUD?.();
+      };
       this.inventoryGrid.appendChild(item);
     });
   }

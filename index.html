@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f5d78">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#0a1424">
   <title>3D 大富翁：富翁帝国 (Q版卡通版)</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
@@ -132,6 +135,8 @@
           <button id="btn-time-of-day" class="icon-btn atmosphere-btn" title="切换时间：白天" aria-label="切换时间">🌤️</button>
         </div>
         <div class="tool-cluster" aria-label="游戏菜单">
+          <button id="btn-market" class="icon-btn" title="玩家公告交易" aria-label="玩家公告交易">📋</button>
+          <button id="btn-help" class="icon-btn" title="规则与教程" aria-label="规则与教程">❔</button>
           <button id="btn-save-game" class="icon-btn" title="手动存档" aria-label="手动存档">💾</button>
           <button id="btn-pause-game" class="icon-btn" title="暂停菜单" aria-label="暂停菜单">⏸️</button>
           <button id="btn-assets" class="icon-btn" title="资产排名" aria-label="资产排名">🏆</button>
@@ -162,6 +167,13 @@
       </div>
 
       <div class="action-buttons">
+        <label class="dice-count-control" title="载具决定最多可用骰子数量">骰子
+          <select id="dice-count-select" aria-label="选择骰子数量">
+            <option value="1">1 颗</option>
+            <option value="2">2 颗</option>
+            <option value="3">3 颗</option>
+          </select>
+        </label>
         <button id="btn-roll" class="btn-action btn-roll">
           <span class="dice-icon" aria-hidden="true">🎲</span>
           <span class="action-text">掷骰子</span>
@@ -346,7 +358,16 @@
           <button class="speed-btn active" data-speed="1">1×</button>
           <button class="speed-btn" data-speed="2">2×</button>
         </div>
+        <div class="volume-options">
+          <label>音乐音量 <input id="music-volume" type="range" min="0" max="1" step="0.05" value="0.22"></label>
+          <label>音效音量 <input id="sfx-volume" type="range" min="0" max="1" step="0.05" value="0.8"></label>
+        </div>
         <div id="save-slot-list" class="save-slot-list"></div>
+        <div class="pause-file-actions">
+          <button id="btn-export-save" class="btn-secondary">导出当前存档</button>
+          <label class="btn-secondary">导入存档<input id="input-import-save" type="file" accept="application/json" hidden></label>
+          <button id="btn-reduce-motion" class="btn-secondary">减少动态效果：关</button>
+        </div>
         <button id="btn-return-menu" class="btn-danger">返回主菜单</button>
       </div>
     </div>

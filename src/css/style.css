@@ -554,6 +554,78 @@ body, html {
   gap: 10px;
 }
 
+.dice-count-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  min-height: 54px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  color: #b9d8e6;
+  font-size: .78rem;
+  background: rgba(4,19,31,.72);
+}
+
+.dice-count-control select {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px;
+  color: #fff;
+  background: #15364a;
+}
+
+.shop-tool-item { border-color: rgba(34,193,195,.35); }
+
+.minigame-box { width: min(620px, 90vw); }
+.minigame-stage {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 16px;
+  background: radial-gradient(circle at center, rgba(34,193,195,.22), rgba(3,19,32,.92));
+}
+.minigame-target {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  border: 0;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  cursor: pointer;
+  background: #ffbf35;
+  box-shadow: 0 0 28px rgba(255,191,53,.6);
+  transition: left .12s ease, top .12s ease;
+}
+.minigame-score { display: block; margin-top: 14px; font-size: 1.25rem; color: #ffcf55; }
+.hotseat-pass-modal { z-index: 10000; backdrop-filter: blur(24px); }
+.hotseat-pass-box { text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+}
+.rules-help-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.rules-help-grid section {
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  background: rgba(4,24,39,.55);
+}
+.rules-help-grid h3 { margin: 0 0 8px; color: #ffcf55; }
+.rules-help-grid p { margin: 0; color: #c6dce6; line-height: 1.55; }
+.pause-file-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
 .btn-action {
   background: rgba(22, 26, 48, 0.85);
   border: 1px solid var(--glass-border);
@@ -751,9 +823,7 @@ body, html {
   height: 180px;
   margin: 0 auto 10px;
   border-radius: 22px;
-  background-image: url('/assets/buildings-v2-atlas.webp');
-  background-size: 500% 100%;
-  background-repeat: no-repeat;
+  background: radial-gradient(circle at 50% 28%, rgba(255,255,255,.34), transparent 22%), linear-gradient(145deg, #14532d, #0ea5e9 58%, #312e81);
   box-shadow: 0 12px 30px rgba(0,0,0,0.3), inset 0 0 0 2px rgba(255,255,255,0.32);
 }
 
@@ -1768,6 +1838,7 @@ input:focus-visible,
 }
 
 .speed-options,
+.volume-options,
 .save-slot-row {
   display: flex;
   gap: 8px;
@@ -1776,6 +1847,14 @@ input:focus-visible,
   padding: 10px;
   background: rgba(255,255,255,0.06);
   border-radius: var(--radius-md);
+}
+
+.volume-options label {
+  display: grid;
+  gap: 5px;
+  flex: 1;
+  font-size: 0.82rem;
+  color: #dbeafe;
 }
 
 .speed-btn {

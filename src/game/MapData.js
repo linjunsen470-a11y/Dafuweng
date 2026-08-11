@@ -19,6 +19,11 @@ export const CITY_LOOP_MAP = {
   musicId: 'city-day',
   tiles: BOARD_TILES.map((tile, index) => ({
     ...tile,
+    ...({
+      12: { type: TileType.COMPANY, name: '天际交通枢纽', icon: '🚝', companyId: 'SKY_TRANSIT', desc: '交通消费进入公司账本' },
+      19: { type: TileType.BIG_PROPERTY, name: '霓虹中央广场', large: true, group: 'GOLD', price: 6200, buildCost: 3200, tolls: [900, 2700, 5900, 12600, 27400] },
+      28: { type: TileType.MINIGAME, name: '夜光航线馆', icon: '🎮', minigameId: 'ROUTE_MEMORY', desc: '完成航线记忆挑战' }
+    }[index] || {}),
     position: loopPosition(index),
     next: [(index + 1) % BOARD_TILES.length],
     previous: [(index - 1 + BOARD_TILES.length) % BOARD_TILES.length]
@@ -58,6 +63,12 @@ export const ISLAND_FORK_MAP = {
     return {
       ...tile,
       name: islandNames[index],
+      ...({
+        5: { type: TileType.BIG_PROPERTY, name: '灯塔度假区', large: true, group: 'GREEN', price: 4300, buildCost: 2400, tolls: [650, 1900, 4100, 8500, 18400] },
+        13: { type: TileType.COMPANY, name: '峰岳材料码头', icon: '⛏️', companyId: 'SUMMIT_MATERIAL', desc: '岛屿材料运输形成公司收入' },
+        23: { type: TileType.MINIGAME, name: '夜市分拣赛', icon: '🎮', minigameId: 'HARBOR_SORT', desc: '参加海岛分拣技巧赛' },
+        27: { type: TileType.COMPANY, name: '蓝港保险站', icon: '🛟', companyId: 'HARBOR_INSURANCE', desc: '为远航旅客提供保险服务' }
+      }[index] || {}),
       position: forkPositions[index] || islandPosition(index),
       next
     };
@@ -97,8 +108,15 @@ export const TAIWAN_MAP = {
 
     return {
       ...baseTile,
-      id: index,
       name: taiwanNames[index] || baseTile.name,
+      ...({
+        11: { type: TileType.COMPANY, name: '云端计算园', icon: '💻', companyId: 'CLOUD_COMPUTE', desc: '科技服务形成公司营收' },
+        17: { type: TileType.BIG_PROPERTY, name: '古都文创园', large: true, group: 'PURPLE', price: 5200, buildCost: 2800, tolls: [760, 2250, 4900, 10300, 22300] },
+        23: { type: TileType.MINIGAME, name: '港都金币赛', icon: '🎮', minigameId: 'SKY_COINS', desc: '参加限时金币技巧赛' },
+        33: { type: TileType.COMPANY, name: '新星营造港', icon: '🏗️', companyId: 'NOVA_BUILD', desc: '海港工程收入进入公司账本' },
+        39: { type: TileType.BIG_PROPERTY, name: '海风度假城', large: true, group: 'GOLD', price: 6500, buildCost: 3400, tolls: [980, 2900, 6300, 13400, 29000] }
+      }[index] || {}),
+      id: index,
       position: pos,
       next
     };
@@ -125,12 +143,12 @@ const crossroadsNext = {
 const crossroadsOverrides = {
   0: { name: '风铃港起点', icon: '🚩' },
   1: { name: '云杉空地', group: 'GREEN', price: 900, buildCost: 550, tolls: [120, 360, 820, 1800, 4000] },
-  2: { type: TileType.COUPON, name: '点券喷泉', icon: '🎟️', couponAmount: 30, desc: '获得 30 点卡片点券' },
+  2: { type: TileType.COMPANY, name: '极光百货', icon: '🏬', companyId: 'AURORA_RETAIL', desc: '消费会形成公司营收，最大股东担任董事长' },
   3: { type: TileType.CHANCE, name: '西岔路口', icon: '↗️', desc: '选择山谷或集市路线' },
   4: { type: TileType.PROPERTY, name: '苔石空地', group: 'GREEN', price: 1200, buildCost: 700, tolls: [160, 480, 1050, 2300, 5100] },
   5: { type: TileType.MONSTER, name: '怪兽巢穴', icon: '👾', desc: '怪兽会夷平一栋最高级的对手建筑' },
   6: { type: TileType.GOD_FORTUNE, name: '福星花径', icon: '🌟', spirit: 'LUCK', cardReward: 1, desc: '福星赠送一张卡片并带来置业好运' },
-  7: { type: TileType.COUPON, name: '彩券栈桥', icon: '🎫', couponAmount: 50, desc: '获得 50 点卡片点券' },
+  7: { type: TileType.COMPANY, name: '蓝港保险', icon: '🛟', companyId: 'HARBOR_INSURANCE', desc: '保险业务收入按经济周期向股东分红' },
   8: { type: TileType.PROPERTY, name: '潮汐空地', group: 'BLUE', price: 1700, buildCost: 950, tolls: [230, 700, 1600, 3300, 7200] },
   9: { type: TileType.CARD_SHOP, name: '风车卡片屋', icon: '🃏' },
   10: { type: TileType.PROPERTY, name: '灯塔空地', group: 'BLUE', price: 2100, buildCost: 1150, tolls: [310, 930, 2050, 4200, 9100] },
@@ -141,17 +159,17 @@ const crossroadsOverrides = {
   15: { type: TileType.COUPON, name: '森林点券站', icon: '🎟️', couponAmount: 30, desc: '获得 30 点卡片点券' },
   16: { type: TileType.BANK, name: '星河银行', icon: '🏦' },
   17: { type: TileType.PROPERTY, name: '月桂空地', group: 'PURPLE', price: 2900, buildCost: 1650, tolls: [460, 1380, 2900, 6000, 13200] },
-  18: { type: TileType.MONSTER, name: '云顶怪兽', icon: '👹', desc: '怪兽会夷平一栋最高级的对手建筑' },
+  18: { type: TileType.BIG_PROPERTY, name: '新星未来城', icon: '🏙️', large: true, group: 'PURPLE', price: 4800, buildCost: 2600, tolls: [720, 2100, 4600, 9800, 21200], desc: '可建设五类商业设施' },
   19: { type: TileType.CHANCE, name: '东岔路口', icon: '↖️', desc: '选择矿谷或花园路线' },
   20: { type: TileType.PROPERTY, name: '金砂空地', group: 'GOLD', price: 3400, buildCost: 1950, tolls: [580, 1750, 3700, 7700, 16800] },
   21: { type: TileType.TREASURE, name: '矿谷宝箱', icon: '💎', desc: '随机获得现金、点券或卡片' },
   22: { type: TileType.GOD_FORTUNE, name: '大福星驿站', icon: '⭐', spirit: 'LUCK', cardReward: 2, desc: '大福星赠送两张卡片并带来置业好运' },
   23: { type: TileType.PROPERTY, name: '花冠空地', group: 'GOLD', price: 3900, buildCost: 2200, tolls: [680, 2050, 4300, 9100, 19800] },
-  24: { type: TileType.COUPON, name: '庆典点券台', icon: '🎟️', couponAmount: 50, desc: '获得 50 点卡片点券' },
+  24: { type: TileType.MINIGAME, name: '港湾游乐场', icon: '🎮', minigameId: 'HARBOR_SORT', desc: '完成技巧挑战赢取点券' },
   25: { type: TileType.PROPERTY, name: '晴空空地', group: 'GOLD', price: 4500, buildCost: 2500, tolls: [790, 2400, 5000, 10600, 23000] },
   26: { type: TileType.STOCK, name: '云端交易所', icon: '📈' },
   27: { type: TileType.PROPERTY, name: '虹桥空地', group: 'GOLD', price: 5100, buildCost: 2850, tolls: [920, 2850, 6100, 13200, 28500] },
-  28: { type: TileType.TREASURE, name: '庆典宝箱', icon: '🎁', desc: '随机获得现金、点券或卡片' },
+  28: { type: TileType.COMPANY, name: '新星营造', icon: '🏗️', companyId: 'NOVA_BUILD', desc: '城市建设消费会进入公司账本' },
   29: { type: TileType.PROPERTY, name: '星幕空地', group: 'PURPLE', price: 3200, buildCost: 1800, tolls: [520, 1550, 3300, 6900, 15100] },
   30: { type: TileType.HOSPITAL, name: '风铃诊所', icon: '🏥' },
   31: { type: TileType.COUPON, name: '港口点券箱', icon: '🎫', couponAmount: 10, desc: '获得 10 点卡片点券' }
@@ -163,7 +181,7 @@ export const FORTUNE_CROSSROADS_MAP = {
   name: '福星岔路岛',
   spawnTile: 0,
   theme: 'CROSSROADS',
-  musicId: 'island-breeze',
+  musicId: 'fortune-crossroads',
   tiles: BOARD_TILES.map((tile, index) => {
     const mapped = {
       ...tile,
@@ -172,7 +190,7 @@ export const FORTUNE_CROSSROADS_MAP = {
       position: crossroadsPositions[index],
       next: crossroadsNext[index] || [(index + 1) % BOARD_TILES.length]
     };
-    if (mapped.type !== TileType.PROPERTY) {
+    if (![TileType.PROPERTY, TileType.BIG_PROPERTY].includes(mapped.type)) {
       delete mapped.group;
       delete mapped.price;
       delete mapped.buildCost;

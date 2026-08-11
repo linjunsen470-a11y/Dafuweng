@@ -21,10 +21,13 @@ export class PawnManager {
       const characterMesh = this.createDetailedCharacter(profile.id, profile);
       group.add(characterMesh);
 
-      const standee = this.createCharacterStandee(profile, () => {
-        characterMesh.visible = false;
-      });
-      group.add(standee);
+      let standee = null;
+      if (profile.avatarImg) {
+        standee = this.createCharacterStandee(profile, () => {
+          characterMesh.visible = false;
+        });
+        group.add(standee);
+      }
 
       // 角色脚下炫彩 3D 光圈底座
       const ringGeo = new THREE.RingGeometry(0.8, 1.0, 32);
@@ -117,16 +120,12 @@ export class PawnManager {
 
     const image = new Image();
     image.onload = () => {
-      const col = profile.id % 4;
-      const row = Math.floor(profile.id / 4);
-      const cellWidth = image.width / 4;
-      const cellHeight = image.height / 3;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(8, 8, 304, 384, 42);
       ctx.clip();
-      ctx.drawImage(image, col * cellWidth, row * cellHeight, cellWidth, cellHeight, 8, 8, 304, 384);
+      ctx.drawImage(image, 8, 8, 304, 384);
       const gradient = ctx.createLinearGradient(0, 250, 0, 392);
       gradient.addColorStop(0, 'rgba(8,12,30,0)');
       gradient.addColorStop(1, 'rgba(8,12,30,0.34)');
@@ -141,7 +140,7 @@ export class PawnManager {
       texture.needsUpdate = true;
       onReady?.();
     };
-    image.src = '/assets/characters-v2-atlas.webp';
+    image.src = profile.avatarImg || '';
     return sprite;
   }
 

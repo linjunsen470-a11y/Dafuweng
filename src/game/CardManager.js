@@ -7,7 +7,7 @@ export const CARDS = [
     id: 'REMOTE_DICE',
     name: '遥控骰子',
     icon: '🎯',
-    cardImg: '/assets/card_remote_dice.jpg',
+    cardImg: '/assets/card_remote_dice.svg',
     cost: 45,
     targetType: 'NONE',
     desc: '自由指定本回合前进步数 (1~6 步)'
@@ -16,7 +16,7 @@ export const CARDS = [
     id: 'OBSTACLE',
     name: '路障卡',
     icon: '🚧',
-    cardImg: '/assets/card_obstacle.jpg',
+    cardImg: '/assets/card_obstacle.svg',
     cost: 40,
     targetType: 'TILE',
     desc: '在前方任意 10 格内放置路障，经过者强制停下'
@@ -263,6 +263,15 @@ export const CARDS = [
     cost: 40,
     targetType: 'NONE',
     desc: '驱散自己身上附着的穷神、衰神或恶魔负面神仙'
+  },
+  {
+    id: 'AUCTION_CARD',
+    name: '竞价令',
+    icon: '🔨',
+    cardImg: '/assets/card_equal_wealth.svg',
+    cost: 55,
+    targetType: 'PROPERTY',
+    desc: '将自己的一块地产公开拍卖给其他玩家'
   }
 ];
 

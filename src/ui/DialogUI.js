@@ -1,5 +1,3 @@
-import confetti from 'canvas-confetti';
-
 import { MAX_PROPERTY_LEVEL } from '../game/GameRules.js';
 
 export class DialogUI {
@@ -107,6 +105,99 @@ export class DialogUI {
     });
   }
 
+  chooseDiceValue() {
+    return new Promise(resolve => this.showRemoteDice(resolve));
+  }
+
+  playMinigame(gameId) {
+    const names = {
+      HARBOR_SORT: '港湾分拣',
+      SKY_COINS: '云端金币',
+      ROUTE_MEMORY: '航线记忆'
+    };
+    return new Promise(resolve => {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal minigame-modal';
+      overlay.innerHTML = `
+        <div class="glass-card modal-box minigame-box">
+          <div class="modal-header"><h2>🎮 ${names[gameId] || '财富挑战'}</h2></div>
+          <p>在 6 秒内尽可能多地点击移动目标。</p>
+          <div class="minigame-stage"><button class="minigame-target" aria-label="小游戏目标">✨</button></div>
+          <strong class="minigame-score">得分：0</strong>
+        </div>
+      `;
+      const stage = overlay.querySelector('.minigame-stage');
+      const target = overlay.querySelector('.minigame-target');
+      const scoreLabel = overlay.querySelector('.minigame-score');
+      let score = 0;
+      let moveIndex = 1;
+      const move = () => {
+        moveIndex = (moveIndex * 17 + 23) % 97;
+        target.style.left = `${(moveIndex * 37) % 82}%`;
+        target.style.top = `${(moveIndex * 53) % 72}%`;
+      };
+      target.onclick = () => {
+        score = Math.min(100, score + 10);
+        scoreLabel.textContent = `得分：${score}`;
+        move();
+      };
+      document.body.appendChild(overlay);
+      move();
+      const mover = setInterval(move, 650);
+      setTimeout(() => {
+        clearInterval(mover);
+        overlay.remove();
+        resolve(score);
+      }, 6000);
+    });
+  }
+
+  showHotseatPass(player) {
+    return new Promise(resolve => {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal hotseat-pass-modal';
+      overlay.innerHTML = `
+        <div class="glass-card modal-box hotseat-pass-box">
+          <div class="crown-icon">🤝</div>
+          <h2>请交给 ${player.name}</h2>
+          <p>确认周围没有其他玩家查看手牌后再继续。</p>
+          <button class="btn-primary btn-large hotseat-ready">我准备好了</button>
+        </div>
+      `;
+      overlay.querySelector('.hotseat-ready').onclick = () => {
+        overlay.remove();
+        resolve();
+      };
+      document.body.appendChild(overlay);
+    });
+  }
+
+  showHelp(firstRun = false) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal rules-help-modal';
+    overlay.innerHTML = `
+      <div class="glass-card modal-box large-modal rules-help-box">
+        <div class="modal-header"><h2>${firstRun ? '欢迎来到富翁帝国 3D' : '规则百科与快捷键'}</h2><button class="close-modal" aria-label="关闭">&times;</button></div>
+        <div class="rules-help-grid">
+          <section><h3>🎲 回合</h3><p>掷骰前可交易股票、购买或使用卡片道具。机车最多 2 颗骰子，汽车和工程车最多 3 颗。</p></section>
+          <section><h3>🏙️ 地产</h3><p>普通地产可发展住宅或连锁店；大型地产可建设公园、商场、旅馆、能源驿站或研究所。</p></section>
+          <section><h3>📈 公司</h3><p>六家公司与股票联动。最大股东成为董事长，公司营收、利息、分红和乐透每 5 轮结算。</p></section>
+          <section><h3>🧰 道具</h3><p>卡片与道具各有 8 格容量。道路实体会在移动经过时触发，爆炸会摧毁载具。</p></section>
+          <section><h3>⌨️ 快捷键</h3><p><kbd>Space</kbd> 掷骰；鼠标拖动旋转地图；滚轮缩放；右上角按钮切换视角、天气和时间。</p></section>
+          <section><h3>🏆 获胜</h3><p>令对手破产，或在轮次上限时拥有最高总资产。组队和领主模式使用各自团队目标。</p></section>
+        </div>
+        <button class="btn-primary rules-help-ready">${firstRun ? '开始探索' : '知道了'}</button>
+      </div>
+    `;
+    const close = () => {
+      overlay.remove();
+      try { localStorage.setItem('fortune-empire:tutorial-seen', '1'); } catch {}
+    };
+    overlay.querySelector('.close-modal').onclick = close;
+    overlay.querySelector('.rules-help-ready').onclick = close;
+    document.body.appendChild(overlay);
+  }
+
   chooseTarget({ title, options }) {
     return new Promise((resolve) => {
       const overlay = document.createElement('div');
@@ -158,11 +249,11 @@ export class DialogUI {
     this.audioManager.playVictory();
 
     // 庆祝烟花
-    confetti({
+    void import('canvas-confetti').then(({ default: confetti }) => confetti({
       particleCount: 120,
       spread: 80,
       origin: { y: 0.6 }
-    });
+    })).catch(() => {});
 
     document.getElementById('btn-restart').onclick = () => {
       this.victoryModal.classList.add('hidden');

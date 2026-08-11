@@ -5,6 +5,9 @@ import { EventManager } from './EventManager.js';
 import { SeededRandom } from './SeededRandom.js';
 import { getMapDefinition } from './MapData.js';
 import { MapRuntime } from './MapRuntime.js';
+import { CompanyManager } from './CompanyManager.js';
+import { InventoryManager } from './InventoryManager.js';
+import { GODS, ITEMS } from './ContentRegistry.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -17,6 +20,8 @@ export const GamePhase = {
   ACTION_MODAL: 'LANDING_ACTION',
   ROUTE_CHOICE: 'ROUTE_CHOICE',
   DEBT_SETTLEMENT: 'DEBT_SETTLEMENT',
+  AUCTION: 'AUCTION',
+  MINIGAME: 'MINIGAME',
   PAUSED: 'PAUSED',
   TURN_END: 'TURN_END',
   GAME_OVER: 'GAME_OVER'
@@ -32,6 +37,8 @@ export class GameState {
     this.propertyManager = new PropertyManager();
     this.stockMarket = new StockMarket();
     this.eventManager = new EventManager();
+    this.companyManager = new CompanyManager();
+    this.inventoryManager = new InventoryManager();
     this.rng = new SeededRandom(seed);
     this.stockMarket.setRandomSource(() => this.rng.next());
     this.eventManager.setRandomSource(() => this.rng.next());
@@ -47,6 +54,15 @@ export class GameState {
     this.lottery = { pot: 2000, tickets: [], lastNumber: null };
     this.boardGods = [];
     this.mechanismState = { activeRoute: 0 };
+    this.roadEntities = [];
+    this.auction = null;
+    this.bankruptcyAuctionQueue = [];
+    this.marketOffers = [];
+    this.researchTasks = [];
+    this.economicCycle = { period: 1, roundsPerPeriod: 5, lastSettlementRound: 0 };
+    this.minigameState = null;
+    this.turnCheckpoint = null;
+    this.pendingDomainEvents = [];
     this.setMap('city-loop');
   }
 
@@ -71,6 +87,7 @@ export class GameState {
     this.setMap(options.mapId || this.mapId || 'city-loop');
     this.propertyManager.init(this.mapDefinition.tiles);
     this.stockMarket.reset();
+    this.companyManager.reset();
     this.newsEffect = null;
     this.winner = null;
     this.winReason = null;
@@ -81,6 +98,14 @@ export class GameState {
     this.gameMode = options.mode || 'STANDARD';
     this.lottery = { pot: 2000, tickets: [], lastNumber: null };
     this.mechanismState = { activeRoute: 0 };
+    this.roadEntities = [];
+    this.auction = null;
+    this.bankruptcyAuctionQueue = [];
+    this.marketOffers = [];
+    this.researchTasks = [];
+    this.economicCycle = { period: 1, roundsPerPeriod: 5, lastSettlementRound: 0 };
+    this.minigameState = null;
+    this.pendingDomainEvents = [];
 
     this.players = playerConfigs.map((cfg, idx) => {
       const profile = PLAYER_PROFILES[cfg.profileIndex !== undefined ? cfg.profileIndex : (idx % PLAYER_PROFILES.length)];
@@ -111,6 +136,7 @@ export class GameState {
         name: cfg.name || profile.name,
         isAI: cfg.isAI,
         aiDifficulty: cfg.aiDifficulty || 'NORMAL',
+        aiStrategy: cfg.aiStrategy || ['ECONOMY', 'PROPERTY', 'CARD', 'ATTACK'][idx % 4],
         avatarImg: profile.avatarImg,
         avatarAtlas: profile.avatarAtlas,
         avatarPosition: profile.avatarPosition,
@@ -122,7 +148,10 @@ export class GameState {
         cash: cash,
         deposit: Math.max(0, Number(options.initialDeposit ?? 0)),
         cardPoints,
-        cards: startingCards,
+        cards: startingCards.slice(0, 8),
+        items: ['REMOTE_DICE_ITEM', 'BARRIER', 'ROBOT_DOLL', 'MINE_ITEM'],
+        selectedDiceCount: 1,
+        engineeringTurns: 0,
         stocks: {},
         currentTile: 0,
         direction: 1,
@@ -161,6 +190,7 @@ export class GameState {
       });
     }
     this.initializeBoardGods();
+    this.captureTurnCheckpoint();
 
     this.addLog(`🎮 《富翁帝国》原创对局开启！基础初始资金 $${initialCash.toLocaleString()}，祝大家日进斗金！`, 'gold');
     this.players.forEach(p => {
@@ -185,7 +215,7 @@ export class GameState {
 
   initializeBoardGods() {
     const tileCount = this.mapDefinition.tiles.length;
-    const types = ['FORTUNE', 'MISFORTUNE', 'ANGEL', 'DEMON'];
+    const types = GODS.map(god => god.id);
     this.boardGods = types.map((type, index) => ({
       id: `BOARD_GOD_${index}`,
       type,
@@ -236,7 +266,9 @@ export class GameState {
   nextTurn() {
     this.phase = GamePhase.TURN_END;
     let attempts = 0;
-    while (attempts < this.players.length * 2) {
+    // A simultaneous hospital/hibernate wave is not a victory condition. Allow
+    // enough full table rotations for the longest production status to expire.
+    while (attempts < this.players.length * 12) {
       const previous = this.currentPlayerIndex;
       let nextIdx = (previous + 1) % this.players.length;
       while (this.players[nextIdx].isBankrupt && nextIdx !== previous) {
@@ -275,6 +307,7 @@ export class GameState {
         continue;
       }
       this.phase = GamePhase.PRE_ROLL_ACTION;
+      this.captureTurnCheckpoint();
       return { gameOver: false, currentPlayer: cur };
     }
     this.checkWinCondition(true);
@@ -290,6 +323,10 @@ export class GameState {
         cur.godType = null;
         cur.godTurns = 0;
       }
+    }
+    if (cur.engineeringTurns > 0) {
+      cur.engineeringTurns--;
+      if (cur.engineeringTurns <= 0 && cur.vehicle === 'ENGINEER') cur.vehicle = 'WALK';
     }
     if (cur.turtleTurns > 0) {
       this.addLog(`🐢 ${cur.name} 受到迟缓效果，本回合只能移动 1 步。`, 'danger');
@@ -332,13 +369,31 @@ export class GameState {
     }
     this.stockMarket.updateMarket();
     this.moveBoardGods();
-    this.drawLottery();
-    if (this.round % 5 === 0) {
+    const chairmanChanges = this.companyManager.updateChairmen(this.players);
+    chairmanChanges.forEach(change => {
+      const company = this.companyManager.get(change.companyId);
+      const chairman = this.players[change.chairmanId];
+      this.addLog(`🏢 ${chairman ? `${chairman.name} 成为` : '暂无'}【${company.name}】董事长。`, 'accent');
+      this.pendingDomainEvents.push({ type: 'CHAIRMAN_CHANGED', ...change });
+    });
+    this.processResearch();
+    this.processRoadEntities();
+    if (this.round % this.economicCycle.roundsPerPeriod === 0) {
+      this.drawLottery();
       this.players.filter(player => !player.isBankrupt && player.deposit > 0).forEach(player => {
         const interest = Math.round(player.deposit * 0.05);
         player.deposit += interest;
         this.addLog(`🏦 ${player.name} 获得五轮定期利息 $${interest.toLocaleString()}。`, 'gold');
       });
+      const settlements = this.companyManager.settle(this.players, this.rng);
+      settlements.forEach(settlement => {
+        const company = this.companyManager.get(settlement.companyId);
+        this.addLog(`🏢 【${company.name}】周期结算：分红 $${settlement.dividendPool.toLocaleString()}。`, settlement.dividendPool > 0 ? 'gold' : 'accent');
+        this.pendingDomainEvents.push({ type: 'COMPANY_SETTLED', ...settlement });
+      });
+      this.economicCycle.period++;
+      this.economicCycle.lastSettlementRound = this.round;
+      this.pendingDomainEvents.push({ type: 'ECONOMIC_CYCLE_ENDED', round: this.round, period: this.economicCycle.period - 1 });
     }
     this.addLog(`📈 第 ${this.round} 轮开始！【当前物价指数: ${this.priceIndex.toFixed(1)}x】股市大盘已刷新！`, 'accent');
 
@@ -346,6 +401,75 @@ export class GameState {
     if (news) {
       this.addLog(`⚡ 新闻大事件：【${news.title}】 - ${news.desc}`, 'gold');
     }
+  }
+
+  captureTurnCheckpoint() {
+    const player = this.getCurrentPlayer();
+    if (!player) return;
+    this.turnCheckpoint = {
+      playerId: player.id,
+      currentTile: player.currentTile,
+      cash: player.cash,
+      deposit: player.deposit,
+      cards: structuredClone(player.cards || []),
+      items: structuredClone(player.items || []),
+      stocks: structuredClone(player.stocks || {}),
+      statuses: {
+        vehicle: player.vehicle,
+        jailTurns: player.jailTurns,
+        hospitalTurns: player.hospitalTurns,
+        godType: player.godType,
+        godTurns: player.godTurns
+      }
+    };
+  }
+
+  processResearch() {
+    this.researchTasks.forEach(task => { task.roundsRemaining--; });
+    const completed = this.researchTasks.filter(task => task.roundsRemaining <= 0);
+    completed.forEach(task => {
+      const player = this.players[task.playerId];
+      if (!player || player.isBankrupt) return;
+      const added = this.inventoryManager.addItem(player, task.itemId);
+      const item = ITEMS.find(definition => definition.id === task.itemId);
+      this.addLog(added.success
+        ? `🧪 ${player.name} 完成【${item?.name || task.itemId}】研发。`
+        : `🧪 ${player.name} 的研发已完成，但道具栏已满。`, added.success ? 'gold' : 'danger');
+      this.pendingDomainEvents.push({ type: 'RESEARCH_COMPLETED', playerId: player.id, itemId: task.itemId, success: added.success });
+    });
+    this.researchTasks = this.researchTasks.filter(task => task.roundsRemaining > 0);
+  }
+
+  processRoadEntities() {
+    const expiredBombs = this.roadEntities.filter(entity => entity.type === 'TIME_BOMB'
+      && entity.expiresRound !== null && entity.expiresRound !== undefined && entity.expiresRound <= this.round);
+    expiredBombs.forEach(entity => {
+      this.players.filter(player => !player.isBankrupt && Math.abs(player.currentTile - entity.tileId) <= 1).forEach(player => {
+        player.vehicle = 'WALK';
+        player.hospitalTurns = Math.max(player.hospitalTurns, 3);
+      });
+      this.addLog(`💥 【${this.getTile(entity.tileId)?.name || entity.tileId}】的倒计时炸弹爆炸！`, 'danger');
+    });
+    const expiredIds = new Set(expiredBombs.map(entity => entity.id));
+    this.roadEntities = this.roadEntities.filter(entity => !expiredIds.has(entity.id));
+    expiredBombs.forEach(entity => this.pendingDomainEvents.push({ type: 'ROAD_ENTITY_CHANGED', tileId: entity.tileId, entityId: entity.id, removed: true }));
+
+    if (this.roadEntities.filter(entity => ['GIFT_BOX', 'COUPON_CHEST', 'DOG'].includes(entity.type)).length < 3) {
+      const type = this.rng.pick(['GIFT_BOX', 'COUPON_CHEST', 'DOG']);
+      const tile = this.rng.pick(this.mapDefinition.tiles);
+      if (tile) {
+        const entity = {
+        id: `ROAD_${this.round}_${this.rng.int(1000, 9999)}`,
+        type,
+        tileId: tile.id,
+        ownerId: null,
+        expiresRound: this.round + 8
+        };
+        this.roadEntities.push(entity);
+        this.pendingDomainEvents.push({ type: 'ROAD_ENTITY_CHANGED', tileId: tile.id, entity });
+      }
+    }
+    this.roadEntities = this.roadEntities.filter(entity => !entity.expiresRound || entity.expiresRound > this.round || entity.type === 'TIME_BOMB');
   }
 
   // 检查玩家撞击/经过他人时的神明碰撞转移
@@ -415,6 +539,7 @@ export class GameState {
       property.level = 0;
       property.isMortgaged = false;
       property.mortgageValue = 0;
+      property.buildingType = this.getTile(tileId)?.type === TileType.BIG_PROPERTY ? null : 'RESIDENTIAL';
       player.cash += value;
       liquidations.push({ kind: 'PROPERTY', tileId, level: 0, value });
     }
@@ -540,8 +665,8 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 4,
-      contentVersion: '2026.2',
+      version: 5,
+      contentVersion: '2026.3',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
@@ -564,12 +689,22 @@ export class GameState {
       lottery: structuredClone(this.lottery),
       boardGods: structuredClone(this.boardGods),
       mechanismState: structuredClone(this.mechanismState),
-      winningTeamId: this.winningTeamId ?? null
+      winningTeamId: this.winningTeamId ?? null,
+      roadEntities: structuredClone(this.roadEntities),
+      companies: structuredClone(this.companyManager.companies),
+      auction: structuredClone(this.auction),
+      bankruptcyAuctionQueue: structuredClone(this.bankruptcyAuctionQueue),
+      marketOffers: structuredClone(this.marketOffers),
+      researchTasks: structuredClone(this.researchTasks),
+      economicCycle: structuredClone(this.economicCycle),
+      minigameState: structuredClone(this.minigameState),
+      turnCheckpoint: structuredClone(this.turnCheckpoint)
     };
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
     this.maxRounds = snapshot.maxRounds;
@@ -584,6 +719,9 @@ export class GameState {
       deposit: 0,
       teamId: player.id,
       isLord: false,
+      items: [],
+      selectedDiceCount: 1,
+      engineeringTurns: 0,
       ...player
     }));
     this.propertyManager.properties = new Map(structuredClone(snapshot.properties).map(([tileId, property]) => [
@@ -594,6 +732,7 @@ export class GameState {
         hasObstacle: false,
         isMortgaged: false,
         mortgageValue: 0,
+        buildingType: this.getTile(tileId)?.type === TileType.BIG_PROPERTY ? 'MALL' : 'RESIDENTIAL',
         ...property
       }
     ]));
@@ -613,6 +752,15 @@ export class GameState {
     if (!this.boardGods.length) this.initializeBoardGods();
     this.mechanismState = structuredClone(snapshot.mechanismState || { activeRoute: 0 });
     this.winningTeamId = snapshot.winningTeamId ?? null;
+    this.roadEntities = structuredClone(snapshot.roadEntities || []);
+    this.companyManager.companies = structuredClone(snapshot.companies || this.companyManager.companies);
+    this.auction = structuredClone(snapshot.auction || null);
+    this.bankruptcyAuctionQueue = structuredClone(snapshot.bankruptcyAuctionQueue || []);
+    this.marketOffers = structuredClone(snapshot.marketOffers || []);
+    this.researchTasks = structuredClone(snapshot.researchTasks || []);
+    this.economicCycle = structuredClone(snapshot.economicCycle || { period: Math.floor(this.round / 5) + 1, roundsPerPeriod: 5, lastSettlementRound: 0 });
+    this.minigameState = structuredClone(snapshot.minigameState || null);
+    this.turnCheckpoint = structuredClone(snapshot.turnCheckpoint || null);
     if (this.mechanismState.activeRoute) {
       this.mapDefinition.tiles.filter(tile => (tile.next || []).length > 1).forEach(tile => {
         this.mapRuntime.setNextOptions(tile.id, [tile.next[this.mechanismState.activeRoute % tile.next.length]]);

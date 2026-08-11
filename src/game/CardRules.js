@@ -109,6 +109,12 @@ export class CardRules {
         return { id: tile.id, label: tile.name, description: `所有者：${ownerName}` };
       });
     }
+    if (card.id === 'AUCTION_CARD') {
+      return this.gameState.mapDefinition.tiles.filter(tile => {
+        const prop = this.gameState.propertyManager.getProperty(tile.id);
+        return isPropertyTile(tile) && prop?.owner === player.id && !prop.isMortgaged;
+      }).map(tile => ({ id: tile.id, label: tile.name, description: '公开竞价出售' }));
+    }
     return [];
   }
 }

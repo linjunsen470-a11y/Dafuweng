@@ -5,14 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-offline-manifest.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:matrix": "node scripts/simulate-matrix.mjs 100",
     "test:watch": "vitest",
     "test:e2e": "node test-monopoly.js",
+    "test:pwa": "npm run build && node test-pwa.js",
     "verify": "npm run typecheck && npm test && npm run build",
-    "verify:full": "npm run verify && npm run test:e2e"
+    "verify:full": "npm run verify && npm run test:e2e && npm run test:pwa"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.2",

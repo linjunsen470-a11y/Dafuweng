@@ -1,0 +1,13 @@
+{
+  "name": "富翁帝国 3D",
+  "short_name": "富翁帝国",
+  "description": "可离线游玩的原创 3D 财富策略棋盘游戏",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071827",
+  "theme_color": "#0f5d78",
+  "orientation": "landscape",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -8,6 +8,7 @@ export class BoardBuilder {
     this.tilePositions = [];
     this.buildingMeshes = new Map();
     this.obstacleMeshes = new Map();
+    this.roadEntityMeshes = new Map();
     this.specialTileMeshes = new Map();
     this.vacantLotMeshes = new Map();
     this.activeMapDefinition = null;
@@ -32,14 +33,14 @@ export class BoardBuilder {
 
   loadTextures() {
     this.textures = {
-      start: this.textureLoader.load('/assets/tile_start_rich.jpg'),
-      bank: this.textureLoader.load('/assets/tile_bank_rich.jpg'),
-      stock: this.textureLoader.load('/assets/tile_stock_rich.jpg'),
-      shop: this.textureLoader.load('/assets/tile_shop_rich.jpg'),
-      mapBg: this.textureLoader.load('/assets/map_bg_texture.jpg'),
-      grass: this.textureLoader.load('/assets/grass_ground.jpg'),
-      parkV2: this.textureLoader.load('/assets/park_ground_v2.webp'),
-      worldGround: this.textureLoader.load('/assets/world-ground-v2.webp')
+      start: this.createProceduralTexture('#f59e0b', '#fef3c7'),
+      bank: this.createProceduralTexture('#1d4ed8', '#dbeafe'),
+      stock: this.createProceduralTexture('#0891b2', '#cffafe'),
+      shop: this.createProceduralTexture('#be185d', '#fce7f3'),
+      mapBg: this.createProceduralTexture('#172554', '#0f766e'),
+      grass: this.createProceduralTexture('#3f6212', '#84cc16'),
+      parkV2: this.createProceduralTexture('#166534', '#86efac'),
+      worldGround: this.createProceduralTexture('#0f172a', '#164e63')
     };
 
     Object.values(this.textures).forEach(texture => {
@@ -52,6 +53,22 @@ export class BoardBuilder {
       this.textures.mapBg.wrapT = THREE.RepeatWrapping;
       this.textures.mapBg.repeat.set(2, 2);
     }
+  }
+
+  createProceduralTexture(primary, accent) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const context = canvas.getContext('2d');
+    context.fillStyle = primary;
+    context.fillRect(0, 0, 64, 64);
+    context.fillStyle = accent;
+    context.globalAlpha = 0.18;
+    for (let y = 0; y < 64; y += 16) {
+      for (let x = (y / 16) % 2 ? 8 : 0; x < 64; x += 16) context.fillRect(x, y, 8, 8);
+    }
+    context.globalAlpha = 1;
+    return new THREE.CanvasTexture(canvas);
   }
 
   createWorldGround() {
@@ -217,7 +234,7 @@ export class BoardBuilder {
     });
     this.tileMeshes = [];
     this.tilePositions = [];
-    [this.buildingMeshes, this.obstacleMeshes, this.mineMeshes, this.specialTileMeshes].forEach(collection => {
+    [this.buildingMeshes, this.obstacleMeshes, this.mineMeshes, this.roadEntityMeshes, this.specialTileMeshes].forEach(collection => {
       collection?.forEach?.(object => {
         this.scene3D.scene.remove(object);
         this.disposeObject(object);
@@ -482,7 +499,7 @@ export class BoardBuilder {
       else if (tile.type === TileType.TREASURE) group = this.createTreasureLandmark();
       else if (tile.type === TileType.GOD_FORTUNE) group = this.createFortuneLandmark();
       else if ((tile.next || []).length > 1) group = this.createForkLandmark();
-      else if ([TileType.BANK, TileType.STOCK, TileType.CARD_SHOP, TileType.HOSPITAL, TileType.PRISON, TileType.LOTTERY, TileType.MAGIC_HOUSE, TileType.MECHANISM].includes(tile.type)) {
+      else if ([TileType.BANK, TileType.STOCK, TileType.CARD_SHOP, TileType.HOSPITAL, TileType.PRISON, TileType.LOTTERY, TileType.MAGIC_HOUSE, TileType.MECHANISM, TileType.COMPANY, TileType.MINIGAME].includes(tile.type)) {
         group = this.createFacilityLandmark(tile);
       }
       if (!group) return;
@@ -550,6 +567,8 @@ export class BoardBuilder {
       [TileType.LOTTERY]: ['#f39c12', '#fff3cd'],
       [TileType.MAGIC_HOUSE]: ['#8e44ad', '#f5e6ff'],
       [TileType.MECHANISM]: ['#34495e', '#d5dbdb']
+      ,[TileType.COMPANY]: ['#0ea5e9', '#e0f2fe']
+      ,[TileType.MINIGAME]: ['#ec4899', '#fce7f3']
     };
     const [roofColor, wallColor] = palette[tile.type] || ['#7bed9f', '#ffffff'];
     const group = new THREE.Group();
@@ -695,7 +714,7 @@ export class BoardBuilder {
   createCentralDecoration() {
     const centerGroup = new THREE.Group();
 
-    // 中央公园使用了生成的草地贴图 (grass_ground.jpg)
+    // 中央公园使用项目内程序化生成的草地纹理。
     const parkGeo = new THREE.BoxGeometry(18.5, 0.4, 18.5);
     const grassMat = new THREE.MeshStandardMaterial({
       map: this.textures.parkV2 || this.textures.mapBg || this.textures.grass || null,
@@ -931,7 +950,7 @@ export class BoardBuilder {
     });
   }
 
-  updateBuildingMesh(tileIndex, level, ownerColor = null) {
+  updateBuildingMesh(tileIndex, level, ownerColor = null, buildingType = null) {
     const vacantLot = this.vacantLotMeshes.get(tileIndex);
     if (vacantLot) vacantLot.visible = level === 0 && ownerColor === null;
     if (this.buildingMeshes.has(tileIndex)) {
@@ -961,8 +980,29 @@ export class BoardBuilder {
       emissiveIntensity: 0.35
     });
 
-    if (tile?.large && level > 0) {
-      const height = 1.2 + level * 0.75;
+    if (tile?.large && ownerColor !== null && buildingType === 'PARK') {
+      const lawn = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 1.9, 0.16, 20), new THREE.MeshStandardMaterial({ color: '#22c55e' }));
+      lawn.position.y = 0.08;
+      group.add(lawn);
+      [[-0.9, -0.5], [0.85, -0.45], [0, 0.75]].forEach(([x, z]) => {
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 0.75, 8), new THREE.MeshStandardMaterial({ color: '#92400e' }));
+        const crown = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.1, 10), new THREE.MeshStandardMaterial({ color: '#15803d' }));
+        trunk.position.set(x, 0.4, z); crown.position.set(x, 1.15, z); group.add(trunk, crown);
+      });
+    } else if (tile?.large && ownerColor !== null && buildingType === 'GAS_STATION') {
+      const canopy = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.28, 2.7), roofMat);
+      canopy.position.y = 1.8;
+      group.add(canopy);
+      [-1.25, 1.25].forEach(x => {
+        const pump = new THREE.Mesh(new THREE.BoxGeometry(0.48, 1.1, 0.55), new THREE.MeshStandardMaterial({ color: '#f8fafc' }));
+        pump.position.set(x, 0.55, 0); group.add(pump);
+      });
+    } else if (tile?.large && ownerColor !== null) {
+      const visual = {
+        MALL: { color: '#38bdf8', height: 1 }, HOTEL: { color: '#f472b6', height: 1.55 }, LAB: { color: '#a78bfa', height: 1.25 }
+      }[buildingType] || { color: '#38bdf8', height: 1 };
+      glassMat.color.set(visual.color);
+      const height = (1.2 + Math.max(1, level) * 0.75) * visual.height;
       const mall = new THREE.Mesh(new THREE.BoxGeometry(3.8, height, 2.8), wallMat);
       mall.position.y = height / 2;
       mall.castShadow = true;
@@ -979,6 +1019,11 @@ export class BoardBuilder {
         logo.position.set(x, Math.min(height - 0.35, 1.1), 1.56);
         group.add(logo);
       });
+      if (buildingType === 'LAB') {
+        const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2, 8), new THREE.MeshStandardMaterial({ color: '#e9d5ff' }));
+        const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 10), new THREE.MeshBasicMaterial({ color: '#22d3ee' }));
+        antenna.position.y = height + 0.75; orb.position.y = height + 1.38; group.add(antenna, orb);
+      }
     } else if (level === 0) {
       const pole = new THREE.Mesh(
         new THREE.CylinderGeometry(0.06, 0.06, 1.2, 8),
@@ -1071,13 +1116,6 @@ export class BoardBuilder {
     }
 
     if (level > 0) this.addBuildingWindows(group, level);
-    if (!tile?.large) {
-      const buildingStandee = this.createBuildingStandee(level, ownerColor, () => {
-        group.children.forEach(child => { child.visible = child === buildingStandee; });
-      });
-      group.add(buildingStandee);
-    }
-
     group.scale.set(0.1, 0.1, 0.1);
     this.scene3D.scene.add(group);
     this.buildingMeshes.set(tileIndex, group);
@@ -1115,54 +1153,6 @@ export class BoardBuilder {
         group.add(windowMesh);
       }
     }
-  }
-
-  createBuildingStandee(level, ownerColor, onReady) {
-    const stage = Math.max(0, Math.min(4, level));
-    const canvas = document.createElement('canvas');
-    canvas.width = 300;
-    canvas.height = 360;
-    const ctx = canvas.getContext('2d');
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
-    const sprite = new THREE.Sprite(material);
-    const heights = [1.7, 2.25, 2.65, 3.35, 4.15];
-    const widths = [1.5, 1.8, 2.0, 2.3, 2.5];
-    sprite.scale.set(widths[stage], heights[stage], 1);
-    sprite.position.y = heights[stage] / 2 + 0.12;
-    sprite.userData.isBuildingStandee = true;
-
-    const frameColor = new THREE.Color(ownerColor ?? 0xffaa00).getStyle();
-    ctx.fillStyle = frameColor;
-    ctx.beginPath();
-    ctx.roundRect(5, 5, 290, 350, 34);
-    ctx.fill();
-    texture.needsUpdate = true;
-
-    const image = new Image();
-    image.onload = () => {
-      const cellWidth = image.width / 5;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(8, 8, 284, 344, 32);
-      ctx.clip();
-      ctx.drawImage(image, stage * cellWidth + 3, 0, cellWidth - 6, image.height, 8, 8, 284, 344);
-      ctx.restore();
-      ctx.strokeStyle = frameColor;
-      ctx.lineWidth = 12;
-      ctx.beginPath();
-      ctx.roundRect(8, 8, 284, 344, 32);
-      ctx.stroke();
-      ctx.strokeStyle = 'rgba(255,255,255,0.86)';
-      ctx.lineWidth = 4;
-      ctx.stroke();
-      texture.needsUpdate = true;
-      onReady?.();
-    };
-    image.src = '/assets/buildings-v2-atlas.webp';
-    return sprite;
   }
 
   setObstacleMesh(tileIndex, hasObstacle) {
@@ -1217,5 +1207,36 @@ export class BoardBuilder {
 
     this.scene3D.scene.add(group);
     this.mineMeshes.set(tileIndex, group);
+  }
+
+  setRoadEntityMesh(tileIndex, entity = null) {
+    const previous = this.roadEntityMeshes.get(tileIndex);
+    if (previous) {
+      this.scene3D.scene.remove(previous);
+      this.disposeObject(previous);
+      this.roadEntityMeshes.delete(tileIndex);
+    }
+    if (!entity || ['BARRIER', 'MINE'].includes(entity.type)) return;
+    const tilePos = this.tilePositions[tileIndex];
+    if (!tilePos) return;
+    const palettes = {
+      TIME_BOMB: ['#111827', '#f59e0b'], GIFT_BOX: ['#ef4444', '#fde047'],
+      COUPON_CHEST: ['#7c3aed', '#fbbf24'], DOG: ['#92400e', '#fef3c7'],
+      GOD: ['#38bdf8', '#ffffff'], NPC: ['#14b8a6', '#ccfbf1']
+    };
+    const [primary, accent] = palettes[entity.type] || ['#64748b', '#f8fafc'];
+    const group = new THREE.Group();
+    group.position.set(tilePos.x + 0.9, tilePos.y + 0.55, tilePos.z + 0.9);
+    const body = new THREE.Mesh(
+      entity.type === 'TIME_BOMB' ? new THREE.SphereGeometry(0.45, 14, 12) : new THREE.BoxGeometry(0.8, 0.8, 0.8),
+      new THREE.MeshStandardMaterial({ color: primary, roughness: 0.35, emissive: accent, emissiveIntensity: 0.12 })
+    );
+    body.position.y = 0.4;
+    body.castShadow = true;
+    const cap = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.45, 8), new THREE.MeshBasicMaterial({ color: accent }));
+    cap.position.y = 1.0;
+    group.add(body, cap);
+    this.scene3D.scene.add(group);
+    this.roadEntityMeshes.set(tileIndex, group);
   }
 }

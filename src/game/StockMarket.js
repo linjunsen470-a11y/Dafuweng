@@ -10,7 +10,8 @@ export class StockMarket {
       { id: 'REALTY', name: '云庭置业', code: '600002', price: 250, prevPrice: 250, change: 0, history: [250] },
       { id: 'BEVERAGE', name: '青柠气泡', code: '600003', price: 50, prevPrice: 50, change: 0, history: [50] },
       { id: 'ENERGY', name: '曙光能源', code: '600004', price: 180, prevPrice: 180, change: 0, history: [180] },
-      { id: 'MINING', name: '远山材料', code: '600005', price: 320, prevPrice: 320, change: 0, history: [320] }
+      { id: 'MINING', name: '远山材料', code: '600005', price: 320, prevPrice: 320, change: 0, history: [320] },
+      { id: 'HARBOR', name: '蓝港保险', code: '600006', price: 140, prevPrice: 140, change: 0, history: [140] }
     ];
 
     // 初始化 10 轮历史波动数据
@@ -29,7 +30,8 @@ export class StockMarket {
       ['REALTY', '云庭置业', '600002', 250],
       ['BEVERAGE', '青柠气泡', '600003', 50],
       ['ENERGY', '曙光能源', '600004', 180],
-      ['MINING', '远山材料', '600005', 320]
+      ['MINING', '远山材料', '600005', 320],
+      ['HARBOR', '蓝港保险', '600006', 140]
     ];
     this.stocks = base.map(([id, name, code, price]) => ({
       id, name, code, price, prevPrice: price, change: 0, history: [price]

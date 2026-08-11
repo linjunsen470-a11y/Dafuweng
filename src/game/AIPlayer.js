@@ -5,7 +5,8 @@ export class AIPlayer {
   static evaluateLandPurchase(aiPlayer, landData, gameState = null) {
     const reserveByDifficulty = { EASY: 2500, NORMAL: 1200, HARD: 500 };
     const safetyReserve = reserveByDifficulty[aiPlayer.aiDifficulty] ?? 1200;
-    if (aiPlayer.cash - landData.price < safetyReserve) return false;
+    const strategyReserve = aiPlayer.aiStrategy === 'PROPERTY' ? Math.round(safetyReserve * 0.5) : safetyReserve;
+    if (aiPlayer.cash - landData.price < strategyReserve) return false;
     if (!gameState) return true;
     const groupTiles = gameState.mapDefinition.tiles.filter(tile => tile.group && tile.group === landData.group);
     const ownedInGroup = groupTiles.filter(tile => gameState.propertyManager.getProperty(tile.id)?.owner === aiPlayer.id).length;
@@ -25,19 +26,68 @@ export class AIPlayer {
     const nextRent = landData.tolls?.[currentLevel + 1] || currentRent;
     const roi = (nextRent - currentRent) / Math.max(1, upgradeCost);
     const opponents = gameState?.players?.filter(player => !player.isBankrupt && player.id !== aiPlayer.id).length || 1;
-    return landData.large || roi * opponents >= 0.45 || aiPlayer.cash > upgradeCost * 3;
+    return landData.large || (aiPlayer.aiStrategy === 'PROPERTY' && roi * opponents >= 0.22) || roi * opponents >= 0.45 || aiPlayer.cash > upgradeCost * 3;
   }
 
   static decideCardPurchase(aiPlayer, gameEngine) {
     const heat = gameEngine?.state?.gameMode === 'HEAT';
-    const preferred = heat
+    const preferred = heat || aiPlayer.aiStrategy === 'ATTACK'
       ? ['NUKES', 'MISSILE', 'MINE', 'HIBERNATE', 'TURTLE', 'OBSTACLE', 'REMOTE_DICE']
-      : ['REMOTE_DICE', 'SUMMON_GOD', 'RENT_SHIELD', 'LAND_BUY', 'CASH_TAX', 'DEMOLISH', 'MISSILE', 'NUKES', 'TURTLE', 'OBSTACLE', 'IMMUNITY_CARD', 'CAR_CARD'];
+      : aiPlayer.aiStrategy === 'CARD'
+        ? ['SUMMON_GOD', 'REMOTE_DICE', 'RENT_SHIELD', 'CASH_TAX', 'DEMOLISH', 'IMMUNITY_CARD', 'CAR_CARD']
+        : ['REMOTE_DICE', 'SUMMON_GOD', 'RENT_SHIELD', 'LAND_BUY', 'CASH_TAX', 'DEMOLISH', 'MISSILE', 'NUKES', 'TURTLE', 'OBSTACLE', 'IMMUNITY_CARD', 'CAR_CARD'];
     if (aiPlayer.cards.length >= 8) return null;
     for (const cardId of preferred) {
       const card = cardManager.getCardById(cardId);
       const cost = gameEngine.getCardCost(aiPlayer, card);
       if (aiPlayer.cardPoints >= cost) return { cardId };
+    }
+    return null;
+  }
+
+  static chooseCommercialBuilding(aiPlayer, gameState) {
+    if ((aiPlayer.items?.length || 0) < 4 && gameState.researchTasks.filter(task => task.playerId === aiPlayer.id).length === 0) return 'LAB';
+    if (aiPlayer.cash < 7000) return 'PARK';
+    if (aiPlayer.vehicle !== 'WALK') return 'GAS_STATION';
+    return gameState.rng.next() < 0.55 ? 'MALL' : 'HOTEL';
+  }
+
+  static chooseMagic(aiPlayer, gameState) {
+    if (aiPlayer.cash < 6000) return { conditionId: 'SELF', effectId: 'CASH_RAIN' };
+    const ownProperties = [...gameState.propertyManager.properties.values()].filter(property => property.owner === aiPlayer.id).length;
+    if (ownProperties >= 2) return { conditionId: 'SELF', effectId: 'PROPERTY_BOOM' };
+    return { conditionId: 'ALL_OPPONENTS', effectId: gameState.rng.next() < 0.5 ? 'STOP_ONE' : 'DEPOSIT_ALL' };
+  }
+
+  static decideItemPurchase(aiPlayer, gameEngine) {
+    if ((aiPlayer.items?.length || 0) >= 8) return null;
+    const preferred = aiPlayer.aiStrategy === 'ATTACK'
+      ? ['MISSILE_ITEM', 'MINE_ITEM', 'BARRIER', 'CAR']
+      : aiPlayer.vehicle === 'WALK' ? ['CAR', 'MOTOR', 'REMOTE_DICE_ITEM', 'BARRIER'] : ['REMOTE_DICE_ITEM', 'MINE_ITEM', 'MISSILE_ITEM'];
+    return preferred.find(itemId => {
+      const item = gameEngine.state.inventoryManager.getDefinition(itemId);
+      return item?.cost !== null && aiPlayer.cardPoints >= item.cost;
+    }) || null;
+  }
+
+  static decideItemUsage(aiPlayer, gameState, gameEngine) {
+    const has = itemId => aiPlayer.items?.includes(itemId) && gameEngine.getItemAction(aiPlayer, itemId).enabled;
+    if (has('CAR') && aiPlayer.vehicle !== 'CAR') return { itemId: 'CAR' };
+    if (has('MOTOR') && aiPlayer.vehicle === 'WALK') return { itemId: 'MOTOR' };
+    if (has('ENGINEERING_CAR')) return { itemId: 'ENGINEERING_CAR' };
+    for (const itemId of ['NUCLEAR_MISSILE', 'MISSILE_ITEM', 'MINE_ITEM', 'BARRIER']) {
+      if (!has(itemId)) continue;
+      const targets = gameEngine.getItemAction(aiPlayer, itemId).targets || [];
+      if (!targets.length) continue;
+      if (['NUCLEAR_MISSILE', 'MISSILE_ITEM'].includes(itemId)) {
+        const target = [...targets].sort((a, b) => {
+          const score = tileId => gameState.players.filter(player => player.id !== aiPlayer.id && player.currentTile === Number(tileId)).length * 100
+            + (gameState.propertyManager.getProperty(Number(tileId))?.level || 0) * 20;
+          return score(b.id) - score(a.id);
+        })[0];
+        return { itemId, targetId: target.id };
+      }
+      return { itemId, targetId: targets.at(-1).id };
     }
     return null;
   }
@@ -126,12 +176,15 @@ export class AIPlayer {
         return { action: 'SELL', stockId, shares: holding.shares };
       }
     }
-    if (aiPlayer.cash > 12000) {
+    if (aiPlayer.cash > (aiPlayer.aiStrategy === 'ECONOMY' ? 9000 : 12000)) {
       const candidates = stockMarket.stocks
         .filter(stock => stock.change >= -2)
         .sort((a, b) => (b.change - a.change) || (a.price - b.price));
       const stock = candidates[0];
-      if (stock) return { action: 'BUY', stockId: stock.id, shares: Math.max(5, Math.min(30, Math.floor((aiPlayer.cash - 8000) / stock.price))) };
+      if (stock) {
+        const reserve = aiPlayer.aiStrategy === 'ECONOMY' ? 5500 : 8000;
+        return { action: 'BUY', stockId: stock.id, shares: Math.max(5, Math.min(30, Math.floor((aiPlayer.cash - reserve) / stock.price))) };
+      }
     }
     return null;
   }

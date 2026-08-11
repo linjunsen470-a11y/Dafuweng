@@ -15,6 +15,7 @@ export class UIRenderer {
     this.logMessages = document.getElementById('log-messages');
     this.cardCountBadge = document.getElementById('card-count-badge');
     this.btnRoll = document.getElementById('btn-roll');
+    this.diceCountSelect = document.getElementById('dice-count-select');
   }
 
   renderHUD() {
@@ -48,7 +49,13 @@ export class UIRenderer {
         this.btnRoll.style.opacity = canRoll ? '1' : '0.5';
         this.btnRoll.style.pointerEvents = canRoll ? 'all' : 'none';
       }
-      this.cardCountBadge.textContent = curPlayer.cards ? curPlayer.cards.length : 0;
+      this.cardCountBadge.textContent = (curPlayer.cards?.length || 0) + (curPlayer.items?.length || 0);
+      if (this.diceCountSelect) {
+        const limit = curPlayer.vehicle === 'MOTOR' ? 2 : ['CAR', 'ENGINEER'].includes(curPlayer.vehicle) ? 3 : 1;
+        [...this.diceCountSelect.options].forEach(option => { option.disabled = Number(option.value) > limit; });
+        this.diceCountSelect.value = String(Math.min(limit, curPlayer.selectedDiceCount || 1));
+        this.diceCountSelect.disabled = curPlayer.isAI || this.gameState.phase !== 'PRE_ROLL_ACTION';
+      }
     }
 
     this.renderLogs();
@@ -87,6 +94,10 @@ export class UIRenderer {
       }
       if (player.vehicle === 'CAR') {
         buffHtml += `<span class="buff-tag" style="background:#ff9f43;color:#fff;">🏎️ 汽车</span>`;
+      } else if (player.vehicle === 'MOTOR') {
+        buffHtml += `<span class="buff-tag" style="background:#f39c12;color:#fff;">🏍️ 机车</span>`;
+      } else if (player.vehicle === 'ENGINEER') {
+        buffHtml += `<span class="buff-tag" style="background:#636e72;color:#fff;">🚜 工程车(${player.engineeringTurns}T)</span>`;
       }
       if (player.jailTurns > 0) {
         buffHtml += `<span class="buff-tag" style="background:#ff4757;color:#fff;">🚔 监狱(${player.jailTurns}T)</span>`;
