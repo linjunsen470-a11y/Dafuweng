@@ -139,6 +139,18 @@ async function runTest() {
     await page.screenshot({ path: artifact('test_step_turn_presentation.png') });
     console.log('✅ Game HUD successfully entered.');
 
+    console.log('\n--- Step 3-Mode: Testing mode objective center ---');
+    await page.click('#btn-mode-status');
+    await page.waitForSelector('#modal-mode-status:not(.hidden)', { timeout: 3000 });
+    const modeRuleCount = await page.$$eval('.mode-rule-grid article', elements => elements.length);
+    const modeStandingCount = await page.$$eval('.mode-standing-row', elements => elements.length);
+    if (modeRuleCount < 3) throw new Error(`Expected mode-specific rules, got ${modeRuleCount}`);
+    if (modeStandingCount !== 4) throw new Error(`Expected 4 mode standings, got ${modeStandingCount}`);
+    await page.screenshot({ path: artifact('test_step_mode_objectives.png') });
+    await page.click('#mode-status-close');
+    await page.waitForSelector('#modal-mode-status.hidden', { timeout: 3000 });
+    console.log('✅ Mode rules, round progress, economy cycle, and live standings rendered.');
+
     console.log('\n--- Step 3a: Testing 120-node flagship map navigation ---');
     const mapTelemetry = await page.evaluate(() => ({
       selectedMap: document.getElementById('map-select')?.value,

@@ -11,6 +11,7 @@ import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from 
 import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
 import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
 import { hasChairmanPerk } from './CompanyRules.js';
+import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -351,9 +352,17 @@ export class GameEngine {
     const events = [{ type: 'PLAYER_STEPPED', playerId: player.id, tileId: selected, remainingSteps: pending.remainingSteps }];
 
     if (selected === this.state.mapDefinition.spawnTile) {
-      const amount = this.state.mapDefinition.passBonus ?? 2000;
+      const amount = getModeStartBonus(this.state, player, this.state.mapDefinition.passBonus ?? 2000);
       player.cash += amount;
       events.push({ type: 'START_BONUS_GRANTED', playerId: player.id, amount });
+      if (this.state.gameMode === 'TEAM') {
+        this.state.players.filter(teammate => teammate.id !== player.id && teammate.teamId === player.teamId && !teammate.isBankrupt).forEach(teammate => {
+          const teamBonus = Math.round(amount * 0.25);
+          teammate.cash += teamBonus;
+          events.push({ type: 'TEAM_START_DIVIDEND', playerId: teammate.id, sourcePlayerId: player.id, amount: teamBonus });
+          this.state.addLog(`🤝 ${teammate.name} 获得 ${player.name} 的起点团队分红 $${teamBonus.toLocaleString()}。`, 'gold');
+        });
+      }
     }
 
     const property = this.state.propertyManager.getProperty(selected);
@@ -560,7 +569,7 @@ export class GameEngine {
       this.state.addLog(`📉 ${player.name} 受到衰运影响，买地失败！`, 'danger');
       return { success: false, reason: '衰运状态禁止买地' };
     }
-    let cost = tile.price;
+    let cost = Math.round(tile.price * getModePropertyCostMultiplier(this.state.gameMode));
     if (player.godType === 'LUCK') cost = 0;
     else {
       if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
@@ -594,7 +603,7 @@ export class GameEngine {
       this.state.addLog(`📉 ${player.name} 受到衰运影响，升级失败！`, 'danger');
       return { success: false, reason: '衰运状态禁止升级' };
     }
-    let cost = Math.round(tile.buildCost * (building?.buildMultiplier || 1));
+    let cost = Math.round(tile.buildCost * (building?.buildMultiplier || 1) * getModePropertyCostMultiplier(this.state.gameMode));
     if (player.godType === 'LUCK') cost = 0;
     else {
       if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);

@@ -10,6 +10,7 @@ import { InventoryManager } from './InventoryManager.js';
 import { GODS, ITEMS } from './ContentRegistry.js';
 import { normalizeAuctionState } from './AuctionRules.js';
 import { expireMarketOffers, normalizeMarketOffer } from './MarketRules.js';
+import { applyModeCycleEffects, getModeCycleRounds } from './ModeRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -64,7 +65,7 @@ export class GameState {
     this.marketOffers = [];
     this.marketHistory = [];
     this.researchTasks = [];
-    this.economicCycle = { period: 1, roundsPerPeriod: 5, lastSettlementRound: 0 };
+    this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0 };
     this.minigameState = null;
     this.turnCheckpoint = null;
     this.pendingDomainEvents = [];
@@ -111,7 +112,7 @@ export class GameState {
     this.marketOffers = [];
     this.marketHistory = [];
     this.researchTasks = [];
-    this.economicCycle = { period: 1, roundsPerPeriod: 5, lastSettlementRound: 0 };
+    this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0 };
     this.minigameState = null;
     this.pendingDomainEvents = [];
 
@@ -401,6 +402,7 @@ export class GameState {
         this.addLog(`🏢 【${company.name}】周期结算：分红 $${settlement.dividendPool.toLocaleString()}${settlement.policyId ? `，完成 ${settlement.policyId} 政策` : ''}。`, settlement.dividendPool > 0 ? 'gold' : 'accent');
         this.pendingDomainEvents.push({ type: 'COMPANY_SETTLED', ...settlement });
       });
+      this.pendingDomainEvents.push(...applyModeCycleEffects(this));
       this.economicCycle.period++;
       this.economicCycle.lastSettlementRound = this.round;
       this.pendingDomainEvents.push({ type: 'ECONOMIC_CYCLE_ENDED', round: this.round, period: this.economicCycle.period - 1 });
@@ -787,7 +789,11 @@ export class GameState {
     this.marketOffers = structuredClone(snapshot.marketOffers || []).map(offer => normalizeMarketOffer(this, offer));
     this.marketHistory = structuredClone(snapshot.marketHistory || []);
     this.researchTasks = structuredClone(snapshot.researchTasks || []);
-    this.economicCycle = structuredClone(snapshot.economicCycle || { period: Math.floor(this.round / 5) + 1, roundsPerPeriod: 5, lastSettlementRound: 0 });
+    const cycleRounds = getModeCycleRounds(this.gameMode);
+    this.economicCycle = structuredClone(snapshot.economicCycle || { period: Math.floor(this.round / cycleRounds) + 1, roundsPerPeriod: cycleRounds, lastSettlementRound: 0 });
+    // The cycle length is a mode rule rather than mutable save data. Re-derive it
+    // so older quick-mode saves immediately adopt the current four-round cycle.
+    this.economicCycle.roundsPerPeriod = cycleRounds;
     this.minigameState = structuredClone(snapshot.minigameState || null);
     this.turnCheckpoint = structuredClone(snapshot.turnCheckpoint || null);
     if (this.mechanismState.activeRoute) {

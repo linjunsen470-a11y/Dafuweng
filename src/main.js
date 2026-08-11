@@ -16,6 +16,7 @@ import { getDebtPortfolio } from './game/DebtRules.js';
 import { chooseAIMarketAction } from './game/MarketRules.js';
 import { chooseAIPropertyManagement } from './game/PropertyRules.js';
 import { chooseAICompanyPolicy } from './game/CompanyRules.js';
+import { getModeProfile } from './game/ModeRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
@@ -40,6 +41,7 @@ class GameController {
     this.shopUI = null;
     this.assetUI = null;
     this.marketUI = null;
+    this.modeUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
     this.presentationUI = new PresentationUI();
@@ -87,6 +89,22 @@ class GameController {
       this.marketUI = new MarketUI(this.gameState, this.gameEngine, this.audioManager, () => this.uiRenderer.renderHUD());
     }
     return this.marketUI;
+  }
+
+  async getModeUI() {
+    if (!this.modeUI) {
+      const { ModeUI } = await import('./ui/ModeUI.js');
+      this.modeUI = new ModeUI(this.gameState);
+    }
+    return this.modeUI;
+  }
+
+  syncModeButton() {
+    const profile = getModeProfile(this.gameState.gameMode);
+    const button = document.getElementById('btn-mode-status');
+    button.textContent = profile.icon;
+    button.title = `${profile.name}：查看目标与进度`;
+    button.setAttribute('aria-label', `${profile.name}目标与进度`);
   }
 
   async getAssetUI() {
@@ -286,6 +304,7 @@ class GameController {
       teams: mode === 'TEAM',
       initialDeposit: Number(document.getElementById('initial-deposit').value || 0)
     });
+    this.syncModeButton();
     this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
     this.minimapUI.setMap(this.gameState.mapDefinition);
     this.pawnManager.createPlayerPawns(playerConfigs);
@@ -370,6 +389,7 @@ class GameController {
     };
 
     document.getElementById('btn-assets').onclick = async () => (await this.getAssetUI()).show();
+    document.getElementById('btn-mode-status').onclick = async () => (await this.getModeUI()).show();
     document.getElementById('btn-news-history').onclick = () => this.presentationUI.showNewsHistory(this.gameState.newsHistory);
     document.getElementById('btn-help').onclick = () => this.dialogUI.showHelp();
     document.getElementById('btn-market').onclick = () => this.showMarketBoard();
@@ -559,6 +579,7 @@ class GameController {
     setupScreen.classList.add('hidden');
     setupScreen.style.display = 'none';
     document.getElementById('hud-layer').classList.remove('hidden');
+    this.syncModeButton();
 
     const configs = this.gameState.players.map(player => ({
       name: player.name,

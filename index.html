@@ -136,6 +136,7 @@
           <button id="btn-time-of-day" class="icon-btn atmosphere-btn" title="切换时间：白天" aria-label="切换时间">🌤️</button>
         </div>
         <div class="tool-cluster" aria-label="游戏菜单">
+          <button id="btn-mode-status" class="icon-btn" title="对局模式与目标" aria-label="对局模式与目标">🧭</button>
           <button id="btn-market" class="icon-btn" title="玩家公告交易" aria-label="玩家公告交易">📋</button>
           <button id="btn-help" class="icon-btn" title="规则与教程" aria-label="规则与教程">❔</button>
           <button id="btn-save-game" class="icon-btn" title="手动存档" aria-label="手动存档">💾</button>
@@ -383,6 +384,14 @@
       </div>
       <div id="asset-property-panel" class="asset-center-panel hidden"></div>
       <div id="asset-district-panel" class="asset-center-panel hidden"></div>
+    </div>
+  </div>
+
+  <div id="modal-mode-status" class="modal hidden">
+    <div class="glass-card modal-box mode-status-box" role="dialog" aria-modal="true" aria-labelledby="mode-status-title">
+      <div class="modal-header"><div><h2 id="mode-status-title">对局目标</h2><small id="mode-status-summary"></small></div>
+        <button type="button" class="close-modal" id="mode-status-close" aria-label="关闭对局目标">&times;</button></div>
+      <div id="mode-status-content" class="mode-status-content"></div>
     </div>
   </div>
 
