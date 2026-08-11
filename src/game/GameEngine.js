@@ -6,6 +6,7 @@ import { MAX_PROPERTY_LEVEL } from './GameRules.js';
 import { validateCommand } from './CommandPolicy.js';
 import { BUILDINGS, COMPANIES, ITEMS, MAGIC_CONDITIONS, MAGIC_EFFECTS, MINIGAMES } from './ContentRegistry.js';
 import { CARD_CAPACITY } from './InventoryManager.js';
+import { clampMinigameScore } from './MinigameRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -1403,7 +1404,7 @@ export class GameEngine {
   submitMinigameResult(player, gameId, score) {
     const definition = MINIGAMES.find(game => game.id === gameId);
     const active = this.state.minigameState;
-    const value = Math.max(0, Math.min(definition?.maxScore || 0, Math.floor(Number(score))));
+    const value = clampMinigameScore(score, definition?.maxScore || 0);
     if (!definition || !active || active.playerId !== player.id || active.gameId !== gameId) return { success: false, reason: '小游戏状态无效' };
     const reward = value * definition.rewardPerPoint;
     player.cardPoints += reward;

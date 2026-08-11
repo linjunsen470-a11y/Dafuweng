@@ -67,9 +67,18 @@ export const MAGIC_EFFECTS = [
 ].map(([id, name]) => ({ id, name }));
 
 export const MINIGAMES = [
-  { id: 'HARBOR_SORT', name: '港湾分拣', icon: '📦', maxScore: 100, rewardPerPoint: 2 },
-  { id: 'SKY_COINS', name: '云端金币', icon: '🪙', maxScore: 100, rewardPerPoint: 2 },
-  { id: 'ROUTE_MEMORY', name: '航线记忆', icon: '🧭', maxScore: 100, rewardPerPoint: 2 }
+  {
+    id: 'HARBOR_SORT', name: '港湾分拣', icon: '📦', maxScore: 100, rewardPerPoint: 2,
+    durationMs: 12000, instructions: '观察传送带上的货物，在时限内送往正确仓位。正确 +10，错误 -5。'
+  },
+  {
+    id: 'SKY_COINS', name: '云端金币', icon: '🪙', maxScore: 100, rewardPerPoint: 2,
+    durationMs: 10000, instructions: '收集金币与星星，避开飞行炸弹。金币 +10，星星 +20，炸弹 -15。'
+  },
+  {
+    id: 'ROUTE_MEMORY', name: '航线记忆', icon: '🧭', maxScore: 100, rewardPerPoint: 2,
+    durationMs: 30000, instructions: '记住依次亮起的航标并按原顺序复现。共 5 轮，每轮价值 20 分。'
+  }
 ];
 
 class ContentRegistry {

@@ -1,4 +1,5 @@
 import { AIPlayer } from './AIPlayer.js';
+import { getAIMinigameScore } from './MinigameRules.js';
 import { GameState } from './GameState.js';
 import { GameEngine } from './GameEngine.js';
 
@@ -156,7 +157,7 @@ export class GameSimulator {
         const magic = AIPlayer.chooseMagic(player, this.state);
         this.engine.execute({ type: 'RESOLVE_MAGIC', playerId: player.id, payload: { tileId: tile.id, ...magic } });
       } else if (special.type === 'MINIGAME_OFFER') {
-        const score = this.state.rng.int(25, 90);
+        const score = getAIMinigameScore(special.gameId, player.aiDifficulty, this.state.rng);
         this.engine.execute({ type: 'SUBMIT_MINIGAME_RESULT', playerId: player.id, payload: { tileId: tile.id, gameId: special.gameId, score } });
       }
     }

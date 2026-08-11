@@ -235,6 +235,44 @@ async function runTest() {
     await page.waitForSelector('#modal-pause.hidden', { timeout: 3000 });
     console.log('✅ Pause menu, speed control, and manual slot save passed.');
 
+    console.log('\n--- Step 6d: Testing three distinct minigames ---');
+    const launchMinigame = gameId => page.evaluate(async id => {
+      const { MinigameUI } = await import('/src/ui/MinigameUI.js');
+      window.__e2eMinigame = window.__e2eMinigame || new MinigameUI();
+      window.__e2eMinigameResult = window.__e2eMinigame.play(id);
+    }, gameId);
+
+    await launchMinigame('HARBOR_SORT');
+    await page.waitForSelector('.minigame-modal[data-game-id="HARBOR_SORT"] .harbor-cargo');
+    await page.click('.harbor-bins [data-bin="COLD"]');
+    await page.waitForFunction(() => document.querySelector('.minigame-score span')?.textContent === '10');
+    await page.screenshot({ path: artifact('test_step_minigame_harbor.png') });
+    await page.click('.minigame-skip');
+    await page.waitForSelector('.minigame-modal', { hidden: true });
+
+    await launchMinigame('SKY_COINS');
+    await page.waitForSelector('.minigame-modal[data-game-id="SKY_COINS"] .sky-object[data-kind="COIN"]');
+    await page.click('.sky-object[data-kind="COIN"]');
+    await page.waitForFunction(() => Number(document.querySelector('.minigame-score span')?.textContent) >= 10);
+    await page.screenshot({ path: artifact('test_step_minigame_sky.png') });
+    await page.click('.minigame-skip');
+    await page.waitForSelector('.minigame-modal', { hidden: true });
+
+    await launchMinigame('ROUTE_MEMORY');
+    await page.waitForSelector('.minigame-modal[data-game-id="ROUTE_MEMORY"] .route-beacons');
+    await page.waitForFunction(() => {
+      const feedback = document.querySelector('.minigame-feedback')?.textContent || '';
+      return feedback.includes('现在按顺序')
+        && [...document.querySelectorAll('.route-beacons button')].every(button => !button.disabled);
+    }, { timeout: 5000 });
+    await page.click('.route-beacons [data-direction="0"]');
+    await page.click('.route-beacons [data-direction="2"]');
+    await page.waitForFunction(() => document.querySelector('.minigame-score span')?.textContent === '20');
+    await page.screenshot({ path: artifact('test_step_minigame_route.png') });
+    await page.click('.minigame-skip');
+    await page.waitForSelector('.minigame-modal', { hidden: true });
+    console.log('✅ Harbor sorting, sky collection, and route memory minigames passed.');
+
     console.log('\n--- Step 7: Testing Dice Roll (Click & Space bar) and Movement & AI Turns ---');
     console.log('Clicking "掷骰子" button for Player 1 turn...');
     await page.click('#btn-roll');

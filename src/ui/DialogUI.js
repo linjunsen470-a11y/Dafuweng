@@ -1,4 +1,5 @@
 import { MAX_PROPERTY_LEVEL } from '../game/GameRules.js';
+import { MinigameUI } from './MinigameUI.js';
 
 export class DialogUI {
   constructor(audioManager) {
@@ -6,6 +7,7 @@ export class DialogUI {
     this.landModal = document.getElementById('modal-land');
     this.remoteDiceModal = document.getElementById('modal-remote-dice');
     this.victoryModal = document.getElementById('modal-victory');
+    this.minigameUI = new MinigameUI(audioManager);
 
     this.bindEvents();
   }
@@ -110,46 +112,7 @@ export class DialogUI {
   }
 
   playMinigame(gameId) {
-    const names = {
-      HARBOR_SORT: '港湾分拣',
-      SKY_COINS: '云端金币',
-      ROUTE_MEMORY: '航线记忆'
-    };
-    return new Promise(resolve => {
-      const overlay = document.createElement('div');
-      overlay.className = 'modal minigame-modal';
-      overlay.innerHTML = `
-        <div class="glass-card modal-box minigame-box">
-          <div class="modal-header"><h2>🎮 ${names[gameId] || '财富挑战'}</h2></div>
-          <p>在 6 秒内尽可能多地点击移动目标。</p>
-          <div class="minigame-stage"><button class="minigame-target" aria-label="小游戏目标">✨</button></div>
-          <strong class="minigame-score">得分：0</strong>
-        </div>
-      `;
-      const stage = overlay.querySelector('.minigame-stage');
-      const target = overlay.querySelector('.minigame-target');
-      const scoreLabel = overlay.querySelector('.minigame-score');
-      let score = 0;
-      let moveIndex = 1;
-      const move = () => {
-        moveIndex = (moveIndex * 17 + 23) % 97;
-        target.style.left = `${(moveIndex * 37) % 82}%`;
-        target.style.top = `${(moveIndex * 53) % 72}%`;
-      };
-      target.onclick = () => {
-        score = Math.min(100, score + 10);
-        scoreLabel.textContent = `得分：${score}`;
-        move();
-      };
-      document.body.appendChild(overlay);
-      move();
-      const mover = setInterval(move, 650);
-      setTimeout(() => {
-        clearInterval(mover);
-        overlay.remove();
-        resolve(score);
-      }, 6000);
-    });
+    return this.minigameUI.play(gameId);
   }
 
   showHotseatPass(player) {

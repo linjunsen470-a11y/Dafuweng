@@ -10,6 +10,7 @@ import { TileType, PLAYER_PROFILES } from './game/BoardData.js';
 import { AIPlayer } from './game/AIPlayer.js';
 import { GameEngine } from './game/GameEngine.js';
 import { BUILDINGS, ITEMS } from './game/ContentRegistry.js';
+import { getAIMinigameScore } from './game/MinigameRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
@@ -945,7 +946,7 @@ class GameController {
 
   async handleMinigameVisit(player, tileId, offer) {
     const score = player.isAI
-      ? this.gameState.rng.int(player.aiDifficulty === 'HARD' ? 65 : 35, player.aiDifficulty === 'EASY' ? 65 : 95)
+      ? getAIMinigameScore(offer.gameId, player.aiDifficulty, this.gameState.rng)
       : await this.dialogUI.playMinigame(offer.gameId);
     this.gameEngine.execute({ type: 'SUBMIT_MINIGAME_RESULT', playerId: player.id, payload: { tileId, gameId: offer.gameId, score } });
     this.uiRenderer.renderHUD();
