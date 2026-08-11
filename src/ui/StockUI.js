@@ -1,3 +1,7 @@
+import { COMPANY_PERKS, COMPANY_POLICIES, getCompanyPolicy } from '../game/CompanyRules.js';
+
+const escapeHTML = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+
 export class StockUI {
   constructor(gameState, audioManager, onUpdateHUD, gameEngine = null) {
     this.gameState = gameState;
@@ -5,6 +9,7 @@ export class StockUI {
     this.onUpdateHUD = onUpdateHUD;
     this.gameEngine = gameEngine;
     this.selectedStockId = 'TECH';
+    this.activeTab = 'MARKET';
 
     this.modal = document.getElementById('modal-stock');
     this.stockListContainer = document.getElementById('stock-list-container');
@@ -14,6 +19,8 @@ export class StockUI {
     this.tradeAmountInput = document.getElementById('stock-trade-amount');
     this.canvas = document.getElementById('stock-chart');
     this.ctx = this.canvas.getContext('2d');
+    this.marketPanel = document.getElementById('stock-market-panel');
+    this.companyPanel = document.getElementById('company-management-panel');
 
     this.bindEvents();
   }
@@ -22,10 +29,18 @@ export class StockUI {
     document.getElementById('stock-modal-close').addEventListener('click', () => this.hide());
     document.getElementById('btn-stock-buy').addEventListener('click', () => this.handleBuy());
     document.getElementById('btn-stock-sell').addEventListener('click', () => this.handleSell());
+    document.getElementById('stock-center-tabs').addEventListener('click', event => {
+      const button = event.target.closest('[data-stock-tab]');
+      if (!button) return;
+      this.activeTab = button.dataset.stockTab;
+      this.render();
+    });
+    this.companyPanel.addEventListener('click', event => this.handleCompanyAction(event));
   }
 
-  show(onClose = null) {
+  show(onClose = null, tab = 'MARKET') {
     this.onClose = onClose;
+    this.activeTab = tab;
     this.modal.classList.remove('hidden');
     this.render();
   }
@@ -38,6 +53,10 @@ export class StockUI {
   }
 
   render() {
+    document.querySelectorAll('[data-stock-tab]').forEach(button => button.classList.toggle('active', button.dataset.stockTab === this.activeTab));
+    this.marketPanel.classList.toggle('hidden', this.activeTab !== 'MARKET');
+    this.companyPanel.classList.toggle('hidden', this.activeTab !== 'COMPANIES');
+    if (this.activeTab === 'COMPANIES') return this.renderCompanies();
     const curPlayer = this.gameState.getCurrentPlayer();
     const stocks = this.gameState.stockMarket.stocks;
 
@@ -85,6 +104,46 @@ export class StockUI {
 
     // 3. 绘制 K 线/趋势折线图
     this.drawChart(stock);
+  }
+
+  renderCompanies() {
+    const player = this.gameState.getCurrentPlayer();
+    const canAct = this.gameState.phase === 'PRE_ROLL_ACTION' && !player.isAI && !player.isBankrupt;
+    this.companyPanel.innerHTML = `<div class="company-board-intro"><div><strong>城市公司董事会</strong><span>最大股东自动担任董事长；政策使用公司金库，不消耗个人现金。</span></div>
+      <span class="company-board-cycle">第 ${this.gameState.economicCycle.period} 经营周期</span></div>
+      <div class="company-board-grid">${this.gameState.companyManager.companies.map(company => {
+        const chairman = this.gameState.players[company.chairmanId];
+        const stock = this.gameState.stockMarket.stocks.find(item => item.id === company.stockId);
+        const shares = player.stocks?.[company.stockId]?.shares || 0;
+        const perk = COMPANY_PERKS[company.perk];
+        const policy = getCompanyPolicy(company);
+        const isChairman = company.chairmanId === player.id;
+        const canSetPolicy = canAct && isChairman && !policy;
+        const last = company.policyHistory?.at(-1);
+        return `<article class="company-board-card ${isChairman ? 'is-chairman' : ''}" data-company-id="${escapeHTML(company.id)}">
+          <div class="company-board-head"><span class="company-board-icon">${escapeHTML(company.icon)}</span><div><span class="company-stock-code">${escapeHTML(stock?.code || company.stockId)}</span><h3>${escapeHTML(company.name)}</h3></div>
+            <span class="company-chairman-badge">${isChairman ? '你的公司' : escapeHTML(chairman ? `董事长 ${chairman.name}` : '暂无董事长')}</span></div>
+          <div class="company-finance-grid"><div><span>公司金库</span><strong>$${company.treasury.toLocaleString()}</strong></div><div><span>周期营收</span><strong>$${company.periodRevenue.toLocaleString()}</strong></div>
+            <div><span>上期分红</span><strong>$${company.lastDividend.toLocaleString()}</strong></div><div><span>你的持股</span><strong>${shares} 股</strong></div></div>
+          <div class="company-perk"><span>${escapeHTML(perk?.icon || '🏢')}</span><div><strong>${escapeHTML(perk?.name || company.perk)}</strong><small>${escapeHTML(perk?.description || '')}</small></div></div>
+          ${policy ? `<div class="company-active-policy"><span>${policy.icon}</span><div><strong>执行中 · ${policy.name}</strong><small>${escapeHTML(policy.description)}</small></div></div>`
+            : `<div class="company-policy-options">${COMPANY_POLICIES.map(option => `<button class="btn-secondary btn-sm" data-company-policy="${option.id}" ${canSetPolicy && company.treasury >= option.cost ? '' : 'disabled'} title="${escapeHTML(option.description)}">${option.icon} ${option.name} · $${option.cost}</button>`).join('')}</div>`}
+          ${last ? `<div class="company-last-result">上次政策：${escapeHTML(COMPANY_POLICIES.find(entry => entry.id === last.policyId)?.name || last.policyId)} · 分红 $${Number(last.dividendPool || 0).toLocaleString()}</div>` : ''}
+        </article>`;
+      }).join('')}</div>`;
+  }
+
+  handleCompanyAction(event) {
+    const button = event.target.closest('[data-company-policy]');
+    if (!button) return;
+    const companyId = button.closest('[data-company-id]').dataset.companyId;
+    const player = this.gameState.getCurrentPlayer();
+    const result = this.gameEngine.execute({ type: 'SET_COMPANY_POLICY', playerId: player.id,
+      payload: { companyId, policyId: button.dataset.companyPolicy } });
+    if (result.success) this.audioManager.playCoinSound();
+    else this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
+    this.onUpdateHUD?.();
+    this.renderCompanies();
   }
 
   drawChart(stock) {

@@ -82,7 +82,7 @@ export class AssetUI {
 
   renderPropertyCard(entry, disabled) {
     const { tile, property } = entry;
-    const sellValue = Math.round(entry.buildCost * 0.5);
+    const sellValue = entry.liquidationValue;
     const mortgageValue = Math.round((tile.price || 0) * 0.5);
     const redeemCost = Math.round((property.mortgageValue || mortgageValue) * 1.1);
     const locked = entry.listed || entry.researchTask;

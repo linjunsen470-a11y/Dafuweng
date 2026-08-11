@@ -398,7 +398,7 @@ export class GameState {
       const settlements = this.companyManager.settle(this.players, this.rng);
       settlements.forEach(settlement => {
         const company = this.companyManager.get(settlement.companyId);
-        this.addLog(`🏢 【${company.name}】周期结算：分红 $${settlement.dividendPool.toLocaleString()}。`, settlement.dividendPool > 0 ? 'gold' : 'accent');
+        this.addLog(`🏢 【${company.name}】周期结算：分红 $${settlement.dividendPool.toLocaleString()}${settlement.policyId ? `，完成 ${settlement.policyId} 政策` : ''}。`, settlement.dividendPool > 0 ? 'gold' : 'accent');
         this.pendingDomainEvents.push({ type: 'COMPANY_SETTLED', ...settlement });
       });
       this.economicCycle.period++;
@@ -688,8 +688,8 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 8,
-      contentVersion: '2026.6',
+      version: 9,
+      contentVersion: '2026.7',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
@@ -729,7 +729,7 @@ export class GameState {
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
@@ -780,7 +780,7 @@ export class GameState {
     this.mechanismState = structuredClone(snapshot.mechanismState || { activeRoute: 0 });
     this.winningTeamId = snapshot.winningTeamId ?? null;
     this.roadEntities = structuredClone(snapshot.roadEntities || []);
-    this.companyManager.companies = structuredClone(snapshot.companies || this.companyManager.companies);
+    this.companyManager.importState(structuredClone(snapshot.companies || []));
     this.auction = normalizeAuctionState(structuredClone(snapshot.auction || null));
     this.phaseBeforeAuction = snapshot.phaseBeforeAuction || (this.auction?.bankruptcy ? 'LANDING_ACTION' : this.auction ? 'PRE_ROLL_ACTION' : null);
     this.bankruptcyAuctionQueue = structuredClone(snapshot.bankruptcyAuctionQueue || []);

@@ -92,13 +92,14 @@ export class ShopUI {
     });
 
     ITEMS.filter(item => item.cost !== null).forEach(tool => {
+      const finalCost = this.gameEngine ? this.gameEngine.getItemCost(curPlayer, tool) : tool.cost;
       const item = document.createElement('div');
       item.className = 'shop-card-item shop-tool-item';
       item.innerHTML = `
         <div class="card-icon">${tool.icon}</div>
         <div class="card-title">${tool.name}</div>
         <div class="card-desc">${tool.description}</div>
-        <div class="card-cost">${tool.cost} PTS · 道具</div>
+        <div class="card-cost">${finalCost} PTS · 道具 ${tool.cost !== finalCost ? `<del style="font-size:0.75rem;color:#888;">${tool.cost}</del>` : ''}</div>
         <button class="btn-primary btn-sm btn-buy-tool">购买道具</button>
       `;
       item.querySelector('.btn-buy-tool').addEventListener('click', () => {

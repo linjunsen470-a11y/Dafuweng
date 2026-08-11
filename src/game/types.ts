@@ -24,7 +24,8 @@ export type GameCommandType =
   | 'BUY_STOCK' | 'SELL_STOCK' | 'BUY_CARD' | 'USE_CARD' | 'ROLL_DICE' | 'BEGIN_MOVE'
   | 'ADVANCE_MOVE' | 'TELEPORT_PLAYER' | 'END_TURN' | 'BANK_TRANSFER' | 'BUY_LOTTERY'
   | 'CAST_MAGIC' | 'SELL_BUILDING' | 'MORTGAGE_PROPERTY' | 'REDEEM_PROPERTY'
-  | 'PAY_DEBT' | 'LIQUIDATE_DEPOSIT' | 'AUTO_SETTLE_DEBT' | 'DECLARE_BANKRUPTCY' | 'PAUSE_GAME' | 'RESUME_GAME';
+  | 'PAY_DEBT' | 'LIQUIDATE_DEPOSIT' | 'AUTO_SETTLE_DEBT' | 'DECLARE_BANKRUPTCY'
+  | 'SET_COMPANY_POLICY' | 'PAUSE_GAME' | 'RESUME_GAME';
 
 export interface GameCommand {
   type: GameCommandType;
@@ -148,6 +149,9 @@ export interface CompanyState {
   periodRevenue: number;
   chairmanId: PlayerId | null;
   lastDividend: number;
+  policyId: string | null;
+  policyStartedRound: number | null;
+  policyHistory: Array<{ policyId: string; round: number | null; dividendPool: number; operation: number }>;
 }
 
 export interface RoadEntity {
@@ -267,4 +271,8 @@ export interface GameSnapshotV8 extends Omit<GameSnapshotV7, 'version'> {
   marketHistory: Array<Record<string, unknown>>;
 }
 
-export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8;
+export interface GameSnapshotV9 extends Omit<GameSnapshotV8, 'version'> {
+  version: 9;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8 | GameSnapshotV9;

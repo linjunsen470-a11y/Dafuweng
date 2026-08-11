@@ -256,10 +256,14 @@
   <div id="modal-stock" class="modal hidden">
     <div class="glass-card modal-box large-modal">
       <div class="modal-header">
-        <h2>📈 帝国证券交易所</h2>
+        <div><h2>📈 帝国证券与董事会</h2><small>股票交易 · 公司经营 · 董事长政策</small></div>
         <button type="button" class="close-modal" id="stock-modal-close" aria-label="关闭股市窗口">&times;</button>
       </div>
-      <div class="stock-content">
+      <nav class="stock-center-tabs" id="stock-center-tabs" aria-label="证券所分页">
+        <button class="active" data-stock-tab="MARKET">股票交易</button>
+        <button data-stock-tab="COMPANIES">公司经营</button>
+      </nav>
+      <div class="stock-content" id="stock-market-panel">
         <div class="stock-list" id="stock-list-container">
           <!-- 动态股票列表 -->
         </div>
@@ -281,6 +285,7 @@
           </div>
         </div>
       </div>
+      <div id="company-management-panel" class="company-management-panel hidden"></div>
     </div>
   </div>
 

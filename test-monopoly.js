@@ -344,9 +344,27 @@ async function runTest() {
       await page.click('#btn-stock-buy');
       console.log('✅ Clicked Buy stock button.');
     }
+    await page.evaluate(async () => {
+      const [{ GameState }, { GameEngine }, { StockUI }] = await Promise.all([
+        import('/src/game/GameState.js'), import('/src/game/GameEngine.js'), import('/src/ui/StockUI.js')
+      ]);
+      const state = new GameState({ seed: 8812 });
+      state.setupGame([{ profileIndex: 0, name: '董事长验收玩家', isAI: false }, { profileIndex: 1, name: '小股东', isAI: true }], 30000, { mapId: 'city-loop' });
+      state.players[0].stocks.BEVERAGE = { shares: 80, avgPrice: 100 };
+      state.companyManager.updateChairmen(state.players);
+      state.companyManager.get('AURORA_RETAIL').treasury = 2400;
+      window.__e2eCompanyFixture = new StockUI(state, { playCoinSound() {} }, () => {}, new GameEngine(state));
+      window.__e2eCompanyFixture.show(null, 'COMPANIES');
+    });
+    await page.waitForFunction(() => document.querySelectorAll('.company-board-card').length === 6
+      && getComputedStyle(document.getElementById('stock-market-panel')).display === 'none');
+    await page.waitForSelector('.company-board-card.is-chairman [data-company-policy]:not([disabled])');
+    await page.click('.company-board-card.is-chairman [data-company-policy="DIVIDEND"]');
+    await page.waitForSelector('.company-board-card.is-chairman .company-active-policy');
+    await page.screenshot({ path: artifact('test_step_company_board.png') });
     await page.click('#stock-modal-close');
     await page.waitForSelector('#modal-stock.hidden', { timeout: 3000 });
-    console.log('✅ Stock Market modal closed.');
+    console.log('✅ Stock trading, six company cards, chairman perk, and board policy activation passed.');
 
     console.log('\n--- Step 5: Testing Card Shop Modal ---');
     await page.click('#btn-card-shop');
@@ -377,6 +395,8 @@ async function runTest() {
       ]);
       const state = new GameState({ seed: 7711 });
       state.setupGame([{ profileIndex: 0, name: '地产验收玩家', isAI: false }, { profileIndex: 1, name: '竞争对手', isAI: true }], 30000, { mapId: 'city-loop' });
+      state.players[0].stocks.MINING = { shares: 80, avgPrice: 100 };
+      state.companyManager.updateChairmen(state.players);
       [1, 3, 5].forEach(tileId => state.propertyManager.buyProperty(tileId, 0));
       state.propertyManager.upgradeProperty(1);
       window.__e2eAssetFixture = new AssetUI(state, new GameEngine(state), null, () => {});
@@ -386,6 +406,8 @@ async function runTest() {
     await page.waitForFunction(() => getComputedStyle(document.getElementById('asset-ranking-panel')).display === 'none');
     const propertyControls = await page.$$('.property-card-actions [data-property-action]');
     if (propertyControls.length < 3) throw new Error('Expected property sale, mortgage, and conversion controls.');
+    const materialRecovery = await page.$eval('.property-portfolio-card[data-property-id="1"] [data-property-action="SELL_BUILDING"]', button => button.textContent);
+    if (!materialRecovery.includes('$390')) throw new Error(`Expected material chairman recovery preview, got ${materialRecovery}`);
     await page.screenshot({ path: artifact('test_step_property_management.png') });
     await page.click('[data-asset-tab="DISTRICTS"]');
     await page.waitForSelector('.district-card.complete');
@@ -410,7 +432,7 @@ async function runTest() {
     await page.waitForSelector('#modal-market.hidden', { timeout: 3000 });
     console.log('✅ Market hall listed an asset and rendered valuation, expiry, and seller controls.');
 
-    console.log('\n--- Step 6d: Testing Pause, Speed, and V8 Save Slot ---');
+    console.log('\n--- Step 6d: Testing Pause, Speed, and V9 Save Slot ---');
     await page.click('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');

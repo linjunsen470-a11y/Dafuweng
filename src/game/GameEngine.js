@@ -10,6 +10,7 @@ import { clampMinigameScore } from './MinigameRules.js';
 import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from './AuctionRules.js';
 import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
 import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
+import { hasChairmanPerk } from './CompanyRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -125,7 +126,8 @@ export class GameEngine {
       { type: 'SELL_BUILDING', enabled: preRoll && ownedProperties.some(property => property.level > 0) },
       { type: 'MORTGAGE_PROPERTY', enabled: preRoll && ownedProperties.some(property => !property.isMortgaged && property.level === 0) },
       { type: 'REDEEM_PROPERTY', enabled: preRoll && ownedProperties.some(property => property.isMortgaged) },
-      { type: 'CHOOSE_BUILDING_TYPE', enabled: preRoll && ownedProperties.some(property => !property.isMortgaged) }
+      { type: 'CHOOSE_BUILDING_TYPE', enabled: preRoll && ownedProperties.some(property => !property.isMortgaged) },
+      { type: 'SET_COMPANY_POLICY', enabled: preRoll && this.state.companyManager.companies.some(company => company.chairmanId === player.id && !company.policyId) }
     );
     for (const cardId of new Set(player.cards || [])) {
       actions.push({ cardId, ...this.getCardAction(player, cardId) });
@@ -212,6 +214,9 @@ export class GameEngine {
       case 'CANCEL_MARKET_OFFER':
         result = this.cancelMarketOffer(player, payload.offerId);
         break;
+      case 'SET_COMPANY_POLICY':
+        result = this.setCompanyPolicy(player, payload.companyId, payload.policyId);
+        break;
       case 'SUBMIT_MINIGAME_RESULT':
         result = this.submitMinigameResult(player, payload.gameId, payload.score);
         break;
@@ -289,6 +294,11 @@ export class GameEngine {
       bonusSteps = 2;
       steps += bonusSteps;
       this.state.addLog(`🐎 ${player.name} 触发【牛仔冲锋】，额外前进 ${bonusSteps} 步！`, 'gold');
+    }
+    if (hasChairmanPerk(this.state, player.id, 'TRANSIT') && player.moveLimitThisTurn !== 1) {
+      bonusSteps += 1;
+      steps += 1;
+      this.state.addLog(`🚝 ${player.name} 调用天际交通董事长专线，额外前进 1 步。`, 'gold');
     }
     this.state.phase = 'ROLLING';
     return { success: true, type: 'DICE_ROLLED', playerId: player.id, dice, steps, bonusSteps };
@@ -552,7 +562,10 @@ export class GameEngine {
     }
     let cost = tile.price;
     if (player.godType === 'LUCK') cost = 0;
-    else if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
+    else {
+      if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
+      if (hasChairmanPerk(this.state, player.id, 'BUILD')) cost = Math.round(cost * 0.85);
+    }
     if (player.cash < cost) {
       this.state.addLog(`⚠️ ${player.name} 现金不足，无法购买【${tile.name}】。`, 'danger');
       return { success: false, reason: '现金不足', cost };
@@ -583,8 +596,11 @@ export class GameEngine {
     }
     let cost = Math.round(tile.buildCost * (building?.buildMultiplier || 1));
     if (player.godType === 'LUCK') cost = 0;
-    else if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
-    else if (player.skillName === '商业神童') cost = Math.round(cost * 0.75);
+    else {
+      if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
+      else if (player.skillName === '商业神童') cost = Math.round(cost * 0.75);
+      if (hasChairmanPerk(this.state, player.id, 'BUILD')) cost = Math.round(cost * 0.85);
+    }
     if (player.cash < cost) {
       this.state.addLog(`⚠️ ${player.name} 现金不足，无法升级【${tile.name}】。`, 'danger');
       return { success: false, reason: '现金不足', cost };
@@ -617,6 +633,11 @@ export class GameEngine {
     if (player.godType === 'MISFORTUNE' || player.godType === 'GREAT_POOR' || player.godType === 'SMALL_POOR') amount *= 2;
     if (owner.skillName === '土地公庇护') amount = Math.round(amount * 1.2);
     if (owner.skillName === '皇家威严') amount = Math.round(amount * 1.25);
+    if (hasChairmanPerk(this.state, player.id, 'INSURANCE')) {
+      const original = amount;
+      amount = Math.max(1, Math.round(amount * 0.8));
+      this.state.addLog(`🛟 蓝港保险为 ${player.name} 理赔 $${(original - amount).toLocaleString()} 租金。`, 'gold');
+    }
     if (player.cash < amount) {
       this.cancelPlayerMarketOffers(player, 'DEBT_SETTLEMENT');
       this.state.pendingDebt = {
@@ -650,7 +671,8 @@ export class GameEngine {
     if (this.state.researchTasks.some(task => task.tileId === Number(tileId))) return { success: false, reason: '研究所仍有研发任务' };
     property.level--;
     const building = BUILDINGS.find(definition => definition.id === property.buildingType);
-    const value = Math.round((tile.buildCost || 0) * (building?.buildMultiplier || 1) * 0.5);
+    const recoveryRate = hasChairmanPerk(this.state, player.id, 'MATERIAL') ? 0.65 : 0.5;
+    const value = Math.round((tile.buildCost || 0) * (building?.buildMultiplier || 1) * recoveryRate);
     player.cash += value;
     this.state.assetRevision++;
     this.state.addLog(`🏗️ ${player.name} 出售【${tile.name}】一层建筑，回笼 $${value.toLocaleString()}。`, 'accent');
@@ -1256,7 +1278,7 @@ export class GameEngine {
       playerId: player.id,
       tileId: Number(tileId),
       itemId,
-      roundsRemaining: item.researchRounds || 1
+      roundsRemaining: Math.max(1, (item.researchRounds || 1) - (hasChairmanPerk(this.state, player.id, 'TECH') ? 1 : 0))
     };
     this.state.researchTasks.push(task);
     this.state.addLog(`🧪 ${player.name} 开始研发【${item.name}】，需要 ${task.roundsRemaining} 轮。`, 'accent');
@@ -1264,9 +1286,21 @@ export class GameEngine {
   }
 
   buyItem(player, itemId) {
-    const result = this.state.inventoryManager.buy(player, itemId);
+    const item = this.state.inventoryManager.getDefinition(itemId);
+    if (!item || item.cost === null) return { success: false, reason: '该道具只能通过研究获得' };
+    const cost = this.getItemCost(player, item);
+    if (player.cardPoints < cost) return { success: false, reason: '点券不足', cost };
+    const result = this.state.inventoryManager.addItem(player, itemId);
+    if (result.success) {
+      player.cardPoints -= cost;
+      Object.assign(result, { type: 'INVENTORY_CHANGED', cost });
+    }
     if (result.success) this.state.addLog(`🧰 ${player.name} 购买了【${ITEMS.find(item => item.id === itemId)?.name}】。`, 'accent');
     return result;
+  }
+
+  getItemCost(player, item) {
+    return hasChairmanPerk(this.state, player.id, 'SHOP') ? Math.max(1, Math.round(item.cost * 0.85)) : item.cost;
   }
 
   sellInventory(player, kind, contentId) {
@@ -1538,6 +1572,14 @@ export class GameEngine {
     return { success: true, type: 'MARKET_OFFER_CANCELLED', offerId };
   }
 
+  setCompanyPolicy(player, companyId, policyId) {
+    const result = this.state.companyManager.startPolicy(String(companyId), player.id, String(policyId), this.state.round);
+    if (!result.success) return result;
+    const company = this.state.companyManager.get(String(companyId));
+    this.state.addLog(`🏢 ${player.name} 在【${company.name}】董事会通过了新的经营政策。`, 'gold');
+    return { ...result, type: 'COMPANY_POLICY_SET', playerId: player.id };
+  }
+
   submitMinigameResult(player, gameId, score) {
     const definition = MINIGAMES.find(game => game.id === gameId);
     const active = this.state.minigameState;
@@ -1592,11 +1634,13 @@ export class GameEngine {
 
   getCardCost(player, card) {
     if (player.skillName === '石油大亨' && ['DEMOLISH', 'STEAL_LAND', 'MISSILE', 'NUKES', 'LAND_BUY', 'SWAP_LAND'].includes(card.id)) {
-      return Math.round(card.cost * 0.5);
+      return Math.round(card.cost * (hasChairmanPerk(this.state, player.id, 'SHOP') ? 0.425 : 0.5));
     }
-    if (player.skillName === '商业奇才') return Math.round(card.cost * 0.85);
-    if (player.skillName === '棒球活力') return Math.round(card.cost * 0.9);
-    return card.cost;
+    let cost = card.cost;
+    if (player.skillName === '商业奇才') cost *= 0.85;
+    else if (player.skillName === '棒球活力') cost *= 0.9;
+    if (hasChairmanPerk(this.state, player.id, 'SHOP')) cost *= 0.85;
+    return Math.max(1, Math.round(cost));
   }
 
   buyCard(player, cardId) {

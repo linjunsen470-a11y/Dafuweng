@@ -2914,3 +2914,24 @@ input:focus-visible,
 .district-progress { grid-column: 1 / -1; height: 4px; border-radius: 99px; background: rgba(142,196,214,.1); overflow: hidden; }.district-progress i { display: block; height: 100%; border-radius: inherit; }
 .asset-empty { min-height: 310px; display: grid; place-items: center; align-content: center; gap: 8px; color: #789bad; text-align: center; }.asset-empty span { font-size: 46px; }.asset-empty strong { color: #d8eef5; font-size: 18px; }.asset-empty p { margin: 0; }
 @media (max-width: 760px) { .property-summary { grid-template-columns: repeat(2,1fr); }.property-portfolio-grid,.district-grid { grid-template-columns: 1fr; }.property-card-metrics { grid-template-columns: repeat(2,1fr); }.district-intro { display: grid; } }
+
+#modal-stock .modal-header > div { display: grid; gap: 3px; }
+#modal-stock .modal-header small { color: #789bad; }
+.stock-center-tabs { display: flex; gap: 8px; padding: 12px 0; border-bottom: 1px solid rgba(142,196,214,.14); }
+.stock-center-tabs button { border: 0; border-radius: 999px; padding: 9px 17px; background: rgba(40,75,94,.4); color: #a9c7d5; cursor: pointer; }
+.stock-center-tabs button.active { color: #071825; background: linear-gradient(135deg,#4ade80,#22c55e); font-weight: 800; }
+.stock-content.hidden,.company-management-panel.hidden { display: none; }
+.company-management-panel { max-height: 590px; overflow: auto; padding-top: 13px; }
+.company-board-intro { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.company-board-intro > div { display: grid; gap: 4px; }.company-board-intro span { color: #789bad; font-size: 12px; }.company-board-cycle { border: 1px solid rgba(74,222,128,.25); border-radius: 999px; padding: 7px 11px; }
+.company-board-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; }
+.company-board-card { border: 1px solid rgba(142,196,214,.15); border-radius: 17px; padding: 14px; background: rgba(4,22,38,.68); }
+.company-board-card.is-chairman { border-color: rgba(251,191,36,.38); box-shadow: inset 0 0 25px rgba(251,191,36,.04); }
+.company-board-head { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; }.company-board-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: rgba(74,222,128,.09); font-size: 22px; }
+.company-board-head h3 { margin: 2px 0 0; color: #e8f7fb; }.company-stock-code { color: #4ade80; font-size: 10px; letter-spacing: .08em; }.company-chairman-badge { color: #d5b96b; font-size: 10px; text-align: right; }
+.company-finance-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin: 12px 0; }.company-finance-grid > div { display: grid; gap: 3px; }.company-finance-grid span { color: #789bad; font-size: 10px; }.company-finance-grid strong { color: #d8eef5; font-size: 12px; }
+.company-perk,.company-active-policy { display: flex; gap: 9px; align-items: center; border-radius: 11px; padding: 9px 10px; background: rgba(103,232,249,.06); margin-bottom: 9px; }.company-perk > span,.company-active-policy > span { font-size: 20px; }.company-perk div,.company-active-policy div { display: grid; gap: 2px; }.company-perk small,.company-active-policy small { color: #789bad; font-size: 10px; line-height: 1.35; }
+.company-active-policy { background: rgba(74,222,128,.08); }.company-active-policy strong { color: #4ade80; }
+.company-policy-options { display: flex; flex-wrap: wrap; gap: 6px; }.company-policy-options button { font-size: 10px; }
+.company-last-result { margin-top: 8px; color: #789bad; font-size: 10px; }
+@media (max-width: 760px) { .company-board-grid { grid-template-columns: 1fr; }.company-finance-grid { grid-template-columns: repeat(2,1fr); }.company-board-intro { display: grid; } }

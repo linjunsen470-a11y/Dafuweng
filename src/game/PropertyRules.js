@@ -1,5 +1,6 @@
 import { COLOR_GROUPS, TileType, isPropertyTile } from './BoardData.js';
 import { BUILDINGS } from './ContentRegistry.js';
+import { hasChairmanPerk } from './CompanyRules.js';
 
 export const BUILDING_LABELS = {
   RESIDENTIAL: '住宅', CHAIN_STORE: '连锁店', MALL: '购物中心', HOTEL: '旅馆',
@@ -13,8 +14,9 @@ export function getPropertyPortfolio(state, playerId) {
       const tile = state.getTile(tileId);
       const building = BUILDINGS.find(entry => entry.id === property.buildingType);
       const buildCost = Math.round((tile.buildCost || 0) * (building?.buildMultiplier || 1));
+      const liquidationValue = Math.round(buildCost * (hasChairmanPerk(state, playerId, 'MATERIAL') ? 0.65 : 0.5));
       return {
-        tileId, tile, property, buildCost,
+        tileId, tile, property, buildCost, liquidationValue,
         buildingLabel: BUILDING_LABELS[property.buildingType] || property.buildingType,
         rent: state.propertyManager.calculateToll(tileId, state.newsEffect, state.priceIndex),
         value: Math.max(0, (tile.price || 0) + buildCost * (property.level || 0) - (property.isMortgaged ? property.mortgageValue || 0 : 0)),

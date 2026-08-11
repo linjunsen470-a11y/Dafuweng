@@ -5,6 +5,7 @@ import { GameState } from './GameState.js';
 import { GameEngine } from './GameEngine.js';
 import { chooseAIMarketAction } from './MarketRules.js';
 import { chooseAIPropertyManagement } from './PropertyRules.js';
+import { chooseAICompanyPolicy } from './CompanyRules.js';
 
 export class GameSimulator {
   constructor({
@@ -101,6 +102,9 @@ export class GameSimulator {
 
     const propertyDecision = player.isSleepwalkingThisTurn ? null : chooseAIPropertyManagement(player, this.state);
     if (propertyDecision) this.engine.execute({ type: propertyDecision.type, playerId: player.id, payload: propertyDecision });
+
+    const companyDecision = player.isSleepwalkingThisTurn ? null : chooseAICompanyPolicy(player, this.state);
+    if (companyDecision) this.engine.execute({ type: 'SET_COMPANY_POLICY', playerId: player.id, payload: companyDecision });
 
     if (teleportTile !== null) {
       this.engine.execute({ type: 'TELEPORT_PLAYER', playerId: player.id, payload: { tileId: teleportTile } });

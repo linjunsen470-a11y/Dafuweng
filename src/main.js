@@ -15,6 +15,7 @@ import { getAIAuctionBid, getMinimumAuctionBid } from './game/AuctionRules.js';
 import { getDebtPortfolio } from './game/DebtRules.js';
 import { chooseAIMarketAction } from './game/MarketRules.js';
 import { chooseAIPropertyManagement } from './game/PropertyRules.js';
+import { chooseAICompanyPolicy } from './game/CompanyRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
@@ -698,6 +699,11 @@ class GameController {
         playerId: aiPlayer.id,
         payload: { tileId: propertyDecision.tileId, buildingType: propertyDecision.buildingType }
       });
+    }
+
+    const companyDecision = chooseAICompanyPolicy(aiPlayer, this.gameState);
+    if (companyDecision) {
+      this.gameEngine.execute({ type: 'SET_COMPANY_POLICY', playerId: aiPlayer.id, payload: companyDecision });
     }
 
     await this.doRollDice();
