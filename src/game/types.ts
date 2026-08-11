@@ -170,6 +170,10 @@ export interface AuctionState {
   highestBidderId: PlayerId | null;
   bidderOrder: PlayerId[];
   bidderIndex: number;
+  activeBidderIds?: PlayerId[];
+  passedBidderIds?: PlayerId[];
+  bidHistory?: Array<{ playerId: PlayerId; amount: number; action: 'BID' | 'PASS' | 'AUTO_PASS'; round: number }>;
+  biddingRound?: number;
   status: 'OPEN' | 'RESOLVED' | 'CANCELLED';
 }
 
@@ -253,4 +257,9 @@ export interface GameSnapshotV6 extends Omit<GameSnapshotV5, 'version'> {
   }>;
 }
 
-export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6;
+export interface GameSnapshotV7 extends Omit<GameSnapshotV6, 'version'> {
+  version: 7;
+  phaseBeforeAuction: GamePhase | null;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7;

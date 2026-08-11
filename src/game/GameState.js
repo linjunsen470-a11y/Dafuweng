@@ -8,6 +8,7 @@ import { MapRuntime } from './MapRuntime.js';
 import { CompanyManager } from './CompanyManager.js';
 import { InventoryManager } from './InventoryManager.js';
 import { GODS, ITEMS } from './ContentRegistry.js';
+import { normalizeAuctionState } from './AuctionRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -57,6 +58,7 @@ export class GameState {
     this.mechanismState = { activeRoute: 0 };
     this.roadEntities = [];
     this.auction = null;
+    this.phaseBeforeAuction = null;
     this.bankruptcyAuctionQueue = [];
     this.marketOffers = [];
     this.researchTasks = [];
@@ -102,6 +104,7 @@ export class GameState {
     this.mechanismState = { activeRoute: 0 };
     this.roadEntities = [];
     this.auction = null;
+    this.phaseBeforeAuction = null;
     this.bankruptcyAuctionQueue = [];
     this.marketOffers = [];
     this.researchTasks = [];
@@ -680,8 +683,8 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 6,
-      contentVersion: '2026.4',
+      version: 7,
+      contentVersion: '2026.5',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
@@ -709,6 +712,7 @@ export class GameState {
       roadEntities: structuredClone(this.roadEntities),
       companies: structuredClone(this.companyManager.companies),
       auction: structuredClone(this.auction),
+      phaseBeforeAuction: this.phaseBeforeAuction,
       bankruptcyAuctionQueue: structuredClone(this.bankruptcyAuctionQueue),
       marketOffers: structuredClone(this.marketOffers),
       researchTasks: structuredClone(this.researchTasks),
@@ -719,7 +723,7 @@ export class GameState {
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4, 5, 6].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
@@ -771,7 +775,8 @@ export class GameState {
     this.winningTeamId = snapshot.winningTeamId ?? null;
     this.roadEntities = structuredClone(snapshot.roadEntities || []);
     this.companyManager.companies = structuredClone(snapshot.companies || this.companyManager.companies);
-    this.auction = structuredClone(snapshot.auction || null);
+    this.auction = normalizeAuctionState(structuredClone(snapshot.auction || null));
+    this.phaseBeforeAuction = snapshot.phaseBeforeAuction || (this.auction?.bankruptcy ? 'LANDING_ACTION' : this.auction ? 'PRE_ROLL_ACTION' : null);
     this.bankruptcyAuctionQueue = structuredClone(snapshot.bankruptcyAuctionQueue || []);
     this.marketOffers = structuredClone(snapshot.marketOffers || []);
     this.researchTasks = structuredClone(snapshot.researchTasks || []);

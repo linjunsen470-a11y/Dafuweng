@@ -7,6 +7,7 @@ import { validateCommand } from './CommandPolicy.js';
 import { BUILDINGS, COMPANIES, ITEMS, MAGIC_CONDITIONS, MAGIC_EFFECTS, MINIGAMES } from './ContentRegistry.js';
 import { CARD_CAPACITY } from './InventoryManager.js';
 import { clampMinigameScore } from './MinigameRules.js';
+import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from './AuctionRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -767,19 +768,15 @@ export class GameEngine {
     }
     this.state.phaseBeforeAuction = 'LANDING_ACTION';
     this.state.phase = 'AUCTION';
-    this.state.auction = {
+    this.state.auction = createAuctionState({
       id: `BANKRUPTCY_${this.state.round}_${lot.tileId}`,
       sellerId: null,
       beneficiaryId: lot.creditorId,
       bankruptcy: true,
       tileId: lot.tileId,
-      minimumBid: Math.max(100, Math.round((tile.price + (tile.buildCost || 0) * lot.level) * 0.45)),
-      highestBid: 0,
-      highestBidderId: null,
+      minimumBid: Math.ceil(Math.max(100, (tile.price + (tile.buildCost || 0) * lot.level) * 0.45) / 100) * 100,
       bidderOrder: bidders,
-      bidderIndex: 0,
-      status: 'OPEN'
-    };
+    });
     return this.state.auction;
   }
 
@@ -1312,32 +1309,68 @@ export class GameEngine {
     if (!bidders.length) return { success: false, reason: '没有可参与竞拍的玩家' };
     this.state.phaseBeforeAuction = this.state.phase;
     this.state.phase = 'AUCTION';
-    this.state.auction = {
+    this.state.auction = createAuctionState({
       id: `AUCTION_${this.state.round}_${tileId}`,
       sellerId: player.id,
       tileId: Number(tileId),
-      minimumBid: Math.max(100, Number(minimumBid) || Math.round(tile.price * 0.5)),
-      highestBid: 0,
-      highestBidderId: null,
+      minimumBid: Math.ceil(Math.max(100, Number(minimumBid) || tile.price * 0.5) / 100) * 100,
       bidderOrder: bidders,
-      bidderIndex: 0,
-      status: 'OPEN'
-    };
+    });
     return { success: true, type: 'AUCTION_UPDATED', auction: structuredClone(this.state.auction) };
   }
 
   placeBid(player, amount) {
-    const auction = this.state.auction;
+    const auction = normalizeAuctionState(this.state.auction);
     if (!auction || auction.status !== 'OPEN') return { success: false, reason: '当前没有拍卖' };
+    this.state.auction = auction;
+    if (auction.bidderOrder[auction.bidderIndex] !== player.id) return { success: false, reason: '尚未轮到该玩家出价' };
     const value = Number(amount) || 0;
-    const minimum = Math.max(auction.minimumBid, auction.highestBid + 100);
-    if (value > 0 && (value < minimum || player.cash < value)) return { success: false, reason: '出价无效或现金不足', minimum };
+    const minimum = getMinimumAuctionBid(auction);
+    if (value > 0 && (value < minimum || value % 100 !== 0 || player.cash < value)) return { success: false, reason: '出价无效或现金不足', minimum };
     if (value >= minimum) {
       auction.highestBid = value;
       auction.highestBidderId = player.id;
+      auction.bidHistory.push({ playerId: player.id, amount: value, action: 'BID', round: auction.biddingRound });
+    } else {
+      if (!auction.passedBidderIds.includes(player.id)) auction.passedBidderIds.push(player.id);
+      auction.bidHistory.push({ playerId: player.id, amount: 0, action: 'PASS', round: auction.biddingRound });
     }
-    auction.bidderIndex++;
-    if (auction.bidderIndex < auction.bidderOrder.length) return { success: true, type: 'AUCTION_UPDATED', auction: structuredClone(auction) };
+
+    const nextMinimum = getMinimumAuctionBid(auction);
+    auction.bidderOrder.forEach(bidderId => {
+      if (bidderId === auction.highestBidderId || auction.passedBidderIds.includes(bidderId)) return;
+      const bidder = this.state.players[bidderId];
+      if (!bidder || bidder.isBankrupt || bidder.cash < nextMinimum) {
+        auction.passedBidderIds.push(bidderId);
+        auction.bidHistory.push({ playerId: bidderId, amount: 0, action: 'AUTO_PASS', round: auction.biddingRound });
+      }
+    });
+    auction.activeBidderIds = auction.bidderOrder.filter(bidderId => !auction.passedBidderIds.includes(bidderId));
+
+    const challengers = auction.bidderOrder.filter(bidderId => bidderId !== auction.highestBidderId && !auction.passedBidderIds.includes(bidderId));
+    const remaining = auction.bidderOrder.filter(bidderId => !auction.passedBidderIds.includes(bidderId));
+    if ((auction.highestBidderId !== null && challengers.length === 0)
+      || (auction.highestBidderId === null && remaining.length === 0)) {
+      return this.finalizeAuction(auction);
+    }
+
+    const currentIndex = auction.bidderIndex;
+    let nextIndex = -1;
+    for (let offset = 1; offset <= auction.bidderOrder.length; offset++) {
+      const candidateIndex = (currentIndex + offset) % auction.bidderOrder.length;
+      const candidateId = auction.bidderOrder[candidateIndex];
+      if (candidateId !== auction.highestBidderId && !auction.passedBidderIds.includes(candidateId)) {
+        nextIndex = candidateIndex;
+        if (candidateIndex <= currentIndex) auction.biddingRound++;
+        break;
+      }
+    }
+    if (nextIndex < 0) return this.finalizeAuction(auction);
+    auction.bidderIndex = nextIndex;
+    return { success: true, type: 'AUCTION_UPDATED', auction: structuredClone(auction) };
+  }
+
+  finalizeAuction(auction) {
     const seller = auction.sellerId === null ? null : this.state.players[auction.sellerId];
     const winner = this.state.players[auction.highestBidderId];
     if (winner) {
@@ -1346,6 +1379,7 @@ export class GameEngine {
       if (beneficiary && !beneficiary.isBankrupt) beneficiary.cash += auction.highestBid;
       this.state.propertyManager.getProperty(auction.tileId).owner = winner.id;
       auction.status = 'RESOLVED';
+      this.state.addLog(`🔨 ${winner.name} 以 $${auction.highestBid.toLocaleString()} 竞得【${this.state.getTile(auction.tileId)?.name || '地产'}】。`, 'gold');
     } else {
       const property = this.state.propertyManager.getProperty(auction.tileId);
       if (auction.bankruptcy && property) {
@@ -1353,6 +1387,7 @@ export class GameEngine {
         property.buildingType = this.state.getTile(auction.tileId)?.type === TileType.BIG_PROPERTY ? null : 'RESIDENTIAL';
       }
       auction.status = 'CANCELLED';
+      this.state.addLog(`🔨 【${this.state.getTile(auction.tileId)?.name || '地产'}】流拍，无人出价。`, 'accent');
     }
     this.state.phase = this.state.phaseBeforeAuction || 'PRE_ROLL_ACTION';
     this.state.phaseBeforeAuction = null;

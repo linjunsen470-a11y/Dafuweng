@@ -11,11 +11,13 @@ import { AIPlayer } from './game/AIPlayer.js';
 import { GameEngine } from './game/GameEngine.js';
 import { BUILDINGS, ITEMS } from './game/ContentRegistry.js';
 import { getAIMinigameScore } from './game/MinigameRules.js';
+import { getAIAuctionBid, getMinimumAuctionBid } from './game/AuctionRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
 import { MinimapUI } from './ui/MinimapUI.js';
 import { PresentationUI } from './ui/PresentationUI.js';
+import { AuctionUI } from './ui/AuctionUI.js';
 
 class GameController {
   constructor() {
@@ -35,6 +37,7 @@ class GameController {
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
     this.presentationUI = new PresentationUI();
+    this.auctionUI = new AuctionUI(this.audioManager);
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
@@ -958,24 +961,22 @@ class GameController {
       const auction = this.gameState.auction;
       const bidderId = auction.bidderOrder[auction.bidderIndex];
       const bidder = this.gameState.players[bidderId];
-      const minimum = Math.max(auction.minimumBid, auction.highestBid + 100);
+      const tile = this.gameState.getTile(auction.tileId);
+      const property = this.gameState.propertyManager.getProperty(auction.tileId);
+      const context = { auction, tile, property, bidder, players: this.gameState.players };
       let amount = 0;
       if (bidder.isAI) {
-        const tile = this.gameState.getTile(auction.tileId);
-        const ceiling = Math.min(bidder.cash - 1500, Math.round((tile.price || minimum) * (bidder.aiDifficulty === 'HARD' ? 1.15 : 0.85)));
-        amount = ceiling >= minimum ? minimum + this.gameState.rng.int(0, Math.min(500, ceiling - minimum)) : 0;
+        amount = getAIAuctionBid(bidder, auction, this.gameState);
+        await this.auctionUI.showAIBid(context, amount, this.actionSpeed);
       } else {
-        const choice = await this.dialogUI.chooseTarget({
-          title: `地产拍卖：${this.gameState.getTile(auction.tileId).name} · ${bidder.name} 出价`,
-          options: [
-            { id: 0, label: '放弃竞拍', description: `当前最高 $${auction.highestBid.toLocaleString()}` },
-            { id: minimum, label: `出价 $${minimum.toLocaleString()}`, description: `现金 $${bidder.cash.toLocaleString()}` },
-            { id: minimum + 500, label: `出价 $${(minimum + 500).toLocaleString()}`, description: '提高竞争门槛' }
-          ].filter(option => option.id === 0 || option.id <= bidder.cash)
-        });
-        amount = Number(choice || 0);
+        amount = await this.auctionUI.chooseBid(context);
       }
-      this.gameEngine.execute({ type: 'PLACE_BID', playerId: bidder.id, payload: { amount } });
+      const result = this.gameEngine.execute({ type: 'PLACE_BID', playerId: bidder.id, payload: { amount } });
+      if (!result.success) {
+        this.gameState.addLog(`⚠️ 拍卖出价失败：${result.reason}（最低 ${getMinimumAuctionBid(auction).toLocaleString()}）`, 'danger');
+        break;
+      }
+      if (result.completed) await this.auctionUI.showResult(result.auction, tile, this.gameState.players, this.actionSpeed, property);
     }
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();

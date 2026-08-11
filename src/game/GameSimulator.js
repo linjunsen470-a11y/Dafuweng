@@ -1,5 +1,6 @@
 import { AIPlayer } from './AIPlayer.js';
 import { getAIMinigameScore } from './MinigameRules.js';
+import { getAIAuctionBid } from './AuctionRules.js';
 import { GameState } from './GameState.js';
 import { GameEngine } from './GameEngine.js';
 
@@ -167,10 +168,7 @@ export class GameSimulator {
     while (this.state.auction) {
       const auction = this.state.auction;
       const bidder = this.state.players[auction.bidderOrder[auction.bidderIndex]];
-      const minimum = Math.max(auction.minimumBid, auction.highestBid + 100);
-      const tile = this.state.getTile(auction.tileId);
-      const ceiling = Math.min(bidder.cash - 1500, Math.round((tile.price || minimum) * 0.95));
-      const amount = ceiling >= minimum ? Math.min(ceiling, minimum + this.state.rng.int(0, Math.min(500, ceiling - minimum))) : 0;
+      const amount = getAIAuctionBid(bidder, auction, this.state);
       this.engine.execute({ type: 'PLACE_BID', playerId: bidder.id, payload: { amount } });
     }
   }

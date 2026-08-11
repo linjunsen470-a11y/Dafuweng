@@ -1,10 +1,11 @@
 const AUTO_SAVE_KEY = 'fortune-empire:auto-save:v1';
 const MANUAL_SAVE_KEY = 'fortune-empire:manual-save:v1';
-const SLOT_PREFIX = 'fortune-empire:slot:v6:';
+const SLOT_PREFIX = 'fortune-empire:slot:v7:';
+const V6_SLOT_PREFIX = 'fortune-empire:slot:v6:';
 const V5_SLOT_PREFIX = 'fortune-empire:slot:v5:';
 const V4_SLOT_PREFIX = 'fortune-empire:slot:v4:';
 const LEGACY_SLOT_PREFIX = 'fortune-empire:slot:v3:';
-const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6];
+const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6, 7];
 
 class IndexedSaveMirror {
   constructor() {
@@ -92,6 +93,8 @@ export class SaveManager {
   loadSlot(slotId) {
     const current = this.read(`${SLOT_PREFIX}${slotId}`);
     if (current.success) return current;
+    const v6 = this.read(`${V6_SLOT_PREFIX}${slotId}`);
+    if (v6.success) return v6;
     const v5 = this.read(`${V5_SLOT_PREFIX}${slotId}`);
     if (v5.success) return v5;
     const v4 = this.read(`${V4_SLOT_PREFIX}${slotId}`);
@@ -101,7 +104,7 @@ export class SaveManager {
   async loadSlotAsync(slotId) {
     const local = this.loadSlot(slotId);
     if (local.success) return local;
-    for (const prefix of [SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
+    for (const prefix of [SLOT_PREFIX, V6_SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
       try {
         const snapshot = await this.indexedMirror.get(`${prefix}${slotId}`);
         if (snapshot && SUPPORTED_VERSIONS.includes(snapshot.version)) {
@@ -116,6 +119,7 @@ export class SaveManager {
   deleteSlot(slotId) {
     try {
       this.storage?.removeItem(`${SLOT_PREFIX}${slotId}`);
+      this.storage?.removeItem(`${V6_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V5_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V4_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${LEGACY_SLOT_PREFIX}${slotId}`);

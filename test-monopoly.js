@@ -216,6 +216,57 @@ async function runTest() {
     await page.click('.news-history-close');
     console.log('✅ News broadcast, impact summary, ticker entry, and archive rendered.');
 
+    console.log('\n--- Step 3d: Testing multi-round auction hall interface ---');
+    await page.evaluate(async () => {
+      const { AuctionUI } = await import('/src/ui/AuctionUI.js');
+      window.__e2eAuctionUI = new AuctionUI();
+      window.__e2eAuctionPlayers = [
+        { id: 0, name: '林小满', cash: 18500, color: '#ff6b81', avatar: '👩' },
+        { id: 1, name: '钱夫人', cash: 13200, color: '#feca57', avatar: '👒' },
+        { id: 2, name: '阿土伯', cash: 9800, color: '#48dbfb', avatar: '👨‍🌾' }
+      ];
+      window.__e2eAuctionTile = { id: 18, name: '海湾金融中心', icon: '🏙️', group: 'GOLD', price: 4200, desc: '城市黄金商圈的核心商业资产。' };
+      window.__e2eAuction = {
+        id: 'AUCTION_E2E', sellerId: 0, tileId: 18, minimumBid: 2200,
+        highestBid: 2600, highestBidderId: 2, bidderOrder: [1, 2], bidderIndex: 0,
+        activeBidderIds: [1, 2], passedBidderIds: [], biddingRound: 2, status: 'OPEN',
+        bidHistory: [
+          { playerId: 1, amount: 2200, action: 'BID', round: 1 },
+          { playerId: 2, amount: 2600, action: 'BID', round: 1 }
+        ]
+      };
+      const context = {
+        auction: window.__e2eAuction,
+        tile: window.__e2eAuctionTile,
+        property: { level: 2, buildingType: 'MALL' },
+        bidder: window.__e2eAuctionPlayers[1],
+        players: window.__e2eAuctionPlayers
+      };
+      window.__e2eAuctionBid = null;
+      window.__e2eAuctionUI.chooseBid(context).then(value => { window.__e2eAuctionBid = value; });
+    });
+    await page.waitForSelector('.auction-overlay.is-visible[data-auction-mode="BID"] .auction-bid-button.is-primary');
+    const auctionBidders = await page.$$eval('.auction-bidder', elements => elements.length);
+    if (auctionBidders !== 2) throw new Error(`Expected 2 auction bidders, got ${auctionBidders}`);
+    await page.screenshot({ path: artifact('test_step_auction_bidding.png') });
+    await page.click('.auction-bid-button.is-primary');
+    await page.waitForFunction(() => window.__e2eAuctionBid === 2700);
+    await page.evaluate(() => {
+      const completed = {
+        ...window.__e2eAuction,
+        highestBid: 3100,
+        highestBidderId: 1,
+        status: 'RESOLVED',
+        bidHistory: [...window.__e2eAuction.bidHistory, { playerId: 1, amount: 3100, action: 'BID', round: 2 }, { playerId: 2, amount: 0, action: 'PASS', round: 2 }]
+      };
+      window.__e2eAuctionUI.showResult(completed, window.__e2eAuctionTile, window.__e2eAuctionPlayers, 1, { level: 2, buildingType: 'MALL' });
+    });
+    await page.waitForSelector('.auction-overlay.is-visible[data-auction-mode="RESULT"] .auction-result.is-sold');
+    await page.screenshot({ path: artifact('test_step_auction_result.png') });
+    await page.click('.auction-controls .btn-primary');
+    await page.waitForSelector('.auction-overlay', { hidden: true });
+    console.log('✅ Auction property card, bidders, bid history, custom controls, and sold result rendered.');
+
     console.log('\n--- Step 4: Testing Stock Market Modal ---');
     await page.click('#btn-stock-market');
     await page.waitForSelector('#modal-stock:not(.hidden)', { timeout: 3000 });
@@ -260,7 +311,7 @@ async function runTest() {
     await page.waitForSelector('#modal-assets.hidden', { timeout: 3000 });
     console.log('✅ Asset ranking modal rendered all players.');
 
-    console.log('\n--- Step 6c: Testing Pause, Speed, and V6 Save Slot ---');
+    console.log('\n--- Step 6c: Testing Pause, Speed, and V7 Save Slot ---');
     await page.click('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');
