@@ -33,14 +33,14 @@ export class BoardBuilder {
 
   loadTextures() {
     this.textures = {
-      start: this.createProceduralTexture('#f59e0b', '#fef3c7'),
-      bank: this.createProceduralTexture('#1d4ed8', '#dbeafe'),
-      stock: this.createProceduralTexture('#0891b2', '#cffafe'),
-      shop: this.createProceduralTexture('#be185d', '#fce7f3'),
-      mapBg: this.createProceduralTexture('#172554', '#0f766e'),
-      grass: this.createProceduralTexture('#3f6212', '#84cc16'),
-      parkV2: this.createProceduralTexture('#166534', '#86efac'),
-      worldGround: this.createProceduralTexture('#0f172a', '#164e63')
+      start: this.createAssetTexture('/assets/tile_start_rich.jpg', '#f59e0b', '#fef3c7'),
+      bank: this.createAssetTexture('/assets/tile_bank_rich.jpg', '#1d4ed8', '#dbeafe'),
+      stock: this.createAssetTexture('/assets/tile_stock_rich.jpg', '#0891b2', '#cffafe'),
+      shop: this.createAssetTexture('/assets/tile_shop_rich.jpg', '#be185d', '#fce7f3'),
+      mapBg: this.createAssetTexture('/assets/map_bg_texture.jpg', '#172554', '#0f766e'),
+      grass: this.createAssetTexture('/assets/grass_ground.jpg', '#3f6212', '#84cc16'),
+      parkV2: this.createAssetTexture('/assets/park_ground_v2.webp', '#166534', '#86efac'),
+      worldGround: this.createAssetTexture('/assets/world-ground-v2.webp', '#0f172a', '#164e63')
     };
 
     Object.values(this.textures).forEach(texture => {
@@ -53,6 +53,80 @@ export class BoardBuilder {
       this.textures.mapBg.wrapT = THREE.RepeatWrapping;
       this.textures.mapBg.repeat.set(2, 2);
     }
+
+    this.buildingAtlasImage = new Image();
+    this.buildingAtlasImage.decoding = 'async';
+    this.buildingAtlasImage.src = '/assets/buildings-v2-atlas.webp';
+  }
+
+  createAssetTexture(path, primary, accent) {
+    const texture = this.textureLoader.load(
+      path,
+      loaded => {
+        loaded.colorSpace = THREE.SRGBColorSpace;
+        loaded.anisotropy = Math.min(8, this.scene3D.renderer.capabilities.getMaxAnisotropy());
+        loaded.needsUpdate = true;
+      },
+      undefined,
+      () => console.warn(`Board texture failed to load: ${path}; material color fallback remains active.`)
+    );
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(8, this.scene3D.renderer.capabilities.getMaxAnisotropy());
+    texture.userData.sharedBoardTexture = true;
+    return texture;
+  }
+
+  createBuildingArtworkSprite(level, ownerColor) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 320;
+    canvas.height = 500;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const sprite = new THREE.Sprite(material);
+    const visualLevel = Math.max(1, Math.min(4, level));
+    const heights = [0, 3.6, 4.5, 5.8, 7.2];
+    const widths = [0, 3.1, 3.5, 4.1, 4.8];
+    sprite.position.set(0, heights[visualLevel] * 0.48, 0.18);
+    sprite.scale.set(widths[visualLevel], heights[visualLevel], 1);
+    sprite.userData.isBuildingStandee = true;
+
+    const draw = () => {
+      const image = this.buildingAtlasImage;
+      if (!image?.naturalWidth) return;
+      const sourceWidth = image.naturalWidth / 5;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(
+        image,
+        visualLevel * sourceWidth,
+        0,
+        sourceWidth,
+        image.naturalHeight,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+      for (let index = 0; index < pixels.data.length; index += 4) {
+        const red = pixels.data[index];
+        const green = pixels.data[index + 1];
+        const blue = pixels.data[index + 2];
+        if (red > 238 && green > 228 && blue > 216 && Math.max(red, green, blue) - Math.min(red, green, blue) < 32) {
+          pixels.data[index + 3] = Math.max(0, (246 - red) * 18);
+        }
+      }
+      context.putImageData(pixels, 0, 0);
+      context.fillStyle = `#${new THREE.Color(ownerColor ?? 0xffaa00).getHexString()}`;
+      context.beginPath();
+      context.roundRect(55, 468, 210, 16, 8);
+      context.fill();
+      texture.needsUpdate = true;
+    };
+    if (this.buildingAtlasImage.complete) draw();
+    else this.buildingAtlasImage.addEventListener('load', draw, { once: true });
+    return sprite;
   }
 
   createProceduralTexture(primary, accent) {
@@ -228,7 +302,7 @@ export class BoardBuilder {
       mesh.geometry?.dispose();
       const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       materials.forEach(material => {
-        if (material?.map?.isCanvasTexture) material.map.dispose();
+        if (material?.map?.isCanvasTexture && !material.map.userData?.sharedBoardTexture) material.map.dispose();
         material?.dispose?.();
       });
     });
@@ -259,7 +333,7 @@ export class BoardBuilder {
       child.geometry?.dispose?.();
       const materials = Array.isArray(child.material) ? child.material : [child.material];
       materials.filter(Boolean).forEach(material => {
-        if (material.map?.isCanvasTexture) material.map.dispose();
+        if (material.map?.isCanvasTexture && !material.map.userData?.sharedBoardTexture) material.map.dispose();
         material.dispose?.();
       });
     });
@@ -313,7 +387,7 @@ export class BoardBuilder {
 
     const island = new THREE.Mesh(
       new THREE.BoxGeometry(142, 0.75, 92),
-      new THREE.MeshBasicMaterial({ color: '#6ead67' })
+      new THREE.MeshBasicMaterial({ map: this.textures.parkV2, color: '#f2fff0' })
     );
     island.position.set(0, -0.48, -3);
     island.receiveShadow = true;
@@ -1115,7 +1189,10 @@ export class BoardBuilder {
       group.add(lightPulse);
     }
 
-    if (level > 0) this.addBuildingWindows(group, level);
+    if (level > 0) {
+      this.addBuildingWindows(group, level);
+      if (!tile?.large) group.add(this.createBuildingArtworkSprite(level, ownerColor));
+    }
     group.scale.set(0.1, 0.1, 0.1);
     this.scene3D.scene.add(group);
     this.buildingMeshes.set(tileIndex, group);

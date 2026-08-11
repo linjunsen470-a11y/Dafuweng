@@ -22,7 +22,7 @@ export class PawnManager {
       group.add(characterMesh);
 
       let standee = null;
-      if (profile.avatarImg) {
+      if (profile.avatarAtlas || profile.avatarImg) {
         standee = this.createCharacterStandee(profile, () => {
           characterMesh.visible = false;
         });
@@ -125,7 +125,28 @@ export class PawnManager {
       ctx.beginPath();
       ctx.roundRect(8, 8, 304, 384, 42);
       ctx.clip();
-      ctx.drawImage(image, 8, 8, 304, 384);
+      if (profile.avatarAtlas) {
+        const [xPercent = 0, yPercent = 0] = String(profile.avatarPosition || '0% 0%')
+          .split(/\s+/)
+          .map(value => Number.parseFloat(value));
+        const column = Math.max(0, Math.min(3, Math.round(xPercent / (100 / 3))));
+        const row = Math.max(0, Math.min(2, Math.round(yPercent / 50)));
+        const sourceWidth = image.naturalWidth / 4;
+        const sourceHeight = image.naturalHeight / 3;
+        ctx.drawImage(
+          image,
+          column * sourceWidth,
+          row * sourceHeight,
+          sourceWidth,
+          sourceHeight,
+          8,
+          8,
+          304,
+          384
+        );
+      } else {
+        ctx.drawImage(image, 8, 8, 304, 384);
+      }
       const gradient = ctx.createLinearGradient(0, 250, 0, 392);
       gradient.addColorStop(0, 'rgba(8,12,30,0)');
       gradient.addColorStop(1, 'rgba(8,12,30,0.34)');
@@ -140,7 +161,7 @@ export class PawnManager {
       texture.needsUpdate = true;
       onReady?.();
     };
-    image.src = profile.avatarImg || '';
+    image.src = profile.avatarAtlas || profile.avatarImg || '';
     return sprite;
   }
 

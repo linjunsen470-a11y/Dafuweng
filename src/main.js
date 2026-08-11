@@ -146,9 +146,13 @@ class GameController {
 
       item.innerHTML = `
         <div class="player-info-meta">
-          <select class="player-profile-select" name="player-profile-${i}" data-index="${i}" aria-label="选择玩家${i + 1}角色">
-            ${optionsHtml}
-          </select>
+          <span class="setup-character-portrait" role="img" aria-label="角色肖像"></span>
+          <div class="setup-character-copy">
+            <select class="player-profile-select" name="player-profile-${i}" data-index="${i}" aria-label="选择玩家${i + 1}角色">
+              ${optionsHtml}
+            </select>
+            <span class="setup-character-skill"></span>
+          </div>
         </div>
         <select class="player-type-select" name="player-type-${i}" data-index="${i}" aria-label="选择玩家${i + 1}类型">
           <option value="HUMAN" ${defaultTypes[i] === 'HUMAN' ? 'selected' : ''}>👤 人类玩家</option>
@@ -161,6 +165,23 @@ class GameController {
     // 绑定角色重复选择校验机制 (自动互换，防冲突)
     const profSelects = document.querySelectorAll('.player-profile-select');
     let previousSelections = Array.from(profSelects).map(s => parseInt(s.value, 10));
+    const updateSetupPortraits = () => {
+      profSelects.forEach((profileSelect) => {
+        const profile = PLAYER_PROFILES.find(item => item.id === Number(profileSelect.value));
+        const configItem = profileSelect.closest('.player-config-item');
+        const portrait = configItem?.querySelector('.setup-character-portrait');
+        const skill = configItem?.querySelector('.setup-character-skill');
+        if (!profile || !portrait || !skill) return;
+        portrait.style.backgroundImage = profile.avatarAtlas
+          ? `url('${profile.avatarAtlas}')`
+          : profile.avatarImg ? `url('${profile.avatarImg}')` : 'none';
+        portrait.style.backgroundPosition = profile.avatarPosition || 'center';
+        portrait.textContent = profile.avatarAtlas || profile.avatarImg ? '' : profile.avatar;
+        portrait.setAttribute('aria-label', `${profile.name}角色肖像`);
+        skill.textContent = `⚡ ${profile.skillName} · ${profile.skillDesc}`;
+        configItem.style.setProperty('--profile-color', profile.color);
+      });
+    };
 
     profSelects.forEach((sel, changedIdx) => {
       sel.addEventListener('change', (e) => {
@@ -173,8 +194,10 @@ class GameController {
           }
         });
         previousSelections = Array.from(profSelects).map(s => parseInt(s.value, 10));
+        updateSetupPortraits();
       });
     });
+    updateSetupPortraits();
 
     const cashBtns = document.querySelectorAll('.cash-btn');
     cashBtns.forEach(btn => {
