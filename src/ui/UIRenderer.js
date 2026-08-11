@@ -67,6 +67,7 @@ export class UIRenderer {
       const isCur = player.id === this.gameState.currentPlayerIndex;
       const card = document.createElement('div');
       card.className = `player-card ${isCur ? 'active-turn' : ''} ${player.isBankrupt ? 'bankrupt' : ''}`;
+      card.dataset.playerId = String(player.id);
 
       const netWorth = this.gameState.calculateNetWorth(player);
 

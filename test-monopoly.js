@@ -112,6 +112,31 @@ async function runTest() {
     await startBtn.click();
 
     await page.waitForSelector('#hud-layer:not(.hidden)', { timeout: 5000 });
+    await page.waitForSelector('.presentation-turn-banner.is-visible', { timeout: 3000 });
+    await page.waitForFunction(() => {
+      const element = document.querySelector('.presentation-turn-banner.is-visible');
+      return element && Number(getComputedStyle(element).opacity) >= 0.9;
+    }, { timeout: 3000 });
+    const turnPresentation = await page.$eval('.presentation-turn-banner.is-visible', element => {
+      const style = getComputedStyle(element);
+      const layerStyle = getComputedStyle(document.getElementById('presentation-layer'));
+      const rect = element.getBoundingClientRect();
+      return {
+        text: element.textContent.replace(/\s+/g, ' ').trim(),
+        opacity: Number(style.opacity),
+        visibility: style.visibility,
+        display: style.display,
+        width: rect.width,
+        height: rect.height,
+        layerZIndex: Number(layerStyle.zIndex)
+      };
+    });
+    if (!turnPresentation.text.includes('ROUND 1') || !turnPresentation.text.includes('的回合')
+      || turnPresentation.opacity < 0.9 || turnPresentation.visibility !== 'visible'
+      || turnPresentation.display === 'none' || turnPresentation.width < 200 || turnPresentation.layerZIndex < 100) {
+      throw new Error(`Turn presentation mismatch: ${JSON.stringify(turnPresentation)}`);
+    }
+    await page.screenshot({ path: artifact('test_step_turn_presentation.png') });
     console.log('✅ Game HUD successfully entered.');
 
     console.log('\n--- Step 3a: Testing 120-node flagship map navigation ---');
@@ -213,6 +238,28 @@ async function runTest() {
     console.log('\n--- Step 7: Testing Dice Roll (Click & Space bar) and Movement & AI Turns ---');
     console.log('Clicking "掷骰子" button for Player 1 turn...');
     await page.click('#btn-roll');
+    await page.waitForSelector('.presentation-dice-result.is-visible', { timeout: 6000 });
+    await page.waitForFunction(() => {
+      const element = document.querySelector('.presentation-dice-result.is-visible');
+      return element && Number(getComputedStyle(element).opacity) >= 0.9;
+    }, { timeout: 3000 });
+    const dicePresentation = await page.$eval('.presentation-dice-result.is-visible', element => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return {
+        dice: element.querySelectorAll('.presentation-die').length,
+        text: element.textContent.replace(/\s+/g, ' ').trim(),
+        opacity: Number(style.opacity),
+        visibility: style.visibility,
+        width: rect.width,
+        height: rect.height
+      };
+    });
+    if (dicePresentation.dice < 1 || !dicePresentation.text.includes('前进') || !dicePresentation.text.includes('步')
+      || dicePresentation.opacity < 0.9 || dicePresentation.visibility !== 'visible' || dicePresentation.width < 200) {
+      throw new Error(`Dice presentation content mismatch: ${JSON.stringify(dicePresentation)}`);
+    }
+    await page.screenshot({ path: artifact('test_step_dice_presentation.png') });
     let capturedLandArt = false;
 
     for (let turn = 1; turn <= 12; turn++) {
@@ -238,6 +285,7 @@ async function runTest() {
         });
         if (buyBtnVisible) {
           await page.click('#btn-land-buy');
+          await page.waitForSelector('.presentation-cash-burst.is-loss', { timeout: 2000 });
           console.log('✅ Land bought.');
         } else {
           await page.click('#btn-land-pass');

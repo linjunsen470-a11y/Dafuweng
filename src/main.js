@@ -14,6 +14,7 @@ import { BUILDINGS, ITEMS } from './game/ContentRegistry.js';
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
 import { MinimapUI } from './ui/MinimapUI.js';
+import { PresentationUI } from './ui/PresentationUI.js';
 
 class GameController {
   constructor() {
@@ -32,6 +33,7 @@ class GameController {
     this.assetUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
+    this.presentationUI = new PresentationUI();
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
@@ -102,6 +104,7 @@ class GameController {
     } else if (event.type === 'PLAYER_BANKRUPT') {
       this.pawnManager.setBankrupt(event.playerId);
     }
+    this.presentationUI.presentDomainEvent(event, this.gameState);
   }
 
   syncBoardAssets(force = false) {
@@ -267,6 +270,7 @@ class GameController {
     this.pawnManager.syncBoardGods(this.gameState.boardGods);
     this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
     this.uiRenderer.renderHUD();
+    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220);
 
     this.checkAITurn();
   }
@@ -540,6 +544,7 @@ class GameController {
     if (this.gameState.players.length && this.gameState.phase !== GamePhase.GAME_OVER
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
     this.audioManager.stopMusic();
+    this.presentationUI.clear();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
     this.gameState.propertyManager.properties.forEach((property, tileId) => {
       this.boardBuilder.updateBuildingMesh(tileId, 0, null);
@@ -582,6 +587,7 @@ class GameController {
     this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
+    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220);
     this.checkAITurn();
   }
 
@@ -705,6 +711,7 @@ class GameController {
     const curPlayer = this.gameState.getCurrentPlayer();
     let diceVal = specifiedDiceVal;
     let dice = specifiedDiceVal ? [specifiedDiceVal] : null;
+    let bonusSteps = 0;
     if (specifiedDiceVal && curPlayer.godType === 'BAD') {
       diceVal = Math.max(1, Math.ceil(diceVal / 2));
       dice = [diceVal];
@@ -718,6 +725,7 @@ class GameController {
       }
       diceVal = roll.steps;
       dice = roll.dice;
+      bonusSteps = roll.bonusSteps || 0;
     }
     this.uiRenderer.renderHUD();
     this.audioManager.playDiceRoll();
@@ -726,6 +734,13 @@ class GameController {
     this.scene3D.focusOnPosition(pawnPos);
 
     await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
+    await this.presentationUI.showDice({
+      player: curPlayer,
+      dice,
+      steps: diceVal,
+      bonusSteps,
+      speed: this.actionSpeed
+    });
 
     const diceDetail = dice.length > 1 ? `（${dice.join(' + ')}）` : '';
     this.gameState.addLog(`🎲 ${curPlayer.name} 掷出了 ${diceVal} 点${diceDetail}！`, 'gold');
