@@ -262,4 +262,9 @@ export interface GameSnapshotV7 extends Omit<GameSnapshotV6, 'version'> {
   phaseBeforeAuction: GamePhase | null;
 }
 
-export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7;
+export interface GameSnapshotV8 extends Omit<GameSnapshotV7, 'version'> {
+  version: 8;
+  marketHistory: Array<Record<string, unknown>>;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8;

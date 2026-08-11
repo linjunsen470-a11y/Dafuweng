@@ -375,7 +375,22 @@ async function runTest() {
     await page.waitForSelector('#modal-assets.hidden', { timeout: 3000 });
     console.log('✅ Asset ranking modal rendered all players.');
 
-    console.log('\n--- Step 6c: Testing Pause, Speed, and V7 Save Slot ---');
+    console.log('\n--- Step 6c: Testing Player Asset Market ---');
+    await page.click('#btn-market');
+    await page.waitForSelector('#modal-market:not(.hidden)', { timeout: 3000 });
+    await page.click('[data-market-tab="ASSETS"]');
+    await page.waitForSelector('.market-asset-row', { timeout: 3000 });
+    const listingButton = await page.$('.market-asset-row [data-market-action="LIST"]');
+    if (!listingButton) throw new Error('Expected at least one market-listable starting asset.');
+    await listingButton.click();
+    await page.click('[data-market-tab="OFFERS"]');
+    await page.waitForSelector('.market-offer-card [data-market-action="CANCEL"]', { timeout: 3000 });
+    await page.screenshot({ path: artifact('test_step_market_hall.png') });
+    await page.click('#market-modal-close');
+    await page.waitForSelector('#modal-market.hidden', { timeout: 3000 });
+    console.log('✅ Market hall listed an asset and rendered valuation, expiry, and seller controls.');
+
+    console.log('\n--- Step 6d: Testing Pause, Speed, and V8 Save Slot ---');
     await page.click('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');
@@ -386,7 +401,7 @@ async function runTest() {
     await page.waitForSelector('#modal-pause.hidden', { timeout: 3000 });
     console.log('✅ Pause menu, speed control, and manual slot save passed.');
 
-    console.log('\n--- Step 6d: Testing three distinct minigames ---');
+    console.log('\n--- Step 6e: Testing three distinct minigames ---');
     const launchMinigame = gameId => page.evaluate(async id => {
       const { MinigameUI } = await import('/src/ui/MinigameUI.js');
       window.__e2eMinigame = window.__e2eMinigame || new MinigameUI();

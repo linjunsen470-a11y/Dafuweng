@@ -149,10 +149,10 @@ describe('GameEngine command contract', () => {
     expect(bought).toMatchObject({ success: true, cost: 30 });
   });
 
-  it('creates V7 snapshots while restoring legacy V1 snapshots', () => {
+  it('creates V8 snapshots while restoring legacy V1 snapshots', () => {
     const { state } = createGame();
     const snapshot = state.createSnapshot();
-    expect(snapshot.version).toBe(7);
+    expect(snapshot.version).toBe(8);
     const legacy = { ...snapshot, version: 1 };
     delete legacy.winnerId;
     delete legacy.winReason;

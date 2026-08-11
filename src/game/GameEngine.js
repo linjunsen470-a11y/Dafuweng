@@ -5,10 +5,11 @@ import { cardManager } from './CardManager.js';
 import { MAX_PROPERTY_LEVEL } from './GameRules.js';
 import { validateCommand } from './CommandPolicy.js';
 import { BUILDINGS, COMPANIES, ITEMS, MAGIC_CONDITIONS, MAGIC_EFFECTS, MINIGAMES } from './ContentRegistry.js';
-import { CARD_CAPACITY } from './InventoryManager.js';
+import { CARD_CAPACITY, ITEM_CAPACITY } from './InventoryManager.js';
 import { clampMinigameScore } from './MinigameRules.js';
 import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from './AuctionRules.js';
 import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
+import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -116,7 +117,8 @@ export class GameEngine {
       { type: 'BUY_ITEM', enabled: preRoll && player.cardPoints > 0 },
       { type: 'USE_ITEM', enabled: preRoll && (player.items?.length || 0) > 0 },
       { type: 'CREATE_MARKET_OFFER', enabled: preRoll },
-      { type: 'ACCEPT_MARKET_OFFER', enabled: preRoll && this.state.marketOffers.some(offer => offer.sellerId !== player.id) }
+      { type: 'ACCEPT_MARKET_OFFER', enabled: preRoll && this.state.marketOffers.some(offer => offer.sellerId !== player.id) },
+      { type: 'CANCEL_MARKET_OFFER', enabled: preRoll && this.state.marketOffers.some(offer => offer.sellerId === player.id) }
     );
     for (const cardId of new Set(player.cards || [])) {
       actions.push({ cardId, ...this.getCardAction(player, cardId) });
@@ -199,6 +201,9 @@ export class GameEngine {
         break;
       case 'ACCEPT_MARKET_OFFER':
         result = this.acceptMarketOffer(player, payload.offerId);
+        break;
+      case 'CANCEL_MARKET_OFFER':
+        result = this.cancelMarketOffer(player, payload.offerId);
         break;
       case 'SUBMIT_MINIGAME_RESULT':
         result = this.submitMinigameResult(player, payload.gameId, payload.score);
@@ -1427,20 +1432,40 @@ export class GameEngine {
     const kind = payload.kind;
     const contentId = payload.contentId;
     const price = Math.max(1, Math.floor(Number(payload.price)));
-    if (!['PROPERTY', 'ITEM', 'CARD'].includes(kind) || !price) return { success: false, reason: '出售内容无效' };
-    if (kind === 'PROPERTY' && this.state.propertyManager.getProperty(Number(contentId))?.owner !== player.id) return { success: false, reason: '没有该地产' };
+    if (!['PROPERTY', 'ITEM', 'CARD'].includes(kind) || !price) return { success: false, reason: '挂牌内容无效' };
+    const asset = getMarketAsset(this.state, kind, contentId);
+    if (!asset) return { success: false, reason: '挂牌资产不存在' };
+    if (kind === 'PROPERTY' && asset.ownerId !== player.id) return { success: false, reason: '没有该地产' };
+    if (kind === 'PROPERTY' && !asset.transferable) return { success: false, reason: '抵押中的地产不能挂牌' };
     if (kind === 'ITEM' && !player.items.includes(contentId)) return { success: false, reason: '没有该道具' };
     if (kind === 'CARD' && !player.cards.includes(contentId)) return { success: false, reason: '没有该卡片' };
-    const offer = { id: `OFFER_${this.state.round}_${player.id}_${this.state.rng.int(100, 999)}`, sellerId: player.id, kind, contentId, price };
-    this.state.marketOffers = [...this.state.marketOffers.slice(-9), offer];
+    if (this.state.marketOffers.some(item => item.sellerId === player.id && item.kind === kind && String(item.contentId) === String(contentId))) {
+      return { success: false, reason: '该资产已经挂牌' };
+    }
+    if (price < asset.referenceValue * MARKET_MIN_RATE || price > asset.referenceValue * MARKET_MAX_RATE) {
+      return { success: false, reason: `挂牌价需在参考价的 ${MARKET_MIN_RATE * 100}%～${MARKET_MAX_RATE * 100}% 之间` };
+    }
+    const offer = { id: `OFFER_${this.state.round}_${player.id}_${this.state.rng.int(100, 999)}`,
+      sellerId: player.id, kind, contentId: asset.contentId, price, referenceValue: asset.referenceValue,
+      createdRound: this.state.round, expiresRound: this.state.round + MARKET_OFFER_DURATION };
+    this.state.marketOffers = [...this.state.marketOffers, offer].slice(-MARKET_OFFER_LIMIT);
+    recordMarketHistory(this.state, { type: 'LISTED', ...offer, round: this.state.round });
+    this.state.addLog(`📣 ${player.name} 挂牌出售「${asset.name}」，报价 $${price.toLocaleString()}。`, 'accent');
+    this.state.assetRevision++;
     return { success: true, type: 'MARKET_OFFER_CREATED', offer };
   }
 
   acceptMarketOffer(player, offerId) {
-    const offer = this.state.marketOffers.find(item => item.id === offerId);
+    const original = this.state.marketOffers.find(item => item.id === offerId);
+    const offer = original && normalizeMarketOffer(this.state, original);
     const seller = offer && this.state.players[offer.sellerId];
     if (!offer || !seller || seller.isBankrupt || seller.id === player.id) return { success: false, reason: '交易报价无效' };
+    if (!validateMarketOffer(this.state, offer)) {
+      this.state.marketOffers = this.state.marketOffers.filter(item => item.id !== offerId);
+      return { success: false, reason: '挂牌已经失效' };
+    }
     if (player.cash < offer.price) return { success: false, reason: '现金不足' };
+    if (!canReceiveMarketAsset(player, offer.kind)) return { success: false, reason: offer.kind === 'CARD' ? '卡片栏已满' : '道具栏已满' };
     if (offer.kind === 'PROPERTY') {
       const property = this.state.propertyManager.getProperty(Number(offer.contentId));
       if (property?.owner !== seller.id) return { success: false, reason: '地产已不属于卖家' };
@@ -1448,7 +1473,7 @@ export class GameEngine {
     } else {
       const source = offer.kind === 'ITEM' ? seller.items : seller.cards;
       const target = offer.kind === 'ITEM' ? player.items : player.cards;
-      const capacity = 8;
+      const capacity = offer.kind === 'ITEM' ? ITEM_CAPACITY : CARD_CAPACITY;
       const index = source.indexOf(offer.contentId);
       if (index < 0 || target.length >= capacity) return { success: false, reason: index < 0 ? '物品已不存在' : '背包已满' };
       source.splice(index, 1);
@@ -1456,9 +1481,23 @@ export class GameEngine {
     }
     player.cash -= offer.price;
     seller.cash += offer.price;
-    this.state.marketOffers = this.state.marketOffers.filter(item => item.id !== offer.id);
+    this.state.marketOffers = this.state.marketOffers.filter(item => item.id !== offer.id
+      && !(item.sellerId === seller.id && item.kind === offer.kind && String(item.contentId) === String(offer.contentId)));
+    const asset = getMarketAsset(this.state, offer.kind, offer.contentId);
+    recordMarketHistory(this.state, { type: 'SOLD', ...offer, buyerId: player.id, round: this.state.round });
+    this.state.addLog(`🤝 ${player.name} 以 $${offer.price.toLocaleString()} 买下 ${seller.name} 的「${asset?.name || offer.contentId}」。`, 'gold');
     this.state.assetRevision++;
-    return { success: true, type: 'MARKET_OFFER_ACCEPTED', offerId, buyerId: player.id };
+    return { success: true, type: 'MARKET_OFFER_ACCEPTED', offerId, buyerId: player.id, sellerId: seller.id, price: offer.price };
+  }
+
+  cancelMarketOffer(player, offerId) {
+    const offer = this.state.marketOffers.find(item => item.id === offerId && item.sellerId === player.id);
+    if (!offer) return { success: false, reason: '只能撤销自己的有效挂牌' };
+    this.state.marketOffers = this.state.marketOffers.filter(item => item.id !== offerId);
+    recordMarketHistory(this.state, { type: 'CANCELLED', ...offer, round: this.state.round });
+    this.state.addLog(`↩️ ${player.name} 撤销了一笔市场挂牌。`, 'accent');
+    this.state.assetRevision++;
+    return { success: true, type: 'MARKET_OFFER_CANCELLED', offerId };
   }
 
   submitMinigameResult(player, gameId, score) {

@@ -9,10 +9,11 @@ import { GameState, GamePhase } from './game/GameState.js';
 import { TileType, PLAYER_PROFILES } from './game/BoardData.js';
 import { AIPlayer } from './game/AIPlayer.js';
 import { GameEngine } from './game/GameEngine.js';
-import { BUILDINGS, ITEMS } from './game/ContentRegistry.js';
+import { BUILDINGS } from './game/ContentRegistry.js';
 import { getAIMinigameScore } from './game/MinigameRules.js';
 import { getAIAuctionBid, getMinimumAuctionBid } from './game/AuctionRules.js';
 import { getDebtPortfolio } from './game/DebtRules.js';
+import { chooseAIMarketAction } from './game/MarketRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
@@ -36,6 +37,7 @@ class GameController {
     this.stockUI = null;
     this.shopUI = null;
     this.assetUI = null;
+    this.marketUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
     this.presentationUI = new PresentationUI();
@@ -75,6 +77,14 @@ class GameController {
       }, () => this.uiRenderer.renderHUD(), this.gameEngine);
     }
     return this.shopUI;
+  }
+
+  async getMarketUI() {
+    if (!this.marketUI) {
+      const { MarketUI } = await import('./ui/MarketUI.js');
+      this.marketUI = new MarketUI(this.gameState, this.gameEngine, this.audioManager, () => this.uiRenderer.renderHUD());
+    }
+    return this.marketUI;
   }
 
   async getAssetUI() {
@@ -440,47 +450,7 @@ class GameController {
 
   async showMarketBoard() {
     if (!this.canOpenPlayerAction()) return;
-    const player = this.gameState.getCurrentPlayer();
-    const offers = this.gameState.marketOffers.filter(offer => offer.sellerId !== player.id).map(offer => ({
-      id: `ACCEPT:${offer.id}`,
-      label: `${offer.kind} · ${offer.contentId}`,
-      description: `$${offer.price.toLocaleString()} · 卖家 ${this.gameState.players[offer.sellerId]?.name}`
-    }));
-    const choice = await this.dialogUI.chooseTarget({
-      title: '财富公告板',
-      options: [
-        ...offers,
-        { id: 'CREATE:PROPERTY', label: '挂牌地产', description: '出售自己的一处地产' },
-        { id: 'CREATE:ITEM', label: '挂牌道具', description: '出售背包中的道具' },
-        { id: 'CREATE:CARD', label: '挂牌卡片', description: '出售背包中的策略卡' }
-      ]
-    });
-    if (choice === null) return;
-    if (String(choice).startsWith('ACCEPT:')) {
-      const result = this.gameEngine.execute({ type: 'ACCEPT_MARKET_OFFER', playerId: player.id, payload: { offerId: String(choice).slice(7) } });
-      if (!result.success) this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
-      return this.uiRenderer.renderHUD();
-    }
-    const kind = String(choice).split(':')[1];
-    let assets = [];
-    if (kind === 'PROPERTY') assets = [...this.gameState.propertyManager.properties.entries()]
-      .filter(([, property]) => property.owner === player.id)
-      .map(([id]) => ({ id, label: this.gameState.getTile(id).name, description: `估值 $${this.gameState.getTile(id).price.toLocaleString()}` }));
-    if (kind === 'ITEM') assets = player.items.map((id, index) => ({ id: `${index}:${id}`, label: ITEMS.find(item => item.id === id)?.name || id }));
-    if (kind === 'CARD') assets = player.cards.map((id, index) => ({ id: `${index}:${id}`, label: id }));
-    const assetChoice = await this.dialogUI.chooseTarget({ title: '选择挂牌内容', options: assets });
-    if (assetChoice === null) return;
-    const contentId = kind === 'PROPERTY' ? assetChoice : String(assetChoice).split(':').slice(1).join(':');
-    const basePrice = kind === 'PROPERTY' ? this.gameState.getTile(Number(contentId)).price
-      : kind === 'ITEM' ? (ITEMS.find(item => item.id === contentId)?.sellPrice || 20) * 20
-      : 1000;
-    const price = await this.dialogUI.chooseTarget({
-      title: '选择挂牌价格',
-      options: [0.75, 1, 1.25].map(rate => ({ id: Math.round(basePrice * rate), label: `$${Math.round(basePrice * rate).toLocaleString()}`, description: `${Math.round(rate * 100)}% 参考价` }))
-    });
-    if (price === null) return;
-    this.gameEngine.execute({ type: 'CREATE_MARKET_OFFER', playerId: player.id, payload: { kind, contentId, price } });
-    this.uiRenderer.renderHUD();
+    (await this.getMarketUI()).show();
   }
 
   showPauseMenu() {
@@ -708,6 +678,13 @@ class GameController {
         playerId: aiPlayer.id,
         payload: { stockId: stockDecision.stockId, shares: stockDecision.shares }
       });
+    }
+
+    const marketDecision = chooseAIMarketAction(aiPlayer, this.gameState);
+    if (marketDecision?.type === 'BUY') {
+      this.gameEngine.execute({ type: 'ACCEPT_MARKET_OFFER', playerId: aiPlayer.id, payload: { offerId: marketDecision.offerId } });
+    } else if (marketDecision?.type === 'LIST') {
+      this.gameEngine.execute({ type: 'CREATE_MARKET_OFFER', playerId: aiPlayer.id, payload: marketDecision.payload });
     }
 
     await this.doRollDice();

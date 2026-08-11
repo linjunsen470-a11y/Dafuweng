@@ -9,6 +9,7 @@ import { CompanyManager } from './CompanyManager.js';
 import { InventoryManager } from './InventoryManager.js';
 import { GODS, ITEMS } from './ContentRegistry.js';
 import { normalizeAuctionState } from './AuctionRules.js';
+import { expireMarketOffers, normalizeMarketOffer } from './MarketRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -61,6 +62,7 @@ export class GameState {
     this.phaseBeforeAuction = null;
     this.bankruptcyAuctionQueue = [];
     this.marketOffers = [];
+    this.marketHistory = [];
     this.researchTasks = [];
     this.economicCycle = { period: 1, roundsPerPeriod: 5, lastSettlementRound: 0 };
     this.minigameState = null;
@@ -107,6 +109,7 @@ export class GameState {
     this.phaseBeforeAuction = null;
     this.bankruptcyAuctionQueue = [];
     this.marketOffers = [];
+    this.marketHistory = [];
     this.researchTasks = [];
     this.economicCycle = { period: 1, roundsPerPeriod: 5, lastSettlementRound: 0 };
     this.minigameState = null;
@@ -383,6 +386,8 @@ export class GameState {
     });
     this.processResearch();
     this.processRoadEntities();
+    const expiredOffers = expireMarketOffers(this);
+    if (expiredOffers.length) this.addLog(`⌛ 交易大厅有 ${expiredOffers.length} 笔挂牌到期下架。`, 'accent');
     if (this.round % this.economicCycle.roundsPerPeriod === 0) {
       this.drawLottery();
       this.players.filter(player => !player.isBankrupt && player.deposit > 0).forEach(player => {
@@ -683,8 +688,8 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 7,
-      contentVersion: '2026.5',
+      version: 8,
+      contentVersion: '2026.6',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
@@ -715,6 +720,7 @@ export class GameState {
       phaseBeforeAuction: this.phaseBeforeAuction,
       bankruptcyAuctionQueue: structuredClone(this.bankruptcyAuctionQueue),
       marketOffers: structuredClone(this.marketOffers),
+      marketHistory: structuredClone(this.marketHistory),
       researchTasks: structuredClone(this.researchTasks),
       economicCycle: structuredClone(this.economicCycle),
       minigameState: structuredClone(this.minigameState),
@@ -723,7 +729,7 @@ export class GameState {
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
@@ -778,7 +784,8 @@ export class GameState {
     this.auction = normalizeAuctionState(structuredClone(snapshot.auction || null));
     this.phaseBeforeAuction = snapshot.phaseBeforeAuction || (this.auction?.bankruptcy ? 'LANDING_ACTION' : this.auction ? 'PRE_ROLL_ACTION' : null);
     this.bankruptcyAuctionQueue = structuredClone(snapshot.bankruptcyAuctionQueue || []);
-    this.marketOffers = structuredClone(snapshot.marketOffers || []);
+    this.marketOffers = structuredClone(snapshot.marketOffers || []).map(offer => normalizeMarketOffer(this, offer));
+    this.marketHistory = structuredClone(snapshot.marketHistory || []);
     this.researchTasks = structuredClone(snapshot.researchTasks || []);
     this.economicCycle = structuredClone(snapshot.economicCycle || { period: Math.floor(this.round / 5) + 1, roundsPerPeriod: 5, lastSettlementRound: 0 });
     this.minigameState = structuredClone(snapshot.minigameState || null);

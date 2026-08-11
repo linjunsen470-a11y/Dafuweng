@@ -299,6 +299,23 @@
   </div>
 
   <!-- 使用卡片/背包弹窗 -->
+  <div id="modal-market" class="modal hidden">
+    <div class="glass-card modal-box market-modal-box" role="dialog" aria-modal="true" aria-labelledby="market-title">
+      <div class="modal-header">
+        <div><h2 id="market-title">🏛️ 财富交易大厅</h2><small>自由挂牌 · 参考估值 · 五回合有效</small></div>
+        <div class="market-balance">现金 <strong id="market-balance">$0</strong></div>
+        <button type="button" class="close-modal" id="market-modal-close" aria-label="关闭交易大厅">&times;</button>
+      </div>
+      <nav class="market-tabs" id="market-tabs" aria-label="交易大厅分页">
+        <button class="active" data-market-tab="OFFERS">市场挂牌</button>
+        <button data-market-tab="ASSETS">我的资产</button>
+        <button data-market-tab="HISTORY">交易流水</button>
+      </nav>
+      <div id="market-content" class="market-content"></div>
+    </div>
+  </div>
+
+  <!-- 使用卡片/背包弹窗 -->
   <div id="modal-inventory" class="modal hidden">
     <div class="glass-card modal-box">
       <div class="modal-header">

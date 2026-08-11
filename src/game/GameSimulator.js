@@ -3,6 +3,7 @@ import { getAIMinigameScore } from './MinigameRules.js';
 import { getAIAuctionBid } from './AuctionRules.js';
 import { GameState } from './GameState.js';
 import { GameEngine } from './GameEngine.js';
+import { chooseAIMarketAction } from './MarketRules.js';
 
 export class GameSimulator {
   constructor({
@@ -88,6 +89,13 @@ export class GameSimulator {
       this.engine.execute({ type: 'BUY_STOCK', playerId: player.id, payload: stockDecision });
     } else if (stockDecision?.action === 'SELL') {
       this.engine.execute({ type: 'SELL_STOCK', playerId: player.id, payload: stockDecision });
+    }
+
+    const marketDecision = player.isSleepwalkingThisTurn ? null : chooseAIMarketAction(player, this.state);
+    if (marketDecision?.type === 'BUY') {
+      this.engine.execute({ type: 'ACCEPT_MARKET_OFFER', playerId: player.id, payload: { offerId: marketDecision.offerId } });
+    } else if (marketDecision?.type === 'LIST') {
+      this.engine.execute({ type: 'CREATE_MARKET_OFFER', playerId: player.id, payload: marketDecision.payload });
     }
 
     if (teleportTile !== null) {
