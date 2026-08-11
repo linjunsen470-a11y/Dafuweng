@@ -46,4 +46,14 @@ describe('presentation event descriptions', () => {
   it('keeps per-step movement silent to avoid notification spam', () => {
     expect(describePresentationEvent({ type: 'PLAYER_STEPPED', playerId: 0, tileId: 2 }, createState())).toEqual([]);
   });
+
+  it('presents debt entry, liquidation, and final payment as distinct cues', () => {
+    const state = createState();
+    expect(describePresentationEvent({ type: 'DEBT_REQUIRED', playerId: 0, amountDue: 2400 }, state)[0])
+      .toMatchObject({ kind: 'toast', title: '现金不足，进入财务清算', tone: 'danger' });
+    expect(describePresentationEvent({ type: 'ASSET_LIQUIDATED', playerId: 0, kind: 'STOCK', value: 900 }, state))
+      .toContainEqual({ kind: 'cash', playerId: 0, amount: 900, label: '资产变现' });
+    expect(describePresentationEvent({ type: 'DEBT_PAID', playerId: 0, amount: 2400 }, state))
+      .toContainEqual({ kind: 'cash', playerId: 0, amount: -2400, label: '偿还债务' });
+  });
 });

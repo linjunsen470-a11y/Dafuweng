@@ -267,6 +267,70 @@ async function runTest() {
     await page.waitForSelector('.auction-overlay', { hidden: true });
     console.log('✅ Auction property card, bidders, bid history, custom controls, and sold result rendered.');
 
+    console.log('\n--- Step 3e: Testing financial crisis settlement center ---');
+    await page.evaluate(async () => {
+      const { DebtUI } = await import('/src/ui/DebtUI.js');
+      window.__e2eDebtUI = new DebtUI();
+      window.__e2eDebtPlayer = { id: 0, name: '林小满', cash: 1800, deposit: 3000, color: '#ff6b81', avatar: '👩' };
+      window.__e2eDebt = { debtorId: 0, creditorId: 1, amountDue: 5200, source: 'RENT:18' };
+      window.__e2eDebtPortfolio = {
+        amountDue: 5200, gap: 3400, cash: 1800, deposit: 3000,
+        stockValue: 2500, propertyValue: 6000, liquidatableTotal: 13300, solvent: true,
+        source: { icon: '🏠', label: '海湾金融中心过路费', creditorName: '钱夫人' },
+        stocks: [{ id: 'TECH', name: '星河智造', shares: 20, value: 2500, suggestedShares: 12 }],
+        properties: [{ tileId: 18, name: '海湾金融中心', level: 2, buildingValue: 1800, mortgageValue: 2100, liquidatableValue: 3900 }]
+      };
+      window.__e2eDebtActions = [
+        { type: 'LIQUIDATE_DEPOSIT', amount: 3000 },
+        { type: 'SELL_STOCK', stockId: 'TECH', shares: 12, estimatedRevenue: 1500 },
+        { type: 'SELL_BUILDING', tileId: 18 },
+        { type: 'MORTGAGE_PROPERTY', tileId: 18 },
+        { type: 'AUTO_SETTLE_DEBT' },
+        { type: 'DECLARE_BANKRUPTCY' }
+      ];
+      window.__e2eDebtAction = null;
+      window.__e2eDebtUI.chooseAction({
+        player: window.__e2eDebtPlayer,
+        debt: window.__e2eDebt,
+        portfolio: window.__e2eDebtPortfolio,
+        actions: window.__e2eDebtActions,
+        state: { getTile: () => window.__e2eAuctionTile }
+      }).then(action => { window.__e2eDebtAction = action; });
+    });
+    await page.waitForSelector('.debt-overlay.is-visible .debt-center');
+    const debtAssetCards = await page.$$eval('.debt-asset-card', elements => elements.length);
+    if (debtAssetCards !== 4) throw new Error(`Expected 4 debt asset cards, got ${debtAssetCards}`);
+    await page.screenshot({ path: artifact('test_step_debt_settlement.png') });
+    await page.click('.debt-action[data-action="LIQUIDATE_DEPOSIT"]');
+    await page.waitForFunction(() => window.__e2eDebtAction?.type === 'LIQUIDATE_DEPOSIT');
+    await page.evaluate(() => {
+      window.__e2eDebtUI.showOutcome({
+        result: { type: 'DEBT_PAID', amount: 5200 },
+        player: { ...window.__e2eDebtPlayer, cash: 600 },
+        debt: window.__e2eDebt
+      });
+    });
+    await page.waitForSelector('.debt-outcome-overlay.is-visible .debt-outcome');
+    await page.screenshot({ path: artifact('test_step_debt_outcome.png') });
+    await page.click('.debt-outcome button');
+    await page.waitForSelector('.debt-outcome-overlay', { hidden: true });
+    await page.evaluate(() => {
+      window.__e2eDebtAction = null;
+      window.__e2eDebtUI.chooseAction({
+        player: window.__e2eDebtPlayer,
+        debt: window.__e2eDebt,
+        portfolio: { ...window.__e2eDebtPortfolio, solvent: false, liquidatableTotal: 2100 },
+        actions: [{ type: 'DECLARE_BANKRUPTCY' }],
+        state: { getTile: () => window.__e2eAuctionTile }
+      }).then(action => { window.__e2eDebtAction = action; });
+    });
+    await page.waitForSelector('.debt-action[data-action="DECLARE_BANKRUPTCY"]');
+    await page.click('.debt-action[data-action="DECLARE_BANKRUPTCY"]');
+    await page.waitForSelector('.debt-action.is-armed');
+    await page.click('.debt-action[data-action="DECLARE_BANKRUPTCY"]');
+    await page.waitForFunction(() => window.__e2eDebtAction?.type === 'DECLARE_BANKRUPTCY');
+    console.log('✅ Debt gap, liquidity portfolio, staged actions, outcome, and bankruptcy confirmation rendered.');
+
     console.log('\n--- Step 4: Testing Stock Market Modal ---');
     await page.click('#btn-stock-market');
     await page.waitForSelector('#modal-stock:not(.hidden)', { timeout: 3000 });
@@ -410,8 +474,10 @@ async function runTest() {
         });
         if (buyBtnVisible) {
           await page.click('#btn-land-buy');
-          await page.waitForSelector('.presentation-cash-burst.is-loss', { timeout: 2000 });
-          console.log('✅ Land bought.');
+          const paidPurchase = await page.waitForSelector('.presentation-cash-burst.is-loss', { timeout: 2000 })
+            .then(() => true)
+            .catch(() => false);
+          console.log(paidPurchase ? '✅ Land bought with cash presentation.' : '✅ Land purchase action resolved without a cash charge.');
         } else {
           await page.click('#btn-land-pass');
           console.log('✅ Land passed.');

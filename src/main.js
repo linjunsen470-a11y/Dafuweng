@@ -12,12 +12,14 @@ import { GameEngine } from './game/GameEngine.js';
 import { BUILDINGS, ITEMS } from './game/ContentRegistry.js';
 import { getAIMinigameScore } from './game/MinigameRules.js';
 import { getAIAuctionBid, getMinimumAuctionBid } from './game/AuctionRules.js';
+import { getDebtPortfolio } from './game/DebtRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
 import { MinimapUI } from './ui/MinimapUI.js';
 import { PresentationUI } from './ui/PresentationUI.js';
 import { AuctionUI } from './ui/AuctionUI.js';
+import { DebtUI } from './ui/DebtUI.js';
 
 class GameController {
   constructor() {
@@ -38,6 +40,7 @@ class GameController {
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
     this.presentationUI = new PresentationUI();
     this.auctionUI = new AuctionUI(this.audioManager);
+    this.debtUI = new DebtUI(this.audioManager);
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
@@ -989,29 +992,37 @@ class GameController {
       if (this.gameState.auction) await this.handleAuction();
       return;
     }
+    const originalDebt = structuredClone(this.gameState.pendingDebt);
+    let finalResult = null;
     while (this.gameState.pendingDebt && !player.isBankrupt) {
       const legal = this.gameEngine.getLegalActions(player.id).filter(action => action.enabled);
       if (player.cash >= this.gameState.pendingDebt.amountDue) {
-        this.gameEngine.execute({ type: 'PAY_DEBT', playerId: player.id });
+        finalResult = this.gameEngine.execute({ type: 'PAY_DEBT', playerId: player.id });
         break;
       }
-      const options = legal.map((action, index) => ({
-        id: index,
-        label: action.type === 'AUTO_SETTLE_DEBT' ? '自动处置资产'
-          : action.type === 'DECLARE_BANKRUPTCY' ? '宣布破产'
-          : action.type === 'SELL_BUILDING' ? `出售建筑：${this.gameState.getTile(action.tileId).name}`
-          : action.type === 'MORTGAGE_PROPERTY' ? `抵押地产：${this.gameState.getTile(action.tileId).name}`
-          : action.type === 'SELL_STOCK' ? `卖出全部股票：${action.stockId}`
-          : action.type,
-        description: `当前现金 $${player.cash.toLocaleString()} / 欠款 $${this.gameState.pendingDebt.amountDue.toLocaleString()}`
-      }));
-      const choice = await this.dialogUI.chooseTarget({ title: '现金不足，请处置资产', options });
-      const action = legal[choice === null ? legal.findIndex(item => item.type === 'AUTO_SETTLE_DEBT') : Number(choice)];
+      const action = await this.debtUI.chooseAction({
+        player,
+        debt: this.gameState.pendingDebt,
+        portfolio: getDebtPortfolio(this.gameState, player),
+        actions: legal.filter(item => item.type !== 'PAY_DEBT'),
+        state: this.gameState
+      });
       if (!action) continue;
       const payload = action.type === 'SELL_STOCK'
         ? { stockId: action.stockId, shares: action.shares }
+        : action.type === 'LIQUIDATE_DEPOSIT' ? { amount: action.amount }
         : { tileId: action.tileId };
-      this.gameEngine.execute({ type: action.type, playerId: player.id, payload });
+      const result = this.gameEngine.execute({ type: action.type, playerId: player.id, payload });
+      if (!result.success) {
+        this.gameState.addLog(`⚠️ 资产处置失败：${result.reason}`, 'danger');
+        continue;
+      }
+      finalResult = result;
+      this.syncBoardAssets(true);
+      this.uiRenderer.renderHUD();
+    }
+    if (finalResult && !this.gameState.pendingDebt) {
+      await this.debtUI.showOutcome({ result: finalResult, player, debt: originalDebt }, this.actionSpeed);
     }
     if (this.gameState.auction) await this.handleAuction();
     this.syncBoardAssets();

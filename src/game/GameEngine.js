@@ -8,6 +8,7 @@ import { BUILDINGS, COMPANIES, ITEMS, MAGIC_CONDITIONS, MAGIC_EFFECTS, MINIGAMES
 import { CARD_CAPACITY } from './InventoryManager.js';
 import { clampMinigameScore } from './MinigameRules.js';
 import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from './AuctionRules.js';
+import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -88,14 +89,17 @@ export class GameEngine {
         { type: 'AUTO_SETTLE_DEBT', enabled: true },
         { type: 'DECLARE_BANKRUPTCY', enabled: true }
       ];
+      const gap = Math.max(0, this.state.pendingDebt.amountDue - player.cash);
+      if ((player.deposit || 0) > 0) actions.push({ type: 'LIQUIDATE_DEPOSIT', enabled: true, amount: Math.min(player.deposit, gap) });
       for (const [stockId, holding] of Object.entries(player.stocks || {})) {
-        if (holding.shares > 0) actions.push({ type: 'SELL_STOCK', enabled: true, stockId, shares: holding.shares });
+        const stock = this.state.stockMarket.stocks.find(item => item.id === stockId);
+        const shares = getSuggestedStockShares(player, stock, holding, gap);
+        if (shares > 0) actions.push({ type: 'SELL_STOCK', enabled: true, stockId, shares, estimatedRevenue: estimateStockSaleRevenue(player, stock, shares) });
       }
       for (const [tileId, property] of this.state.propertyManager.properties) {
         if (property.owner !== player.id) continue;
         if (property.level > 0) actions.push({ type: 'SELL_BUILDING', enabled: true, tileId });
         if (!property.isMortgaged && property.level === 0) actions.push({ type: 'MORTGAGE_PROPERTY', enabled: true, tileId });
-        else actions.push({ type: 'REDEEM_PROPERTY', enabled: player.cash >= property.mortgageValue * 1.1, tileId });
       }
       return actions;
     }
@@ -219,6 +223,9 @@ export class GameEngine {
         break;
       case 'MORTGAGE_PROPERTY':
         result = this.mortgageProperty(player, payload.tileId);
+        break;
+      case 'LIQUIDATE_DEPOSIT':
+        result = this.liquidateDeposit(player, payload.amount);
         break;
       case 'REDEEM_PROPERTY':
         result = this.redeemProperty(player, payload.tileId);
@@ -629,6 +636,7 @@ export class GameEngine {
     const value = Math.round((tile.buildCost || 0) * 0.5);
     player.cash += value;
     this.state.assetRevision++;
+    this.state.addLog(`🏗️ ${player.name} 出售【${tile.name}】一层建筑，回笼 $${value.toLocaleString()}。`, 'accent');
     return { success: true, type: 'ASSET_LIQUIDATED', kind: 'BUILDING', tileId: Number(tileId), level: property.level, value };
   }
 
@@ -644,7 +652,20 @@ export class GameEngine {
     property.mortgageValue = value;
     player.cash += value;
     this.state.assetRevision++;
+    this.state.addLog(`🏦 ${player.name} 抵押【${tile.name}】，获得 $${value.toLocaleString()}。`, 'accent');
     return { success: true, type: 'PROPERTY_MORTGAGED', tileId: Number(tileId), value };
+  }
+
+  liquidateDeposit(player, amount = null) {
+    const debt = this.state.pendingDebt;
+    if (!debt || debt.debtorId !== player.id) return { success: false, reason: '当前无需动用存款' };
+    const gap = Math.max(0, debt.amountDue - player.cash);
+    const value = Math.min(player.deposit || 0, gap, Math.max(0, Number(amount ?? gap)));
+    if (!value) return { success: false, reason: '没有可提取的存款' };
+    player.deposit -= value;
+    player.cash += value;
+    this.state.addLog(`🏦 ${player.name} 提取存款 $${value.toLocaleString()} 用于偿债。`, 'accent');
+    return { success: true, type: 'ASSET_LIQUIDATED', kind: 'DEPOSIT', value };
   }
 
   redeemProperty(player, tileId) {
@@ -678,10 +699,8 @@ export class GameEngine {
     if (!debt || debt.debtorId !== player.id) return { success: false, reason: '没有待处理债务' };
     const events = [];
     if (player.cash < debt.amountDue && (player.deposit || 0) > 0) {
-      const amount = Math.min(player.deposit, debt.amountDue - player.cash);
-      player.deposit -= amount;
-      player.cash += amount;
-      events.push({ type: 'ASSET_LIQUIDATED', kind: 'DEPOSIT', value: amount });
+      const withdrawn = this.liquidateDeposit(player);
+      if (withdrawn.success) events.push(withdrawn);
     }
     const stockIds = Object.keys(player.stocks || {}).sort((a, b) => {
       const left = this.state.stockMarket.stocks.find(stock => stock.id === a);
@@ -693,8 +712,10 @@ export class GameEngine {
       if (player.cash >= debt.amountDue) break;
       const shares = player.stocks[stockId]?.shares || 0;
       if (shares) {
-        const sold = this.tradeStock(player, 'SELL', stockId, shares);
-        if (sold.success) events.push({ type: 'ASSET_LIQUIDATED', kind: 'STOCK', stockId, shares, value: sold.revenue });
+        const stock = this.state.stockMarket.stocks.find(item => item.id === stockId);
+        const quantity = getSuggestedStockShares(player, stock, player.stocks[stockId], debt.amountDue - player.cash);
+        const sold = this.tradeStock(player, 'SELL', stockId, quantity);
+        if (sold.success) events.push(...(sold.events || []));
       }
     }
     const owned = [...this.state.propertyManager.properties.entries()]
@@ -746,6 +767,10 @@ export class GameEngine {
     });
     player.stocks = {};
     player.deposit = 0;
+    player.cards = [];
+    player.items = [];
+    player.cardPoints = 0;
+    player.vehicle = 'WALK';
     player.isBankrupt = true;
     this.state.pendingDebt = null;
     this.state.phase = 'LANDING_ACTION';
@@ -1474,13 +1499,17 @@ export class GameEngine {
     if (!result.success) return { ...result, reason: result.msg };
     const chairmanChanges = this.state.companyManager.updateChairmen(this.state.players);
     const type = action === 'BUY' ? 'STOCK_BOUGHT' : 'STOCK_SOLD';
+    const transactionEvent = canSellForDebt
+      ? { type: 'ASSET_LIQUIDATED', playerId: player.id, kind: 'STOCK', stockId, shares: quantity, value: result.revenue }
+      : { type, playerId: player.id, stockId, shares: quantity, cost: result.cost, revenue: result.revenue };
+    if (canSellForDebt) this.state.addLog(`📉 ${player.name} 卖出 ${quantity} 股用于偿债，回笼 $${result.revenue.toLocaleString()}。`, 'accent');
     return {
       ...result,
       type,
       playerId: player.id,
       stockId,
       shares: quantity,
-      events: chairmanChanges.map(change => ({ type: 'CHAIRMAN_CHANGED', ...change }))
+      events: [transactionEvent, ...chairmanChanges.map(change => ({ type: 'CHAIRMAN_CHANGED', ...change }))]
     };
   }
 

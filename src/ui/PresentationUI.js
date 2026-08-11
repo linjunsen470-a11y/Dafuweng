@@ -43,6 +43,21 @@ export function describePresentationEvent(event, state) {
     case 'RENT_WAIVED':
       toast('🛡️', '过路费免除', `${current?.name || '玩家'} 本次免费通行`, 'success');
       break;
+    case 'DEBT_REQUIRED':
+      toast('⚠️', '现金不足，进入财务清算', `需筹集 ${money(event.amountDue)}`, 'danger');
+      break;
+    case 'ASSET_LIQUIDATED':
+      cash(current?.id, event.value, '资产变现');
+      toast('🏦', '资产处置完成', `${event.kind || '资产'} · 回笼 ${money(event.value)}`, 'accent');
+      break;
+    case 'PROPERTY_MORTGAGED':
+      cash(current?.id, event.value, '地产抵押');
+      toast('🏠', '地产已抵押', `${tile?.name || '地产'} · 获得 ${money(event.value)}`, 'accent');
+      break;
+    case 'DEBT_PAID':
+      cash(current?.id, -event.amount, '偿还债务');
+      toast('✅', '债务清偿完成', `${current?.name || '玩家'} 支付 ${money(event.amount)}`, 'success');
+      break;
     case 'CASH_GAINED':
       cash(current?.id, event.amount, event.chance?.title || '现金收入');
       toast('💰', event.chance?.title || '获得现金', `${current?.name || '玩家'} +${money(event.amount)}`, 'success');
