@@ -366,14 +366,34 @@ async function runTest() {
     await page.waitForSelector('#modal-inventory.hidden', { timeout: 3000 });
     console.log('✅ Inventory modal closed.');
 
-    console.log('\n--- Step 6b: Testing Asset Ranking Modal ---');
+    console.log('\n--- Step 6b: Testing Asset and Property Management Center ---');
     await page.click('#btn-assets');
     await page.waitForSelector('#modal-assets:not(.hidden)', { timeout: 3000 });
     const assetRows = await page.$$('#asset-ranking-body tr');
     if (assetRows.length !== 4) throw new Error(`Expected 4 asset rows, got ${assetRows.length}`);
+    await page.evaluate(async () => {
+      const [{ GameState }, { GameEngine }, { AssetUI }] = await Promise.all([
+        import('/src/game/GameState.js'), import('/src/game/GameEngine.js'), import('/src/ui/AssetUI.js')
+      ]);
+      const state = new GameState({ seed: 7711 });
+      state.setupGame([{ profileIndex: 0, name: '地产验收玩家', isAI: false }, { profileIndex: 1, name: '竞争对手', isAI: true }], 30000, { mapId: 'city-loop' });
+      [1, 3, 5].forEach(tileId => state.propertyManager.buyProperty(tileId, 0));
+      state.propertyManager.upgradeProperty(1);
+      window.__e2eAssetFixture = new AssetUI(state, new GameEngine(state), null, () => {});
+      window.__e2eAssetFixture.show('PROPERTIES');
+    });
+    await page.waitForFunction(() => document.querySelectorAll('.property-portfolio-card').length === 3);
+    await page.waitForFunction(() => getComputedStyle(document.getElementById('asset-ranking-panel')).display === 'none');
+    const propertyControls = await page.$$('.property-card-actions [data-property-action]');
+    if (propertyControls.length < 3) throw new Error('Expected property sale, mortgage, and conversion controls.');
+    await page.screenshot({ path: artifact('test_step_property_management.png') });
+    await page.click('[data-asset-tab="DISTRICTS"]');
+    await page.waitForSelector('.district-card.complete');
+    const districtCards = await page.$$('.district-card');
+    if (districtCards.length < 4) throw new Error(`Expected district overview cards, got ${districtCards.length}`);
     await page.click('#asset-modal-close');
     await page.waitForSelector('#modal-assets.hidden', { timeout: 3000 });
-    console.log('✅ Asset ranking modal rendered all players.');
+    console.log('✅ Asset ranking, property controls, rent/value cards, and monopoly district overview rendered.');
 
     console.log('\n--- Step 6c: Testing Player Asset Market ---');
     await page.click('#btn-market');

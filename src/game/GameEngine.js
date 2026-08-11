@@ -120,6 +120,13 @@ export class GameEngine {
       { type: 'ACCEPT_MARKET_OFFER', enabled: preRoll && this.state.marketOffers.some(offer => offer.sellerId !== player.id) },
       { type: 'CANCEL_MARKET_OFFER', enabled: preRoll && this.state.marketOffers.some(offer => offer.sellerId === player.id) }
     );
+    const ownedProperties = [...this.state.propertyManager.properties.values()].filter(property => property.owner === player.id);
+    actions.push(
+      { type: 'SELL_BUILDING', enabled: preRoll && ownedProperties.some(property => property.level > 0) },
+      { type: 'MORTGAGE_PROPERTY', enabled: preRoll && ownedProperties.some(property => !property.isMortgaged && property.level === 0) },
+      { type: 'REDEEM_PROPERTY', enabled: preRoll && ownedProperties.some(property => property.isMortgaged) },
+      { type: 'CHOOSE_BUILDING_TYPE', enabled: preRoll && ownedProperties.some(property => !property.isMortgaged) }
+    );
     for (const cardId of new Set(player.cards || [])) {
       actions.push({ cardId, ...this.getCardAction(player, cardId) });
     }
@@ -550,10 +557,10 @@ export class GameEngine {
       this.state.addLog(`⚠️ ${player.name} 现金不足，无法购买【${tile.name}】。`, 'danger');
       return { success: false, reason: '现金不足', cost };
     }
-    player.cash -= cost;
     if (tile.type === TileType.BIG_PROPERTY && buildingType && !BUILDINGS.some(building => building.id === buildingType)) {
       return { success: false, reason: '商业建筑类型无效' };
     }
+    player.cash -= cost;
     this.state.propertyManager.buyProperty(tileId, player.id, buildingType);
     this.state.assetRevision++;
     this.state.addLog(`🏗️ ${player.name} 成功购买【${tile.name}】(花费 $${cost.toLocaleString()})！`, 'success');
@@ -611,6 +618,7 @@ export class GameEngine {
     if (owner.skillName === '土地公庇护') amount = Math.round(amount * 1.2);
     if (owner.skillName === '皇家威严') amount = Math.round(amount * 1.25);
     if (player.cash < amount) {
+      this.cancelPlayerMarketOffers(player, 'DEBT_SETTLEMENT');
       this.state.pendingDebt = {
         debtorId: player.id,
         creditorId: owner.id,
@@ -633,12 +641,16 @@ export class GameEngine {
   }
 
   sellBuilding(player, tileId) {
-    if (this.state.pendingDebt?.debtorId !== player.id) return { success: false, reason: '当前无需处置资产' };
+    const canManage = this.state.phase === 'PRE_ROLL_ACTION' && this.state.currentPlayerIndex === player.id;
+    if (this.state.pendingDebt?.debtorId !== player.id && !canManage) return { success: false, reason: '当前不能处置资产' };
     const property = this.state.propertyManager.getProperty(Number(tileId));
     const tile = this.state.getTile(Number(tileId));
     if (!property || property.owner !== player.id || property.level <= 0) return { success: false, reason: '没有可出售建筑' };
+    if (this.isPropertyListed(tileId)) return { success: false, reason: '地产挂牌中，请先撤销挂牌' };
+    if (this.state.researchTasks.some(task => task.tileId === Number(tileId))) return { success: false, reason: '研究所仍有研发任务' };
     property.level--;
-    const value = Math.round((tile.buildCost || 0) * 0.5);
+    const building = BUILDINGS.find(definition => definition.id === property.buildingType);
+    const value = Math.round((tile.buildCost || 0) * (building?.buildMultiplier || 1) * 0.5);
     player.cash += value;
     this.state.assetRevision++;
     this.state.addLog(`🏗️ ${player.name} 出售【${tile.name}】一层建筑，回笼 $${value.toLocaleString()}。`, 'accent');
@@ -646,12 +658,15 @@ export class GameEngine {
   }
 
   mortgageProperty(player, tileId) {
-    if (this.state.pendingDebt?.debtorId !== player.id) return { success: false, reason: '当前无需抵押' };
+    const canManage = this.state.phase === 'PRE_ROLL_ACTION' && this.state.currentPlayerIndex === player.id;
+    if (this.state.pendingDebt?.debtorId !== player.id && !canManage) return { success: false, reason: '当前不能抵押' };
     const property = this.state.propertyManager.getProperty(Number(tileId));
     const tile = this.state.getTile(Number(tileId));
     if (!property || property.owner !== player.id || property.isMortgaged || property.level > 0) {
       return { success: false, reason: '需先出售全部建筑才能抵押' };
     }
+    if (this.isPropertyListed(tileId)) return { success: false, reason: '地产挂牌中，请先撤销挂牌' };
+    if (this.state.researchTasks.some(task => task.tileId === Number(tileId))) return { success: false, reason: '研究所仍有研发任务' };
     const value = Math.round((tile.price || 0) * 0.5);
     property.isMortgaged = true;
     property.mortgageValue = value;
@@ -682,7 +697,22 @@ export class GameEngine {
     property.isMortgaged = false;
     property.mortgageValue = 0;
     this.state.assetRevision++;
+    this.state.addLog(`🔓 ${player.name} 支付 $${cost.toLocaleString()} 赎回【${this.state.getTile(Number(tileId))?.name}】。`, 'gold');
     return { success: true, type: 'PROPERTY_REDEEMED', tileId: Number(tileId), cost };
+  }
+
+  isPropertyListed(tileId) {
+    return this.state.marketOffers.some(offer => offer.kind === 'PROPERTY' && Number(offer.contentId) === Number(tileId));
+  }
+
+  cancelPlayerMarketOffers(player, reason = 'CANCELLED') {
+    const cancelled = this.state.marketOffers.filter(offer => offer.sellerId === player.id);
+    if (!cancelled.length) return [];
+    this.state.marketOffers = this.state.marketOffers.filter(offer => offer.sellerId !== player.id);
+    cancelled.forEach(offer => recordMarketHistory(this.state, { type: 'CANCELLED', ...offer, round: this.state.round, reason }));
+    this.state.addLog(`↩️ ${player.name} 的 ${cancelled.length} 笔挂牌因资产处置而撤销。`, 'accent');
+    this.state.assetRevision++;
+    return cancelled;
   }
 
   payDebt(player) {
@@ -1194,16 +1224,24 @@ export class GameEngine {
   chooseBuildingType(player, tileId, buildingType) {
     const property = this.state.propertyManager.getProperty(Number(tileId));
     if (!property || property.owner !== player.id) return { success: false, reason: '只能改建自己的地产' };
+    if (property.isMortgaged) return { success: false, reason: '抵押地产不能改建' };
+    if (this.isPropertyListed(tileId)) return { success: false, reason: '地产挂牌中，请先撤销挂牌' };
+    if (this.state.researchTasks.some(task => task.tileId === Number(tileId)) && property.buildingType !== buildingType) {
+      return { success: false, reason: '研究所仍有研发任务' };
+    }
     const previous = property.buildingType;
+    const previousLevel = property.level;
     const changed = this.state.propertyManager.setBuildingType(Number(tileId), String(buildingType));
     if (!changed) return { success: false, reason: '建筑类型不适用于该地产' };
     const cost = previous && previous !== property.buildingType ? Math.round((this.state.getTile(Number(tileId)).buildCost || 0) * 0.25) : 0;
     if (player.cash < cost) {
       property.buildingType = previous;
+      property.level = previousLevel;
       return { success: false, reason: '现金不足', cost };
     }
     player.cash -= cost;
     this.state.assetRevision++;
+    this.state.addLog(`🏗️ ${player.name} 将【${this.state.getTile(Number(tileId))?.name}】改建为 ${BUILDINGS.find(item => item.id === property.buildingType)?.name || (property.buildingType === 'CHAIN_STORE' ? '连锁店' : '住宅')}。`, 'gold');
     return { success: true, type: 'PROPERTY_CHANGED', tileId: Number(tileId), buildingType: property.buildingType, cost };
   }
 

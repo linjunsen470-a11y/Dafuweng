@@ -14,6 +14,7 @@ import { getAIMinigameScore } from './game/MinigameRules.js';
 import { getAIAuctionBid, getMinimumAuctionBid } from './game/AuctionRules.js';
 import { getDebtPortfolio } from './game/DebtRules.js';
 import { chooseAIMarketAction } from './game/MarketRules.js';
+import { chooseAIPropertyManagement } from './game/PropertyRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
@@ -90,7 +91,10 @@ class GameController {
   async getAssetUI() {
     if (!this.assetUI) {
       const { AssetUI } = await import('./ui/AssetUI.js');
-      this.assetUI = new AssetUI(this.gameState);
+      this.assetUI = new AssetUI(this.gameState, this.gameEngine, this.audioManager, () => {
+        this.uiRenderer.renderHUD();
+        this.syncBoardAssets();
+      });
     }
     return this.assetUI;
   }
@@ -685,6 +689,15 @@ class GameController {
       this.gameEngine.execute({ type: 'ACCEPT_MARKET_OFFER', playerId: aiPlayer.id, payload: { offerId: marketDecision.offerId } });
     } else if (marketDecision?.type === 'LIST') {
       this.gameEngine.execute({ type: 'CREATE_MARKET_OFFER', playerId: aiPlayer.id, payload: marketDecision.payload });
+    }
+
+    const propertyDecision = chooseAIPropertyManagement(aiPlayer, this.gameState);
+    if (propertyDecision) {
+      this.gameEngine.execute({
+        type: propertyDecision.type,
+        playerId: aiPlayer.id,
+        payload: { tileId: propertyDecision.tileId, buildingType: propertyDecision.buildingType }
+      });
     }
 
     await this.doRollDice();

@@ -3,6 +3,9 @@ const PRE_ROLL_COMMANDS = new Set([
   'BUY_ITEM', 'SELL_INVENTORY', 'USE_ITEM', 'PLACE_ROAD_ENTITY',
   'CREATE_MARKET_OFFER', 'ACCEPT_MARKET_OFFER', 'CANCEL_MARKET_OFFER', 'START_AUCTION'
 ]);
+const PROPERTY_MANAGEMENT_COMMANDS = new Set([
+  'SELL_BUILDING', 'MORTGAGE_PROPERTY', 'REDEEM_PROPERTY', 'CHOOSE_BUILDING_TYPE'
+]);
 const LANDING_COMMANDS = new Set([
   'PURCHASE_PROPERTY',
   'UPGRADE_PROPERTY',
@@ -13,13 +16,9 @@ const LANDING_COMMANDS = new Set([
   'CAST_MAGIC',
   'RESOLVE_MAGIC',
   'START_RESEARCH',
-  'SUBMIT_MINIGAME_RESULT',
-  'CHOOSE_BUILDING_TYPE'
+  'SUBMIT_MINIGAME_RESULT'
 ]);
 const DEBT_COMMANDS = new Set([
-  'SELL_BUILDING',
-  'MORTGAGE_PROPERTY',
-  'REDEEM_PROPERTY',
   'LIQUIDATE_DEPOSIT',
   'PAY_DEBT',
   'AUTO_SETTLE_DEBT',
@@ -36,6 +35,16 @@ export function validateCommand(state, player, command) {
       : { success: false, reason: '尚未轮到该玩家出价' };
   }
   if (player.id !== state.currentPlayerIndex) return { success: false, reason: '只能由当前玩家执行操作' };
+
+  if (PROPERTY_MANAGEMENT_COMMANDS.has(type)) {
+    const debtAction = ['SELL_BUILDING', 'MORTGAGE_PROPERTY'].includes(type)
+      && state.phase === 'DEBT_SETTLEMENT' && state.pendingDebt?.debtorId === player.id;
+    const preRollAction = state.phase === 'PRE_ROLL_ACTION';
+    const landingChange = type === 'CHOOSE_BUILDING_TYPE' && state.phase === 'LANDING_ACTION'
+      && Number(command.payload?.tileId) === player.currentTile;
+    if (!debtAction && !preRollAction && !landingChange) return { success: false, reason: '只能在掷骰前经营地产' };
+    return null;
+  }
 
   if (PRE_ROLL_COMMANDS.has(type) && state.phase !== 'PRE_ROLL_ACTION') {
     return { success: false, reason: '该操作只能在掷骰前执行' };

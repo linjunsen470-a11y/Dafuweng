@@ -4,6 +4,7 @@ import { getAIAuctionBid } from './AuctionRules.js';
 import { GameState } from './GameState.js';
 import { GameEngine } from './GameEngine.js';
 import { chooseAIMarketAction } from './MarketRules.js';
+import { chooseAIPropertyManagement } from './PropertyRules.js';
 
 export class GameSimulator {
   constructor({
@@ -97,6 +98,9 @@ export class GameSimulator {
     } else if (marketDecision?.type === 'LIST') {
       this.engine.execute({ type: 'CREATE_MARKET_OFFER', playerId: player.id, payload: marketDecision.payload });
     }
+
+    const propertyDecision = player.isSleepwalkingThisTurn ? null : chooseAIPropertyManagement(player, this.state);
+    if (propertyDecision) this.engine.execute({ type: propertyDecision.type, playerId: player.id, payload: propertyDecision });
 
     if (teleportTile !== null) {
       this.engine.execute({ type: 'TELEPORT_PLAYER', playerId: player.id, payload: { tileId: teleportTile } });

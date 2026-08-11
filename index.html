@@ -359,10 +359,16 @@
   <div id="modal-assets" class="modal hidden">
     <div class="glass-card modal-box asset-modal-box">
       <div class="modal-header">
-        <h2>🏆 实时资产排名</h2>
+        <div><h2>🏙️ 资产与地产经营中心</h2><small id="asset-center-subtitle">财富排行与城市版图</small></div>
         <button type="button" class="close-modal" id="asset-modal-close" aria-label="关闭资产排名">&times;</button>
       </div>
-      <div class="asset-table-wrap">
+      <nav class="asset-center-tabs" id="asset-center-tabs" aria-label="资产中心分页">
+        <button class="active" data-asset-tab="RANKING">财富排行</button>
+        <button data-asset-tab="PROPERTIES">我的地产</button>
+        <button data-asset-tab="DISTRICTS">区域版图</button>
+      </nav>
+      <div id="asset-center-status" class="asset-center-status" aria-live="polite"></div>
+      <div class="asset-table-wrap" id="asset-ranking-panel">
         <table class="asset-table">
           <thead>
             <tr><th>#</th><th>玩家</th><th>现金</th><th>存款</th><th>土地</th><th>建筑</th><th>股票</th><th>地产数</th><th>总资产</th></tr>
@@ -370,6 +376,8 @@
           <tbody id="asset-ranking-body"></tbody>
         </table>
       </div>
+      <div id="asset-property-panel" class="asset-center-panel hidden"></div>
+      <div id="asset-district-panel" class="asset-center-panel hidden"></div>
     </div>
   </div>
 
