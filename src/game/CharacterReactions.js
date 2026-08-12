@@ -61,6 +61,9 @@ export function describeCharacterReactions(event, state) {
     case 'LORD_REINFORCED': return single('win', '领主增援抵达');
     case 'MINIGAME_COMPLETED': return single('win', '小游戏获胜');
     case 'CARD_USED': return single('win', '发动策略卡');
+    case 'QUEST_STARTED': return single('gain', `接受委托「${event.title}」`);
+    case 'QUEST_COMPLETED': return single('win', `完成委托「${event.title}」`);
+    case 'QUEST_FAILED': return single('loss', `委托「${event.title}」到期`);
     case 'CARD_BOUGHT': return single('gain', '兑换策略卡');
     case 'RESEARCH_COMPLETED': return single(event.success === false ? 'loss' : 'win', event.success === false ? '研发成果暂存失败' : '研发项目完成');
     case 'BOARD_GOD_COLLECTED': return single('win', '邂逅巡游神明');

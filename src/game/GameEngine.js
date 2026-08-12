@@ -14,6 +14,7 @@ import { hasChairmanPerk } from './CompanyRules.js';
 import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js';
 import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
 import { applyCommercialFacilityVisit } from './CommercialFacilityRules.js';
+import { advanceQuestsForEvent, startQuest } from './QuestRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -278,8 +279,10 @@ export class GameEngine {
     }
 
     const events = result.events || (result.type ? [{ type: result.type, ...result }] : []);
-    this.emitAll(events);
-    return { ...result, events };
+    const questEvents = events.flatMap(event => advanceQuestsForEvent(this.state, event, player.id));
+    const allEvents = [...events, ...questEvents];
+    this.emitAll(allEvents);
+    return { ...result, events: allEvents };
   }
 
   rollDice(player) {
@@ -1082,6 +1085,8 @@ export class GameEngine {
       return { type: 'NEGATIVE_BLOCKED', chance };
     }
     switch (chance.kind) {
+      case 'QUEST':
+        return startQuest(this.state, player, chance.questId, chance);
       case 'CARD_POINTS':
         player.cardPoints = Math.max(0, (player.cardPoints || 0) + signed);
         return { type: 'INVENTORY_CHANGED', inventory: 'CARD_POINTS', amount: signed, chance };

@@ -59,6 +59,16 @@ describe('character reactions', () => {
     }, createState())[0]).toMatchObject({ playerId: 0, emotion: 'loss', label: '旅馆入住' });
   });
 
+  it('reacts to quest acceptance, completion, and failure', () => {
+    const state = createState();
+    expect(describeCharacterReactions({ type: 'QUEST_STARTED', playerId: 0, title: '环城巡礼' }, state)[0])
+      .toMatchObject({ emotion: 'gain', label: '接受委托「环城巡礼」' });
+    expect(describeCharacterReactions({ type: 'QUEST_COMPLETED', playerId: 1, title: '策略演习' }, state)[0])
+      .toMatchObject({ playerId: 1, emotion: 'win' });
+    expect(describeCharacterReactions({ type: 'QUEST_FAILED', playerId: 0, title: '地标巡访' }, state)[0])
+      .toMatchObject({ emotion: 'loss' });
+  });
+
   it('selects dialogue deterministically without consuming game randomness', () => {
     const state = createState();
     const event = { type: 'PROPERTY_PURCHASED', playerId: 0, tileId: 7, cost: 1800 };

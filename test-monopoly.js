@@ -206,6 +206,39 @@ async function runTest() {
     await page.evaluate(() => window.__e2eFacilityUI.clear());
     console.log('✅ Hotel service, independent stay state, facility toast, and character response rendered.');
 
+    console.log('\n--- Step 3-Quest: Testing continuous fate quest tracker ---');
+    await page.evaluate(async () => {
+      const [{ GameState }, { UIRenderer }, { PresentationUI }, questRules] = await Promise.all([
+        import('/src/game/GameState.js'), import('/src/ui/UIRenderer.js'), import('/src/ui/PresentationUI.js'), import('/src/game/QuestRules.js')
+      ]);
+      const state = new GameState({ seed: 8128 });
+      state.setupGame([
+        { profileIndex: 0, name: '委托测试员', isAI: false },
+        { profileIndex: 1, name: '城市向导', isAI: true }
+      ], 30000);
+      questRules.startQuest(state, state.players[0], 'PROPERTY_INVESTOR');
+      questRules.advanceQuestsForEvent(state, { type: 'PROPERTY_PURCHASED', playerId: 0, tileId: 1 });
+      new UIRenderer(state).renderQuests();
+      window.__e2eQuestUI = new PresentationUI();
+      window.__e2eQuestUI.presentDomainEvent({
+        type: 'QUEST_COMPLETED', playerId: 0, title: '建设合伙人', reward: { cash: 2200, cardPoints: 50 }
+      }, state);
+    });
+    await page.waitForFunction(() => document.querySelector('.quest-card')?.textContent.includes('建设合伙人')
+      && document.querySelector('.quest-card')?.textContent.includes('1/2')
+      && document.querySelector('.presentation-toast')?.textContent.includes('委托完成'));
+    const questTelemetry = await page.$eval('.quest-card', element => ({
+      title: element.querySelector('.quest-card-title')?.textContent.replace(/\s+/g, ' ').trim(),
+      player: element.querySelector('.quest-card-meta span')?.textContent,
+      progressWidth: parseFloat(getComputedStyle(element.querySelector('.quest-progress i')).width)
+    }));
+    if (!questTelemetry.title.includes('1/2') || questTelemetry.player !== '委托测试员' || questTelemetry.progressWidth <= 0) {
+      throw new Error(`Quest tracker mismatch: ${JSON.stringify(questTelemetry)}`);
+    }
+    await page.screenshot({ path: artifact('test_step_continuous_quest.png') });
+    await page.evaluate(() => window.__e2eQuestUI.clear());
+    console.log('✅ Quest assignment, progress bar, deadline context, completion reward, and character response rendered.');
+
     console.log('\n--- Step 3a: Testing 120-node flagship map navigation ---');
     const mapTelemetry = await page.evaluate(() => ({
       selectedMap: document.getElementById('map-select')?.value,

@@ -2088,6 +2088,39 @@ input:focus-visible,
   letter-spacing: 0.04em;
 }
 
+.quest-panel {
+  position: absolute;
+  top: 262px;
+  right: 14px;
+  width: 238px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 16px;
+  background: rgba(12, 22, 42, 0.88);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+  backdrop-filter: blur(12px);
+}
+
+.quest-panel-header,
+.quest-card-title,
+.quest-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quest-panel-header { color: #dff8ff; font-size: 0.76rem; font-weight: 900; letter-spacing: 0.06em; }
+.quest-count { min-width: 22px; padding: 2px 6px; border-radius: 999px; background: rgba(103,232,249,0.14); color: #67e8f9; text-align: center; }
+.quest-list { display: grid; gap: 7px; margin-top: 8px; }
+.quest-empty { padding: 10px 5px; color: #8297aa; font-size: 0.68rem; text-align: center; }
+.quest-card { padding: 8px; border: 1px solid rgba(103,232,249,0.15); border-radius: 11px; background: linear-gradient(135deg, rgba(24,47,75,0.9), rgba(24,31,58,0.9)); }
+.quest-card-title { color: #f6fbff; font-size: 0.72rem; font-weight: 800; }
+.quest-card-title b { color: #f9d976; font-variant-numeric: tabular-nums; }
+.quest-card-meta { margin-top: 4px; color: #9aafc0; font-size: 0.62rem; }
+.quest-progress { height: 4px; margin: 6px 0 5px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.09); }
+.quest-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #22d3ee, #f9d976); transition: width 0.35s ease; }
+.quest-description { color: #adc2d0; font-size: 0.62rem; line-height: 1.35; }
+
 .control-panel {
   right: auto;
   bottom: 14px;
@@ -2284,6 +2317,7 @@ input:focus-visible,
   .control-panel { width: min(580px, calc(100vw - 500px)); min-width: 470px; }
   .minimap-panel { width: 210px; }
   #minimap-canvas { width: 192px; height: 126px; }
+  .quest-panel { width: 210px; top: 244px; }
 }
 
 @media (max-width: 820px) {
@@ -2295,6 +2329,7 @@ input:focus-visible,
   .left-panel { width: 190px; }
   .player-details, .player-skill-badge { display: none; }
   .minimap-panel { display: none; }
+  .quest-panel { display: none; }
   .control-panel { right: 12px; left: auto; width: calc(100vw - 226px); min-width: 0; transform: none; }
   .log-panel { display: none; }
   .action-buttons { grid-template-columns: repeat(4, 1fr); }

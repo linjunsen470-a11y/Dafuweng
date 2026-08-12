@@ -160,11 +160,11 @@ export const CHANCE_CARDS = [
   { title: '招待贵宾', desc: '在五星级饭店请客吃饭消费', amount: 600, isGain: false }
   ,{ title: '创意比赛获奖', desc: '城市创意赛奖金到账', amount: 1500, isGain: true }
   ,{ title: '旧物拍卖', desc: '收藏品拍出好价钱', amount: 900, isGain: true }
-  ,{ title: '社区贡献奖', desc: '获得社区建设奖励', amount: 700, isGain: true }
-  ,{ title: '旅行退款', desc: '延误补偿款到账', amount: 500, isGain: true }
+  ,{ title: '社区建设委托', desc: '商业联合会邀请你巡访城市地标', kind: 'QUEST', questId: 'LANDMARK_ROUTE', isGain: true }
+  ,{ title: '环城观光委托', desc: '城市观光局邀请你完成一轮环城巡礼', kind: 'QUEST', questId: 'CITY_TOUR', isGain: true }
   ,{ title: '应用分红', desc: '参与投资的应用开始分红', amount: 1800, isGain: true }
   ,{ title: '节能奖励', desc: '获得绿色生活补助', amount: 650, isGain: true }
-  ,{ title: '临时顾问', desc: '完成商业咨询项目', amount: 1100, isGain: true }
+  ,{ title: '城市建设委托', desc: '城市开发署征集地产建设合伙人', kind: 'QUEST', questId: 'PROPERTY_INVESTOR', isGain: true }
   ,{ title: '保险返还', desc: '年度保险返还到账', amount: 750, isGain: true }
   ,{ title: '设备维修', desc: '随身设备意外损坏', amount: 450, isGain: false }
   ,{ title: '行李超重', desc: '支付额外托运费用', amount: 350, isGain: false }
@@ -175,7 +175,7 @@ export const CHANCE_CARDS = [
   ,{ title: '公益捐款', desc: '参与城市公益项目', amount: 900, isGain: false }
   ,{ title: '装修超支', desc: '材料价格临时上涨', amount: 1300, isGain: false }
   ,{ title: '幸运返现', desc: '消费活动抽中返现', amount: 1000, isGain: true }
-  ,{ title: '技能培训', desc: '报名城市高级研修班', amount: 1000, isGain: false }
+  ,{ title: '策略公会委托', desc: '卡片公会邀请你参加实战策略演习', kind: 'QUEST', questId: 'CARD_TACTIC', isGain: true }
   ,{ title: '点券大奖', desc: '获得卡片与道具消费点券', kind: 'CARD_POINTS', amount: 120, isGain: true }
   ,{ title: '公益积分', desc: '社区服务获得点券', kind: 'CARD_POINTS', amount: 80, isGain: true }
   ,{ title: '积分遗失', desc: '电子钱包故障丢失点券', kind: 'CARD_POINTS', amount: 60, isGain: false }

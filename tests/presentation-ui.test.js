@@ -63,4 +63,15 @@ describe('presentation event descriptions', () => {
     }, createState());
     expect(cues).toEqual([{ kind: 'toast', icon: '⛽', title: '能源性能调校', detail: '后续 2 次掷骰 +1 步', tone: 'gold' }]);
   });
+
+  it('presents quest acceptance, progress, completion, and expiry', () => {
+    const state = createState();
+    expect(describePresentationEvent({ type: 'QUEST_STARTED', playerId: 0, icon: '📜', title: '环城巡礼', issuer: '城市观光局', description: '经过起点' }, state)[0])
+      .toMatchObject({ kind: 'toast', title: '接受委托 · 环城巡礼', tone: 'gold' });
+    expect(describePresentationEvent({ type: 'QUEST_PROGRESS', playerId: 0, title: '建设合伙人', progress: 1, target: 2 }, state)[0].detail).toBe('1/2');
+    expect(describePresentationEvent({ type: 'QUEST_COMPLETED', playerId: 0, title: '环城巡礼', reward: { cash: 1800, cardPoints: 30 } }, state))
+      .toContainEqual({ kind: 'cash', playerId: 0, amount: 1800, label: '委托奖励' });
+    expect(describePresentationEvent({ type: 'QUEST_FAILED', playerId: 0, title: '策略演习', penaltyPoints: 25 }, state)[0])
+      .toMatchObject({ title: '委托到期 · 策略演习', tone: 'danger' });
+  });
 });

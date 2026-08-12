@@ -106,6 +106,22 @@ export function describePresentationEvent(event, state) {
     case 'CARD_USED':
       toast('🃏', '策略卡发动', state.getCardById?.(event.cardId)?.name || event.cardId, 'gold');
       break;
+    case 'QUEST_STARTED':
+      toast(event.icon || '📜', `接受委托 · ${event.title}`, `${event.issuer || '城市公会'} · ${event.description || `${event.progress}/${event.target}`}`, 'gold');
+      break;
+    case 'QUEST_EXTENDED':
+      toast(event.icon || '📜', `委托延期 · ${event.title}`, `期限延长至第 ${event.expiresRound} 轮`, 'accent');
+      break;
+    case 'QUEST_PROGRESS':
+      toast(event.icon || '📜', `委托进展 · ${event.title}`, `${event.progress}/${event.target}`, 'accent');
+      break;
+    case 'QUEST_COMPLETED':
+      cash(event.playerId, event.reward?.cash || 0, '委托奖励');
+      toast('🏆', `委托完成 · ${event.title}`, `获得 ${money(event.reward?.cash)} 与 ${event.reward?.cardPoints || 0} PTS`, 'success');
+      break;
+    case 'QUEST_FAILED':
+      toast('⌛', `委托到期 · ${event.title}`, `扣除 ${event.penaltyPoints || 0} PTS`, 'danger');
+      break;
     case 'MAGIC_CAST':
       toast('🔮', '魔法屋效果发动', event.effectId || event.magicId || '命运发生改变', 'accent');
       break;

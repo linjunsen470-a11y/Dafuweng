@@ -11,6 +11,7 @@ import { GODS, ITEMS } from './ContentRegistry.js';
 import { normalizeAuctionState } from './AuctionRules.js';
 import { expireMarketOffers, normalizeMarketOffer } from './MarketRules.js';
 import { applyModeCycleEffects, getModeCycleRounds } from './ModeRules.js';
+import { processQuestDeadlines } from './QuestRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -69,6 +70,9 @@ export class GameState {
     this.minigameState = null;
     this.turnCheckpoint = null;
     this.pendingDomainEvents = [];
+    this.activeQuests = [];
+    this.questHistory = [];
+    this.questSequence = 0;
     this.setMap('city-loop');
   }
 
@@ -115,6 +119,9 @@ export class GameState {
     this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0 };
     this.minigameState = null;
     this.pendingDomainEvents = [];
+    this.activeQuests = [];
+    this.questHistory = [];
+    this.questSequence = 0;
 
     this.players = playerConfigs.map((cfg, idx) => {
       const profile = PLAYER_PROFILES[cfg.profileIndex !== undefined ? cfg.profileIndex : (idx % PLAYER_PROFILES.length)];
@@ -383,6 +390,7 @@ export class GameState {
   }
 
   onRoundEnd() {
+    this.pendingDomainEvents.push(...processQuestDeadlines(this));
     if (this.newsEffect) {
       this.newsEffect.remainingRounds--;
       if (this.newsEffect.remainingRounds <= 0) this.newsEffect = null;
@@ -740,7 +748,10 @@ export class GameState {
       researchTasks: structuredClone(this.researchTasks),
       economicCycle: structuredClone(this.economicCycle),
       minigameState: structuredClone(this.minigameState),
-      turnCheckpoint: structuredClone(this.turnCheckpoint)
+      turnCheckpoint: structuredClone(this.turnCheckpoint),
+      activeQuests: structuredClone(this.activeQuests),
+      questHistory: structuredClone(this.questHistory),
+      questSequence: this.questSequence
     };
   }
 
@@ -812,6 +823,9 @@ export class GameState {
     this.economicCycle.roundsPerPeriod = cycleRounds;
     this.minigameState = structuredClone(snapshot.minigameState || null);
     this.turnCheckpoint = structuredClone(snapshot.turnCheckpoint || null);
+    this.activeQuests = structuredClone(snapshot.activeQuests || []);
+    this.questHistory = structuredClone(snapshot.questHistory || []);
+    this.questSequence = Number(snapshot.questSequence) || 0;
     if (this.mechanismState.activeRoute) {
       this.mapDefinition.tiles.filter(tile => (tile.next || []).length > 1).forEach(tile => {
         this.mapRuntime.setNextOptions(tile.id, [tile.next[this.mechanismState.activeRoute % tile.next.length]]);

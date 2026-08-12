@@ -16,6 +16,9 @@ export class UIRenderer {
     this.cardCountBadge = document.getElementById('card-count-badge');
     this.btnRoll = document.getElementById('btn-roll');
     this.diceCountSelect = document.getElementById('dice-count-select');
+    this.questPanel = document.getElementById('quest-panel');
+    this.questList = document.getElementById('quest-list');
+    this.questCount = document.getElementById('quest-count');
   }
 
   renderHUD() {
@@ -38,6 +41,7 @@ export class UIRenderer {
     }
 
     this.renderPlayersList();
+    this.renderQuests();
 
     const curPlayer = this.gameState.getCurrentPlayer();
     if (curPlayer) {
@@ -65,6 +69,33 @@ export class UIRenderer {
     }
 
     this.renderLogs();
+  }
+
+  renderQuests() {
+    if (!this.questList) return;
+    const quests = [...(this.gameState.activeQuests || [])].sort((a, b) => {
+      const aCurrent = a.playerId === this.gameState.currentPlayerIndex ? 0 : 1;
+      const bCurrent = b.playerId === this.gameState.currentPlayerIndex ? 0 : 1;
+      return aCurrent - bCurrent || a.expiresRound - b.expiresRound;
+    });
+    if (this.questCount) this.questCount.textContent = String(quests.length);
+    this.questPanel?.classList.toggle('has-quests', quests.length > 0);
+    if (!quests.length) {
+      this.questList.innerHTML = '<div class="quest-empty">命运格将签发跨回合委托</div>';
+      return;
+    }
+    this.questList.innerHTML = quests.slice(0, 3).map(quest => {
+      const player = this.gameState.players.find(item => item.id === quest.playerId);
+      const percent = Math.round((quest.progress / Math.max(1, quest.target)) * 100);
+      const rounds = Math.max(0, quest.expiresRound - this.gameState.round + 1);
+      return `
+        <article class="quest-card" data-quest-id="${quest.id}">
+          <div class="quest-card-title"><span>${quest.icon} ${quest.title}</span><b>${quest.progress}/${quest.target}</b></div>
+          <div class="quest-card-meta"><span style="color:${player?.color || '#dff8ff'}">${player?.name || '玩家'}</span><span>剩 ${rounds} 轮</span></div>
+          <div class="quest-progress"><i style="width:${percent}%"></i></div>
+          <div class="quest-description">${quest.description}</div>
+        </article>`;
+    }).join('');
   }
 
   renderPlayersList() {
