@@ -74,4 +74,18 @@ describe('presentation event descriptions', () => {
     expect(describePresentationEvent({ type: 'QUEST_FAILED', playerId: 0, title: '策略演习', penaltyPoints: 25 }, state)[0])
       .toMatchObject({ title: '委托到期 · 策略演习', tone: 'danger' });
   });
+
+  it('presents named god attachment, transfer, turn effects, and departure', () => {
+    const state = createState();
+    expect(describePresentationEvent({ type: 'BOARD_GOD_COLLECTED', playerId: 0, godType: 'GREAT_FORTUNE', godName: '大福精灵', icon: '💰', duration: 5 }, state)[0])
+      .toMatchObject({ title: '邂逅巡游精灵', tone: 'gold' });
+    expect(describePresentationEvent({ type: 'STATUS_CHANGED', playerId: 0, status: 'ANGEL', statusName: '繁荣精灵', duration: 5 }, state)[0])
+      .toMatchObject({ title: '召唤巡游精灵', tone: 'gold' });
+    expect(describePresentationEvent({ type: 'GOD_TRANSFERRED', fromPlayerId: 0, toPlayerId: 1, godType: 'ANGEL' }, state)[0].detail)
+      .toContain('转移给');
+    expect(describePresentationEvent({ type: 'GOD_TURN_EFFECT', playerId: 0, godType: 'MISFORTUNE', amount: 900, effect: 'CASH_LOSS' }, state))
+      .toContainEqual({ kind: 'cash', playerId: 0, amount: -900, label: '漏财精灵' });
+    expect(describePresentationEvent({ type: 'GOD_DEPARTED', playerId: 0, godType: 'LUCK', name: '筑梦精灵' }, state)[0])
+      .toMatchObject({ title: '精灵离场', tone: 'accent' });
+  });
 });

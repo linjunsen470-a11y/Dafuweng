@@ -1,5 +1,6 @@
 import { NewsUI } from './NewsUI.js';
 import { describeCharacterReactions } from '../game/CharacterReactions.js';
+import { getGodRule } from '../game/GodRules.js';
 
 const money = value => `$${Math.abs(Number(value) || 0).toLocaleString()}`;
 
@@ -78,10 +79,35 @@ export function describePresentationEvent(event, state) {
       toast('🏬', event.offer?.tileName || '卡片屋限定货架', `获赠 ${event.amount || 0} PTS · 本轮 ${event.offer?.cardIds?.length || 0} 张卡片 · 到店折扣 ${Math.round((event.offer?.discountRate || 0) * 100)}%`, 'gold');
       break;
     case 'STATUS_APPLIED':
-      toast('✨', '运势精灵附体', `${event.status} · 持续 ${event.duration} 回合`, ['BAD', 'MISFORTUNE', 'DEMON'].includes(event.status) ? 'danger' : 'gold');
+      toast(event.icon || getGodRule(event.status)?.icon || '✨', '运势精灵附体', `${event.statusName || getGodRule(event.status)?.name || event.status} · 持续 ${event.duration} 回合`, event.tone || getGodRule(event.status)?.tone || 'gold');
       break;
+    case 'STATUS_CHANGED': {
+      const rule = getGodRule(event.status);
+      if (rule) toast(rule.icon, '召唤巡游精灵', `${event.statusName || rule.name} · 持续 ${event.duration} 回合`, rule.tone);
+      break;
+    }
     case 'BOARD_GOD_COLLECTED':
-      toast('🧚', '邂逅巡游神明', `${current?.name || '玩家'} 获得 ${event.godType}`, 'gold');
+      toast(event.icon || '🧚', '邂逅巡游精灵', `${current?.name || '玩家'} 获得 ${event.godName || getGodRule(event.godType)?.name || event.godType} · ${event.duration} 回合`, event.tone || 'gold');
+      break;
+    case 'GOD_TRANSFERRED': {
+      const from = playerFor(state, event.fromPlayerId);
+      const to = playerFor(state, event.toPlayerId);
+      const rule = getGodRule(event.godType);
+      toast(rule?.icon || '✨', '擦肩转移', `${rule?.name || event.godType} 从 ${from?.name || '玩家'} 转移给 ${to?.name || '玩家'}`, rule?.tone || 'accent');
+      break;
+    }
+    case 'GOD_TURN_EFFECT': {
+      const rule = getGodRule(event.godType);
+      const detail = event.effect === 'CASH_GAIN' ? `获得 ${money(event.amount)}`
+        : event.effect === 'CASH_LOSS' ? `损失 ${money(event.amount)}`
+          : event.effect === 'CARD_POINTS' ? `获得 ${event.amount} PTS` : `损失 ${event.amount} PTS`;
+      if (event.effect === 'CASH_GAIN') cash(event.playerId, event.amount, rule?.name || '精灵收益');
+      if (event.effect === 'CASH_LOSS') cash(event.playerId, -event.amount, rule?.name || '精灵损失');
+      toast(rule?.icon || '✨', `${rule?.name || '精灵'}回合效果`, detail, rule?.tone || 'accent');
+      break;
+    }
+    case 'GOD_DEPARTED':
+      toast('🌫️', '精灵离场', `${event.name || getGodRule(event.godType)?.name || event.godType} 的效果结束`, 'accent');
       break;
     case 'JAILED':
       toast('🚔', '被送入监狱', `${current?.name || '玩家'} 暂停 ${event.duration} 回合`, 'danger');

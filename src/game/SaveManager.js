@@ -1,13 +1,14 @@
 const AUTO_SAVE_KEY = 'fortune-empire:auto-save:v1';
 const MANUAL_SAVE_KEY = 'fortune-empire:manual-save:v1';
-const SLOT_PREFIX = 'fortune-empire:slot:v9:';
+const SLOT_PREFIX = 'fortune-empire:slot:v10:';
+const V9_SLOT_PREFIX = 'fortune-empire:slot:v9:';
 const V8_SLOT_PREFIX = 'fortune-empire:slot:v8:';
 const V7_SLOT_PREFIX = 'fortune-empire:slot:v7:';
 const V6_SLOT_PREFIX = 'fortune-empire:slot:v6:';
 const V5_SLOT_PREFIX = 'fortune-empire:slot:v5:';
 const V4_SLOT_PREFIX = 'fortune-empire:slot:v4:';
 const LEGACY_SLOT_PREFIX = 'fortune-empire:slot:v3:';
-const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 class IndexedSaveMirror {
   constructor() {
@@ -95,6 +96,8 @@ export class SaveManager {
   loadSlot(slotId) {
     const current = this.read(`${SLOT_PREFIX}${slotId}`);
     if (current.success) return current;
+    const v9 = this.read(`${V9_SLOT_PREFIX}${slotId}`);
+    if (v9.success) return v9;
     const v8 = this.read(`${V8_SLOT_PREFIX}${slotId}`);
     if (v8.success) return v8;
     const v7 = this.read(`${V7_SLOT_PREFIX}${slotId}`);
@@ -110,7 +113,7 @@ export class SaveManager {
   async loadSlotAsync(slotId) {
     const local = this.loadSlot(slotId);
     if (local.success) return local;
-    for (const prefix of [SLOT_PREFIX, V8_SLOT_PREFIX, V7_SLOT_PREFIX, V6_SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
+    for (const prefix of [SLOT_PREFIX, V9_SLOT_PREFIX, V8_SLOT_PREFIX, V7_SLOT_PREFIX, V6_SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
       try {
         const snapshot = await this.indexedMirror.get(`${prefix}${slotId}`);
         if (snapshot && SUPPORTED_VERSIONS.includes(snapshot.version)) {
@@ -125,6 +128,7 @@ export class SaveManager {
   deleteSlot(slotId) {
     try {
       this.storage?.removeItem(`${SLOT_PREFIX}${slotId}`);
+      this.storage?.removeItem(`${V9_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V8_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V7_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V6_SLOT_PREFIX}${slotId}`);

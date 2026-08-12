@@ -194,6 +194,8 @@ export class AIPlayer {
       const tile = gameState.getTile(tileId);
       const property = gameState.propertyManager.getProperty(tileId);
       if (!tile) return -100;
+      const boardGod = gameState.boardGods?.find(god => god.tileId === tileId);
+      if (boardGod) return this.scoreBoardGod(aiPlayer, boardGod.type);
       if (tile.type === 'GOD_FORTUNE' || tile.type === 'GOD_EARTH') return 80;
       if (tile.type === 'GOD_MISFORTUNE' || tile.type === 'GOD_BAD') return -80;
       if ((tile.type === 'PROPERTY' || tile.type === 'BIG_PROPERTY') && property?.owner === null && aiPlayer.cash > (tile.price || 0) + 1200) {
@@ -213,5 +215,11 @@ export class AIPlayer {
       return 0;
     };
     return [...options].sort((a, b) => score(b) - score(a))[0];
+  }
+
+  static scoreBoardGod(aiPlayer, godType) {
+    const values = { GREAT_FORTUNE: 105, FORTUNE: 95, LUCK: 82, EARTH: 88, ANGEL: 74, MISFORTUNE: -105, BAD: -95, DEMON: -78 };
+    const base = values[godType] || 0;
+    return aiPlayer.aiStrategy === 'PROPERTY' && ['EARTH', 'ANGEL'].includes(godType) ? base + 20 : base;
   }
 }

@@ -239,6 +239,40 @@ async function runTest() {
     await page.evaluate(() => window.__e2eQuestUI.clear());
     console.log('✅ Quest assignment, progress bar, deadline context, completion reward, and character response rendered.');
 
+    console.log('\n--- Step 3-God: Testing differentiated roaming gods ---');
+    await page.evaluate(async () => {
+      const [{ GameState }, { UIRenderer }, { PresentationUI }, godRules] = await Promise.all([
+        import('/src/game/GameState.js'), import('/src/ui/UIRenderer.js'), import('/src/ui/PresentationUI.js'), import('/src/game/GodRules.js')
+      ]);
+      const state = new GameState({ seed: 8129 });
+      state.setupGame([
+        { profileIndex: 0, name: '精灵测试员', isAI: false },
+        { profileIndex: 1, name: '转移目标', isAI: true },
+        { profileIndex: 2, name: '电脑乙', isAI: true },
+        { profileIndex: 3, name: '电脑丙', isAI: true }
+      ], 30000);
+      godRules.attachGod(state.players[0], 'GREAT_FORTUNE', 5);
+      new UIRenderer(state).renderPlayersList();
+      window.__e2eGodUI = new PresentationUI();
+      window.__e2eGodUI.presentDomainEvent({
+        type: 'BOARD_GOD_COLLECTED', playerId: 0, godType: 'GREAT_FORTUNE', godName: '大福精灵', icon: '💰', tone: 'gold', duration: 5
+      }, state);
+      window.__e2eGodTelemetry = { rules: Object.keys(godRules.GOD_RULES).length };
+    });
+    await page.waitForFunction(() => document.querySelector('.player-card .buff-tag')?.textContent.includes('大福精灵')
+      && document.querySelector('.presentation-toast')?.textContent.includes('邂逅巡游精灵'));
+    const godTelemetry = await page.evaluate(() => ({
+      ...window.__e2eGodTelemetry,
+      buff: document.querySelector('.player-card .buff-tag')?.textContent,
+      title: document.querySelector('.presentation-toast strong')?.textContent
+    }));
+    if (godTelemetry.rules !== 8 || !godTelemetry.buff.includes('5T') || !godTelemetry.title.includes('邂逅巡游精灵')) {
+      throw new Error(`Roaming god presentation mismatch: ${JSON.stringify(godTelemetry)}`);
+    }
+    await page.screenshot({ path: artifact('test_step_roaming_gods.png') });
+    await page.evaluate(() => window.__e2eGodUI.clear());
+    console.log('✅ Eight god rules, named HUD buff, duration, collision toast, and character response rendered.');
+
     console.log('\n--- Step 3a: Testing 120-node flagship map navigation ---');
     const mapTelemetry = await page.evaluate(() => ({
       selectedMap: document.getElementById('map-select')?.value,
@@ -568,7 +602,7 @@ async function runTest() {
     await page.waitForSelector('#modal-market.hidden', { timeout: 3000 });
     console.log('✅ Market hall listed an asset and rendered valuation, expiry, and seller controls.');
 
-    console.log('\n--- Step 6d: Testing Pause, Speed, and V9 Save Slot ---');
+    console.log('\n--- Step 6d: Testing Pause, Speed, and V10 Save Slot ---');
     await page.click('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');

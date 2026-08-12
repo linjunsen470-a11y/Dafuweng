@@ -1,3 +1,5 @@
+import { getGodRule } from '../game/GodRules.js';
+
 export class UIRenderer {
   constructor(gameState) {
     this.gameState = gameState;
@@ -109,16 +111,10 @@ export class UIRenderer {
       const netWorth = this.gameState.calculateNetWorth(player);
 
       let buffHtml = '';
-      if (player.godType === 'FORTUNE') {
-        buffHtml += `<span class="buff-tag buff-god-gold">🧙‍♂️ 免租精灵(${Math.max(1, player.godTurns)}T)</span>`;
-      } else if (player.godType === 'LUCK') {
-        buffHtml += `<span class="buff-tag" style="background:#00d2d3;color:#fff;">🌟 建造精灵(${Math.max(1, player.godTurns)}T)</span>`;
-      } else if (player.godType === 'EARTH') {
-        buffHtml += `<span class="buff-tag" style="background:#2ed573;color:#fff;">⛰️ 土地公(${player.godTurns}T)</span>`;
-      } else if (player.godType === 'MISFORTUNE') {
-        buffHtml += `<span class="buff-tag buff-god-poor">👻 穷神(${player.godTurns}T)</span>`;
-      } else if (player.godType === 'BAD') {
-        buffHtml += `<span class="buff-tag" style="background:#ff4757;color:#fff;">📉 衰神(${player.godTurns}T)</span>`;
+      const godRule = getGodRule(player.godType);
+      if (godRule) {
+        const godClass = godRule.tone === 'danger' ? 'buff-god-poor' : 'buff-god-gold';
+        buffHtml += `<span class="buff-tag ${godClass}" title="${godRule.description}">${godRule.icon} ${godRule.name}(${Math.max(1, player.godTurns)}T)</span>`;
       }
 
       if (player.turtleTurns > 0) {

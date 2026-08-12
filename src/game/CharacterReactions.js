@@ -67,6 +67,9 @@ export function describeCharacterReactions(event, state) {
     case 'CARD_BOUGHT': return single('gain', '兑换策略卡');
     case 'RESEARCH_COMPLETED': return single(event.success === false ? 'loss' : 'win', event.success === false ? '研发成果暂存失败' : '研发项目完成');
     case 'BOARD_GOD_COLLECTED': return single('win', '邂逅巡游神明');
+    case 'GOD_TRANSFERRED': return single('gain', '擦肩获得巡游精灵', playerFor(state, event.toPlayerId));
+    case 'GOD_TURN_EFFECT': return single(['CASH_LOSS', 'CARD_POINTS_LOSS'].includes(event.effect) ? 'loss' : 'win', '巡游精灵回合效果');
+    case 'GOD_DEPARTED': return single('loss', '巡游精灵离场');
     case 'DEBT_PAID': return single('win', '解除财务危机');
     case 'CHAIRMAN_CHANGED':
       return event.chairmanId === null || event.chairmanId === undefined

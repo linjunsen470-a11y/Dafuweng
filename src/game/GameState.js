@@ -12,6 +12,7 @@ import { normalizeAuctionState } from './AuctionRules.js';
 import { expireMarketOffers, normalizeMarketOffer } from './MarketRules.js';
 import { applyModeCycleEffects, getModeCycleRounds } from './ModeRules.js';
 import { processQuestDeadlines } from './QuestRules.js';
+import { attachGod, tickGodAtTurnStart } from './GodRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -254,14 +255,12 @@ export class GameState {
   checkBoardGodCollision(player) {
     const god = this.boardGods.find(item => item.tileId === player.currentTile);
     if (!god) return null;
-    player.godType = god.type;
-    const negative = ['MISFORTUNE', 'DEMON'].includes(god.type);
-    const baseTurns = 4;
-    player.godTurns = negative && player.skillName === '甜心庇佑' ? 2 : baseTurns;
+    const attached = attachGod(player, god.type);
+    const negative = attached.rule.tone === 'BAD';
     const relocation = this.rng.pick(this.mapDefinition.tiles)?.id ?? this.mapDefinition.spawnTile;
     god.tileId = relocation;
-    this.addLog(`🧚 ${player.name} 遇到巡游神明【${god.type}】，附身 ${player.godTurns} 回合！`, negative ? 'danger' : 'gold');
-    return god;
+    this.addLog(`${attached.rule.icon} ${player.name} 遇到巡游精灵【${attached.rule.name}】，附身 ${attached.duration} 回合！`, negative ? 'danger' : 'gold');
+    return { ...god, previousGodType: attached.previousGodType, duration: attached.duration, name: attached.rule.name, icon: attached.rule.icon, tone: attached.rule.tone };
   }
 
   drawLottery() {
@@ -340,14 +339,6 @@ export class GameState {
 
   tickPlayerStatuses(cur) {
     cur.isSleepwalkingThisTurn = false;
-    if (cur.godType) {
-      cur.godTurns--;
-      if (cur.godTurns <= 0) {
-        this.addLog(`✨ ${cur.name} 的运势精灵效果结束。`, 'accent');
-        cur.godType = null;
-        cur.godTurns = 0;
-      }
-    }
     if (cur.engineeringTurns > 0) {
       cur.engineeringTurns--;
       if (cur.engineeringTurns <= 0 && cur.vehicle === 'ENGINEER') {
@@ -371,18 +362,14 @@ export class GameState {
     if (cur.rentShieldActiveThisTurn) cur.rentShieldTurns--;
     cur.negativeImmuneActiveThisTurn = cur.negativeImmuneTurns > 0;
     if (cur.negativeImmuneActiveThisTurn) cur.negativeImmuneTurns--;
-    if (cur.godType === 'MISFORTUNE' && !cur.negativeImmuneActiveThisTurn) {
-      const penalty = Math.max(0, Math.round(cur.cash * 0.10));
-      const transferTarget = this.players.find(player => player.id === cur.penaltyTransferTargetId && !player.isBankrupt && player.id !== cur.id);
-      const recipient = transferTarget || cur;
-      if (transferTarget) {
-        cur.penaltyTransferTargetId = null;
-        this.addLog(`🎭 ${cur.name} 将破财惩罚转嫁给了 ${recipient.name}！`, 'gold');
-      }
-      recipient.cash -= penalty;
-      this.addLog(`👻 破财精灵收取 ${recipient.name} $${penalty.toLocaleString()}。`, 'danger');
-      this.checkBankrupt(recipient);
-    }
+    const godEvents = tickGodAtTurnStart(this, cur);
+    this.pendingDomainEvents.push(...godEvents);
+    godEvents.forEach(event => {
+      if (event.type === 'GOD_DEPARTED') this.addLog(`🌫️ ${cur.name} 的巡游精灵离场了。`, 'accent');
+      if (event.type === 'GOD_TURN_EFFECT' && event.effect === 'CASH_GAIN') this.addLog(`💰 ${cur.name} 获得精灵收益 $${event.amount.toLocaleString()}。`, 'gold');
+      if (event.type === 'GOD_TURN_EFFECT' && event.effect === 'CASH_LOSS') this.addLog(`👻 ${this.players[event.playerId]?.name || cur.name} 被精灵收取 $${event.amount.toLocaleString()}。`, 'danger');
+    });
+    if (cur.cash < 0) this.checkBankrupt(cur);
   }
 
   get priceIndex() {
@@ -521,7 +508,8 @@ export class GameState {
 
   // 检查玩家撞击/经过他人时的神明碰撞转移
   checkGodCollision(movingPlayer) {
-    if (!movingPlayer || movingPlayer.isBankrupt) return;
+    if (!movingPlayer || movingPlayer.isBankrupt) return [];
+    const events = [];
     const sameTilePlayers = this.players.filter(p => !p.isBankrupt && p.id !== movingPlayer.id && p.currentTile === movingPlayer.currentTile);
     sameTilePlayers.forEach(other => {
       if (movingPlayer.godType && !other.godType) {
@@ -530,14 +518,17 @@ export class GameState {
         this.addLog(`✨ 擦肩而过！${movingPlayer.name} 的【${movingPlayer.godType}】转移到了 ${other.name} 身上！`, 'accent');
         movingPlayer.godType = null;
         movingPlayer.godTurns = 0;
+        events.push({ type: 'GOD_TRANSFERRED', fromPlayerId: movingPlayer.id, toPlayerId: other.id, playerId: other.id, godType: other.godType, duration: other.godTurns });
       } else if (!movingPlayer.godType && other.godType) {
         movingPlayer.godType = other.godType;
         movingPlayer.godTurns = other.godTurns;
         this.addLog(`✨ 擦肩而过！${movingPlayer.name} 从 ${other.name} 身上染上了【${movingPlayer.godType}】！`, 'accent');
         other.godType = null;
         other.godTurns = 0;
+        events.push({ type: 'GOD_TRANSFERRED', fromPlayerId: other.id, toPlayerId: movingPlayer.id, playerId: movingPlayer.id, godType: movingPlayer.godType, duration: movingPlayer.godTurns });
       }
     });
+    return events;
   }
 
   checkBankrupt(player) {
@@ -712,8 +703,8 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 9,
-      contentVersion: '2026.7',
+      version: 10,
+      contentVersion: '2026.8',
       savedAt: new Date().toISOString(),
       seed: random.seed,
       rngState: random.state,
@@ -756,7 +747,7 @@ export class GameState {
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;

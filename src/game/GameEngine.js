@@ -15,6 +15,7 @@ import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js
 import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
 import { applyCommercialFacilityVisit } from './CommercialFacilityRules.js';
 import { advanceQuestsForEvent, startQuest } from './QuestRules.js';
+import { attachGod } from './GodRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -410,9 +411,9 @@ export class GameEngine {
     }
 
     // 检查经过其他玩家时的神明擦肩转移
-    this.state.checkGodCollision(player);
+    events.push(...this.state.checkGodCollision(player));
     const boardGod = this.state.checkBoardGodCollision(player);
-    if (boardGod) events.push({ type: 'BOARD_GOD_COLLECTED', playerId: player.id, godType: boardGod.type, tileId: selected });
+    if (boardGod) events.push({ type: 'BOARD_GOD_COLLECTED', playerId: player.id, godType: boardGod.type, godName: boardGod.name, icon: boardGod.icon, tone: boardGod.tone, duration: boardGod.duration, previousGodType: boardGod.previousGodType, tileId: selected });
 
     if (player.godType === 'EARTH' && isPropertyTile(this.state.getTile(selected)) && property.owner === null) {
       property.owner = player.id;
@@ -643,7 +644,7 @@ export class GameEngine {
       const facility = applyCommercialFacilityVisit(this.state, { visitor: player, owner, tileId, property, paidAmount });
       return facility ? { ...result, events: [{ ...result }, facility] } : result;
     };
-    if (player.godType === 'FORTUNE' || player.rentShieldActiveThisTurn) {
+    if (player.godType === 'GREAT_FORTUNE' || player.rentShieldActiveThisTurn) {
       this.state.addLog(`🛡️ ${player.name} 的免租效果抵消了【${tile.name}】过路费！`, 'gold');
       return withFacility({ success: true, type: 'RENT_WAIVED', amount: 0 });
     }
@@ -657,6 +658,7 @@ export class GameEngine {
       return withFacility({ success: true, type: 'RENT_WAIVED', amount: 0 });
     }
     if (player.godType === 'MISFORTUNE' || player.godType === 'GREAT_POOR' || player.godType === 'SMALL_POOR') amount *= 2;
+    if (player.godType === 'FORTUNE') amount = Math.max(1, Math.round(amount * 0.5));
     if (owner.skillName === '土地公庇护') amount = Math.round(amount * 1.2);
     if (owner.skillName === '皇家威严') amount = Math.round(amount * 1.25);
     if (hasChairmanPerk(this.state, player.id, 'INSURANCE')) {
@@ -1027,9 +1029,10 @@ export class GameEngine {
       const specialChance = this.resolveChanceEffect(player, chance);
       if (specialChance) return specialChance;
       if (chance.isGain || player.skillName === '自然之福') {
-        player.cash += Math.abs(chance.amount);
-        this.state.addLog(`❓ 【${chance.title}】获得 $${Math.abs(chance.amount).toLocaleString()}！`, 'gold');
-        return { type: 'CASH_GAINED', amount: Math.abs(chance.amount), chance };
+        const amount = Math.round(Math.abs(chance.amount) * (player.godType === 'FORTUNE' ? 1.5 : 1));
+        player.cash += amount;
+        this.state.addLog(`❓ 【${chance.title}】获得 $${amount.toLocaleString()}！`, 'gold');
+        return { type: 'CASH_GAINED', amount, chance, amplifiedByGod: player.godType === 'FORTUNE' };
       }
       if (player.negativeImmuneActiveThisTurn) {
         this.state.addLog(`🍀 ${player.name} 抵消了【${chance.title}】。`, 'gold');
@@ -1052,13 +1055,10 @@ export class GameEngine {
       [TileType.GOD_BAD]: 'BAD'
     };
     if (tile.type === TileType.GOD_FORTUNE || spiritByType[tile.type]) {
-      player.godType = tile.type === TileType.GOD_FORTUNE
+      const godType = tile.type === TileType.GOD_FORTUNE
         ? (tile.spirit || (tileId === 28 ? 'LUCK' : 'FORTUNE'))
         : spiritByType[tile.type];
-      player.godTurns = player.godType === 'BAD' ? 3 : duration;
-      if (['BAD', 'MISFORTUNE', 'DEMON', 'GREAT_POOR', 'SMALL_POOR'].includes(player.godType)) {
-        player.godTurns = this.getNegativeDuration(player, player.godTurns);
-      }
+      const attached = attachGod(player, godType, godType === 'BAD' ? 3 : duration);
       const cards = [];
       for (let i = 0; i < (tile.cardReward || 0); i++) {
         const card = this.state.rng.pick(cardManager.getAllCards());
@@ -1067,9 +1067,9 @@ export class GameEngine {
           cards.push(card.id);
         }
       }
-      this.state.addLog(`✨ ${player.name} 获得运势精灵【${player.godType}】${player.godTurns} 回合。`, player.godType === 'BAD' || player.godType === 'MISFORTUNE' ? 'danger' : 'gold');
+      this.state.addLog(`${attached.rule.icon} ${player.name} 获得运势精灵【${attached.rule.name}】${player.godTurns} 回合。`, attached.rule.tone);
       if (cards.length) this.state.addLog(`🌟 福星额外赠送 ${cards.length} 张卡片！`, 'gold');
-      return { type: 'STATUS_APPLIED', status: player.godType, duration: player.godTurns, cards };
+      return { type: 'STATUS_APPLIED', status: player.godType, statusName: attached.rule.name, icon: attached.rule.icon, tone: attached.rule.tone, previousGodType: attached.previousGodType, duration: player.godTurns, cards };
     }
     if (tile.type === TileType.STOCK) {
       this.state.addLog(`📈 ${player.name} 到达【${tile.name}】。`, 'accent');
@@ -1163,10 +1163,9 @@ export class GameEngine {
         player.deposit = Math.max(0, (player.deposit || 0) + signed);
         return { type: 'BANK_TRANSFERRED', direction: chance.isGain ? 'DEPOSIT_REWARD' : 'DEPOSIT_FEE', amount: Math.abs(signed), chance };
       case 'GOD': {
-        const god = this.state.rng.pick(['LUCK', 'FORTUNE', 'EARTH', 'ANGEL', 'BUILD']);
-        player.godType = god;
-        player.godTurns = chance.amount || 3;
-        return { type: 'STATUS_APPLIED', status: god, duration: player.godTurns, chance };
+        const god = this.state.rng.pick(['LUCK', 'FORTUNE', 'GREAT_FORTUNE', 'EARTH', 'ANGEL']);
+        const attached = attachGod(player, god, chance.amount || 3);
+        return { type: 'STATUS_APPLIED', status: god, statusName: attached.rule.name, icon: attached.rule.icon, tone: attached.rule.tone, previousGodType: attached.previousGodType, duration: player.godTurns, chance };
       }
       default:
         return null;
@@ -1940,12 +1939,11 @@ export class GameEngine {
         break;
       }
       case 'SUMMON_GOD': {
-        const gods = ['FORTUNE', 'LUCK', 'EARTH', 'ANGEL'];
+        const gods = ['FORTUNE', 'GREAT_FORTUNE', 'LUCK', 'EARTH', 'ANGEL'];
         const chosen = this.state.rng.pick(gods);
-        player.godType = chosen;
-        player.godTurns = player.skillName === '石油大亨' ? 5 : 4;
-        this.state.addLog(`🧧 虔诚祈祷！${player.name} 成功召唤【${chosen}】吉神附体 ${player.godTurns} 回合！`, 'gold');
-        events.push({ type: 'STATUS_CHANGED', playerId: player.id, status: chosen });
+        const attached = attachGod(player, chosen, 4);
+        this.state.addLog(`🧧 虔诚祈祷！${player.name} 成功召唤【${attached.rule.name}】附体 ${player.godTurns} 回合！`, 'gold');
+        events.push({ type: 'STATUS_CHANGED', playerId: player.id, status: chosen, statusName: attached.rule.name, duration: attached.duration });
         break;
       }
       case 'BANISH_GOD': {

@@ -68,7 +68,7 @@ describe('phase two gods, mechanisms, and modes', () => {
     player.currentTile = 1;
     const god = state.checkBoardGodCollision(player);
     expect(god.type).toBe('FORTUNE');
-    expect(player).toMatchObject({ godType: 'FORTUNE', godTurns: 4 });
+    expect(player).toMatchObject({ godType: 'FORTUNE', godTurns: 5 });
     expect(god.tileId).not.toBe(1);
   });
 

@@ -275,4 +275,8 @@ export interface GameSnapshotV9 extends Omit<GameSnapshotV8, 'version'> {
   version: 9;
 }
 
-export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8 | GameSnapshotV9;
+export interface GameSnapshotV10 extends Omit<GameSnapshotV9, 'version'> {
+  version: 10;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8 | GameSnapshotV9 | GameSnapshotV10;

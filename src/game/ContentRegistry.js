@@ -44,14 +44,14 @@ export const COMPANIES = [
 ];
 
 export const GODS = [
-  { id: 'FORTUNE', name: '金运精灵', tone: 'GOOD', turns: 5, description: '减免一半租金并放大事件收入' },
-  { id: 'GREAT_FORTUNE', name: '曜金精灵', tone: 'GOOD', turns: 5, description: '免除租金并获得现金' },
-  { id: 'LUCK', name: '筑梦精灵', tone: 'GOOD', turns: 5, description: '购买与升级获得额外建设' },
-  { id: 'EARTH', name: '拓土精灵', tone: 'GOOD', turns: 4, description: '占领经过的无主地产' },
-  { id: 'MISFORTUNE', name: '漏财精灵', tone: 'BAD', turns: 5, description: '周期扣款并增加租金' },
-  { id: 'BAD', name: '失意精灵', tone: 'BAD', turns: 5, description: '投资可能失败且移动减半' },
-  { id: 'ANGEL', name: '繁荣精灵', tone: 'GOOD', turns: 5, description: '升级经过的建筑' },
-  { id: 'DEMON', name: '荒芜精灵', tone: 'BAD', turns: 5, description: '拆除经过的建筑' }
+  { id: 'FORTUNE', name: '金运精灵', tone: 'GOOD', turns: 5, description: '租金减半，命运现金奖励提高 50%' },
+  { id: 'GREAT_FORTUNE', name: '大福精灵', tone: 'GOOD', turns: 5, description: '免除租金，每回合获得 $500' },
+  { id: 'LUCK', name: '筑梦精灵', tone: 'GOOD', turns: 5, description: '买地升级免费，每回合获得 25 PTS' },
+  { id: 'EARTH', name: '拓土精灵', tone: 'GOOD', turns: 4, description: '免费占领经过的无主地产并加盖一级' },
+  { id: 'MISFORTUNE', name: '漏财精灵', tone: 'BAD', turns: 5, description: '每回合损失 10% 现金，支付双倍租金' },
+  { id: 'BAD', name: '失意精灵', tone: 'BAD', turns: 5, description: '无法买地升级、移动减半并损失点券' },
+  { id: 'ANGEL', name: '繁荣精灵', tone: 'GOOD', turns: 5, description: '经过地产时免费升级一层建筑' },
+  { id: 'DEMON', name: '荒芜精灵', tone: 'BAD', turns: 5, description: '经过地产时拆除一层建筑' }
 ];
 
 export const MAGIC_CONDITIONS = [

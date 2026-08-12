@@ -37,15 +37,17 @@ describe('SaveManager', () => {
     expect(saves.loadSlot(2).success).toBe(false);
   });
 
-  it('writes V9 slots and still discovers legacy V8/V7 slots', () => {
+  it('writes V10 slots and still discovers legacy V9/V8 slots', () => {
     const storage = new MemoryStorage();
     const saves = new SaveManager(storage);
-    expect(saves.saveSlot(1, { version: 9, round: 12 }, '董事会')).toEqual({ success: true });
-    expect(JSON.parse(storage.getItem('fortune-empire:slot:v9:1'))).toMatchObject({ version: 9, round: 12 });
+    expect(saves.saveSlot(1, { version: 10, round: 12 }, '巡游精灵')).toEqual({ success: true });
+    expect(JSON.parse(storage.getItem('fortune-empire:slot:v10:1'))).toMatchObject({ version: 10, round: 12 });
 
     const legacyStorage = new MemoryStorage();
+    legacyStorage.setItem('fortune-empire:slot:v9:1', JSON.stringify({ version: 9, round: 10 }));
     legacyStorage.setItem('fortune-empire:slot:v8:2', JSON.stringify({ version: 8, round: 9 }));
     legacyStorage.setItem('fortune-empire:slot:v5:3', JSON.stringify({ version: 5, round: 7 }));
+    expect(new SaveManager(legacyStorage).loadSlot(1)).toEqual({ success: true, snapshot: { version: 9, round: 10 } });
     expect(new SaveManager(legacyStorage).loadSlot(2)).toEqual({ success: true, snapshot: { version: 8, round: 9 } });
     expect(new SaveManager(legacyStorage).loadSlot(3)).toEqual({ success: true, snapshot: { version: 5, round: 7 } });
   });

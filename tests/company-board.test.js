@@ -119,6 +119,6 @@ describe('company board and chairman perks', () => {
     const restored = new GameState({ seed: 1 });
     restored.restoreSnapshot(legacy);
     expect(restored.companyManager.companies.every(company => company.policyId === null && company.policyHistory.length === 0)).toBe(true);
-    expect(restored.createSnapshot().version).toBe(9);
+    expect(restored.createSnapshot().version).toBe(10);
   });
 });

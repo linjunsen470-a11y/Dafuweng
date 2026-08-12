@@ -520,7 +520,10 @@ export class PawnManager {
         this.boardGodMeshes.delete(id);
       }
     });
-    const colors = { FORTUNE: 0xffd700, MISFORTUNE: 0x2d3436, ANGEL: 0xffffff, DEMON: 0x8e44ad };
+    const colors = {
+      FORTUNE: 0xffd166, GREAT_FORTUNE: 0xff9f1c, LUCK: 0x22d3ee, EARTH: 0x2ed573,
+      MISFORTUNE: 0x2d3436, BAD: 0xd63031, ANGEL: 0xffffff, DEMON: 0x8e44ad
+    };
     boardGods.forEach((god, index) => {
       let group = this.boardGodMeshes.get(god.id);
       if (!group) {
