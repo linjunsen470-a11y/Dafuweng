@@ -11,11 +11,11 @@ export const GAME_MODES = [
 ];
 
 export const BUILDINGS = [
-  { id: 'PARK', name: '生态公园', icon: '🌳', maxLevel: 1, rentMultiplier: 0, buildMultiplier: 0.55, description: '不收费，使相邻地产租金提升 20%' },
-  { id: 'MALL', name: '潮流商场', icon: '🛍️', maxLevel: 4, rentMultiplier: 1.35, buildMultiplier: 1.15, description: '收取较高消费费用' },
-  { id: 'HOTEL', name: '云端旅馆', icon: '🏨', maxLevel: 4, rentMultiplier: 1.05, buildMultiplier: 1.1, description: '收费并令访客停留' },
-  { id: 'GAS_STATION', name: '能源驿站', icon: '⛽', maxLevel: 1, rentMultiplier: 0.35, buildMultiplier: 0.7, description: '只向驾驶载具的访客收费' },
-  { id: 'LAB', name: '未来研究所', icon: '🧪', maxLevel: 4, rentMultiplier: 0, buildMultiplier: 1.25, description: '研发商店中无法购买的高级道具' }
+  { id: 'PARK', name: '生态公园', icon: '🌳', maxLevel: 1, rentMultiplier: 0, buildMultiplier: 0.55, description: '免费休憩并获得点券与负面免疫；相邻地产租金提升 20%' },
+  { id: 'MALL', name: '潮流商场', icon: '🛍️', maxLevel: 4, rentMultiplier: 1.35, buildMultiplier: 1.15, description: '收取较高消费费用，并向访客返还会员点券' },
+  { id: 'HOTEL', name: '云端旅馆', icon: '🏨', maxLevel: 4, rentMultiplier: 1.05, buildMultiplier: 1.1, description: '收费并令访客独立入住 1 至 3 回合' },
+  { id: 'GAS_STATION', name: '能源驿站', icon: '⛽', maxLevel: 1, rentMultiplier: 0.35, buildMultiplier: 0.7, description: '只向载具收费，并让后续两次掷骰额外前进 1 步' },
+  { id: 'LAB', name: '未来研究所', icon: '🧪', maxLevel: 4, rentMultiplier: 0, buildMultiplier: 1.25, description: '研发高级道具；开放日向访客及业主发放技术点券' }
 ];
 
 export const ITEMS = [

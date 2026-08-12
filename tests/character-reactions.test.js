@@ -53,6 +53,12 @@ describe('character reactions', () => {
     expect(reactions[1]).toMatchObject({ playerId: 1, emotion: 'win', label: '交易大厅成功售出' });
   });
 
+  it('uses the facility emotion and service title for commercial visits', () => {
+    expect(describeCharacterReactions({
+      type: 'COMMERCIAL_FACILITY_VISITED', playerId: 0, title: '旅馆入住', emotion: 'loss', duration: 2
+    }, createState())[0]).toMatchObject({ playerId: 0, emotion: 'loss', label: '旅馆入住' });
+  });
+
   it('selects dialogue deterministically without consuming game randomness', () => {
     const state = createState();
     const event = { type: 'PROPERTY_PURCHASED', playerId: 0, tileId: 7, cost: 1800 };

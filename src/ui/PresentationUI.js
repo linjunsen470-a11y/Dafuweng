@@ -109,6 +109,9 @@ export function describePresentationEvent(event, state) {
     case 'MAGIC_CAST':
       toast('🔮', '魔法屋效果发动', event.effectId || event.magicId || '命运发生改变', 'accent');
       break;
+    case 'COMMERCIAL_FACILITY_VISITED':
+      toast(event.icon || '🏙️', event.title || '商业设施服务', event.detail || `${current?.name || '玩家'} 完成设施互动`, event.emotion === 'loss' ? 'danger' : 'gold');
+      break;
     default:
       break;
   }

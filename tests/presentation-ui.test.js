@@ -56,4 +56,11 @@ describe('presentation event descriptions', () => {
     expect(describePresentationEvent({ type: 'DEBT_PAID', playerId: 0, amount: 2400 }, state))
       .toContainEqual({ kind: 'cash', playerId: 0, amount: -2400, label: '偿还债务' });
   });
+
+  it('presents differentiated commercial facility service feedback', () => {
+    const cues = describePresentationEvent({
+      type: 'COMMERCIAL_FACILITY_VISITED', playerId: 0, icon: '⛽', title: '能源性能调校', detail: '后续 2 次掷骰 +1 步', emotion: 'win'
+    }, createState());
+    expect(cues).toEqual([{ kind: 'toast', icon: '⛽', title: '能源性能调校', detail: '后续 2 次掷骰 +1 步', tone: 'gold' }]);
+  });
 });

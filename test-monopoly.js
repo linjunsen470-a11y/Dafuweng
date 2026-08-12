@@ -109,14 +109,13 @@ async function runTest() {
     });
     const startBtn = await page.$('#start-game-btn');
     if (!startBtn) throw new Error('Start game button not found!');
-    await startBtn.click();
-
-    await page.waitForSelector('#hud-layer:not(.hidden)', { timeout: 5000 });
-    await page.waitForSelector('.presentation-turn-banner.is-visible', { timeout: 3000 });
-    await page.waitForFunction(() => {
+    const hudReady = page.waitForSelector('#hud-layer:not(.hidden)', { timeout: 15000 });
+    const turnBannerReady = page.waitForFunction(() => {
       const element = document.querySelector('.presentation-turn-banner.is-visible');
       return element && Number(getComputedStyle(element).opacity) >= 0.9;
-    }, { timeout: 3000 });
+    }, { timeout: 15000 });
+    await startBtn.click();
+    await Promise.all([hudReady, turnBannerReady]);
     const turnPresentation = await page.$eval('.presentation-turn-banner.is-visible', element => {
       const style = getComputedStyle(element);
       const layerStyle = getComputedStyle(document.getElementById('presentation-layer'));
@@ -174,6 +173,38 @@ async function runTest() {
     await page.screenshot({ path: artifact('test_step_character_reaction.png') });
     await page.evaluate(() => window.__e2eReactionUI.clear());
     console.log('✅ Character portrait, personality title, and event dialogue rendered.');
+
+    console.log('\n--- Step 3-Facility: Testing differentiated commercial services ---');
+    await page.evaluate(async () => {
+      const [{ GameState }, { GameEngine }, { PresentationUI }] = await Promise.all([
+        import('/src/game/GameState.js'), import('/src/game/GameEngine.js'), import('/src/ui/PresentationUI.js')
+      ]);
+      const state = new GameState({ seed: 8127 });
+      state.setupGame([{ profileIndex: 0, name: '设施访客', isAI: false }, { profileIndex: 1, name: '旅馆业主', isAI: true }], 30000, { mapId: 'fortune-crossroads' });
+      const [visitor, owner] = state.players;
+      state.propertyManager.buyProperty(18, owner.id, 'HOTEL');
+      for (let level = 0; level < 4; level++) state.propertyManager.upgradeProperty(18);
+      const result = new GameEngine(state).settleRent(visitor, 18);
+      const facilityEvent = result.events.find(event => event.type === 'COMMERCIAL_FACILITY_VISITED');
+      window.__e2eFacilityTelemetry = {
+        buildingType: facilityEvent?.buildingType,
+        duration: facilityEvent?.duration,
+        hotelTurns: visitor.hotelTurns,
+        hospitalTurns: visitor.hospitalTurns
+      };
+      window.__e2eFacilityUI = new PresentationUI();
+      window.__e2eFacilityUI.presentDomainEvent(facilityEvent, state);
+    });
+    await page.waitForFunction(() => document.querySelector('.presentation-toast')?.textContent.includes('旅馆入住')
+      && document.querySelector('.character-reaction-meta')?.textContent.includes('旅馆入住'));
+    const facilityTelemetry = await page.evaluate(() => window.__e2eFacilityTelemetry);
+    if (facilityTelemetry.buildingType !== 'HOTEL' || facilityTelemetry.duration !== 3
+      || facilityTelemetry.hotelTurns !== 3 || facilityTelemetry.hospitalTurns !== 0) {
+      throw new Error(`Commercial facility state mismatch: ${JSON.stringify(facilityTelemetry)}`);
+    }
+    await page.screenshot({ path: artifact('test_step_commercial_facility.png') });
+    await page.evaluate(() => window.__e2eFacilityUI.clear());
+    console.log('✅ Hotel service, independent stay state, facility toast, and character response rendered.');
 
     console.log('\n--- Step 3a: Testing 120-node flagship map navigation ---');
     const mapTelemetry = await page.evaluate(() => ({

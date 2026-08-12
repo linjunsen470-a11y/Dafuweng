@@ -13,6 +13,7 @@ import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_L
 import { hasChairmanPerk } from './CompanyRules.js';
 import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js';
 import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
+import { applyCommercialFacilityVisit } from './CommercialFacilityRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -302,6 +303,12 @@ export class GameEngine {
       steps += 1;
       this.state.addLog(`🚝 ${player.name} 调用天际交通董事长专线，额外前进 1 步。`, 'gold');
     }
+    if ((player.fuelBoostTurns || 0) > 0 && player.vehicle !== 'WALK' && player.moveLimitThisTurn !== 1) {
+      bonusSteps += 1;
+      steps += 1;
+      player.fuelBoostTurns--;
+      this.state.addLog(`⛽ ${player.name} 的能源调校生效，额外前进 1 步（剩余 ${player.fuelBoostTurns} 次）。`, 'gold');
+    }
     this.state.phase = 'ROLLING';
     return { success: true, type: 'DICE_ROLLED', playerId: player.id, dice, steps, bonusSteps };
   }
@@ -387,6 +394,7 @@ export class GameEngine {
       }
       const confinement = this.applyConfinement(player, 'HOSPITAL', 3, '地雷伤害');
       confinement.recipient.vehicle = 'WALK';
+      confinement.recipient.fuelBoostTurns = 0;
       confinement.recipient.selectedDiceCount = 1;
       events.push({ type: 'MINE_EXPLODED', playerId: confinement.recipient.id, tileId: selected, avoided: confinement.avoided });
       if (!confinement.avoided) this.state.addLog(`💣 轰！${confinement.recipient.name} 被地雷炸伤，住院 ${confinement.turns} 回合！`, 'danger');
@@ -452,6 +460,7 @@ export class GameEngine {
     } else if (entity.type === 'MINE') {
       pending.remainingSteps = 0;
       player.vehicle = 'WALK';
+      player.fuelBoostTurns = 0;
       player.selectedDiceCount = 1;
       const confinement = this.applyConfinement(player, 'HOSPITAL', 3, '道路地雷');
       events.push({ type: 'MINE_EXPLODED', playerId: confinement.recipient.id, tileId: entity.tileId });
@@ -627,18 +636,22 @@ export class GameEngine {
     const property = this.state.propertyManager.getProperty(tileId);
     const owner = this.state.players[property.owner];
     if (!owner || owner.id === player.id) return { success: false, reason: '没有应付租金' };
+    const withFacility = (result, paidAmount = 0) => {
+      const facility = applyCommercialFacilityVisit(this.state, { visitor: player, owner, tileId, property, paidAmount });
+      return facility ? { ...result, events: [{ ...result }, facility] } : result;
+    };
     if (player.godType === 'FORTUNE' || player.rentShieldActiveThisTurn) {
       this.state.addLog(`🛡️ ${player.name} 的免租效果抵消了【${tile.name}】过路费！`, 'gold');
-      return { success: true, type: 'RENT_WAIVED', amount: 0 };
+      return withFacility({ success: true, type: 'RENT_WAIVED', amount: 0 });
     }
     if (player.skillName === '股市高手' && this.state.rng.next() < 0.25) {
       this.state.addLog(`💎 ${player.name} 触发商业人脉，免除【${tile.name}】过路费！`, 'gold');
-      return { success: true, type: 'RENT_WAIVED', amount: 0 };
+      return withFacility({ success: true, type: 'RENT_WAIVED', amount: 0 });
     }
     let amount = this.state.propertyManager.calculateToll(tileId, this.state.newsEffect, this.state.priceIndex, player);
     if (amount <= 0) {
       this.state.addLog(`🌿 ${player.name} 免费参观了【${tile.name}】。`, 'accent');
-      return { success: true, type: 'RENT_WAIVED', amount: 0 };
+      return withFacility({ success: true, type: 'RENT_WAIVED', amount: 0 });
     }
     if (player.godType === 'MISFORTUNE' || player.godType === 'GREAT_POOR' || player.godType === 'SMALL_POOR') amount *= 2;
     if (owner.skillName === '土地公庇护') amount = Math.round(amount * 1.2);
@@ -654,7 +667,10 @@ export class GameEngine {
         debtorId: player.id,
         creditorId: owner.id,
         amountDue: amount,
-        source: `RENT:${tileId}`
+        source: `RENT:${tileId}`,
+        facilityVisit: BUILDINGS.some(building => building.id === property.buildingType)
+          ? { tileId: Number(tileId), buildingType: property.buildingType }
+          : null
       };
       this.state.phase = 'DEBT_SETTLEMENT';
       this.state.addLog(`⚠️ ${player.name} 需要筹集 $${amount.toLocaleString()} 支付租金。`, 'danger');
@@ -662,13 +678,8 @@ export class GameEngine {
     }
     player.cash -= amount;
     owner.cash += amount;
-    if (property.buildingType === 'HOTEL') {
-      const duration = Math.max(1, Math.min(3, Math.ceil((property.level + 1) / 2)));
-      player.hospitalTurns = Math.max(player.hospitalTurns, duration);
-      this.state.addLog(`🏨 ${player.name} 在旅馆停留 ${duration} 回合。`, 'accent');
-    }
     this.state.addLog(`💸 ${player.name} 向 ${owner.name} 支付【${tile.name}】过路费 $${amount.toLocaleString()}！`, 'danger');
-    return { success: true, type: 'RENT_PAID', amount, amountDue: amount, ownerId: owner.id };
+    return withFacility({ success: true, type: 'RENT_PAID', amount, amountDue: amount, ownerId: owner.id }, amount);
   }
 
   sellBuilding(player, tileId) {
@@ -758,7 +769,14 @@ export class GameEngine {
     this.state.pendingDebt = null;
     this.state.phase = 'LANDING_ACTION';
     this.state.addLog(`💸 ${player.name} 完成债务支付 $${paid.toLocaleString()}。`, 'danger');
-    return { success: true, type: 'DEBT_PAID', amount: paid, creditorId: creditor?.id ?? null };
+    const result = { success: true, type: 'DEBT_PAID', amount: paid, creditorId: creditor?.id ?? null };
+    const facilityTileId = debt.facilityVisit?.tileId;
+    const property = facilityTileId === undefined ? null : this.state.propertyManager.getProperty(facilityTileId);
+    const owner = property ? this.state.players[property.owner] : null;
+    const facility = property?.buildingType === debt.facilityVisit?.buildingType && owner
+      ? applyCommercialFacilityVisit(this.state, { visitor: player, owner, tileId: facilityTileId, property, paidAmount: paid })
+      : null;
+    return facility ? { ...result, events: [{ ...result }, facility] } : result;
   }
 
   autoSettleDebt(player) {
@@ -804,7 +822,7 @@ export class GameEngine {
     }
     if (player.cash >= debt.amountDue) {
       const paid = this.payDebt(player);
-      events.push({ type: 'DEBT_PAID', amount: paid.amount, creditorId: paid.creditorId });
+      events.push(...(paid.events || [{ type: 'DEBT_PAID', amount: paid.amount, creditorId: paid.creditorId }]));
       return { success: true, type: 'DEBT_PAID', amount: paid.amount, events };
     }
     const bankrupt = this.declareBankruptcy(player);
@@ -838,6 +856,8 @@ export class GameEngine {
     player.items = [];
     player.cardPoints = 0;
     player.vehicle = 'WALK';
+    player.hotelTurns = 0;
+    player.fuelBoostTurns = 0;
     player.isBankrupt = true;
     this.state.pendingDebt = null;
     this.state.phase = 'LANDING_ACTION';
@@ -1085,10 +1105,12 @@ export class GameEngine {
       }
       case 'VEHICLE':
         player.vehicle = chance.vehicle || 'WALK';
+        player.fuelBoostTurns = 0;
         player.selectedDiceCount = Math.min(player.selectedDiceCount || 1, player.vehicle === 'CAR' ? 3 : player.vehicle === 'MOTOR' ? 2 : 1);
         return { type: 'STATUS_CHANGED', playerId: player.id, status: player.vehicle, chance };
       case 'HOSPITAL': {
         player.vehicle = 'WALK';
+        player.fuelBoostTurns = 0;
         player.selectedDiceCount = 1;
         const confinement = this.applyConfinement(player, 'HOSPITAL', chance.amount || 2, chance.title);
         return { type: confinement.avoided ? 'NEGATIVE_BLOCKED' : 'HOSPITALIZED', playerId: confinement.recipient.id, duration: confinement.turns, chance };
@@ -1416,6 +1438,7 @@ export class GameEngine {
       }
       this.state.players.filter(target => !target.isBankrupt && target.currentTile === tileId).forEach(target => {
         target.vehicle = 'WALK';
+        target.fuelBoostTurns = 0;
         target.selectedDiceCount = 1;
         this.applyConfinement(target, 'HOSPITAL', destructive ? 5 : 3, destructive ? '聚变飞弹' : '战术飞弹');
       });

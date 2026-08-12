@@ -109,6 +109,15 @@ export class UIRenderer {
       if (player.jailTurns > 0) {
         buffHtml += `<span class="buff-tag" style="background:#ff4757;color:#fff;">🚔 监狱(${player.jailTurns}T)</span>`;
       }
+      if (player.hospitalTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#e84393;color:#fff;">🏥 住院(${player.hospitalTurns}T)</span>`;
+      }
+      if (player.hotelTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#9b59b6;color:#fff;">🏨 入住(${player.hotelTurns}T)</span>`;
+      }
+      if (player.fuelBoostTurns > 0) {
+        buffHtml += `<span class="buff-tag" style="background:#d35400;color:#fff;">⛽ 调校(${player.fuelBoostTurns}次)</span>`;
+      }
       if (player.rentShieldTurns > 0) {
         buffHtml += `<span class="buff-tag" style="background:#0984e3;color:#fff;">🛡️ 免租(${player.rentShieldTurns}T)</span>`;
       }

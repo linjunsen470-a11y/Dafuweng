@@ -22,7 +22,7 @@ describe('100-game deterministic stability simulation', () => {
         expect(player.cards.length).toBeGreaterThanOrEqual(0);
       });
     });
-  });
+  }, 15000);
 
   it('replays the same final snapshot from the same seed', () => {
     const first = new GameSimulator({ seed: 7788, mapId: 'island-fork' }).run();

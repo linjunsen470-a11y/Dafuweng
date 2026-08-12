@@ -77,6 +77,8 @@ export function describeCharacterReactions(event, state) {
         reaction(event, seller, 'win', '交易大厅成功售出')
       ].filter(Boolean);
     }
+    case 'COMMERCIAL_FACILITY_VISITED':
+      return single(event.emotion || 'win', event.title || '商业设施互动');
     case 'STATUS_APPLIED':
       return single(['BAD', 'MISFORTUNE', 'DEMON', 'GREAT_POOR', 'SMALL_POOR'].includes(event.status) ? 'loss' : 'win', '运势发生变化');
     case 'CASH_GAINED': return single('win', event.chance?.title || '获得意外收入');

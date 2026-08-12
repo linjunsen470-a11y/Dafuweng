@@ -167,6 +167,8 @@ export class GameState {
         vehicle: 'WALK', // 'WALK', 'MOTOR', 'CAR'
         jailTurns: 0,
         hospitalTurns: 0,
+        hotelTurns: 0,
+        fuelBoostTurns: 0,
         turtleTurns: 0,
         hibernateTurns: 0,
         sleepwalkTurns: 0,
@@ -309,6 +311,12 @@ export class GameState {
         attempts++;
         continue;
       }
+      if (cur.hotelTurns > 0) {
+        cur.hotelTurns--;
+        this.addLog(`🏨 ${cur.name} 正在旅馆入住，剩余 ${cur.hotelTurns} 回合，本回合跳过。`, 'accent');
+        attempts++;
+        continue;
+      }
       if (cur.hibernateTurns > 0) {
         cur.hibernateTurns--;
         this.addLog(`❄️ ${cur.name} 仍在冬眠，剩余 ${cur.hibernateTurns} 回合，本回合跳过。`, 'danger');
@@ -335,7 +343,10 @@ export class GameState {
     }
     if (cur.engineeringTurns > 0) {
       cur.engineeringTurns--;
-      if (cur.engineeringTurns <= 0 && cur.vehicle === 'ENGINEER') cur.vehicle = 'WALK';
+      if (cur.engineeringTurns <= 0 && cur.vehicle === 'ENGINEER') {
+        cur.vehicle = 'WALK';
+        cur.fuelBoostTurns = 0;
+      }
     }
     if (cur.turtleTurns > 0) {
       this.addLog(`🐢 ${cur.name} 受到迟缓效果，本回合只能移动 1 步。`, 'danger');
@@ -443,6 +454,8 @@ export class GameState {
         vehicle: player.vehicle,
         jailTurns: player.jailTurns,
         hospitalTurns: player.hospitalTurns,
+        hotelTurns: player.hotelTurns,
+        fuelBoostTurns: player.fuelBoostTurns,
         godType: player.godType,
         godTurns: player.godTurns
       }
@@ -471,6 +484,7 @@ export class GameState {
     expiredBombs.forEach(entity => {
       this.players.filter(player => !player.isBankrupt && Math.abs(player.currentTile - entity.tileId) <= 1).forEach(player => {
         player.vehicle = 'WALK';
+        player.fuelBoostTurns = 0;
         player.hospitalTurns = Math.max(player.hospitalTurns, 3);
       });
       this.addLog(`💥 【${this.getTile(entity.tileId)?.name || entity.tileId}】的倒计时炸弹爆炸！`, 'danger');
@@ -750,6 +764,8 @@ export class GameState {
       items: [],
       selectedDiceCount: 1,
       engineeringTurns: 0,
+      hotelTurns: 0,
+      fuelBoostTurns: 0,
       ...player
     }));
     this.propertyManager.properties = new Map(structuredClone(snapshot.properties).map(([tileId, property]) => [
