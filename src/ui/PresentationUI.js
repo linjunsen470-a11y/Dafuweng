@@ -1,4 +1,5 @@
 import { NewsUI } from './NewsUI.js';
+import { describeCharacterReactions } from '../game/CharacterReactions.js';
 
 const money = value => `$${Math.abs(Number(value) || 0).toLocaleString()}`;
 
@@ -117,8 +118,12 @@ export class PresentationUI {
     this.diceHost = document.getElementById('presentation-dice-host');
     this.toastStack = document.getElementById('presentation-toast-stack');
     this.cashHost = document.getElementById('presentation-cash-host');
+    this.reactionHost = document.getElementById('presentation-reaction-host');
     this.bannerToken = 0;
     this.turnTimer = null;
+    this.reactionQueue = [];
+    this.reactionActive = false;
+    this.reactionTimer = null;
     this.newsUI = new NewsUI();
   }
 
@@ -254,6 +259,51 @@ export class PresentationUI {
     setTimeout(() => burst.remove(), 1500);
   }
 
+  showReaction(cue, state) {
+    if (!this.reactionHost) return;
+    this.reactionQueue.push({ cue, state });
+    if (!this.reactionActive) this.playNextReaction();
+  }
+
+  playNextReaction() {
+    const queued = this.reactionQueue.shift();
+    if (!queued || !this.reactionHost) {
+      this.reactionActive = false;
+      return;
+    }
+    this.reactionActive = true;
+    const { cue, state } = queued;
+    const player = playerFor(state, cue.playerId);
+    if (!player) return this.playNextReaction();
+    this.reactionHost.replaceChildren();
+    const card = document.createElement('article');
+    card.className = `character-reaction emotion-${cue.emotion || 'win'}`;
+    card.style.setProperty('--player-color', player.color || '#67e8f9');
+    card.appendChild(this.portrait(player, 'character-reaction-portrait'));
+    const copy = document.createElement('div');
+    const meta = document.createElement('span');
+    meta.className = 'character-reaction-meta';
+    meta.textContent = `${cue.label || '即时反应'} · ${cue.title || player.skillName || '城市投资人'}`;
+    const line = document.createElement('strong');
+    line.textContent = `“${cue.line}”`;
+    const name = document.createElement('span');
+    name.className = 'character-reaction-name';
+    name.textContent = player.name;
+    copy.append(meta, line, name);
+    card.appendChild(copy);
+    this.reactionHost.appendChild(card);
+    void card.offsetWidth;
+    card.classList.add('is-visible');
+    const duration = this.isReducedMotion() ? 1250 : 2300;
+    this.reactionTimer = setTimeout(() => {
+      card.classList.remove('is-visible');
+      this.reactionTimer = setTimeout(() => {
+        card.remove();
+        this.playNextReaction();
+      }, this.isReducedMotion() ? 0 : 260);
+    }, duration);
+  }
+
   presentDomainEvent(event, state) {
     if (event.type === 'NEWS_FLASH') {
       this.newsUI.show(event.news);
@@ -264,13 +314,18 @@ export class PresentationUI {
       else if (cue.kind === 'cash') this.showCash(cue);
       else if (cue.kind === 'turn') this.scheduleTurn(playerFor(state, cue.playerId), cue.round);
     });
+    describeCharacterReactions(event, state).forEach(cue => this.showReaction(cue, state));
   }
 
   clear() {
     this.bannerToken++;
     if (this.turnTimer) clearTimeout(this.turnTimer);
     this.turnTimer = null;
-    [this.bannerHost, this.diceHost, this.toastStack, this.cashHost].forEach(host => host?.replaceChildren());
+    if (this.reactionTimer) clearTimeout(this.reactionTimer);
+    this.reactionTimer = null;
+    this.reactionQueue = [];
+    this.reactionActive = false;
+    [this.bannerHost, this.diceHost, this.toastStack, this.cashHost, this.reactionHost].forEach(host => host?.replaceChildren());
     this.newsUI.close();
   }
 

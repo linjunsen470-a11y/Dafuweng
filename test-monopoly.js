@@ -151,6 +151,30 @@ async function runTest() {
     await page.waitForSelector('#modal-mode-status.hidden', { timeout: 3000 });
     console.log('✅ Mode rules, round progress, economy cycle, and live standings rendered.');
 
+    console.log('\n--- Step 3-Character: Testing character reactions and dialogue ---');
+    await page.evaluate(async () => {
+      const { PresentationUI } = await import('/src/ui/PresentationUI.js');
+      const players = [
+        { id: 0, profileId: 0, name: '林小满', color: '#ff4757', avatarAtlas: '/assets/characters-v2-atlas.webp', avatarPosition: '0% 0%', skillName: '商业奇才' },
+        { id: 1, profileId: 10, name: '黑泽隼', color: '#485460', avatarAtlas: '/assets/characters-v2-atlas.webp', avatarPosition: '66.667% 100%', skillName: '剑道大师' }
+      ];
+      window.__e2eReactionUI = new PresentationUI();
+      window.__e2eReactionState = { players, round: 1, getCurrentPlayer: () => players[0], getTile: () => ({ name: '海湾金融中心' }) };
+      window.__e2eReactionUI.presentDomainEvent({ type: 'PROPERTY_PURCHASED', playerId: 0, tileId: 18, cost: 4200 }, window.__e2eReactionState);
+    });
+    await page.waitForSelector('.character-reaction.is-visible', { timeout: 3000 });
+    const reactionTelemetry = await page.$eval('.character-reaction', element => ({
+      line: element.querySelector('strong')?.textContent,
+      name: element.querySelector('.character-reaction-name')?.textContent,
+      portrait: getComputedStyle(element.querySelector('.character-reaction-portrait')).backgroundImage
+    }));
+    if (!reactionTelemetry.line || reactionTelemetry.name !== '林小满' || reactionTelemetry.portrait === 'none') {
+      throw new Error(`Character reaction presentation mismatch: ${JSON.stringify(reactionTelemetry)}`);
+    }
+    await page.screenshot({ path: artifact('test_step_character_reaction.png') });
+    await page.evaluate(() => window.__e2eReactionUI.clear());
+    console.log('✅ Character portrait, personality title, and event dialogue rendered.');
+
     console.log('\n--- Step 3a: Testing 120-node flagship map navigation ---');
     const mapTelemetry = await page.evaluate(() => ({
       selectedMap: document.getElementById('map-select')?.value,
