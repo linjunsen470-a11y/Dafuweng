@@ -54,7 +54,7 @@ describe('phase one character talents', () => {
   it('applies wind ninja doubled shop points and obstacle dodge', () => {
     const { state, engine } = createState([4, 1]);
     const player = state.players[0];
-    expect(engine.resolveSpecialLanding(player, 2)).toMatchObject({ amount: 120 });
+    expect(engine.resolveSpecialLanding(player, 2)).toMatchObject({ type: 'CARD_SHOP_OFFER', amount: 120 });
     state.propertyManager.getProperty(1).hasObstacle = true;
     state.rng.next = () => 0.1;
     engine.beginMove(player, 1);
@@ -89,7 +89,7 @@ describe('phase one character talents', () => {
     const { state, engine } = createState([7, 1]);
     const player = state.players[0];
     const before = player.cardPoints;
-    expect(engine.resolveSpecialLanding(player, 2)).toMatchObject({ type: 'CARD_POINTS', amount: 100 });
+    expect(engine.resolveSpecialLanding(player, 2)).toMatchObject({ type: 'CARD_SHOP_OFFER', amount: 100 });
     expect(player.cardPoints).toBe(before + 100);
     expect(engine.getCardCost(player, { id: 'REMOTE_DICE', cost: 45 })).toBe(41);
   });

@@ -402,6 +402,42 @@ async function runTest() {
     await page.waitForSelector('#modal-stock.hidden', { timeout: 3000 });
     console.log('✅ Stock trading, six company cards, chairman perk, and board policy activation passed.');
 
+    console.log('\n--- Step 4b: Testing rotating card shop visit ---');
+    await page.evaluate(async () => {
+      const [{ GameState }, { GameEngine }, { ShopUI }] = await Promise.all([
+        import('/src/game/GameState.js'), import('/src/game/GameEngine.js'), import('/src/ui/ShopUI.js')
+      ]);
+      const state = new GameState({ seed: 7319 });
+      state.setupGame([{ profileIndex: 0, name: '到店验收玩家', isAI: false }, { profileIndex: 1, name: '对手', isAI: true }], 20000, { mapId: 'city-loop' });
+      const engine = new GameEngine(state);
+      const player = state.players[0];
+      player.currentTile = 2;
+      player.cardPoints = 500;
+      state.phase = 'LANDING_ACTION';
+      const visit = engine.execute({ type: 'RESOLVE_LANDING', playerId: player.id, payload: { tileId: 2 } });
+      window.__e2eShopState = state;
+      window.__e2eShopInitialCards = player.cards.length;
+      window.__e2eShopFixture = new ShopUI(state, { playCardSpell() {} }, () => {}, () => {}, engine);
+      window.__e2eShopFixture.showShop({ offer: visit.offer });
+    });
+    await page.waitForSelector('#shop-visit-banner:not(.hidden)');
+    const visitShopTelemetry = await page.evaluate(() => ({
+      title: document.getElementById('shop-title')?.textContent,
+      subtitle: document.getElementById('shop-subtitle')?.textContent,
+      items: document.querySelectorAll('#shop-card-grid .shop-card-item').length,
+      discounted: document.querySelectorAll('#shop-card-grid .card-cost del').length
+    }));
+    if (!visitShopTelemetry.title.includes('卡片') || !visitShopTelemetry.subtitle.includes('15%')
+      || visitShopTelemetry.items !== 12 || visitShopTelemetry.discounted !== 12) {
+      throw new Error(`Rotating shop presentation mismatch: ${JSON.stringify(visitShopTelemetry)}`);
+    }
+    await page.click('#shop-card-grid .btn-buy-card');
+    await page.waitForFunction(() => window.__e2eShopState.players[0].cards.length > window.__e2eShopInitialCards);
+    await page.screenshot({ path: artifact('test_step_rotating_shop.png') });
+    await page.click('#shop-modal-close');
+    await page.waitForSelector('#modal-shop.hidden', { timeout: 3000 });
+    console.log('✅ Limited shelf, visit bonus, discount, purchase, and next-round refresh messaging rendered.');
+
     console.log('\n--- Step 5: Testing Card Shop Modal ---');
     await page.click('#btn-card-shop');
     await page.waitForSelector('#modal-shop:not(.hidden)', { timeout: 3000 });

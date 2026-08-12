@@ -74,6 +74,9 @@ export function describePresentationEvent(event, state) {
     case 'CARD_GAINED':
       toast('🃏', '获得新卡片', state.getCardById?.(event.cardId)?.name || event.cardId, 'gold');
       break;
+    case 'CARD_SHOP_OFFER':
+      toast('🏬', event.offer?.tileName || '卡片屋限定货架', `获赠 ${event.amount || 0} PTS · 本轮 ${event.offer?.cardIds?.length || 0} 张卡片 · 到店折扣 ${Math.round((event.offer?.discountRate || 0) * 100)}%`, 'gold');
+      break;
     case 'STATUS_APPLIED':
       toast('✨', '运势精灵附体', `${event.status} · 持续 ${event.duration} 回合`, ['BAD', 'MISFORTUNE', 'DEMON'].includes(event.status) ? 'danger' : 'gold');
       break;

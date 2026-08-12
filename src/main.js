@@ -17,6 +17,7 @@ import { chooseAIMarketAction } from './game/MarketRules.js';
 import { chooseAIPropertyManagement } from './game/PropertyRules.js';
 import { chooseAICompanyPolicy } from './game/CompanyRules.js';
 import { getModeProfile } from './game/ModeRules.js';
+import { chooseAIShopPurchase } from './game/ShopRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
@@ -900,6 +901,9 @@ class GameController {
     if (result.type === 'OPEN_BANK') {
       await this.handleBankVisit(curPlayer, tileIndex);
     }
+    if (result.type === 'CARD_SHOP_OFFER') {
+      await this.handleCardShopVisit(curPlayer, tileIndex, result.offer);
+    }
     if (result.type === 'LOTTERY_OFFER') {
       await this.handleLotteryVisit(curPlayer, tileIndex, result);
     }
@@ -910,6 +914,30 @@ class GameController {
       await this.handleMinigameVisit(curPlayer, tileIndex, result);
     }
     this.finishTurn();
+  }
+
+  async handleCardShopVisit(player, tileId, offer) {
+    if (player.isAI) {
+      const decision = chooseAIShopPurchase(
+        player,
+        offer,
+        card => this.gameEngine.getCardCost(player, card, tileId),
+        item => this.gameEngine.getItemCost(player, item, tileId)
+      );
+      if (!decision) {
+        this.gameState.addLog(`🤖 ${player.name} 浏览了【${offer.tileName}】后保留点券。`, 'accent');
+        return;
+      }
+      const command = decision.kind === 'CARD'
+        ? { type: 'BUY_CARD', playerId: player.id, payload: { cardId: decision.contentId, tileId } }
+        : { type: 'BUY_ITEM', playerId: player.id, payload: { itemId: decision.contentId, tileId } };
+      const purchased = this.gameEngine.execute(command);
+      if (purchased.success) this.audioManager.playCardSpell();
+      return;
+    }
+    const shopUI = await this.getShopUI();
+    await shopUI.showShop({ offer, awaitClose: true });
+    this.uiRenderer.renderHUD();
   }
 
   async handleBankVisit(player, tileId) {

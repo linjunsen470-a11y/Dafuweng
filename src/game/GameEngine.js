@@ -12,6 +12,7 @@ import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.j
 import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
 import { hasChairmanPerk } from './CompanyRules.js';
 import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js';
+import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -177,13 +178,13 @@ export class GameEngine {
         result = this.tradeStock(player, 'SELL', payload.stockId, payload.shares);
         break;
       case 'BUY_CARD':
-        result = this.buyCard(player, payload.cardId);
+        result = this.buyCard(player, payload.cardId, payload.tileId);
         break;
       case 'SELECT_DICE_COUNT':
         result = this.selectDiceCount(player, payload.count);
         break;
       case 'BUY_ITEM':
-        result = this.buyItem(player, payload.itemId);
+        result = this.buyItem(player, payload.itemId, payload.tileId);
         break;
       case 'SELL_INVENTORY':
         result = this.sellInventory(player, payload.kind, payload.contentId);
@@ -939,11 +940,13 @@ export class GameEngine {
       return { type: 'CASH_LOST', amount, source: 'MONSTER' };
     }
     if (tile.type === TileType.CARD_SHOP) {
+      const offer = getCardShopOffer(this.state, tileId);
       let amount = player.skillName === '疾风忍术' ? 120 : 60;
       if (player.skillName === '棒球活力') amount += 40;
       player.cardPoints += amount;
-      this.state.addLog(`🃏 ${player.name} 获得 ${amount} 卡片积分！`, 'accent');
-      return { type: 'CARD_POINTS', amount };
+      offer.bonusPoints = amount;
+      this.state.addLog(`🏬 ${player.name} 到访【${offer.tileName}】，领取 ${amount} 点券并开启本轮限定货架。`, 'accent');
+      return { type: 'CARD_SHOP_OFFER', amount, offer };
     }
     if (tile.type === TileType.BANK) {
       return { type: 'OPEN_BANK', cash: player.cash, deposit: player.deposit || 0 };
@@ -1294,22 +1297,31 @@ export class GameEngine {
     return { success: true, type: 'RESEARCH_STARTED', task };
   }
 
-  buyItem(player, itemId) {
+  buyItem(player, itemId, tileId = null) {
     const item = this.state.inventoryManager.getDefinition(itemId);
     if (!item || item.cost === null) return { success: false, reason: '该道具只能通过研究获得' };
-    const cost = this.getItemCost(player, item);
+    const shopVisit = this.getShopVisit(player, tileId);
+    if (player.id !== this.state.currentPlayerIndex || (this.state.phase !== 'PRE_ROLL_ACTION' && !shopVisit)) {
+      return { success: false, reason: '当前不能购买道具' };
+    }
+    if (shopVisit && !isOfferedAtShop(shopVisit, 'ITEM', itemId)) return { success: false, reason: '本轮货架没有该道具' };
+    const cost = this.getItemCost(player, item, tileId);
     if (player.cardPoints < cost) return { success: false, reason: '点券不足', cost };
     const result = this.state.inventoryManager.addItem(player, itemId);
     if (result.success) {
       player.cardPoints -= cost;
-      Object.assign(result, { type: 'INVENTORY_CHANGED', cost });
+      Object.assign(result, { type: 'INVENTORY_CHANGED', cost, itemId, shopTileId: shopVisit?.tileId ?? null });
     }
     if (result.success) this.state.addLog(`🧰 ${player.name} 购买了【${ITEMS.find(item => item.id === itemId)?.name}】。`, 'accent');
     return result;
   }
 
-  getItemCost(player, item) {
-    return hasChairmanPerk(this.state, player.id, 'SHOP') ? Math.max(1, Math.round(item.cost * 0.85)) : item.cost;
+  getItemCost(player, item, tileId = null) {
+    let cost = item.cost;
+    if (hasChairmanPerk(this.state, player.id, 'SHOP')) cost *= 0.85;
+    const offer = this.getShopVisit(player, tileId);
+    if (offer) cost *= 1 - offer.discountRate;
+    return Math.max(1, Math.round(cost));
   }
 
   sellInventory(player, kind, contentId) {
@@ -1641,30 +1653,41 @@ export class GameEngine {
     };
   }
 
-  getCardCost(player, card) {
-    if (player.skillName === '石油大亨' && ['DEMOLISH', 'STEAL_LAND', 'MISSILE', 'NUKES', 'LAND_BUY', 'SWAP_LAND'].includes(card.id)) {
-      return Math.round(card.cost * (hasChairmanPerk(this.state, player.id, 'SHOP') ? 0.425 : 0.5));
-    }
+  getShopVisit(player, tileId = null) {
+    const target = Number(tileId);
+    if (tileId === null || tileId === undefined
+      || this.state.phase !== 'LANDING_ACTION'
+      || player.currentTile !== target
+      || this.state.getTile(target)?.type !== TileType.CARD_SHOP) return null;
+    return getCardShopOffer(this.state, target);
+  }
+
+  getCardCost(player, card, tileId = null) {
     let cost = card.cost;
-    if (player.skillName === '商业奇才') cost *= 0.85;
+    if (player.skillName === '石油大亨' && ['DEMOLISH', 'STEAL_LAND', 'MISSILE', 'NUKES', 'LAND_BUY', 'SWAP_LAND'].includes(card.id)) cost *= 0.5;
+    else if (player.skillName === '商业奇才') cost *= 0.85;
     else if (player.skillName === '棒球活力') cost *= 0.9;
     if (hasChairmanPerk(this.state, player.id, 'SHOP')) cost *= 0.85;
+    const offer = this.getShopVisit(player, tileId);
+    if (offer) cost *= 1 - offer.discountRate;
     return Math.max(1, Math.round(cost));
   }
 
-  buyCard(player, cardId) {
-    if (player.id !== this.state.currentPlayerIndex || this.state.phase !== 'PRE_ROLL_ACTION') {
+  buyCard(player, cardId, tileId = null) {
+    const shopVisit = this.getShopVisit(player, tileId);
+    if (player.id !== this.state.currentPlayerIndex || (this.state.phase !== 'PRE_ROLL_ACTION' && !shopVisit)) {
       return { success: false, reason: '当前不能购买卡片' };
     }
     const card = cardManager.getCardById(cardId);
     if (!card) return { success: false, reason: '卡片不存在' };
+    if (shopVisit && !isOfferedAtShop(shopVisit, 'CARD', cardId)) return { success: false, reason: '本轮货架没有该卡片' };
     if ((player.cards?.length || 0) >= CARD_CAPACITY) return { success: false, reason: '卡片栏已满' };
-    const cost = this.getCardCost(player, card);
+    const cost = this.getCardCost(player, card, tileId);
     if (player.cardPoints < cost) return { success: false, reason: '卡片积分不足', cost };
     player.cardPoints -= cost;
     player.cards.push(cardId);
     this.state.addLog(`🛒 ${player.name} 消费 ${cost} 积分兑换了【${card.name}】！`, 'accent');
-    return { success: true, type: 'CARD_BOUGHT', playerId: player.id, cardId, cost };
+    return { success: true, type: 'CARD_BOUGHT', playerId: player.id, cardId, cost, shopTileId: shopVisit?.tileId ?? null };
   }
 
   useCard(player, cardId, targetId = null, value = null) {

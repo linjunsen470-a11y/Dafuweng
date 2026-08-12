@@ -1,6 +1,6 @@
 const PRE_ROLL_COMMANDS = new Set([
-  'BUY_STOCK', 'BUY_CARD', 'USE_CARD', 'ROLL_DICE', 'SELECT_DICE_COUNT',
-  'BUY_ITEM', 'SELL_INVENTORY', 'USE_ITEM', 'PLACE_ROAD_ENTITY',
+  'BUY_STOCK', 'USE_CARD', 'ROLL_DICE', 'SELECT_DICE_COUNT',
+  'SELL_INVENTORY', 'USE_ITEM', 'PLACE_ROAD_ENTITY',
   'CREATE_MARKET_OFFER', 'ACCEPT_MARKET_OFFER', 'CANCEL_MARKET_OFFER', 'START_AUCTION',
   'SET_COMPANY_POLICY'
 ]);
@@ -44,6 +44,17 @@ export function validateCommand(state, player, command) {
     const landingChange = type === 'CHOOSE_BUILDING_TYPE' && state.phase === 'LANDING_ACTION'
       && Number(command.payload?.tileId) === player.currentTile;
     if (!debtAction && !preRollAction && !landingChange) return { success: false, reason: '只能在掷骰前经营地产' };
+    return null;
+  }
+
+  if (type === 'BUY_CARD' || type === 'BUY_ITEM') {
+    const shopTileId = Number(command.payload?.tileId);
+    const landingShop = state.phase === 'LANDING_ACTION'
+      && shopTileId === player.currentTile
+      && state.getTile?.(shopTileId)?.type === 'CARD_SHOP';
+    if (state.phase !== 'PRE_ROLL_ACTION' && !landingShop) {
+      return { success: false, reason: '只能在掷骰前或到访卡片屋时购买' };
+    }
     return null;
   }
 

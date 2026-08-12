@@ -1,5 +1,6 @@
 import { AIPlayer } from './AIPlayer.js';
 import { getAIMinigameScore } from './MinigameRules.js';
+import { chooseAIShopPurchase } from './ShopRules.js';
 import { getAIAuctionBid } from './AuctionRules.js';
 import { GameState } from './GameState.js';
 import { GameEngine } from './GameEngine.js';
@@ -163,6 +164,19 @@ export class GameSimulator {
           type: 'BANK_TRANSFER',
           playerId: player.id,
           payload: { tileId: tile.id, direction: 'DEPOSIT', amount }
+        });
+      } else if (special.type === 'CARD_SHOP_OFFER') {
+        const decision = chooseAIShopPurchase(
+          player,
+          special.offer,
+          card => this.engine.getCardCost(player, card, tile.id),
+          item => this.engine.getItemCost(player, item, tile.id)
+        );
+        if (decision?.kind === 'CARD') this.engine.execute({
+          type: 'BUY_CARD', playerId: player.id, payload: { cardId: decision.contentId, tileId: tile.id }
+        });
+        else if (decision?.kind === 'ITEM') this.engine.execute({
+          type: 'BUY_ITEM', playerId: player.id, payload: { itemId: decision.contentId, tileId: tile.id }
         });
       } else if (special.type === 'LOTTERY_OFFER' && player.cash >= special.ticketPrice + 3000) {
         this.engine.execute({
