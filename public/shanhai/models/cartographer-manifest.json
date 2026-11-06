@@ -1,0 +1,45 @@
+{
+  "originalAuthorship": "Original project cartographer; shared original base mesh and authored accessories/animation. No third-party source assets.",
+  "characters": [
+    {
+      "file": "character-cartographer.glb",
+      "boundsYUp": {
+        "min": [
+          -0.43,
+          0.0,
+          -0.34
+        ],
+        "max": [
+          0.43,
+          1.74,
+          0.36
+        ]
+      },
+      "height": 1.74,
+      "triangles": 18160,
+      "meshCount": 6,
+      "clips": {
+        "idle": 2.4,
+        "walk": 0.8,
+        "celebrate": 1.6,
+        "disappointed": 1.8,
+        "ability": 1.2,
+        "notice": 1.0
+      },
+      "forward": "+Z",
+      "up": "+Y",
+      "rightsStatement": "Original project asset; no separate third-party license granted",
+      "animation": "Articulated rigid meshes; named object-transform NLA clips",
+      "originalMeshCount": 105,
+      "drawCallsPerNormalPass": 28,
+      "optimization": "Static geometry merged by nearest animated ancestor and material; animations unchanged",
+      "facialTargets": [
+        "happy",
+        "concern",
+        "surprise"
+      ],
+      "bytes": 781600,
+      "expressions": "Original sparse position morphs on the existing head; neutral geometry and body animation unchanged"
+    }
+  ]
+}

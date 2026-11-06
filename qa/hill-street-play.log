@@ -1,0 +1,30 @@
+{
+  "errors": [],
+  "limits": [
+    "Prepared only initial human position101; existing remote card1/item6 and real shop purchase through UI.",
+    "Desktop/360px software WebGL, not physical phone or long-game acceptance."
+  ],
+  "beforeBuy": {
+    "tile": 102,
+    "cash": 20000,
+    "points": 180,
+    "cards": [
+      "OBSTACLE",
+      "TURN_AROUND"
+    ],
+    "banner": "✨ 到店会员价已生效\n到店获赠 60 PTS；本轮供应 8 张卡片与 4 件道具，下一轮自动更新。\nROUND SPECIAL"
+  },
+  "purchaseKey": "CARD:REMOTE_DICE",
+  "afterBuy": {
+    "cash": 20000,
+    "points": 147,
+    "cards": [
+      "OBSTACLE",
+      "TURN_AROUND",
+      "REMOTE_DICE"
+    ]
+  },
+  "joined": true,
+  "mobileShopReturned": true,
+  "success": true
+}

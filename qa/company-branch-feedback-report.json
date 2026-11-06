@@ -1,0 +1,38 @@
+{
+  "checks": [
+    "Desktop fee-only: original company and four residential levels loaded with unchanged state; actual existing remote card 1 step 88→89, fee and fully wrapped on-screen receipt verified",
+    "390px phone real scene shows original company and four levels; loaded player/property/random state unchanged; actual existing remote card 1 step 88→89, fee and on-screen receipt verified"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared four residential levels, not naturally bought or upgraded.",
+    "Mobile is Chromium 390px software WebGL, not physical mobile."
+  ],
+  "desktopVisit": {
+    "tile": 89,
+    "cash": 19610,
+    "company": 1590,
+    "toast": "💻公司服务费林小满 · 云端计算 · 支付 $390，计入公司营收；分红在周期结算"
+  },
+  "desktopLayout": {
+    "whiteSpace": "normal",
+    "overflow": false,
+    "bottom": 712.4000244140625,
+    "turnTop": 709,
+    "viewport": 1440
+  },
+  "mobileVisit": {
+    "tile": 89,
+    "cash": 19610,
+    "company": 1590,
+    "toast": "💻公司服务费林小满 · 云端计算 · 支付 $390，计入公司营收；分红在周期结算"
+  },
+  "mobileLayout": {
+    "whiteSpace": "normal",
+    "overflow": false,
+    "bottom": 680.4000244140625,
+    "turnTop": 696,
+    "viewport": 390
+  },
+  "success": true
+}

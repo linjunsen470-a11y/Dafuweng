@@ -1,0 +1,63 @@
+{
+  "generatedAt": "2026-11-05T19:17:43.886930+00:00",
+  "validatedSourceCommit": "af77d6fa75f645eb06ceaa16344070dea3b0882d",
+  "branch": "cloud/dafuweng-playability",
+  "checks": [
+    {
+      "command": "npm run verify",
+      "success": true,
+      "testFiles": 47,
+      "tests": 313,
+      "typecheck": true,
+      "fullBuild": true,
+      "log": "cloud-verify.log"
+    },
+    {
+      "command": "npm run build:shanhai",
+      "success": true,
+      "byteIdenticalToBrowserTestedBuild": true,
+      "filesCompared": 24,
+      "log": "cloud-build-shanhai.log"
+    },
+    {
+      "command": "node scripts/simulate-shanhai.mjs",
+      "success": true,
+      "games": 100,
+      "report": "cloud-slice-simulation.json"
+    },
+    {
+      "command": "npm run test:shanhai",
+      "success": true,
+      "tests": 10,
+      "completeMatchRounds": 16,
+      "replay": true,
+      "report": "shanhai-browser-report.json"
+    },
+    {
+      "command": "npm run test:e2e",
+      "success": true,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "networkErrors": 0,
+      "log": "cloud-legacy-browser.log"
+    },
+    {
+      "command": "node test-pwa.js (after npm run verify production build)",
+      "success": true,
+      "offlineLaunch": true,
+      "offlineNewGame": true,
+      "v11Save": true,
+      "offlineRefresh": true,
+      "log": "cloud-pwa.log"
+    }
+  ],
+  "limitations": [
+    "Browser uses Chromium software WebGL/SwiftShader; native hardware FPS and memory endurance are not established.",
+    "Coastal browser main flow uses prefers-reduced-motion; real touchscreen feel is not established.",
+    "Audio decoding, running audio context, playback progression and independent toggles verified; no subjective listening.",
+    "Legacy browser includes deterministic UI fixtures and a partial match; only coastal match completed to round 16 and replay.",
+    "Original chapter remains one map and two economically similar characters; full Richman 4 breadth/experience target remains unfinished.",
+    "Legacy source assets retain unverified release licensing; standalone coastal build includes only original chapter art."
+  ],
+  "noRemotePushOrPublication": true
+}

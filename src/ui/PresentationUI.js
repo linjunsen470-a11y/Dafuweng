@@ -1,6 +1,11 @@
 import { NewsUI } from './NewsUI.js';
 import { describeCharacterReactions } from '../game/CharacterReactions.js';
 import { getGodRule } from '../game/GodRules.js';
+import { EconomicReportUI } from './EconomicReportUI.js';
+import { ChanceRevealUI } from './ChanceRevealUI.js';
+import { getArrivalBrief, getTurnBrief } from '../game/TurnPresentationRules.js';
+import { createCardPresentation } from '../game/CardPresentation.js';
+import { cardManager } from '../game/CardManager.js';
 
 const money = value => `$${Math.abs(Number(value) || 0).toLocaleString()}`;
 
@@ -15,7 +20,7 @@ export function describePresentationEvent(event, state) {
   const tile = event.tileId === undefined ? null : state.getTile?.(event.tileId);
   const cues = [];
   const cash = (playerId, amount, label) => cues.push({ kind: 'cash', playerId, amount, label });
-  const toast = (icon, title, detail, tone = 'info') => cues.push({ kind: 'toast', icon, title, detail, tone });
+  const toast = (icon, title, detail, tone = 'info', fullDetail = false) => cues.push({ kind: 'toast', icon, title, detail, tone, fullDetail });
 
   switch (event.type) {
     case 'TURN_CHANGED': {
@@ -113,6 +118,8 @@ export function describePresentationEvent(event, state) {
       toast('🚔', '被送入监狱', `${current?.name || '玩家'} 暂停 ${event.duration} 回合`, 'danger');
       break;
     case 'HOSPITALIZED':
+      toast('🏥', '住院疗养', `${current?.name || '玩家'} 暂停 ${current?.hospitalTurns ?? event.duration ?? 1} 次行动，之后从当前格继续`, 'danger', true);
+      break;
     case 'MINE_EXPLODED':
       toast(event.type === 'MINE_EXPLODED' ? '💣' : '🏥', event.type === 'MINE_EXPLODED' ? '地雷爆炸' : '住院疗养', `${current?.name || '玩家'} 暂时无法行动`, 'danger');
       break;
@@ -122,12 +129,31 @@ export function describePresentationEvent(event, state) {
     case 'PLAYER_BANKRUPT':
       toast('📉', '玩家破产', `${current?.name || '玩家'} 退出财富竞逐`, 'danger');
       break;
+    case 'COMPANY_VISIT': {
+      const company = state.companyManager?.get(event.companyId);
+      const chairman = event.chairmanId === current?.id;
+      if (event.fee > 0) cash(current?.id, -event.fee, '公司服务费');
+      toast(company?.icon || '🏢', chairman ? '董事长视察' : '公司服务费',
+        `${current?.name || '玩家'} · ${company?.name || '公司'} · ${chairman ? '免服务费' : `支付 ${money(event.fee)}，计入公司营收`}；分红在周期结算`, chairman ? 'gold' : 'accent', true);
+      break;
+    }
     case 'LOTTERY_BOUGHT':
-      toast('🎰', '乐透券购买成功', `${event.number} 号 · 奖池 ${money(event.pot)}`, 'accent');
+      toast('🎰', '乐透券购买成功', `${(event.numbers || [event.number]).join('、')} 号 · 奖池 ${money(event.pot)}`, 'accent');
+      break;
+    case 'BANK_TRANSFERRED':
+      toast('🏦', event.direction === 'DEPOSIT' ? '定期存款已入账' : event.direction === 'WITHDRAW' ? '可用现金已到账' : '银行账户已更新', event.projectedInterest === undefined ? `${money(event.amount)} 账户变动` : `${money(event.amount)} · 下期利息 ${money(event.projectedInterest)}`, 'accent');
+      break;
+    case 'RESEARCH_STARTED':
+      toast(event.itemIcon || '🧪', `研发启动 · ${event.itemName || event.task?.itemId}`, `${event.discipline || '科技项目'} · ${event.task?.roundsRemaining || 1} 轮后交付${event.accelerated ? ' · 董事长加速' : ''}`, 'accent');
+      break;
+    case 'RESEARCH_COMPLETED':
+      toast(event.success ? event.itemIcon || '💡' : '⚠️', event.success ? '研发成果已交付' : '研发成果交付失败', event.success ? `${event.itemName || event.itemId} 已进入科技道具栏` : `${event.itemName || event.itemId} 未能交付 · 科技道具栏已满`, event.success ? 'success' : 'danger');
+      break;
+    case 'MECHANISM_TRIGGERED':
+      toast(event.routeIcon || '⚙️', `路网重构 · ${event.routeName || '路线方案'}`, `${event.branchCount || 0} 处岔路已同步 · 覆盖 ${event.nodeCount || 0} 个节点`, 'accent');
       break;
     case 'MINIGAME_COMPLETED':
-      cash(current?.id, event.reward, '小游戏奖励');
-      toast('🎮', '小游戏完成', `得分 ${event.score} · 奖励 ${money(event.reward)}`, 'success');
+      toast(event.rankIcon || '🎮', `${event.rankLabel || '小游戏完成'}`, `${event.rank || '挑战'}级 · ${event.score} 分 · 奖励 ${event.reward || 0} 点券`, 'success');
       break;
     case 'CARD_USED':
       toast('🃏', '策略卡发动', state.getCardById?.(event.cardId)?.name || event.cardId, 'gold');
@@ -149,7 +175,7 @@ export function describePresentationEvent(event, state) {
       toast('⌛', `委托到期 · ${event.title}`, `扣除 ${event.penaltyPoints || 0} PTS`, 'danger');
       break;
     case 'MAGIC_CAST':
-      toast('🔮', '魔法屋效果发动', event.effectId || event.magicId || '命运发生改变', 'accent');
+      toast('🔮', `魔法发动 · ${event.effectLabel || event.effectId || event.magicId || '命运改写'}`, event.targetNames?.length ? `${event.targetNames.join('、')} · ${event.outcome || '效果已生效'}` : '命运发生改变', 'accent');
       break;
     case 'COMMERCIAL_FACILITY_VISITED':
       toast(event.icon || '🏙️', event.title || '商业设施服务', event.detail || `${current?.name || '玩家'} 完成设施互动`, event.emotion === 'loss' ? 'danger' : 'gold');
@@ -160,19 +186,65 @@ export function describePresentationEvent(event, state) {
   return cues;
 }
 
+export function describeImpactEvent(event, state) {
+  const current = playerFor(state, event.playerId);
+  const tile = event.tileId === undefined ? null : state.getTile?.(event.tileId);
+  const card = event.type === 'CARD_USED'
+    ? (state.getCardById?.(event.cardId) || cardManager.getCardById(event.cardId))
+    : null;
+  const cardView = card ? createCardPresentation(card) : null;
+  const impacts = {
+    PROPERTY_PURCHASED: { tone: 'success', eyebrow: 'CITY EXPANSION', icon: '🏙️', title: '版图扩张', detail: tile?.name || '新地产入手' },
+    PROPERTY_UPGRADED: { tone: 'gold', eyebrow: 'PROPERTY LEVEL UP', icon: '🏗️', title: `建筑升至 LV ${event.level}`, detail: tile?.name || '地产完成升级' },
+    RENT_PAID: { tone: 'danger', eyebrow: 'TOLL SETTLEMENT', icon: '💸', title: '租金交锋', detail: `${current?.name || '玩家'} 支付 ${money(event.amount)}` },
+    CARD_USED: {
+      tone: 'accent', eyebrow: `STRATEGY CARD · ${cardView?.rarity.label || '战术'}`,
+      icon: cardView?.icon || '🃏', title: cardView?.name || '策略发动',
+      detail: `${current?.name || '玩家'} · ${cardView?.category.label || '策略'}效果生效`,
+      artClass: cardView?.artClass || 'card-art-support', serial: cardView?.serial || 'FE-00'
+    },
+    MAGIC_CAST: { tone: 'accent', eyebrow: 'FORTUNE SHIFT', icon: '🔮', title: event.effectLabel || '命运改写', detail: event.targetNames?.length ? `${event.targetNames.join('、')} · ${event.outcome || '效果生效'}` : event.effectId || event.magicId || '魔法效果生效' },
+    QUEST_COMPLETED: { tone: 'success', eyebrow: 'MISSION COMPLETE', icon: '🏆', title: '城市委托完成', detail: event.title || '奖励已经到账' },
+    MINIGAME_COMPLETED: { tone: 'gold', eyebrow: 'CHALLENGE CLEAR', icon: event.rankIcon || '🎮', title: `${event.rank || ''}级 ${event.rankLabel || '小游戏通关'}`.trim(), detail: `${event.score || 0} 分 · ${event.reward || 0} 点券` },
+    PLAYER_BANKRUPT: { tone: 'critical', eyebrow: 'BANKRUPTCY', icon: '📉', title: '玩家破产', detail: `${current?.name || '玩家'} 退出财富竞逐` }
+  };
+  return impacts[event.type] || null;
+}
+
 export class PresentationUI {
-  constructor() {
+  constructor(audioManager = null) {
+    this.audioManager = audioManager;
     this.bannerHost = document.getElementById('presentation-banner-host');
     this.diceHost = document.getElementById('presentation-dice-host');
+    this.moveHost = document.getElementById('presentation-move-host');
+    this.arrivalHost = document.getElementById('presentation-arrival-host');
+    this.impactHost = document.getElementById('presentation-impact-host');
     this.toastStack = document.getElementById('presentation-toast-stack');
     this.cashHost = document.getElementById('presentation-cash-host');
     this.reactionHost = document.getElementById('presentation-reaction-host');
+    // Feedback must clear the actual dock, including wrapped turn text and phone layouts.
+    const dock = document.querySelector('.control-panel');
+    const layer = document.getElementById('presentation-layer');
+    if (dock && layer && window.ResizeObserver) {
+      const updateDockClearance = () => {
+        const height = dock.getBoundingClientRect().height;
+        const bottom = parseFloat(getComputedStyle(dock).bottom) || 0;
+        layer.style.setProperty('--action-dock-clearance', `${Math.ceil(height + bottom + 24)}px`);
+      };
+      this.dockObserver = new ResizeObserver(updateDockClearance);
+      this.dockObserver.observe(dock);
+      window.addEventListener('resize', updateDockClearance);
+      updateDockClearance();
+    }
     this.bannerToken = 0;
+    this.impactToken = 0;
     this.turnTimer = null;
     this.reactionQueue = [];
     this.reactionActive = false;
     this.reactionTimer = null;
     this.newsUI = new NewsUI();
+    this.economicReportUI = new EconomicReportUI(audioManager);
+    this.chanceRevealUI = new ChanceRevealUI(audioManager);
   }
 
   isReducedMotion() {
@@ -198,7 +270,7 @@ export class PresentationUI {
     return portrait;
   }
 
-  async showTurn(player, round = 1) {
+  async showTurn(player, round = 1, state = null) {
     if (!this.bannerHost || !player) return;
     const token = ++this.bannerToken;
     this.bannerHost.replaceChildren();
@@ -215,10 +287,24 @@ export class PresentationUI {
     const detail = document.createElement('span');
     detail.textContent = player.skillName ? `⚡ ${player.skillName}` : '准备行动';
     copy.append(eyebrow, title, detail);
+    if (state) {
+      const brief = getTurnBrief(state, player);
+      const metrics = document.createElement('div');
+      metrics.className = 'presentation-turn-metrics';
+      metrics.innerHTML = `<span><small>排名</small><b>${brief.rank}<em>/${brief.activeCount}</em></b></span><span><small>总资产</small><b>${brief.netWorthLabel}</b></span><span><small>地产</small><b>${brief.propertyCount}<em>处</em></b></span>`;
+      const objective = document.createElement('div');
+      objective.className = 'presentation-turn-objective';
+      objective.innerHTML = `<small>本轮建议</small><strong>${brief.objective}</strong>${brief.statuses.map(status => `<i class="${status.tone}">${status.icon} ${status.label}</i>`).join('')}`;
+      copy.append(metrics, objective);
+    }
     banner.appendChild(copy);
     this.bannerHost.appendChild(banner);
     void banner.offsetWidth;
     banner.classList.add('is-visible');
+    // Let the first painted frame survive a slow WebGL initialization before
+    // starting the reading interval. Hidden tabs resume with a readable banner.
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (token !== this.bannerToken || !banner.isConnected) return;
     const duration = 3000;
     await new Promise(resolve => setTimeout(resolve, duration));
     if (token !== this.bannerToken) return;
@@ -226,11 +312,11 @@ export class PresentationUI {
     setTimeout(() => banner.remove(), this.isReducedMotion() ? 0 : 260);
   }
 
-  scheduleTurn(player, round = 1, delay = 160) {
+  scheduleTurn(player, round = 1, delay = 160, state = null) {
     if (this.turnTimer) clearTimeout(this.turnTimer);
     this.turnTimer = setTimeout(() => {
       this.turnTimer = null;
-      this.showTurn(player, round);
+      this.showTurn(player, round, state);
     }, delay);
   }
 
@@ -259,6 +345,10 @@ export class PresentationUI {
     this.diceHost.appendChild(result);
     void result.offsetWidth;
     result.classList.add('is-visible');
+    // Slow WebGL frames can otherwise consume the entire result interval while
+    // the CSS transition is still at opacity zero.
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (!result.isConnected) return;
     const duration = this.isReducedMotion() ? 900 : Math.max(650, Math.round(1050 / Math.max(0.5, speed)));
     await new Promise(resolve => setTimeout(resolve, duration));
     result.classList.remove('is-visible');
@@ -268,7 +358,7 @@ export class PresentationUI {
   showToast(cue) {
     if (!this.toastStack) return;
     const toast = document.createElement('div');
-    toast.className = `presentation-toast tone-${cue.tone || 'info'}`;
+    toast.className = `presentation-toast tone-${cue.tone || 'info'}${cue.fullDetail ? ' has-full-detail' : ''}`;
     const icon = document.createElement('span');
     icon.className = 'presentation-toast-icon';
     icon.textContent = cue.icon || '◆';
@@ -283,11 +373,77 @@ export class PresentationUI {
     void toast.offsetWidth;
     toast.classList.add('is-visible');
     while (this.toastStack.children.length > 4) this.toastStack.lastElementChild?.remove();
-    const duration = 2600;
+    const duration = cue.fullDetail ? 4200 : 2600;
     setTimeout(() => {
       toast.classList.remove('is-visible');
       setTimeout(() => toast.remove(), this.isReducedMotion() ? 0 : 260);
     }, duration);
+  }
+
+  showMoveProgress({ player, current, total, tile }) {
+    if (!this.moveHost || !player) return;
+    let panel = this.moveHost.querySelector('.presentation-move-progress');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.className = 'presentation-move-progress';
+      panel.innerHTML = '<span class="move-progress-label">MOVE</span><strong></strong><div class="move-progress-track"><i></i></div><small></small>';
+      this.moveHost.replaceChildren(panel);
+      void panel.offsetWidth;
+      panel.classList.add('is-visible');
+    }
+    panel.style.setProperty('--player-color', player.color || '#67e8f9');
+    panel.querySelector('strong').textContent = `${current} / ${total}`;
+    panel.querySelector('i').style.width = `${Math.min(100, Math.max(0, current / Math.max(1, total) * 100))}%`;
+    panel.querySelector('small').textContent = tile?.name ? `途经 · ${tile.name}` : `${player.name} 正在移动`;
+  }
+
+  endMove() {
+    const panel = this.moveHost?.querySelector('.presentation-move-progress');
+    if (!panel) return;
+    panel.classList.add('is-complete');
+    setTimeout(() => {
+      panel.classList.remove('is-visible');
+      setTimeout(() => panel.remove(), this.isReducedMotion() ? 0 : 220);
+    }, this.isReducedMotion() ? 80 : 420);
+  }
+
+  async showArrival({ state, player, tileId, landing, speed = 1 }) {
+    if (!this.arrivalHost || !state || !player) return;
+    this.arrivalHost.replaceChildren();
+    const cue = getArrivalBrief(state, player, tileId, landing);
+    const card = document.createElement('article');
+    card.className = `presentation-arrival tone-${cue.tone}`;
+    card.style.setProperty('--player-color', player.color || '#67e8f9');
+    card.innerHTML = `<div class="presentation-arrival-scan"></div><span class="presentation-arrival-icon">${cue.icon}</span><div class="presentation-arrival-copy"><small>${cue.eyebrow}</small><strong>${cue.title}</strong><span>${cue.tileName} · ${cue.detail}</span></div><b>${cue.badge}</b>`;
+    this.arrivalHost.appendChild(card);
+    void card.offsetWidth;
+    card.classList.add('is-visible');
+    this.audioManager?.playSFX?.(cue.tone === 'danger' ? 'danger' : cue.tone === 'opportunity' ? 'confirm' : 'turn');
+    const duration = this.isReducedMotion() ? 360 : Math.max(560, Math.round(900 / Math.max(.65, speed)));
+    await new Promise(resolve => setTimeout(resolve, duration));
+    card.classList.remove('is-visible');
+    await new Promise(resolve => setTimeout(resolve, this.isReducedMotion() ? 0 : 190));
+    card.remove();
+  }
+
+  async showImpact(cue) {
+    if (!this.impactHost || !cue) return;
+    const token = ++this.impactToken;
+    this.impactHost.replaceChildren();
+    const impact = document.createElement('div');
+    impact.className = `presentation-impact tone-${cue.tone || 'accent'} ${cue.artClass || ''}`;
+    impact.innerHTML = `${cue.artClass ? `<div class="presentation-impact-card"><span>${cue.icon || '🃏'}</span><i>${cue.serial || 'FE-00'}</i></div>` : ''}<div class="presentation-impact-lines"></div><span class="presentation-impact-eyebrow"></span><div class="presentation-impact-title"><b></b><strong></strong></div><small></small>`;
+    impact.querySelector('.presentation-impact-eyebrow').textContent = cue.eyebrow || 'CITY EVENT';
+    impact.querySelector('.presentation-impact-title b').textContent = cue.icon || '◆';
+    impact.querySelector('.presentation-impact-title strong').textContent = cue.title || '关键事件';
+    impact.querySelector('small').textContent = cue.detail || '';
+    this.impactHost.appendChild(impact);
+    void impact.offsetWidth;
+    impact.classList.add('is-visible');
+    await new Promise(resolve => setTimeout(resolve, this.isReducedMotion() ? 500 : cue.artClass ? 2300 : 1050));
+    if (token !== this.impactToken) return;
+    impact.classList.remove('is-visible');
+    setTimeout(() => impact.remove(), this.isReducedMotion() ? 0 : 260);
   }
 
   showCash(cue) {
@@ -354,30 +510,43 @@ export class PresentationUI {
 
   presentDomainEvent(event, state) {
     if (event.type === 'NEWS_FLASH') {
-      this.newsUI.show(event.news);
+      if (!this.economicReportUI.appendNews(event.news)) this.newsUI.show(event.news);
       return;
     }
+    if (event.type === 'ECONOMIC_CYCLE_ENDED' && event.report) {
+      this.economicReportUI.show(event.report);
+    }
+    if (event.chance) this.chanceRevealUI.show({ event, player: playerFor(state, event.playerId) });
     describePresentationEvent(event, state).forEach(cue => {
       if (cue.kind === 'toast') this.showToast(cue);
       else if (cue.kind === 'cash') this.showCash(cue);
-      else if (cue.kind === 'turn') this.scheduleTurn(playerFor(state, cue.playerId), cue.round);
+      else if (cue.kind === 'turn') this.scheduleTurn(playerFor(state, cue.playerId), cue.round, 160, state);
     });
+    const impact = describeImpactEvent(event, state);
+    if (impact) void this.showImpact(impact);
     describeCharacterReactions(event, state).forEach(cue => this.showReaction(cue, state));
   }
 
   clear() {
     this.bannerToken++;
+    this.impactToken++;
     if (this.turnTimer) clearTimeout(this.turnTimer);
     this.turnTimer = null;
     if (this.reactionTimer) clearTimeout(this.reactionTimer);
     this.reactionTimer = null;
     this.reactionQueue = [];
     this.reactionActive = false;
-    [this.bannerHost, this.diceHost, this.toastStack, this.cashHost, this.reactionHost].forEach(host => host?.replaceChildren());
+    [this.bannerHost, this.diceHost, this.moveHost, this.arrivalHost, this.impactHost, this.toastStack, this.cashHost, this.reactionHost].forEach(host => host?.replaceChildren());
     this.newsUI.close();
+    this.economicReportUI.close();
+    this.chanceRevealUI.close();
   }
 
   showNewsHistory(history) {
     this.newsUI.showHistory(history);
+  }
+
+  showEconomicReport(report, newsHistory = []) {
+    this.economicReportUI.show(report, newsHistory);
   }
 }

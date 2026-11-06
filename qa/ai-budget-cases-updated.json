@@ -1,0 +1,162 @@
+[
+  {
+    "mapId": "shanhai-coast",
+    "kind": "PURCHASE",
+    "beforeCash": 3500,
+    "cost": 1200,
+    "rent": 2760,
+    "nextRentCovered": true,
+    "afterCash": 3500,
+    "property": {
+      "owner": null,
+      "level": 0,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "陶宁 暂缓购地：前方可达2号参考租金 ¥2760，按留现 ¥3760 判断；可达不等于必经，不预知下次骰子。",
+        "type": "info",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      }
+    ]
+  },
+  {
+    "mapId": "shanhai-coast",
+    "kind": "UPGRADE",
+    "beforeCash": 2800,
+    "cost": 600,
+    "rent": 2760,
+    "nextRentCovered": true,
+    "afterCash": 2800,
+    "property": {
+      "owner": 3,
+      "level": 0,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "陶宁 暂缓升级：前方可达2号参考租金 ¥2760，按留现 ¥3760 判断；可达不等于必经，不预知下次骰子。",
+        "type": "info",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      }
+    ]
+  },
+  {
+    "mapId": "shanhai-highland",
+    "kind": "PURCHASE",
+    "beforeCash": 3500,
+    "cost": 1000,
+    "rent": 2520,
+    "nextRentCovered": true,
+    "afterCash": 3500,
+    "property": {
+      "owner": null,
+      "level": 0,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "陶宁 暂缓购地：前方可达2号参考租金 ¥2520，按留现 ¥3520 判断；可达不等于必经，不预知下次骰子。",
+        "type": "info",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      }
+    ]
+  },
+  {
+    "mapId": "shanhai-highland",
+    "kind": "UPGRADE",
+    "beforeCash": 2800,
+    "cost": 500,
+    "rent": 2520,
+    "nextRentCovered": true,
+    "afterCash": 2800,
+    "property": {
+      "owner": 3,
+      "level": 0,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "陶宁 暂缓升级：前方可达2号参考租金 ¥2520，按留现 ¥3520 判断；可达不等于必经，不预知下次骰子。",
+        "type": "info",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:35 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:35 AM"
+      }
+    ]
+  }
+]

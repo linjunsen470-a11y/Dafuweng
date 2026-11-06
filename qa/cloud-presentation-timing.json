@@ -1,0 +1,49 @@
+{
+  "check": "actual legacy dice result has a visibly opaque browser frame at 2x speed",
+  "success": true,
+  "software_renderer": "Chromium SwiftShader",
+  "frames": [
+    {
+      "kind": "mutation",
+      "time": 1687,
+      "cls": "presentation-dice-result is-visible",
+      "opacity": "0",
+      "text": "⚅前进6步"
+    },
+    {
+      "kind": "frame",
+      "time": 1932,
+      "cls": "presentation-dice-result is-visible",
+      "opacity": "0",
+      "text": "⚅前进6步"
+    },
+    {
+      "kind": "frame",
+      "time": 2363,
+      "cls": "presentation-dice-result is-visible",
+      "opacity": "0",
+      "text": "⚅前进6步"
+    },
+    {
+      "kind": "frame",
+      "time": 2800,
+      "cls": "presentation-dice-result is-visible",
+      "opacity": "1",
+      "text": "⚅前进6步"
+    },
+    {
+      "kind": "mutation",
+      "time": 3018,
+      "cls": "presentation-dice-result",
+      "opacity": "1",
+      "text": "⚅前进6步"
+    },
+    {
+      "kind": "frame",
+      "time": 3170,
+      "cls": "presentation-dice-result",
+      "opacity": "1",
+      "text": "⚅前进6步"
+    }
+  ]
+}

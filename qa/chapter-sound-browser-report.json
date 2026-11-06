@@ -1,0 +1,78 @@
+{
+  "kind": "real browser audio output and preferences",
+  "checks": [
+    {
+      "map": "coast",
+      "music": {
+        "rate": 44100,
+        "rms": 0.02682406836393377,
+        "peak": 0.13265524804592133
+      },
+      "loopDuration": 43.640375,
+      "loopOutput": {
+        "rate": 44100,
+        "rms": 0.0313948377818604,
+        "peak": 0.09805001318454742
+      },
+      "mute": {
+        "rate": 44100,
+        "rms": 0,
+        "peak": 0
+      },
+      "tones": {
+        "dice": 0.15248948335647583,
+        "purchase": 0.2798742651939392,
+        "event-success": 0.2618427872657776,
+        "event-fail": 0.15543337166309357
+      },
+      "silence": {
+        "rate": 44100,
+        "rms": 0,
+        "peak": 0
+      },
+      "gameplay": "actual remote die, purchase, AI turn and chosen event; reload preserves game and muted audio"
+    },
+    {
+      "map": "highland",
+      "music": {
+        "rate": 44100,
+        "rms": 0.02615652363394023,
+        "peak": 0.1063632145524025
+      },
+      "loopDuration": 37.89875,
+      "loopOutput": {
+        "rate": 44100,
+        "rms": 0.026849413968197403,
+        "peak": 0.07932968437671661
+      },
+      "mute": {
+        "rate": 44100,
+        "rms": 0,
+        "peak": 0
+      },
+      "tones": {
+        "dice": 0.15248948335647583,
+        "purchase": 0.2798742651939392,
+        "event-success": 0.2618427872657776,
+        "event-fail": 0.15543337166309357
+      },
+      "silence": {
+        "rate": 44100,
+        "rms": 0,
+        "peak": 0
+      },
+      "gameplay": "actual remote die, purchase, AI turn and chosen event; reload preserves game and muted audio"
+    }
+  ],
+  "recordings": [
+    "qa/chapter-sound-coast-playback.wav",
+    "qa/chapter-sound-dice-playback.wav",
+    "qa/chapter-sound-purchase-playback.wav",
+    "qa/chapter-sound-event-success-playback.wav",
+    "qa/chapter-sound-event-fail-playback.wav",
+    "qa/chapter-sound-highland-playback.wav"
+  ],
+  "errors": [],
+  "subjectiveListening": "Not completed: this environment has no available listening endpoint. Rendered PCM checks are not a listening verdict.",
+  "success": true
+}

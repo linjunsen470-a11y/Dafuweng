@@ -1,0 +1,32 @@
+{
+  "kind": "three-player new games, two AI turns, third-seat rent, AI resume and finals",
+  "checks": [
+    {
+      "map": "coast",
+      "newGame": "Three distinct models/roles; one human and two AIs complete their turns before round 2; separate AI recaps; third seat buys property and receives actual human rent; reload and card targeting retain all three."
+    },
+    {
+      "map": "highland",
+      "newGame": "Three distinct models/roles; one human and two AIs complete their turns before round 2; separate AI recaps; third seat buys property and receives actual human rent; reload and card targeting retain all three."
+    },
+    {
+      "resume": "Saved second-AI turn executes once, first AI cash unchanged, returns to human in round 2."
+    },
+    {
+      "map": "coast",
+      "final": "Normal simulation to round 16, real final human and AI turns, all three ranked; result reload and same-cast three-player replay succeed."
+    },
+    {
+      "twoPlayer": "Return to welcome retains three-player choice; switch to two players starts original mode and completes human + one AI turn."
+    },
+    {
+      "map": "highland",
+      "final": "Normal simulation to round 16, real final human and AI turns, all three ranked; result reload and same-cast three-player replay succeed."
+    },
+    {
+      "bankruptcy": "Declared round-2 debt fixture: real human rent landing liquidates owned property, all-pass auction returns it to market; continue runs both surviving AIs to final ranking with bankrupt human last."
+    }
+  ],
+  "errors": [],
+  "success": true
+}

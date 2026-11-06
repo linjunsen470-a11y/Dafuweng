@@ -1,3 +1,4 @@
+import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
 import { Scene3D } from './engine/Scene3D.js';
 import { BoardBuilder } from './engine/BoardBuilder.js';
@@ -25,6 +26,39 @@ import { MinimapUI } from './ui/MinimapUI.js';
 import { PresentationUI } from './ui/PresentationUI.js';
 import { AuctionUI } from './ui/AuctionUI.js';
 import { DebtUI } from './ui/DebtUI.js';
+import { MagicHouseUI } from './ui/MagicHouseUI.js';
+import { LotteryUI } from './ui/LotteryUI.js';
+import { chooseAILotteryNumbers } from './game/LotteryRules.js';
+import { BankUI } from './ui/BankUI.js';
+import { chooseAIBankTransfer } from './game/BankRules.js';
+import { ResearchLabUI } from './ui/ResearchLabUI.js';
+import { chooseAIResearchProject } from './game/ResearchRules.js';
+import { MechanismUI } from './ui/MechanismUI.js';
+import { chooseAIMechanismRoute } from './game/MechanismRules.js';
+import { RouteChoiceUI } from './ui/RouteChoiceUI.js';
+
+const SETUP_MAP_PRESENTATION = {
+  'grand-bay': {
+    icon: '🌊', name: '山海都市岛', description: '穿越蓝湾、榕城、星河与云顶，争夺旗舰群岛的财富王冠。',
+    stats: [['120', '格棋盘'], ['4', '大区域'], ['旗舰', '难度']]
+  },
+  'fortune-crossroads': {
+    icon: '🍀', name: '福星岔路岛', description: '在多条财富捷径之间权衡风险，用路线选择扭转每一轮局势。',
+    stats: [['32', '格棋盘'], ['多线', '岔路'], ['经典', '难度']]
+  },
+  'city-loop': {
+    icon: '🌃', name: '霓虹财富城', description: '环绕不夜金融城高速周转，让地产连锁与股市波动彼此放大。',
+    stats: [['32', '格棋盘'], ['都市', '环线'], ['激进', '节奏']]
+  },
+  'island-fork': {
+    icon: '🏝️', name: '潮汐宝藏岛', description: '沿双岔海岸搜寻机会，在潮汐般变化的路线中抢占黄金地段。',
+    stats: [['32', '格棋盘'], ['双岔', '路线'], ['探索', '节奏']]
+  },
+  'taiwan-loop': {
+    icon: '🚂', name: '宝岛环岛图', description: '乘环岛路线串联城市与港湾，以稳定经营完成一场长线财富旅行。',
+    stats: [['32', '格棋盘'], ['环岛', '路线'], ['均衡', '难度']]
+  }
+};
 
 class GameController {
   constructor() {
@@ -45,9 +79,15 @@ class GameController {
     this.modeUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
-    this.presentationUI = new PresentationUI();
+    this.presentationUI = new PresentationUI(this.audioManager);
     this.auctionUI = new AuctionUI(this.audioManager);
     this.debtUI = new DebtUI(this.audioManager);
+    this.magicHouseUI = new MagicHouseUI(this.audioManager);
+    this.lotteryUI = new LotteryUI(this.audioManager);
+    this.bankUI = new BankUI(this.audioManager);
+    this.researchLabUI = new ResearchLabUI(this.audioManager);
+    this.mechanismUI = new MechanismUI(this.audioManager);
+    this.routeChoiceUI = new RouteChoiceUI(this.audioManager);
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
@@ -57,6 +97,7 @@ class GameController {
 
     this.renderSetupScreen();
     this.bindHUDButtons();
+    bindMobileHUD();
     this.bindKeyboardAndCanvasClick();
     setTimeout(() => {
       try {
@@ -120,7 +161,9 @@ class GameController {
   }
 
   applyDomainEvent(event) {
-    if (event.type === 'OBSTACLE_CHANGED') {
+    if (event.type === 'POSITIONS_SWAPPED') {
+      this.pawnManager.syncFromGameState(this.gameState);
+    } else if (event.type === 'OBSTACLE_CHANGED') {
       this.boardBuilder.setObstacleMesh(event.tileId, event.active);
     } else if (event.type === 'OBSTACLE_CONSUMED') {
       this.boardBuilder.setObstacleMesh(event.tileId, false);
@@ -144,8 +187,34 @@ class GameController {
       this.pawnManager.syncBoardGods(this.gameState.boardGods);
     } else if (event.type === 'PLAYER_BANKRUPT') {
       this.pawnManager.setBankrupt(event.playerId);
+    } else if (event.type === 'ECONOMIC_CYCLE_ENDED') {
+      document.getElementById('btn-economic-report')?.classList.remove('hidden');
     }
+    const eventSounds = {
+      TURN_CHANGED: 'turn', DEBT_REQUIRED: 'danger', PLAYER_BANKRUPT: 'bankrupt',
+      QUEST_COMPLETED: 'confirm', MINIGAME_COMPLETED: 'confirm', NEWS_FLASH: 'confirm'
+    };
+    if (eventSounds[event.type]) this.audioManager.playSFX(eventSounds[event.type]);
+    const adaptiveEvents = new Set([
+      'TURN_CHANGED', 'DEBT_REQUIRED', 'PLAYER_BANKRUPT', 'MINE_EXPLODED', 'HOSPITALIZED', 'JAILED',
+      'PROPERTY_PURCHASED', 'PROPERTY_UPGRADED', 'RENT_PAID', 'CARD_USED', 'MAGIC_CAST', 'MINIGAME_COMPLETED'
+    ]);
+    if (adaptiveEvents.has(event.type)) this.syncAdaptiveMusic(event.type === 'TURN_CHANGED' ? null : event.type);
     this.presentationUI.presentDomainEvent(event, this.gameState);
+  }
+
+  syncAdaptiveMusic(eventType = null) {
+    return this.audioManager.setMusicContext({
+      round: this.gameState.round,
+      maxRounds: this.gameState.maxRounds,
+      phase: this.gameState.phase,
+      gameMode: this.gameState.gameMode,
+      activePlayers: this.gameState.players.filter(player => !player.isBankrupt).length,
+      pendingDebt: Boolean(this.gameState.pendingDebt),
+      eventType,
+      weather: this.scene3D.weather,
+      timeOfDay: this.scene3D.timeOfDay
+    });
   }
 
   syncBoardAssets(force = false) {
@@ -220,6 +289,8 @@ class GameController {
           ? `url('${profile.avatarAtlas}')`
           : profile.avatarImg ? `url('${profile.avatarImg}')` : 'none';
         portrait.style.backgroundPosition = profile.avatarPosition || 'center';
+        portrait.style.backgroundSize = profile.avatarAtlas ? '400% 300%' : 'cover';
+        portrait.style.setProperty('--profile-color', profile.color);
         portrait.textContent = profile.avatarAtlas || profile.avatarImg ? '' : profile.avatar;
         portrait.setAttribute('aria-label', `${profile.name}角色肖像`);
         skill.textContent = `⚡ ${profile.skillName} · ${profile.skillDesc}`;
@@ -259,6 +330,25 @@ class GameController {
 
     document.getElementById('player-count').onchange = () => this.renderSetupScreen();
 
+    const mapSelect = document.getElementById('map-select');
+    const updateMapShowcase = () => {
+      const mapIds = Object.keys(SETUP_MAP_PRESENTATION);
+      const mapId = mapSelect?.value || mapIds[0];
+      const presentation = SETUP_MAP_PRESENTATION[mapId] || SETUP_MAP_PRESENTATION[mapIds[0]];
+      const icon = document.getElementById('setup-map-icon');
+      const name = document.getElementById('setup-map-name');
+      const description = document.getElementById('setup-map-description');
+      const index = document.getElementById('setup-map-index');
+      const stats = document.getElementById('setup-map-stats');
+      if (icon) icon.textContent = presentation.icon;
+      if (name) name.textContent = presentation.name;
+      if (description) description.textContent = presentation.description;
+      if (index) index.textContent = `${String(mapIds.indexOf(mapId) + 1).padStart(2, '0')} / ${String(mapIds.length).padStart(2, '0')}`;
+      if (stats) stats.innerHTML = presentation.stats.map(([value, label]) => `<span><b>${value}</b> ${label}</span>`).join('');
+    };
+    if (mapSelect) mapSelect.onchange = updateMapShowcase;
+    updateMapShowcase();
+
     const autoSave = this.gameEngine.saves.loadAuto();
     const manualSave = this.gameEngine.saves.loadManual();
     const autoButton = document.getElementById('load-auto-save-btn');
@@ -271,6 +361,9 @@ class GameController {
 
   startGame() {
     const setupScreen = document.getElementById('setup-screen');
+    if (setupScreen.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
     setupScreen.classList.remove('active');
     setupScreen.classList.add('hidden');
     setupScreen.setAttribute('aria-hidden', 'true');
@@ -306,14 +399,46 @@ class GameController {
       initialDeposit: Number(document.getElementById('initial-deposit').value || 0)
     });
     this.syncModeButton();
+    document.getElementById('btn-economic-report')?.classList.add('hidden');
     this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
     this.minimapUI.setMap(this.gameState.mapDefinition);
     this.pawnManager.createPlayerPawns(playerConfigs);
     this.pawnManager.syncBoardGods(this.gameState.boardGods);
     this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
+    this.syncAdaptiveMusic();
     this.uiRenderer.renderHUD();
-    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220);
+    if (this.gameState.mapDefinition.id === 'grand-bay') {
+      this.scene3D.showStreetView(this.boardBuilder.tilePositions[this.gameState.getCurrentPlayer().currentTile]);
+    }
+    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
 
+    this.checkAITurn();
+  }
+
+  restartMatch() {
+    const config = structuredClone(this.gameState.matchConfig);
+    if (!config?.playerConfigs?.length) return this.returnToMenu();
+    this.isProcessingAction = false;
+    this.presentationUI.clear();
+    document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
+    this.pawnManager.clearPawns();
+    this.gameState.setupGame(config.playerConfigs, config.initialCash, config.options);
+    this.syncModeButton();
+    document.getElementById('btn-economic-report')?.classList.add('hidden');
+    this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
+    this.minimapUI.setMap(this.gameState.mapDefinition);
+    this.pawnManager.createPlayerPawns(config.playerConfigs);
+    this.pawnManager.syncBoardGods(this.gameState.boardGods);
+    this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
+    this.syncAdaptiveMusic();
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('hud-layer').classList.remove('hidden');
+    this.uiRenderer.renderHUD();
+    if (this.gameState.mapDefinition.id === 'grand-bay') {
+      this.scene3D.showStreetView(this.boardBuilder.tilePositions[this.gameState.getCurrentPlayer().currentTile]);
+    }
+    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
     this.checkAITurn();
   }
 
@@ -333,6 +458,7 @@ class GameController {
     document.getElementById('btn-toggle-audio').onclick = () => {
       const muted = this.audioManager.toggleMute();
       document.getElementById('btn-toggle-audio').textContent = muted ? '🔇' : '🔊';
+      if (!muted) this.audioManager.playConfirm();
     };
 
     document.getElementById('btn-reset-view').onclick = () => {
@@ -360,6 +486,8 @@ class GameController {
       const button = document.getElementById('btn-weather');
       button.textContent = icon;
       button.title = `切换天气：${label}`;
+      this.audioManager.setAtmosphere({ weather, timeOfDay: this.scene3D.timeOfDay });
+      this.audioManager.playSFX(weather === 'STORM' ? 'danger' : 'confirm');
       this.gameState.addLog(`${icon} 天气切换为${label}。`, 'accent');
       this.uiRenderer.renderHUD();
     };
@@ -376,6 +504,8 @@ class GameController {
       button.textContent = icon;
       button.title = `切换时间：${label}`;
       this.boardBuilder.setNightMode(timeOfDay === 'NIGHT');
+      this.audioManager.setAtmosphere({ weather: this.scene3D.weather, timeOfDay });
+      this.audioManager.playConfirm();
       this.gameState.addLog(`${icon} 场景时间切换为${label}。`, 'accent');
       this.uiRenderer.renderHUD();
     };
@@ -392,6 +522,7 @@ class GameController {
     document.getElementById('btn-assets').onclick = async () => (await this.getAssetUI()).show();
     document.getElementById('btn-mode-status').onclick = async () => (await this.getModeUI()).show();
     document.getElementById('btn-news-history').onclick = () => this.presentationUI.showNewsHistory(this.gameState.newsHistory);
+    document.getElementById('btn-economic-report').onclick = () => this.presentationUI.showEconomicReport(this.gameState.economicCycle.lastReport, this.gameState.newsHistory);
     document.getElementById('btn-help').onclick = () => this.dialogUI.showHelp();
     document.getElementById('btn-market').onclick = () => this.showMarketBoard();
     document.getElementById('btn-pause-game').onclick = () => this.showPauseMenu();
@@ -581,6 +712,7 @@ class GameController {
     setupScreen.style.display = 'none';
     document.getElementById('hud-layer').classList.remove('hidden');
     this.syncModeButton();
+    document.getElementById('btn-economic-report')?.classList.toggle('hidden', !this.gameState.economicCycle.lastReport);
 
     const configs = this.gameState.players.map(player => ({
       name: player.name,
@@ -590,9 +722,13 @@ class GameController {
     this.pawnManager.createPlayerPawns(configs);
     this.pawnManager.syncFromGameState(this.gameState);
     this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
+    this.syncAdaptiveMusic();
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
-    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220);
+    if (this.gameState.mapDefinition.id === 'grand-bay') {
+      this.scene3D.showStreetView(this.boardBuilder.tilePositions[this.gameState.getCurrentPlayer().currentTile]);
+    }
+    this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
     this.checkAITurn();
   }
 
@@ -600,7 +736,8 @@ class GameController {
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' || e.code === 'Enter') {
         const activeEl = document.activeElement;
-        if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
+        if (activeEl?.closest('button, a, input, textarea, select, summary, [role="button"], [contenteditable="true"]')
+          || document.getElementById('hud-tools')?.classList.contains('is-open')) {
           return;
         }
         e.preventDefault();
@@ -612,6 +749,7 @@ class GameController {
     const mouse = new THREE.Vector2();
 
     window.addEventListener('pointerdown', (e) => {
+      if (e.target !== this.scene3D.renderer.domElement) return;
       if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
       const curPlayer = this.gameState.getCurrentPlayer();
       if (curPlayer.isAI) return;
@@ -637,7 +775,7 @@ class GameController {
     this.doRollDice();
   }
 
-  checkAITurn() {
+  checkAITurn({ reframeHuman = false } = {}) {
     if (this.gameState.phase === GamePhase.GAME_OVER) return;
 
     const curPlayer = this.gameState.getCurrentPlayer();
@@ -649,6 +787,11 @@ class GameController {
       }, Math.round(800 / this.actionSpeed));
     } else {
       this.isProcessingAction = false;
+      if (reframeHuman && this.gameState.mapId === 'grand-bay' && curPlayer && !curPlayer.isBankrupt
+        && this.gameState.phase === GamePhase.PRE_ROLL_ACTION) {
+        const position = this.boardBuilder.tilePositions[curPlayer.currentTile];
+        this.scene3D.showStreetView(position, this.actionSpeed <= 1 && !this.presentationUI.isReducedMotion());
+      }
       this.uiRenderer.renderHUD();
     }
   }
@@ -732,7 +875,8 @@ class GameController {
   }
 
   async doRollDice(specifiedDiceVal = null) {
-    if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
+    const specifiedRollReady = specifiedDiceVal !== null && this.gameState.phase === GamePhase.ROLLING;
+    if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL && !specifiedRollReady) return;
     this.isProcessingAction = true;
     const curPlayer = this.gameState.getCurrentPlayer();
     let diceVal = specifiedDiceVal;
@@ -783,6 +927,12 @@ class GameController {
     });
     if (!started.success) return;
 
+    const reducedMotion = document.documentElement.classList.contains('reduce-motion')
+      || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const pawnMesh = this.pawnManager.getPawnMesh(curPlayer.id);
+    if (pawnMesh && !reducedMotion) this.scene3D.followObject(pawnMesh);
+    let completedSteps = 0;
+
     while (this.gameState.pendingMove) {
       let result = this.gameEngine.execute({ type: 'ADVANCE_MOVE', playerId: curPlayer.id });
       if (result.type === 'ROUTE_CHOICE_REQUIRED') {
@@ -791,14 +941,12 @@ class GameController {
         const selected = curPlayer.isSleepwalkingThisTurn
           ? this.gameState.rng.pick(result.options)
           : curPlayer.isAI
-            ? AIPlayer.chooseRoute(curPlayer, result.options, this.gameState)
-          : await this.dialogUI.chooseTarget({
-              title: '前方出现岔路，请选择路线',
-              options: result.options.map(tileId => ({
-                id: tileId,
-                label: this.gameState.getTile(tileId).name,
-                description: this.gameState.getTile(tileId).desc || '继续前进'
-              }))
+            ? AIPlayer.chooseRoute(curPlayer, result.options, this.gameState, result.remainingSteps)
+          : await this.routeChoiceUI.choose({
+              player: curPlayer,
+              state: this.gameState,
+              options: result.options,
+              remainingSteps: result.remainingSteps
             });
         result = this.gameEngine.execute({
           type: 'ADVANCE_MOVE',
@@ -810,10 +958,20 @@ class GameController {
       }
       if (!result.success) break;
       await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, Math.round(220 / (this.actionSpeed || 1)));
-      const stepPosition = this.boardBuilder.tilePositions[result.tileId];
-      if (stepPosition) this.scene3D.focusOnPosition(stepPosition);
+      completedSteps++;
+      this.presentationUI.showMoveProgress({
+        player: curPlayer,
+        current: completedSteps,
+        total: steps,
+        tile: this.gameState.getTile(result.tileId)
+      });
       if (result.events.some(event => event.type === 'START_BONUS_GRANTED')) this.audioManager.playCoinSound();
     }
+
+    this.presentationUI.endMove();
+    this.scene3D.stopFollowing();
+    this.pawnManager.celebrateLanding(curPlayer.id, completedSteps >= 8 ? 1.35 : 1);
+    if (!reducedMotion) this.scene3D.shakeCamera(completedSteps >= 8 ? 0.42 : 0.24, 230);
 
     this.uiRenderer.renderHUD();
 
@@ -823,6 +981,9 @@ class GameController {
   async handleTileArrival(tileIndex) {
     const curPlayer = this.gameState.getCurrentPlayer();
     const landing = this.gameEngine.inspectLanding(curPlayer, tileIndex);
+    const landingPosition = this.boardBuilder.tilePositions[tileIndex];
+    if (landingPosition) this.scene3D.focusOnPosition(landingPosition, new THREE.Vector3(0, 9, 11));
+    await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
         const buildingType = landing.tile.type === TileType.BIG_PROPERTY ? AIPlayer.chooseCommercialBuilding(curPlayer, this.gameState) : null;
@@ -842,6 +1003,9 @@ class GameController {
         tileData: landing.tile,
         currentLevel: 0,
         player: curPlayer,
+        gameState: this.gameState,
+        buildingType,
+        quote: this.gameEngine.getPropertyActionCost(curPlayer, tileIndex, 'BUY'),
         onBuy: () => { this.buyLand(tileIndex, curPlayer, buildingType); this.finishTurn(); },
         onPass: () => this.finishTurn()
       });
@@ -855,21 +1019,19 @@ class GameController {
         tileData: landing.tile,
         currentLevel: landing.property.level,
         player: curPlayer,
+        gameState: this.gameState,
+        buildingType: landing.property.buildingType,
+        quote: this.gameEngine.getPropertyActionCost(curPlayer, tileIndex, 'UPGRADE'),
         onUpgrade: () => { this.upgradeLand(tileIndex, curPlayer); this.finishTurn(); },
         onPass: () => this.finishTurn()
       });
     }
     if (landing.kind === 'LAB') {
-      const options = landing.researchOptions.map(item => ({
-        id: item.id,
-        label: `${item.icon} ${item.name}`,
-        description: `研发 ${item.researchRounds || 1} 轮 · ${item.description}`
-      }));
       if (curPlayer.isAI) {
-        const item = options.at(-1);
+        const item = chooseAIResearchProject(this.gameState, curPlayer, tileIndex);
         if (item) this.gameEngine.execute({ type: 'START_RESEARCH', playerId: curPlayer.id, payload: { tileId: tileIndex, itemId: item.id } });
-      } else if (options.length) {
-        const itemId = await this.dialogUI.chooseTarget({ title: '研究所：选择研发项目', options });
+      } else {
+        const itemId = await this.researchLabUI.choose({ player: curPlayer, state: this.gameState, tileId: tileIndex });
         if (itemId !== null) this.gameEngine.execute({ type: 'START_RESEARCH', playerId: curPlayer.id, payload: { tileId: tileIndex, itemId } });
       }
       return this.finishTurn();
@@ -910,6 +1072,9 @@ class GameController {
     if (result.type === 'MAGIC_OFFER') {
       await this.handleMagicVisit(curPlayer, tileIndex, result);
     }
+    if (result.type === 'MECHANISM_OFFER') {
+      await this.handleMechanismVisit(curPlayer, tileIndex, result);
+    }
     if (result.type === 'MINIGAME_OFFER') {
       await this.handleMinigameVisit(curPlayer, tileIndex, result);
     }
@@ -942,42 +1107,26 @@ class GameController {
 
   async handleBankVisit(player, tileId) {
     if (player.isAI) {
-      const amount = Math.max(0, player.cash - 8000);
-      if (amount) this.gameEngine.execute({
+      const decision = chooseAIBankTransfer(this.gameState, player);
+      if (decision) this.gameEngine.execute({
         type: 'BANK_TRANSFER', playerId: player.id,
-        payload: { tileId, direction: 'DEPOSIT', amount }
+        payload: { tileId, ...decision }
       });
       return;
     }
-    const cash = player.cash;
-    const deposit = player.deposit || 0;
-    const options = [
-      { id: 'DEPOSIT:0.25', label: '存入 25% 现金', description: `$${Math.floor(cash * 0.25).toLocaleString()}` },
-      { id: 'DEPOSIT:0.5', label: '存入 50% 现金', description: `$${Math.floor(cash * 0.5).toLocaleString()}` },
-      { id: 'DEPOSIT:1', label: '存入全部现金', description: `$${cash.toLocaleString()}` },
-      { id: 'WITHDRAW:0.25', label: '取出 25% 存款', description: `$${Math.floor(deposit * 0.25).toLocaleString()}` },
-      { id: 'WITHDRAW:0.5', label: '取出 50% 存款', description: `$${Math.floor(deposit * 0.5).toLocaleString()}` },
-      { id: 'WITHDRAW:1', label: '取出全部存款', description: `$${deposit.toLocaleString()}` }
-    ];
-    const choice = await this.dialogUI.chooseTarget({ title: '银行：调整现金与存款', options });
-    if (choice === null) return;
-    const [direction, ratioText] = String(choice).split(':');
-    const ratio = Number(ratioText);
-    const amount = Math.floor((direction === 'DEPOSIT' ? cash : deposit) * ratio);
-    if (amount > 0) this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, direction, amount } });
+    const decision = await this.bankUI.choose({ player, state: this.gameState });
+    if (!decision) return;
+    this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, ...decision } });
     this.uiRenderer.renderHUD();
   }
 
   async handleLotteryVisit(player, tileId, offer) {
     if (player.cash < offer.ticketPrice) return;
-    const number = player.isAI
-      ? this.gameState.rng.int(1, 10)
-      : await this.dialogUI.chooseTarget({
-          title: `乐透奖池 $${offer.pot.toLocaleString()}：选择号码`,
-          options: Array.from({ length: 10 }, (_, index) => ({ id: index + 1, label: `${index + 1} 号`, description: `票价 $${offer.ticketPrice}` }))
-        });
-    if (number === null) return;
-    this.gameEngine.execute({ type: 'BUY_LOTTERY', playerId: player.id, payload: { tileId, number } });
+    const numbers = player.isAI
+      ? chooseAILotteryNumbers(this.gameState, player, offer.pot >= 5000 ? 2 : 1)
+      : await this.lotteryUI.choose({ player, state: this.gameState, offer });
+    if (!numbers?.length) return;
+    this.gameEngine.execute({ type: 'BUY_LOTTERY', playerId: player.id, payload: { tileId, numbers } });
     this.uiRenderer.renderHUD();
   }
 
@@ -986,13 +1135,20 @@ class GameController {
       const decision = AIPlayer.chooseMagic(player, this.gameState);
       this.gameEngine.execute({ type: 'RESOLVE_MAGIC', playerId: player.id, payload: { tileId, ...decision } });
     } else {
-      const conditionId = await this.dialogUI.chooseTarget({ title: '魔法屋：选择目标条件', options: offer.conditions });
-      if (conditionId === null) return;
-      const effectId = await this.dialogUI.chooseTarget({ title: '魔法屋：选择施法结果', options: offer.effects });
-      if (effectId === null) return;
-      this.gameEngine.execute({ type: 'RESOLVE_MAGIC', playerId: player.id, payload: { tileId, conditionId, effectId } });
+      const decision = await this.magicHouseUI.choose({ player, state: this.gameState, offer });
+      if (!decision) return;
+      this.gameEngine.execute({ type: 'RESOLVE_MAGIC', playerId: player.id, payload: { tileId, ...decision } });
     }
     this.syncBoardAssets(true);
+    this.uiRenderer.renderHUD();
+  }
+
+  async handleMechanismVisit(player, tileId, offer) {
+    const routeIndex = player.isAI
+      ? chooseAIMechanismRoute(this.gameState, player)?.routeIndex
+      : await this.mechanismUI.choose({ player, state: this.gameState, offer });
+    if (routeIndex === null || routeIndex === undefined) return;
+    this.gameEngine.execute({ type: 'SET_MECHANISM_ROUTE', playerId: player.id, payload: { tileId, routeIndex } });
     this.uiRenderer.renderHUD();
   }
 
@@ -1218,9 +1374,7 @@ class GameController {
     this.uiRenderer.renderHUD();
 
     if (this.gameState.checkWinCondition()) {
-      this.dialogUI.showVictory(this.gameState.winner, () => {
-        this.returnToMenu();
-      }, this.gameState);
+      this.dialogUI.showVictory(this.gameState.winner, () => this.restartMatch(), this.gameState, () => this.returnToMenu());
       return;
     }
 
@@ -1239,13 +1393,13 @@ class GameController {
       this.gameEngine.autoSave();
       this.uiRenderer.renderHUD();
       if (transition?.gameOver && this.gameState.winner) {
-        this.dialogUI.showVictory(this.gameState.winner, () => this.returnToMenu(), this.gameState);
+        this.dialogUI.showVictory(this.gameState.winner, () => this.restartMatch(), this.gameState, () => this.returnToMenu());
       } else {
         const nextPlayer = this.gameState.getCurrentPlayer();
         if (previousPlayer && nextPlayer && !previousPlayer.isAI && !nextPlayer.isAI && previousPlayer.id !== nextPlayer.id) {
           await this.dialogUI.showHotseatPass(nextPlayer);
         }
-        this.checkAITurn();
+        this.checkAITurn({ reframeHuman: true });
       }
     }, Math.round(800 / this.actionSpeed));
   }

@@ -1,0 +1,25 @@
+{
+  "kind": "midgame construction quotes, confirmation, save and AI feedback",
+  "checks": [
+    {
+      "mapId": "shanhai-coast",
+      "seed": 2027,
+      "round": 8,
+      "tileId": 3,
+      "cost": 900,
+      "netWorthDelta": -300,
+      "checks": "Production save of simulated midgame resumed; quote and Escape leave state intact; keyboard confirm charges once, updates building and blocks remote; reload preserves spent strategy slot; ordinary roll and real AI construction complete; other map save unchanged."
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 4093,
+      "round": 8,
+      "tileId": 3,
+      "cost": 300,
+      "netWorthDelta": 200,
+      "checks": "Production save of simulated midgame resumed; quote and Escape leave state intact; keyboard confirm charges once, updates building and blocks remote; reload preserves spent strategy slot; ordinary roll and real AI construction complete; other map save unchanged."
+    }
+  ],
+  "errors": [],
+  "success": true
+}

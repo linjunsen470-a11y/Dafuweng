@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { describePresentationEvent } from '../src/ui/PresentationUI.js';
+import { describeImpactEvent, describePresentationEvent } from '../src/ui/PresentationUI.js';
 
 function createState() {
   const players = [
@@ -17,6 +17,24 @@ function createState() {
 }
 
 describe('presentation event descriptions', () => {
+  it('promotes commercial milestone events into cinematic impacts', () => {
+    const state = createState();
+    expect(describeImpactEvent({ type: 'PROPERTY_PURCHASED', playerId: 0, tileId: 7 }, state))
+      .toMatchObject({ tone: 'success', eyebrow: 'CITY EXPANSION', title: '版图扩张' });
+    expect(describeImpactEvent({ type: 'RENT_PAID', playerId: 0, amount: 900 }, state))
+      .toMatchObject({ tone: 'danger', title: '租金交锋' });
+    expect(describeImpactEvent({ type: 'PLAYER_STEPPED', playerId: 0 }, state)).toBeNull();
+  });
+
+  it('resolves strategy card art from the production catalogue', () => {
+    const state = createState();
+    delete state.getCardById;
+    expect(describeImpactEvent({ type: 'CARD_USED', playerId: 0, cardId: 'REMOTE_DICE' }, state))
+      .toMatchObject({
+        icon: '🎯', title: '遥控骰子', artClass: 'card-art-movement', serial: 'FE-32'
+      });
+  });
+
   it('describes a property purchase as both spending and a success toast', () => {
     const cues = describePresentationEvent({ type: 'PROPERTY_PURCHASED', tileId: 7, cost: 1800 }, createState());
     expect(cues).toEqual([
@@ -41,6 +59,12 @@ describe('presentation event descriptions', () => {
       transition: { gameOver: false, currentPlayer: state.players[1] }
     }, state);
     expect(cues).toEqual([{ kind: 'turn', playerId: 1, round: 3 }]);
+  });
+
+  it('keeps the presentation layer contract for turn and arrival hosts', () => {
+    const state = createState();
+    const cues = describePresentationEvent({ type: 'TURN_CHANGED', transition: { gameOver: false, currentPlayer: state.players[1] } }, state);
+    expect(cues[0]).toMatchObject({ kind: 'turn', playerId: 1, round: 3 });
   });
 
   it('keeps per-step movement silent to avoid notification spam', () => {

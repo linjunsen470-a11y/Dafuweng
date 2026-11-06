@@ -1,0 +1,11 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+08:22:02 | INFO: Starting glTF 2.0 export
+08:22:02 | INFO: Extracting primitive: Cube.001
+08:22:02 | INFO: Primitives created: 6
+08:22:02 | INFO: Finished glTF 2.0 export in 0.03782343864440918 s
+
+Info: Saved "summit-yard.blend"
+{"asset": "summit-yard.glb", "generator": "scripts/art/create_summit_yard.py", "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.", "axes": "GLB Y-up, front +Z, origin ground center", "models": [{"prefab": "company_summit_yard", "triangles": 276, "size_xyz_blender": [3.799999952316284, 3.200000047683716, 3.3315744400024414]}]}
+Blender 4.3.2
+
+Blender quit

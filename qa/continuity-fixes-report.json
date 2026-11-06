@@ -1,0 +1,41 @@
+{
+  "checks": [
+    "Normal-motion desktop: actual last-AI turn returns to the human at tile 32 before rolling",
+    "Reduced-motion phone: actual last-AI turn returns to the human at tile 32 before rolling",
+    "Eight existing north old-city plots show the four original levels; clock card shop and rotated view render; snapshot data unchanged",
+    "Targeted mobile move 46→47 opens the real card shop and grants its existing visit supply; shop closes normally (no card purchase claim)"
+  ],
+  "errors": [],
+  "limits": [
+    "Targeted handoff and art fixtures derived from the actual walked saves, separate from the natural game trace.",
+    "Desktop and 390px Chromium software WebGL; not physical mobile."
+  ],
+  "desktopHandoff": {
+    "tile": 32,
+    "target": [
+      52.81211880975825,
+      0.28020125348530295,
+      -2.9545171301438513
+    ],
+    "distance": 3.184373287626087,
+    "followingAI": false,
+    "round": 9
+  },
+  "mobileHandoff": {
+    "tile": 32,
+    "target": [
+      53,
+      0.28,
+      -3
+    ],
+    "distance": 3.1622776601683795,
+    "followingAI": false,
+    "round": 9
+  },
+  "cardVisit": {
+    "tile": 47,
+    "points": 420,
+    "banner": "\n      ✨ 到店会员价已生效\n      到店获赠 60 PTS；本轮供应 8 张卡片与 4 件道具，下一轮自动更新。\n      ROUND SPECIAL\n    "
+  },
+  "success": true
+}

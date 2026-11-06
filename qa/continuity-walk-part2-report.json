@@ -1,0 +1,331 @@
+{
+  "actions": [
+    {
+      "round": 8,
+      "tile": 32,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 8,
+      "tile": 36,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "round": 8,
+      "tile": 37,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "round": 9,
+      "tile": 37,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 10,
+      "tile": 40,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 10,
+      "tile": 40,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 10,
+      "tile": 46,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 11,
+      "tile": 46,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 11,
+      "tile": 46,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 11,
+      "tile": 48,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 12,
+      "tile": 48,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 13,
+      "tile": 54,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 13,
+      "tile": 54,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 13,
+      "tile": 56,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 14,
+      "tile": 56,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 14,
+      "tile": 56,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 14,
+      "tile": 57,
+      "action": ".bank-confirm"
+    },
+    {
+      "round": 14,
+      "tile": 57,
+      "action": ".bank-confirm"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 15,
+      "tile": 57,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 16,
+      "tile": 59,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 16,
+      "tile": 60,
+      "action": "[data-route=\"61\"]"
+    },
+    {
+      "round": 16,
+      "tile": 60,
+      "action": "[data-route=\"61\"]",
+      "staleControl": "Node is detached from document"
+    },
+    {
+      "round": 16,
+      "tile": 61,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 17,
+      "tile": 61,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 17,
+      "tile": 61,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 17,
+      "tile": 63,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 18,
+      "tile": 63,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 18,
+      "tile": 63,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 18,
+      "tile": 68,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 19,
+      "tile": 68,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 20,
+      "tile": 70,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 20,
+      "tile": 70,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 21,
+      "tile": 72,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 22,
+      "tile": 72,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 22,
+      "tile": 75,
+      "action": "#btn-land-upgrade"
+    },
+    {
+      "round": 23,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 24,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".news-dismiss",
+      "staleControl": "Node is detached from document"
+    },
+    {
+      "round": 25,
+      "tile": 75,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 26,
+      "tile": 75,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 26,
+      "tile": 76,
+      "action": "#btn-land-pass"
+    },
+    {
+      "round": 27,
+      "tile": 76,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 27,
+      "tile": 76,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 27,
+      "tile": 79,
+      "action": ".mechanism-close"
+    }
+  ],
+  "errors": [],
+  "checkpoints": [
+    {
+      "region": "connector",
+      "round": 11,
+      "tile": 46
+    },
+    {
+      "region": "business",
+      "round": 17,
+      "tile": 61
+    },
+    {
+      "region": "other",
+      "round": 20,
+      "tile": 70
+    }
+  ],
+  "limits": [
+    "Started through the real setup UI with default four-player standard game; only the built-in 2x speed chosen. No forced dice, teleport, money, god or route-state edits.",
+    "Automated clicks on visible UI with conservative purchasing; browser software WebGL, no subjective audio acceptance."
+  ],
+  "resumed": "Exact pre-roll checkpoint at round 8 tile 32 after harness attempted a second click on a disappearing route button; no game state edits.",
+  "commands": [],
+  "failure": "TargetCloseError: Protocol error (Runtime.callFunctionOn): Target closed\n    at CallbackRegistry.clear (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/common/CallbackRegistry.js:82:36)\n    at CdpCDPSession.onClosed (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/CdpSession.js:121:25)\n    at Connection.onMessage (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/Connection.js:159:25)\n    at WebSocket.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/node/NodeWebSocketTransport.js:38:32)\n    at callListener (/workspace/dafuweng-cloud/node_modules/ws/lib/event-target.js:290:14)\n    at WebSocket.onMessage (/workspace/dafuweng-cloud/node_modules/ws/lib/event-target.js:209:9)\n    at WebSocket.emit (node:events:514:28)\n    at Receiver.receiverOnMessage (/workspace/dafuweng-cloud/node_modules/ws/lib/websocket.js:1239:20)\n    at Receiver.emit (node:events:514:28)\n    at Immediate.<anonymous> (/workspace/dafuweng-cloud/node_modules/ws/lib/receiver.js:638:16)"
+}

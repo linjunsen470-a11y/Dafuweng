@@ -9,9 +9,6 @@
   <meta name="theme-color" content="#0a1424">
   <title>3D 大富翁：富翁帝国 (Q版卡通版)</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/css/style.css">
 </head>
 <body>
@@ -21,13 +18,44 @@
 
   <!-- 游戏启动与设置界面 -->
   <div id="setup-screen" class="overlay-screen active">
-    <div class="glass-card setup-box">
+    <div class="setup-atmosphere" aria-hidden="true">
+      <span class="setup-sun-glow"></span>
+      <span class="setup-cloud setup-cloud-a"></span>
+      <span class="setup-cloud setup-cloud-b"></span>
+      <span class="setup-light-sweep"></span>
+    </div>
+
+    <section class="setup-title-stage" aria-labelledby="setup-game-title">
       <div class="logo-area">
-        <div class="game-badge">GRAND ISLAND EDITION</div>
-        <h1>富翁帝国 <span>3D</span></h1>
-        <p>踏上 120 格山海都市岛，在港湾、老城与云顶之间建立你的财富版图。</p>
+        <div class="game-badge"><span></span> GRAND ISLAND EDITION</div>
+        <h1 id="setup-game-title">富翁帝国 <span>3D</span></h1>
+        <p>踏上山海都市岛，在港湾、老城与云顶之间建立你的财富版图。</p>
         <div class="setup-feature-strip" aria-label="游戏特色">
           <span>🗺️ 120 格大地图</span><span>🏙️ 四大实景区域</span><span>🤖 智能对手</span><span>💾 随时存档</span>
+        </div>
+      </div>
+
+      <div class="setup-map-showcase" aria-live="polite">
+        <div class="setup-map-kicker"><span>FEATURED MAP</span><b id="setup-map-index">01 / 05</b></div>
+        <div class="setup-map-copy">
+          <span class="setup-map-icon" id="setup-map-icon" aria-hidden="true">🌊</span>
+          <div>
+            <h2 id="setup-map-name">山海都市岛</h2>
+            <p id="setup-map-description">穿越蓝湾、榕城、星河与云顶，争夺旗舰群岛的财富王冠。</p>
+          </div>
+        </div>
+        <div class="setup-map-stats" id="setup-map-stats">
+          <span><b>120</b> 格棋盘</span><span><b>4</b> 大区域</span><span><b>旗舰</b> 难度</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="glass-card setup-box">
+      <div class="setup-panel-heading">
+        <span>NEW GAME CONFIGURATION</span>
+        <div>
+          <h2>建立财富对局</h2>
+          <p>选择角色、规则与经济起点</p>
         </div>
       </div>
 
@@ -122,7 +150,8 @@
         <span class="ticker-history-hint" aria-hidden="true">›</span>
       </button>
 
-      <div class="top-actions">
+      <button type="button" id="btn-mobile-tools" class="mobile-tools-toggle" aria-controls="hud-tools" aria-expanded="false">地图 / 菜单</button>
+      <div class="top-actions" id="hud-tools">
         <div class="tool-cluster" aria-label="地图视角">
           <button id="btn-map-overview" class="icon-btn" title="全图总览" aria-label="全图总览">🗺️</button>
           <button id="btn-rotate-left" class="icon-btn" title="视角左转45度" aria-label="视角左转45度">↶</button>
@@ -137,6 +166,7 @@
         </div>
         <div class="tool-cluster" aria-label="游戏菜单">
           <button id="btn-mode-status" class="icon-btn" title="对局模式与目标" aria-label="对局模式与目标">🧭</button>
+          <button id="btn-economic-report" class="icon-btn hidden" title="查看上期周期财报" aria-label="查看上期周期财报">🧾</button>
           <button id="btn-market" class="icon-btn" title="玩家公告交易" aria-label="玩家公告交易">📋</button>
           <button id="btn-help" class="icon-btn" title="规则与教程" aria-label="规则与教程">❔</button>
           <button id="btn-save-game" class="icon-btn" title="手动存档" aria-label="手动存档">💾</button>
@@ -163,7 +193,7 @@
     </section>
 
     <!-- 左侧：玩家信息面板 -->
-    <aside class="left-panel">
+    <aside class="left-panel" tabindex="0" aria-label="玩家资产列表，可滚动查看">
       <div class="players-container" id="players-list">
         <!-- 玩家状态卡片动态渲染 -->
       </div>
@@ -221,6 +251,9 @@
   <div id="presentation-layer" class="presentation-layer" aria-live="polite" aria-atomic="false">
     <div id="presentation-banner-host" class="presentation-banner-host"></div>
     <div id="presentation-dice-host" class="presentation-dice-host"></div>
+    <div id="presentation-move-host" class="presentation-move-host"></div>
+    <div id="presentation-arrival-host" class="presentation-arrival-host"></div>
+    <div id="presentation-impact-host" class="presentation-impact-host"></div>
     <div id="presentation-toast-stack" class="presentation-toast-stack"></div>
     <div id="presentation-cash-host" class="presentation-cash-host"></div>
     <div id="presentation-reaction-host" class="presentation-reaction-host"></div>
@@ -228,16 +261,18 @@
 
   <!-- 地产买卖/升级交互弹窗 -->
   <div id="modal-land" class="modal hidden">
-    <div class="glass-card modal-box">
+    <div class="glass-card modal-box land-modal-box">
       <div class="modal-header">
-        <h2 id="land-modal-title">到达地产</h2>
+        <div><h2 id="land-modal-title">到达地产</h2><small id="land-modal-subtitle">区域投资评估</small></div>
         <button type="button" class="close-modal" id="land-modal-close" aria-label="关闭地产窗口">&times;</button>
       </div>
       <div class="land-details">
         <div class="land-preview" id="land-preview-box">
+          <div class="land-district-chip" id="land-district-chip">城市街区 0/3</div>
           <div class="land-building-art" id="land-building-art" aria-hidden="true"></div>
           <div class="land-level-badge" id="land-level-badge">LV 0 空地</div>
-          <div class="land-name" id="land-name">金金融街 1号</div>
+          <div class="land-name" id="land-name">黄金金融街 1号</div>
+          <p class="land-building-description" id="land-building-description">逐级建设可显著提高到访租金。</p>
         </div>
         <div class="land-stats">
           <div class="stat-row">
@@ -251,6 +286,24 @@
           <div class="stat-row">
             <span>升级后过路费:</span>
             <strong id="land-next-toll" class="highlight-gold">$600</strong>
+          </div>
+          <div class="stat-row land-yield-row">
+            <span>单次收益率:</span>
+            <strong id="land-yield-rate">20.0%</strong>
+          </div>
+          <section class="land-rent-projection">
+            <div class="land-section-heading"><span>租金成长预测</span><small id="land-payback">约 5 次收费回本</small></div>
+            <div class="land-rent-chart" id="land-rent-chart" aria-label="各等级租金预测"></div>
+          </section>
+          <div class="land-monopoly-callout hidden" id="land-monopoly-callout">
+            <span>👑</span><div><strong>区域垄断即将完成</strong><small>完成同色街区后，基础租金将获得双倍加成。</small></div>
+          </div>
+          <div class="land-cash-flow">
+            <div><span>当前现金</span><strong id="land-cash-before">$20,000</strong></div>
+            <i>−</i>
+            <div><span>投资支出</span><strong id="land-action-cost">−$1,000</strong></div>
+            <i>=</i>
+            <div class="land-cash-result"><span>投资后现金</span><strong id="land-cash-after">$19,000</strong></div>
           </div>
         </div>
       </div>
@@ -283,6 +336,7 @@
             <canvas id="stock-chart" width="400" height="180"></canvas>
           </div>
           <div class="stock-trade-controls" id="stock-trade-controls">
+            <p id="stock-trade-guidance" role="status"></p>
             <div class="holding-info">
               <span>持有数量: <strong id="stock-holding-count">0</strong> 股</span>
               <span>买入均价: <strong id="stock-holding-avg">$0</strong></span>
@@ -301,15 +355,17 @@
 
   <!-- 道具商店弹窗 -->
   <div id="modal-shop" class="modal hidden">
-    <div class="glass-card modal-box large-modal">
+    <div class="glass-card modal-box large-modal shop-modal-box" role="dialog" aria-modal="true" aria-labelledby="shop-title">
       <div class="modal-header">
         <div><h2 id="shop-title">🏬 道具卡片商店</h2><small id="shop-subtitle">完整目录 · 掷骰前自由兑换</small></div>
         <div class="user-points-badge">卡片点数: <span id="shop-user-points">0</span> PTS</div>
         <button type="button" class="close-modal" id="shop-modal-close" aria-label="关闭商店窗口">&times;</button>
       </div>
       <div id="shop-visit-banner" class="shop-visit-banner hidden"></div>
-      <div class="shop-card-grid" id="shop-card-grid">
-        <!-- 动态卡片列表 -->
+      <nav class="card-center-tabs" id="shop-filter-tabs" aria-label="卡片商店分类"></nav>
+      <div class="card-center-layout">
+        <div class="shop-card-grid" id="shop-card-grid"><!-- 动态卡片列表 --></div>
+        <aside class="card-detail-panel" id="shop-card-detail" aria-live="polite"></aside>
       </div>
     </div>
   </div>
@@ -333,13 +389,15 @@
 
   <!-- 使用卡片/背包弹窗 -->
   <div id="modal-inventory" class="modal hidden">
-    <div class="glass-card modal-box">
+    <div class="glass-card modal-box inventory-modal-box" role="dialog" aria-modal="true" aria-labelledby="inventory-title">
       <div class="modal-header">
-        <h2>🃏 我的卡片包</h2>
+        <div><h2 id="inventory-title">🃏 我的卡片包</h2><small id="inventory-subtitle">策略卡与科技道具 · 掷骰前使用</small></div>
         <button type="button" class="close-modal" id="inventory-modal-close" aria-label="关闭卡片包">&times;</button>
       </div>
-      <div class="inventory-card-grid" id="inventory-card-grid">
-        <!-- 玩家手头卡片 -->
+      <nav class="card-center-tabs" id="inventory-filter-tabs" aria-label="背包分类"></nav>
+      <div class="card-center-layout">
+        <div class="inventory-card-grid" id="inventory-card-grid"><!-- 玩家手头卡片 --></div>
+        <aside class="card-detail-panel" id="inventory-card-detail" aria-live="polite"></aside>
       </div>
     </div>
   </div>
@@ -368,7 +426,7 @@
       <h1 id="winner-name">大富翁诞生！</h1>
       <p id="winner-desc">恭喜获得富翁帝国的终极统治权！</p>
       <div class="winner-stats" id="winner-stats"></div>
-      <button id="btn-restart" class="btn-primary btn-large">再来一局 🔄</button>
+      <div class="victory-actions"><button id="btn-restart" class="btn-primary btn-large">同配置再来一局 🔄</button><button id="btn-victory-menu" class="btn-secondary btn-large">返回主菜单</button></div>
     </div>
   </div>
 

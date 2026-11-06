@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "Fresh read of the exact completed walk, unoccluded overview and north-west street view"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared four-player saved positions and short real UI moves; not a complete natural match.",
+    "Desktop software WebGL and phone viewport emulation, not physical devices."
+  ],
+  "success": true
+}

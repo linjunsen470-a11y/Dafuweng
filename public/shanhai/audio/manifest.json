@@ -1,0 +1,65 @@
+{
+  "title": "Saltwind Promenade / 盐风漫步",
+  "authorship": "Original composition and procedural synthesis created for 山海都市岛. No external samples.",
+  "tempoBpm": 88,
+  "meter": "4/4",
+  "bars": 16,
+  "durationSeconds": 43.636375,
+  "sampleRate": 32000,
+  "music": [
+    "saltwind-promenade.ogg",
+    "saltwind-promenade.mp3"
+  ],
+  "sfx": [
+    "dice.wav",
+    "step.wav",
+    "purchase.wav",
+    "upgrade.wav",
+    "rent.wav",
+    "event.wav",
+    "turn.wav",
+    "win.wav",
+    "event-success.wav",
+    "event-fail.wav",
+    "ability.wav",
+    "auction-sold.wav",
+    "bankruptcy.wav"
+  ],
+  "source": "scripts/audio/compose.py",
+  "quality": {
+    "peak": 0.77,
+    "rms": 0.129717739900199,
+    "loopEndpointDelta": 0.001616799895184949,
+    "clippedSamples": 0
+  },
+  "tracks": [
+    {
+      "id": "saltwind-promenade",
+      "title": "盐风漫步",
+      "map": "shanhai-coast",
+      "meter": "4/4",
+      "bpm": 88,
+      "source": "scripts/audio/compose.py"
+    },
+    {
+      "id": "maple-tea-waltz",
+      "title": "枫谷茶时",
+      "map": "shanhai-highland",
+      "meter": "3/4",
+      "bpm": 76,
+      "durationSeconds": 37.89475,
+      "source": "scripts/audio/compose-chapters.py"
+    }
+  ],
+  "revision": "action-feedback-2026-11-06",
+  "sources": [
+    "scripts/audio/compose.py",
+    "scripts/audio/compose-chapters.py",
+    "scripts/audio/compose-feedback.py"
+  ],
+  "actionCues": {
+    "ability.wav": "Rising whistle and soft high answer: role ability completed.",
+    "auction-sold.wav": "Two dry wooden strikes and short confirmation: lot sold.",
+    "bankruptcy.wav": "Two low descending tones with a soft release: player exits the season."
+  }
+}

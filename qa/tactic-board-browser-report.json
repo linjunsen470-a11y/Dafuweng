@@ -1,0 +1,10 @@
+{
+  "kind": "board targeting, cancellation, keyboard and AI feedback",
+  "checks": [
+    "Actual board picking previews a legal target; illegal station click clears confirmation, Space does not roll, and Escape restores controls/camera without changing the save state.",
+    "Confirmed board use spends exactly one fence; after the normal roll, the AI buys/uses the same clearing tool and leaves an explicit round/actor/target result.",
+    "Coast player markers can be picked separately at the same station; reversed three-stop preview is correct, keyboard selection/confirmation works, and refresh keeps the rule state without persisting temporary targeting."
+  ],
+  "errors": [],
+  "success": true
+}

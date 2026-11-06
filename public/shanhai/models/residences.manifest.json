@@ -1,0 +1,116 @@
+{
+  "asset": "residences.glb",
+  "generator": "scripts/art/create_shanhai_residences.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, entrance +Z, origin ground center",
+  "prefabs": [
+    {
+      "name": "res_harbor_1",
+      "triangles": 1468,
+      "size_xyz_blender": [
+        2.25,
+        2.05,
+        1.625
+      ]
+    },
+    {
+      "name": "res_harbor_2",
+      "triangles": 2216,
+      "size_xyz_blender": [
+        2.25,
+        2.05,
+        2.265
+      ]
+    },
+    {
+      "name": "res_harbor_3",
+      "triangles": 3652,
+      "size_xyz_blender": [
+        2.25,
+        2.05,
+        3.215
+      ]
+    },
+    {
+      "name": "res_harbor_4",
+      "triangles": 4984,
+      "size_xyz_blender": [
+        2.25,
+        2.05,
+        3.855
+      ]
+    },
+    {
+      "name": "res_market_1",
+      "triangles": 1248,
+      "size_xyz_blender": [
+        2.25,
+        2.13,
+        1.2
+      ]
+    },
+    {
+      "name": "res_market_2",
+      "triangles": 1856,
+      "size_xyz_blender": [
+        2.25,
+        2.13,
+        1.9
+      ]
+    },
+    {
+      "name": "res_market_3",
+      "triangles": 2656,
+      "size_xyz_blender": [
+        2.25,
+        2.13,
+        2.645
+      ]
+    },
+    {
+      "name": "res_market_4",
+      "triangles": 3352,
+      "size_xyz_blender": [
+        2.25,
+        2.13,
+        3.82
+      ]
+    },
+    {
+      "name": "res_garden_1",
+      "triangles": 1228,
+      "size_xyz_blender": [
+        2.25,
+        2.12,
+        1.305
+      ]
+    },
+    {
+      "name": "res_garden_2",
+      "triangles": 2052,
+      "size_xyz_blender": [
+        2.25,
+        2.12,
+        1.945
+      ]
+    },
+    {
+      "name": "res_garden_3",
+      "triangles": 2808,
+      "size_xyz_blender": [
+        2.25,
+        2.12,
+        3.015
+      ]
+    },
+    {
+      "name": "res_garden_4",
+      "triangles": 3264,
+      "size_xyz_blender": [
+        2.25,
+        2.12,
+        3.93
+      ]
+    }
+  ]
+}

@@ -94,6 +94,9 @@ function previousForLot(id) {
 
 function makeLot(id) {
   const current = positions[id];
+  // Visual lot anchors only: the automatic normals overlap neighboring roads at these bends.
+  const inset = {106:{x:17.4,z:-30},116:{x:-45.4,z:-3.4},118:{x:-45.4,z:-17}}[id];
+  if (inset) return {position:inset,rotation:Math.atan2(current.x-inset.x,current.z-inset.z),size:{x:3.5,z:3.5}};
   const previous = positions[previousForLot(id)] || current;
   const next = positions[nextFor(id)[0]] || current;
   const dx = next.x - previous.x;

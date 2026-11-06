@@ -1,0 +1,243 @@
+{
+  "success": true,
+  "entry": "main / grand-bay",
+  "settings": {
+    "players": 4,
+    "initialCash": 20000,
+    "initialDeposit": 5000,
+    "maxRounds": 40,
+    "aiDifficulty": "NORMAL",
+    "speed": 2
+  },
+  "firstCheckpointRound": 8,
+  "firstCheckpointTile": 32,
+  "endRound": 27,
+  "endTile": 79,
+  "humanRolls": 23,
+  "route": "0→79 on the existing outer main road, choosing 13 at fork 12, 37 at fork 36 and 61 at fork 60",
+  "resumedStepTiles": [
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+  ],
+  "landings": [
+    {
+      "round": 1,
+      "tile": 5,
+      "action": "coupon supply (first segment)"
+    },
+    {
+      "round": 2,
+      "tile": 11,
+      "action": "purchase"
+    },
+    {
+      "round": 3,
+      "tile": 14,
+      "action": "road"
+    },
+    {
+      "round": 4,
+      "tile": 17,
+      "action": "treasure"
+    },
+    {
+      "round": 5,
+      "tile": 23,
+      "action": "purchase"
+    },
+    {
+      "round": 6,
+      "tile": 27,
+      "action": "coupon supply"
+    },
+    {
+      "round": 7,
+      "tile": 32,
+      "action": "stock window opened and closed; no trade"
+    },
+    {
+      "round": 8,
+      "tile": 37,
+      "action": "CASH_LOST",
+      "detail": "设备维修"
+    },
+    {
+      "round": 9,
+      "tile": 40,
+      "action": "NO_ACTION",
+      "detail": null
+    },
+    {
+      "round": 10,
+      "tile": 46,
+      "action": "PROPERTY_PURCHASED",
+      "detail": null
+    },
+    {
+      "round": 11,
+      "tile": 48,
+      "action": "PROPERTY_PURCHASED",
+      "detail": null
+    },
+    {
+      "round": 12,
+      "tile": 54,
+      "action": "NO_ACTION",
+      "detail": null
+    },
+    {
+      "round": 13,
+      "tile": 56,
+      "action": "PROPERTY_PURCHASED",
+      "detail": null
+    },
+    {
+      "round": 14,
+      "tile": 57,
+      "action": "OPEN_BANK",
+      "detail": null
+    },
+    {
+      "round": 14,
+      "tile": 57,
+      "action": "BANK_TRANSFERRED",
+      "detail": null
+    },
+    {
+      "round": 15,
+      "tile": 59,
+      "action": "NO_ACTION",
+      "detail": null
+    },
+    {
+      "round": 16,
+      "tile": 61,
+      "action": "PROPERTY_PURCHASED",
+      "detail": null
+    },
+    {
+      "round": 17,
+      "tile": 63,
+      "action": "PROPERTY_PURCHASED",
+      "detail": null
+    },
+    {
+      "round": 18,
+      "tile": 68,
+      "action": "PROPERTY_PURCHASED",
+      "detail": null
+    },
+    {
+      "round": 19,
+      "tile": 70,
+      "action": "NO_ACTION",
+      "detail": null
+    },
+    {
+      "round": 20,
+      "tile": 72,
+      "action": "HOSPITALIZED",
+      "detail": null
+    },
+    {
+      "round": 22,
+      "tile": 75,
+      "action": "PROPERTY_UPGRADED",
+      "detail": null
+    },
+    {
+      "round": 27,
+      "tile": 79,
+      "action": "MECHANISM_OFFER",
+      "detail": null
+    }
+  ],
+  "firstSegmentEvidence": "continuity-walk-part1.log/actions and unchanged round-8 snapshot; command-level trace starts after resume",
+  "interruptions": [
+    "Harness double-clicked a route control while it disappeared; resumed the exact saved round-8 pre-roll state, replaying that one turn.",
+    "Resume completion guard omitted the first segment coverage and overshot the intended business stop. Manually captured the complete live command trace and ended browser at round 27 tile 79. Runner target-closed error is intentional test termination, not a game crash."
+  ],
+  "uncovered": [
+    "Human visits to banks other than 57",
+    "Card exchange, lottery purchase, magic casting, prison visit, branch minigame and company interactions during this natural run",
+    "Stock buying/selling: tile 32 was only viewed",
+    "Most western-road facilities beyond 79 and branches 84–119",
+    "Full-match outcome, physical mobile performance and audio"
+  ],
+  "notableFinding": "Human turn screenshots at tile 32 and 46 still show the last AI at a distant harbor location until the human rolls.",
+  "finalPlayers": [
+    {
+      "id": 0,
+      "cash": 5219,
+      "deposit": 7667,
+      "tile": 79,
+      "bankrupt": false
+    },
+    {
+      "id": 1,
+      "cash": 6636,
+      "deposit": 7253,
+      "tile": 58,
+      "bankrupt": false
+    },
+    {
+      "id": 2,
+      "cash": 13183,
+      "deposit": 6509,
+      "tile": 2,
+      "bankrupt": false
+    },
+    {
+      "id": 3,
+      "cash": 8703,
+      "deposit": 6509,
+      "tile": 40,
+      "bankrupt": false
+    }
+  ]
+}

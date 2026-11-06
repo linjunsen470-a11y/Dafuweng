@@ -1,0 +1,111 @@
+{
+  "success": true,
+  "viewports": [
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "maximumFeedbackDockOverlapBefore": 60180,
+      "maximumFeedbackDockOverlapAfter": 0,
+      "samplesAfter": 7,
+      "kindsAfter": [
+        "presentation-move-progress is-visible",
+        "presentation-toast tone-gold is-visible",
+        "presentation-toast tone-success is-visible"
+      ],
+      "purchaseMatchesBaseline": true,
+      "buyButton": {
+        "x": 234.35000610351562,
+        "y": 602.25,
+        "right": 945.6030578613281,
+        "bottom": 645,
+        "hit": true
+      },
+      "keyboardScroll": {
+        "scrollTop": 85,
+        "lastBottom": 572,
+        "panelBottom": 576,
+        "focused": true
+      },
+      "piers": [
+        {
+          "x": -24,
+          "start": 36.25,
+          "end": 48.75
+        },
+        {
+          "x": -8,
+          "start": 36.25,
+          "end": 48.75
+        },
+        {
+          "x": 12,
+          "start": 36.25,
+          "end": 48.75
+        },
+        {
+          "x": 32,
+          "start": 36.25,
+          "end": 48.75
+        }
+      ]
+    },
+    {
+      "viewport": [
+        360,
+        640
+      ],
+      "maximumFeedbackDockOverlapBefore": 14960,
+      "maximumFeedbackDockOverlapAfter": 0,
+      "samplesAfter": 30,
+      "kindsAfter": [
+        "character-reaction emotion-gain is-visible",
+        "character-reaction emotion-win is-visible",
+        "presentation-arrival tone-opportunity is-visible",
+        "presentation-move-progress is-visible",
+        "presentation-move-progress is-visible is-complete",
+        "presentation-toast tone-gold is-visible",
+        "presentation-toast tone-success is-visible"
+      ],
+      "purchaseMatchesBaseline": true,
+      "buyButton": {
+        "x": 29.900001525878906,
+        "y": 570.800048828125,
+        "right": 257.88516998291016,
+        "bottom": 612.5999755859375,
+        "hit": true
+      },
+      "keyboardScroll": null,
+      "piers": null
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "maximumFeedbackDockOverlapBefore": 16280,
+      "maximumFeedbackDockOverlapAfter": 0,
+      "samplesAfter": 30,
+      "kindsAfter": [
+        "character-reaction emotion-gain is-visible",
+        "character-reaction emotion-win is-visible",
+        "presentation-arrival tone-opportunity is-visible",
+        "presentation-move-progress is-visible",
+        "presentation-move-progress is-visible is-complete",
+        "presentation-toast tone-gold is-visible",
+        "presentation-toast tone-success is-visible"
+      ],
+      "purchaseMatchesBaseline": true,
+      "buyButton": {
+        "x": 30.650001525878906,
+        "y": 738.3499755859375,
+        "right": 287.13513946533203,
+        "bottom": 780.1499633789062,
+        "hit": true
+      },
+      "keyboardScroll": null,
+      "piers": null
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "kind": "mountain tea-slope paid return, actual playthrough",
+  "checks": [
+    "Three actual remote-dice turns and AI responses reach station 16; pending event survives reload, mobile view previews both routes and keyboard confirms exactly one ¥250 payment without moving or spending cards.",
+    "Completed payment reloads without replay; next turn uses an actually crafted remote die and moves backward from 16 to 13, then normal landing and AI turn continue.",
+    "Coast still starts normally and its independent save does not overwrite the mountain game."
+  ],
+  "errors": [],
+  "success": true
+}

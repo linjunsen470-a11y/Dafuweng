@@ -1,0 +1,25 @@
+{
+  "kind": "actual mountain NPC interaction and complete short story",
+  "checks": [
+    "Clicks the actual tea-shed NPC mesh and accepts the mountain story at station 0 through its dialog.",
+    "Real travel reaches the kiln, packaging choice advances the story, and refresh resumes stage 2 without replaying the event.",
+    "Stops at tea slope then cargo station, completes the free road-work ending, receives only a cosmetic title, and retains the ending and cash after refresh."
+  ],
+  "errors": [],
+  "final": {
+    "round": 4,
+    "story": {
+      "stage": 4,
+      "ending": "trail",
+      "startedRound": 1,
+      "commissionKind": null
+    },
+    "aiStory": {
+      "stage": 1,
+      "ending": null,
+      "startedRound": 1,
+      "commissionKind": null
+    }
+  },
+  "success": true
+}

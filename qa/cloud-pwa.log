@@ -1,0 +1,4 @@
+PWA: load production entry and install offline cache.
+PWA: installed; switch offline and launch a two-player match.
+PWA: offline game started; save slot 1.
+PWA install, offline launch, offline new game, V11 save, and offline refresh passed.

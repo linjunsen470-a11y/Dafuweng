@@ -1,0 +1,9 @@
+{
+  "kind": "fresh mobile first turn and optional-commission return",
+  "checks": [
+    "Fresh 390px mobile game puts both the objective and roll button in the viewport, with no horizontal overflow.",
+    "Accepting an optional commission returns to the action; buying and ending the first turn keeps the next control reachable and produces an AI recap."
+  ],
+  "errors": [],
+  "success": true
+}

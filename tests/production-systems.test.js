@@ -146,13 +146,13 @@ describe('production economy vertical slice', () => {
     const { state, engine, players: [player] } = setup();
     state.minigameState = { playerId: player.id, gameId: 'HARBOR_SORT', tileId: 24, status: 'OPEN' };
     const before = player.cardPoints;
-    expect(engine.submitMinigameResult(player, 'HARBOR_SORT', 999)).toMatchObject({ success: true, score: 100, reward: 200 });
+    expect(engine.submitMinigameResult(player, 'HARBOR_SORT', 999)).toMatchObject({ success: true, score: 100, reward: 200, rank: 'S', rankLabel: '传奇大师' });
     expect(player.cardPoints).toBe(before + 200);
     expect(state.minigameState).toBeNull();
   });
 });
 
-describe('V10 persistence contract', () => {
+describe('V11 persistence contract', () => {
   it('round-trips production systems and news history while migrating V4 defaults', () => {
     const { state, engine, players } = setup();
     state.roadEntities.push({ id: 'R1', type: 'DOG', tileId: 4, ownerId: null });
@@ -165,7 +165,7 @@ describe('V10 persistence contract', () => {
     const restored = new GameState({ seed: 1 });
     restored.restoreSnapshot(snapshot);
     expect(restored.createSnapshot()).toMatchObject({
-      version: 10,
+      version: 11,
       roadEntities: [{ id: 'R1' }],
       marketOffers: [{ id: 'O1' }],
       auction: { tileId: 1, highestBid: 0 },
@@ -186,6 +186,6 @@ describe('V10 persistence contract', () => {
     delete legacy.minigameState;
     delete legacy.newsHistory;
     restored.restoreSnapshot(legacy);
-    expect(restored.createSnapshot()).toMatchObject({ version: 10, roadEntities: [], marketOffers: [], marketHistory: [], researchTasks: [], newsHistory: [] });
+    expect(restored.createSnapshot()).toMatchObject({ version: 11, roadEntities: [], marketOffers: [], marketHistory: [], researchTasks: [], newsHistory: [] });
   });
 });

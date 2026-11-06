@@ -15,14 +15,18 @@
     "test:e2e": "node test-monopoly.js",
     "test:pwa": "npm run build && node test-pwa.js",
     "verify": "npm run typecheck && npm test && npm run build",
-    "verify:full": "npm run verify && npm run test:e2e && npm run test:pwa"
+    "verify:full": "npm run verify && npm run test:e2e && npm run test:pwa",
+    "build:shanhai": "node scripts/build-shanhai.mjs",
+    "test:shanhai": "npm run build:shanhai && node test-shanhai.js"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.2",
-    "three": "^0.160.0"
+    "three": "^0.160.1",
+    "three-modern": "npm:three@^0.187.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "happy-dom": "^21.0.4",
     "puppeteer-core": "^25.4.0",
     "typescript": "^7.0.2",
     "vite": "^8.1.5",

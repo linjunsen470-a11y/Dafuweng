@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "errors": [],
+  "unchanged": "All map fields equal previous checkpoint, including visual lots, 120 tiles, 123 links and economy parameters",
+  "clinic": {
+    "meshes": 15,
+    "triangles": 216,
+    "source": "Original procedural geometry in HospitalStreet.js"
+  }
+}

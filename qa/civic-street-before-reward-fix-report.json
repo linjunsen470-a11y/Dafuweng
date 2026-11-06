@@ -1,0 +1,45 @@
+{
+  "checks": [
+    "Four business home silhouettes and two functional landmarks render; old snapshot state unchanged; normal, overview and reverse views captured",
+    "Actual move 56→57 opens bank and transfers 1000 cash into deposit with no net-asset change",
+    "390px real movement to notice tile 65 resolves its existing random event and displays feedback",
+    "Actual upgrade on lot 66 purchased during the baseline walk renders civic level 1",
+    "Four business home silhouettes and three functional landmarks render; old snapshot state unchanged; normal, overview and reverse views captured"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared four-player saved positions and short real UI moves; not a complete natural match.",
+    "Desktop software WebGL and phone viewport emulation, not physical devices."
+  ],
+  "eventResult": {
+    "success": true,
+    "type": "INVENTORY_CHANGED",
+    "inventory": "CARD_POINTS",
+    "amount": -40,
+    "chance": {
+      "title": "竞赛入场费",
+      "desc": "支付活动点券",
+      "kind": "CARD_POINTS",
+      "amount": 40,
+      "isGain": false
+    },
+    "events": [
+      {
+        "type": "INVENTORY_CHANGED",
+        "success": true,
+        "inventory": "CARD_POINTS",
+        "amount": -40,
+        "chance": {
+          "title": "竞赛入场费",
+          "desc": "支付活动点券",
+          "kind": "CARD_POINTS",
+          "amount": 40,
+          "isGain": false
+        }
+      }
+    ]
+  },
+  "success": false,
+  "finalArtRecheck": "Refreshed views after adding reverse-side details and replacing adjacent arcade landmark; bank, event and upgrade engine checks preserved from first pass.",
+  "failure": "TimeoutError: Waiting failed: 90000ms exceeded\n    at new WaitTask (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46:34)\n    at IsolatedWorld.waitForFunction (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Realm.js:49:26)\n    at CdpFrame.waitForFunction (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:580:43)\n    at CdpFrame.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)\n    at CdpPage.waitForFunction (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1447:37)\n    at file:///workspace/dafuweng-cloud/test-main-civic-street.js:29:678"
+}

@@ -1,0 +1,84 @@
+{
+  "success": true,
+  "errors": [],
+  "tiles": 120,
+  "connections": 123,
+  "changes": [
+    {
+      "tile": 106,
+      "before": {
+        "position": {
+          "x": 18.74730880654188,
+          "z": -35.25269119345812
+        },
+        "rotation": 2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "after": {
+        "position": {
+          "x": 17.4,
+          "z": -30
+        },
+        "rotation": 1.9809236673363877,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      }
+    },
+    {
+      "tile": 116,
+      "before": {
+        "position": {
+          "x": -53.25269119345812,
+          "z": -4.7473088065418825
+        },
+        "rotation": -2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "after": {
+        "position": {
+          "x": -45.4,
+          "z": -3.4
+        },
+        "rotation": -2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      }
+    },
+    {
+      "tile": 118,
+      "before": {
+        "position": {
+          "x": -54.6,
+          "z": -16
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "after": {
+        "position": {
+          "x": -45.4,
+          "z": -17
+        },
+        "rotation": -1.356735643231075,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      }
+    }
+  ],
+  "unchanged": "All other map fields, including tile coordinates, connectivity, prices and rules"
+}

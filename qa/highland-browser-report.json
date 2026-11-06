@@ -1,0 +1,12 @@
+{
+  "kind": "two maps selected through the welcome UI with independent real saves",
+  "checks": [
+    "Welcome selector opens Maple Valley with its own name, mountain scenery and empty independent slot; coastal transport and story are unavailable.",
+    "Actual remote-dice travel buys Tea Farmer Court for ¥1000, AI takes legal turns, and the new station-4 tea event survives reload and grants its stated ¥250 once.",
+    "The new board renders at 390px without horizontal overflow; core turn controls and original resource models remain usable.",
+    "Returning to the coast restores the original purchased plot and cash; neither map overwrites the other map’s slot.",
+    "Switching back restores the mountain map’s round-3 progress and ownership independently."
+  ],
+  "errors": [],
+  "success": true
+}

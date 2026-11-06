@@ -1,0 +1,272 @@
+{
+  "source": "src/shanhai/SliceHighlandArt.js",
+  "original": true,
+  "models": [
+    {
+      "name": "mountain_tea_1",
+      "triangles": 300,
+      "bounds": [
+        2.04,
+        1.7679999999999998,
+        2.1
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-plaster",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-tea"
+      ]
+    },
+    {
+      "name": "mountain_tea_2",
+      "triangles": 396,
+      "bounds": [
+        2.04,
+        2.158,
+        2.1550000000000002
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-plaster",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-tea"
+      ]
+    },
+    {
+      "name": "mountain_tea_3",
+      "triangles": 552,
+      "bounds": [
+        2.2245835306215422,
+        2.4949999999999997,
+        2.38
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-plaster",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-tea"
+      ]
+    },
+    {
+      "name": "mountain_tea_4",
+      "triangles": 648,
+      "bounds": [
+        2.2245835306215422,
+        3.118,
+        2.38
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-plaster",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-tea"
+      ]
+    },
+    {
+      "name": "mountain_kiln_1",
+      "triangles": 292,
+      "bounds": [
+        2.04,
+        2.05,
+        2.1100000000000003
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window"
+      ]
+    },
+    {
+      "name": "mountain_kiln_2",
+      "triangles": 388,
+      "bounds": [
+        2.04,
+        2.4,
+        2.1550000000000002
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window"
+      ]
+    },
+    {
+      "name": "mountain_kiln_3",
+      "triangles": 544,
+      "bounds": [
+        2.2245835306215422,
+        2.7499999999999996,
+        2.38
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-plaster"
+      ]
+    },
+    {
+      "name": "mountain_kiln_4",
+      "triangles": 640,
+      "bounds": [
+        2.2245835306215422,
+        3.118,
+        2.38
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-plaster"
+      ]
+    },
+    {
+      "name": "mountain_ridge_1",
+      "triangles": 300,
+      "bounds": [
+        2.04,
+        1.7679999999999998,
+        2.01
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window"
+      ]
+    },
+    {
+      "name": "mountain_ridge_2",
+      "triangles": 396,
+      "bounds": [
+        2.04,
+        2.158,
+        2.1550000000000002
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window"
+      ]
+    },
+    {
+      "name": "mountain_ridge_3",
+      "triangles": 552,
+      "bounds": [
+        2.2245835306215422,
+        2.4949999999999997,
+        2.38
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-plaster"
+      ]
+    },
+    {
+      "name": "mountain_ridge_4",
+      "triangles": 648,
+      "bounds": [
+        2.2245835306215422,
+        3.118,
+        2.38
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-slate",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-plaster"
+      ]
+    },
+    {
+      "name": "mountain_exchange_1",
+      "triangles": 352,
+      "bounds": [
+        2.04,
+        2.05,
+        2.255
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-amber"
+      ]
+    },
+    {
+      "name": "mountain_exchange_2",
+      "triangles": 448,
+      "bounds": [
+        2.04,
+        2.4,
+        2.255
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-amber"
+      ]
+    },
+    {
+      "name": "mountain_exchange_3",
+      "triangles": 604,
+      "bounds": [
+        2.2245835306215422,
+        2.7499999999999996,
+        2.395
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-plaster",
+        "mountain-amber"
+      ]
+    },
+    {
+      "name": "mountain_exchange_4",
+      "triangles": 700,
+      "bounds": [
+        2.2245835306215422,
+        3.118,
+        2.395
+      ],
+      "materials": [
+        "mountain-stone",
+        "mountain-brick",
+        "mountain-tile",
+        "mountain-wood",
+        "mountain-window",
+        "mountain-plaster",
+        "mountain-amber"
+      ]
+    }
+  ]
+}

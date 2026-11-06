@@ -1,0 +1,36 @@
+{
+  "maps": [
+    {
+      "mapId": "shanhai-coast",
+      "desktop": {
+        "calls": 241,
+        "sun": 3.1998787478341777
+      },
+      "disabled": {
+        "calls": 236
+      },
+      "compact": {
+        "calls": 239,
+        "birds": 1
+      },
+      "checks": "Motion, visible/offscreen/reduced/manual pause, keyboard toggle, desktop/mobile layout, real purchase, reload save and preference"
+    },
+    {
+      "mapId": "shanhai-highland",
+      "desktop": {
+        "calls": 207,
+        "sun": 3.1998546217143664
+      },
+      "disabled": {
+        "calls": 205
+      },
+      "compact": {
+        "calls": 206,
+        "smoke": 2
+      },
+      "checks": "Motion, visible/offscreen/reduced/manual pause, keyboard toggle, desktop/mobile layout, real purchase, reload save and preference"
+    }
+  ],
+  "errors": [],
+  "success": true
+}

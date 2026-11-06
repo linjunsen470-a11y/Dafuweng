@@ -1,0 +1,17 @@
+{
+  "asset": "old-town.glb",
+  "generator": "scripts/art/create_old_town.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "models": [
+    {
+      "prefab": "old_town_exchange",
+      "triangles": 616,
+      "size_xyz_blender": [
+        4.199999809265137,
+        3.0,
+        4.090000152587891
+      ]
+    }
+  ]
+}

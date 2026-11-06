@@ -1,0 +1,230 @@
+{
+  "scope": "Eight four-seat 16-round engine games; seat zero uses the same AI as a reproducible proxy, not a human win-rate study",
+  "games": [
+    {
+      "mapId": "shanhai-coast",
+      "seed": 314,
+      "purchases": 15,
+      "upgrades": 4,
+      "bankrupt": 0,
+      "winner": 1,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 2718,
+      "purchases": 14,
+      "upgrades": 9,
+      "bankrupt": 0,
+      "winner": 0,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 42,
+      "purchases": 10,
+      "upgrades": 9,
+      "bankrupt": 0,
+      "winner": 2,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 2026,
+      "purchases": 9,
+      "upgrades": 8,
+      "bankrupt": 0,
+      "winner": 2,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 314,
+      "purchases": 12,
+      "upgrades": 6,
+      "bankrupt": 0,
+      "winner": 0,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 2718,
+      "purchases": 15,
+      "upgrades": 6,
+      "bankrupt": 0,
+      "winner": 0,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 42,
+      "purchases": 11,
+      "upgrades": 10,
+      "bankrupt": 0,
+      "winner": 2,
+      "retainedPauseLogs": 0
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 2026,
+      "purchases": 14,
+      "upgrades": 7,
+      "bankrupt": 0,
+      "winner": 0,
+      "retainedPauseLogs": 0
+    }
+  ],
+  "exposed": [
+    {
+      "mapId": "shanhai-coast",
+      "seed": 2718,
+      "round": 16,
+      "playerId": 2,
+      "method": "upgrade",
+      "tileId": 17,
+      "cash": 7400,
+      "cost": 1000,
+      "cashAfterCost": 6400,
+      "threat": {
+        "tileId": 23,
+        "rent": 9280
+      }
+    }
+  ],
+  "paidRemoteTargets": [
+    {
+      "mapId": "shanhai-coast",
+      "seed": 314,
+      "round": 6,
+      "playerId": 0,
+      "cash": 18460,
+      "tileId": 1,
+      "rent": 180,
+      "task": {
+        "kind": "DELIVERY",
+        "targetId": 1,
+        "dueRound": 8,
+        "acceptedRound": 6
+      },
+      "story": {
+        "stage": 2,
+        "ending": null,
+        "startedRound": 1,
+        "commissionKind": "DELIVERY",
+        "title": "灯塔街的纸灯罩",
+        "objective": "实际停靠 8号海风补给，向小栀领取灯罩。",
+        "targetId": 8,
+        "actions": [
+          {
+            "id": "collect",
+            "label": "向小栀领取灯罩"
+          }
+        ],
+        "blockedReason": "请在自己的回合推进故事",
+        "endingInfo": null
+      }
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 314,
+      "round": 8,
+      "playerId": 0,
+      "cash": 21000,
+      "tileId": 6,
+      "rent": 180,
+      "task": {
+        "kind": "DELIVERY",
+        "targetId": 6,
+        "dueRound": 9,
+        "acceptedRound": 7
+      },
+      "story": {
+        "stage": 2,
+        "ending": null,
+        "startedRound": 1,
+        "commissionKind": "DELIVERY",
+        "title": "灯塔街的纸灯罩",
+        "objective": "实际停靠 8号海风补给，向小栀领取灯罩。",
+        "targetId": 8,
+        "actions": [
+          {
+            "id": "collect",
+            "label": "向小栀领取灯罩"
+          }
+        ],
+        "blockedReason": "请在自己的回合推进故事",
+        "endingInfo": null
+      }
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 314,
+      "round": 9,
+      "playerId": 0,
+      "cash": 21720,
+      "tileId": 9,
+      "rent": 240,
+      "task": {
+        "kind": "DELIVERY",
+        "targetId": 9,
+        "dueRound": 11,
+        "acceptedRound": 9
+      },
+      "story": {
+        "stage": 2,
+        "ending": null,
+        "startedRound": 1,
+        "commissionKind": "DELIVERY",
+        "title": "灯塔街的纸灯罩",
+        "objective": "实际停靠 8号海风补给，向小栀领取灯罩。",
+        "targetId": 8,
+        "actions": [
+          {
+            "id": "collect",
+            "label": "向小栀领取灯罩"
+          }
+        ],
+        "blockedReason": "请在自己的回合推进故事",
+        "endingInfo": null
+      }
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 42,
+      "round": 10,
+      "playerId": 0,
+      "cash": 17279,
+      "tileId": 14,
+      "rent": 252,
+      "task": {
+        "kind": "DELIVERY",
+        "targetId": 14,
+        "dueRound": 12,
+        "acceptedRound": 10
+      },
+      "story": {
+        "stage": 2,
+        "ending": null,
+        "startedRound": 1,
+        "commissionKind": null,
+        "title": "阿棠留的新茶",
+        "objective": "实际停靠16号茶坡来信，先处理来信，再领取茶棚留的新茶。",
+        "targetId": 16,
+        "actions": [
+          {
+            "id": "collect",
+            "label": "向阿棠领取新茶"
+          }
+        ],
+        "blockedReason": "请在自己的回合推进故事",
+        "endingInfo": null
+      }
+    }
+  ],
+  "summary": {
+    "games": 8,
+    "investmentsBelowReferenceRent": 1,
+    "purchases": 100,
+    "upgrades": 59
+  }
+}

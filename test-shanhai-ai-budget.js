@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import puppeteer from 'puppeteer-core';
+import {preview} from 'vite';
+const fixtures=JSON.parse(await fs.readFile('qa/ai-budget-cases-baseline.json','utf8')),report={checks:[],errors:[]};
+const server=await preview({build:{outDir:'dist-shanhai'},preview:{host:'127.0.0.1',port:5219,strictPort:true}});let browser;
+try{
+ browser=await puppeteer.launch({executablePath:'/usr/bin/chromium',headless:true,timeout:120000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+ for(const mapId of ['shanhai-coast','shanhai-highland']){
+  const kind=mapId==='shanhai-coast'?'UPGRADE':'PURCHASE',f=fixtures.find(c=>c.mapId===mapId&&c.kind===kind),ctx=await browser.createBrowserContext(),page=await ctx.newPage();page.setDefaultTimeout(60000);await page.setViewport({width:mapId==='shanhai-coast'?1100:390,height:844});await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);await page.evaluateOnNewDocument(s=>{const key=s.mapId+':save:v1';if(!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify(s));localStorage.setItem('shanhai:ai-quick','true');localStorage.setItem('shanhai:audio',JSON.stringify({musicEnabled:false,sfxEnabled:false}));},f.fixture);page.on('pageerror',e=>report.errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});page.on('response',r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
+  const snap=()=>page.evaluate(()=>window.shanhai.session.snapshot()),idle=()=>page.waitForFunction(()=>!window.shanhai.busy&&!window.shanhai.session.currentPlayer.isAI);
+  await page.goto(`http://127.0.0.1:5219/shanhai.html${mapId==='shanhai-highland'?'?map=highland':''}`);await page.waitForFunction(()=>window.shanhai?.ready);await page.click('#resume-button');await idle();const after=await snap();assert.equal(after.players[3].cash,f.beforeCash);assert.deepEqual(after.properties.find(([id])=>id===1),f.fixture.properties.find(([id])=>id===1));assert.equal(after.currentPlayerIndex,0);assert.equal(after.round,7);assert.match(await page.$eval('#ai-recap',e=>e.textContent),/暂缓.*前方可达2号.*不预知下次骰子/s);await page.click('.ai-turn-recap summary');await page.$eval('#ai-recap',e=>e.scrollIntoView({block:'start'}));await page.screenshot({path:`qa/ai-budget-${mapId}.png`});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.reload();await page.waitForFunction(()=>window.shanhai?.ready);await page.click('#resume-button');await idle();assert.deepEqual((await snap()).players,after.players);assert.deepEqual((await snap()).properties,after.properties);
+  await page.click('#remote-button');await page.click('[data-step="1"]');await idle();if(kind==='PURCHASE'){await page.click('#decision-button');await idle();assert.equal((await snap()).properties.find(([id])=>id===1)[1].owner,0);}else assert.equal((await snap()).slice.focus.kind,'RENT');
+  report.checks.push({mapId,kind,baselineCashAfterInvestment:f.afterCash,updatedCash:f.beforeCash,visibleNextRent:f.rent,normalHumanTurnContinues:true,receipt:'AI explanation visible, no investment deducted, old save resumes once, refresh stable'});await ctx.close();
+ }
+ assert.deepEqual(report.errors,[]);report.success=true;
+}catch(e){report.success=false;report.failure=e.stack;process.exitCode=1;}finally{await browser?.close();await new Promise(r=>server.httpServer.close(r));await fs.writeFile('qa/ai-budget-browser-report.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));}

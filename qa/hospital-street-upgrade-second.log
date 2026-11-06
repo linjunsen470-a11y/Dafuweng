@@ -1,0 +1,35 @@
+{
+  "errors": [],
+  "checks": [],
+  "limits": [
+    "Prepared player105/117 and owned level1 target106/118, real original remote card1 then UI upgrade; original DEMON at106 lowers it to0 on arrival.",
+    "360px is viewport simulation, not physical phone."
+  ],
+  "layout": {
+    "art": {
+      "x": 35,
+      "y": 140,
+      "width": 124,
+      "height": 124,
+      "bottom": 264
+    },
+    "preview": {
+      "x": 22,
+      "y": 90,
+      "width": 316,
+      "height": 36,
+      "bottom": 126
+    },
+    "button": {
+      "x": 22,
+      "y": 574,
+      "width": 239.984375,
+      "height": 44,
+      "bottom": 618
+    },
+    "overflow": true,
+    "scrollable": false
+  },
+  "success": false,
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at file:///workspace/dafuweng-cloud/test-hospital-street-upgrade.js:5:1360"
+}

@@ -11,7 +11,7 @@ function createState() {
 
 describe('character reactions', () => {
   it('provides complete personality voices for all twelve characters', () => {
-    expect(Object.keys(CHARACTER_VOICES)).toHaveLength(12);
+    expect(Object.keys(CHARACTER_VOICES)).toHaveLength(16);
     Object.values(CHARACTER_VOICES).forEach(voice => {
       expect(voice).toEqual(expect.objectContaining({ title: expect.any(String) }));
       ['gain', 'win', 'loss', 'crisis', 'bankrupt'].forEach(category => expect(voice[category].length).toBeGreaterThanOrEqual(2));

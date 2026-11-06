@@ -52,6 +52,15 @@ describe('phase two economy and facilities', () => {
     expect(state.lottery.pot).toBe(2000);
   });
 
+  it('purchases up to three distinct lottery tickets as one engine transaction', () => {
+    const { state, engine } = setup();
+    const player = state.players[0];
+    const before = player.cash;
+    expect(engine.buyLottery(player, [1, 5, 10])).toMatchObject({ success: true, cost: 600, numbers: [1, 5, 10], pot: 2600 });
+    expect(player.cash).toBe(before - 600);
+    expect(state.lottery.tickets).toHaveLength(3);
+  });
+
   it('casts selectable magic-house global effects', () => {
     const { state, engine } = setup();
     const before = state.players.map(player => player.cash);

@@ -1,0 +1,42 @@
+{
+  "checks": [
+    "Four business home silhouettes and two functional landmarks render; old snapshot state unchanged; normal, overview and reverse views captured",
+    "Actual move 56→57 opens bank and transfers 1000 cash into deposit with no net-asset change",
+    "390px real movement to notice tile 65 resolves its existing random event and displays feedback",
+    "Actual upgrade on lot 66 purchased during the baseline walk renders civic level 1"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared four-player saved positions and short real UI moves; not a complete natural match.",
+    "Desktop software WebGL and phone viewport emulation, not physical devices."
+  ],
+  "eventResult": {
+    "success": true,
+    "type": "INVENTORY_CHANGED",
+    "inventory": "CARD_POINTS",
+    "amount": -40,
+    "chance": {
+      "title": "竞赛入场费",
+      "desc": "支付活动点券",
+      "kind": "CARD_POINTS",
+      "amount": 40,
+      "isGain": false
+    },
+    "events": [
+      {
+        "type": "INVENTORY_CHANGED",
+        "success": true,
+        "inventory": "CARD_POINTS",
+        "amount": -40,
+        "chance": {
+          "title": "竞赛入场费",
+          "desc": "支付活动点券",
+          "kind": "CARD_POINTS",
+          "amount": 40,
+          "isGain": false
+        }
+      }
+    ]
+  },
+  "success": true
+}

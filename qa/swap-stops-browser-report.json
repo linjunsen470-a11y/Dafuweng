@@ -1,0 +1,60 @@
+{
+  "checks": [
+    {
+      "mapId": "shanhai-coast",
+      "mode": "human",
+      "cost": 60,
+      "target": 1,
+      "cancelNoMutation": true,
+      "actualBoardClick": true,
+      "keyboardConfirm": true,
+      "pawnsMatch": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "refreshNoReplay": true,
+      "ordinaryRoll": true
+    },
+    {
+      "mapId": "shanhai-coast",
+      "mode": "AI",
+      "cost": 60,
+      "pointsAfterSwap": 45,
+      "normalLandingCoupon": 30,
+      "pointsAtTurnEnd": 75,
+      "visiblePublicRentReason": true,
+      "humanCounterTurnAndRoll": true
+    },
+    {
+      "mapId": "shanhai-highland",
+      "mode": "human",
+      "cost": 60,
+      "target": 1,
+      "cancelNoMutation": true,
+      "actualBoardClick": true,
+      "keyboardConfirm": true,
+      "pawnsMatch": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "refreshNoReplay": true,
+      "ordinaryRoll": true
+    },
+    {
+      "mapId": "shanhai-highland",
+      "mode": "AI",
+      "cost": 60,
+      "pointsAfterSwap": 45,
+      "normalLandingCoupon": 30,
+      "pointsAtTurnEnd": 75,
+      "visiblePublicRentReason": true,
+      "humanCounterTurnAndRoll": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

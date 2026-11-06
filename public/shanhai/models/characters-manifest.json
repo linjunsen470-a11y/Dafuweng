@@ -1,0 +1,85 @@
+{
+  "originalAuthorship": "Original procedural designs created for 山海都市岛. No third-party artwork, textures, or geometry sources. No separate third-party license granted.",
+  "characters": [
+    {
+      "file": "character-courier.glb",
+      "boundsYUp": {
+        "min": [
+          -0.392,
+          0.0,
+          -0.369
+        ],
+        "max": [
+          0.392,
+          1.7,
+          0.422
+        ]
+      },
+      "height": 1.7,
+      "triangles": 16172,
+      "meshCount": 6,
+      "clips": {
+        "idle": 2.4,
+        "walk": 0.8,
+        "celebrate": 1.6,
+        "disappointed": 1.8,
+        "ability": 1.2,
+        "notice": 1.0
+      },
+      "forward": "+Z",
+      "up": "+Y",
+      "rightsStatement": "Original project asset; no separate third-party license granted",
+      "animation": "Articulated rigid meshes; named object-transform NLA clips",
+      "originalMeshCount": 70,
+      "drawCallsPerNormalPass": 28,
+      "optimization": "Static geometry merged by nearest animated ancestor and material; animations unchanged",
+      "facialTargets": [
+        "happy",
+        "concern",
+        "surprise"
+      ],
+      "bytes": 712848,
+      "expressions": "Original sparse position morphs on the existing head; neutral geometry and body animation unchanged"
+    },
+    {
+      "file": "character-botanist.glb",
+      "boundsYUp": {
+        "min": [
+          -0.392,
+          0.0,
+          -0.3275
+        ],
+        "max": [
+          0.4094,
+          1.7708,
+          0.324
+        ]
+      },
+      "height": 1.771,
+      "triangles": 18476,
+      "meshCount": 6,
+      "clips": {
+        "idle": 2.4,
+        "walk": 0.8,
+        "celebrate": 1.6,
+        "disappointed": 1.8,
+        "ability": 1.2,
+        "notice": 1.0
+      },
+      "forward": "+Z",
+      "up": "+Y",
+      "rightsStatement": "Original project asset; no separate third-party license granted",
+      "animation": "Articulated rigid meshes; named object-transform NLA clips",
+      "originalMeshCount": 83,
+      "drawCallsPerNormalPass": 28,
+      "optimization": "Static geometry merged by nearest animated ancestor and material; animations unchanged",
+      "facialTargets": [
+        "happy",
+        "concern",
+        "surprise"
+      ],
+      "bytes": 766304,
+      "expressions": "Original sparse position morphs on the existing head; neutral geometry and body animation unchanged"
+    }
+  ]
+}

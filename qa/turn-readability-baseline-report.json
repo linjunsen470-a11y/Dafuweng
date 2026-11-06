@@ -1,0 +1,2152 @@
+{
+  "kind": "Four-player three-round season through UI; turn and asset readability",
+  "turns": [
+    {
+      "turn": 1,
+      "aiWaitMs": 5846,
+      "phase": "PRE_ROLL_ACTION",
+      "recaps": 3
+    },
+    {
+      "turn": 2,
+      "aiWaitMs": 10035,
+      "phase": "PRE_ROLL_ACTION",
+      "recaps": 3
+    },
+    {
+      "turn": 3,
+      "aiWaitMs": 5435,
+      "phase": "GAME_OVER",
+      "recaps": 3
+    }
+  ],
+  "errors": [],
+  "desktop": {
+    "recapHeight": 590.6875,
+    "assetOffsetFromAction": 1045.1875,
+    "assetHeight": 418,
+    "overflow": false
+  },
+  "mobile": {
+    "recapHeight": 620.125,
+    "assetOffsetFromAction": 1056.90625,
+    "assetHeight": 418,
+    "overflow": false
+  },
+  "final": {
+    "version": 11,
+    "contentVersion": "2026.8",
+    "savedAt": "2026-11-06T01:09:48.998Z",
+    "seed": 314,
+    "rngState": 3754046361,
+    "phase": "GAME_OVER",
+    "round": 3,
+    "maxRounds": 3,
+    "gameMode": "STANDARD",
+    "mapId": "shanhai-coast",
+    "currentPlayerIndex": 3,
+    "players": [
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 0,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 0,
+        "profileId": "ayu",
+        "name": "阿屿",
+        "isAI": false,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "ECONOMY",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🧢",
+        "color": "#f5816c",
+        "colorHex": 16089452,
+        "skillName": "顺风速递",
+        "skillDesc": "完成速递委托额外获得 ¥300。",
+        "cash": 14950,
+        "cardPoints": 170,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "stocks": {},
+        "currentTile": 10,
+        "direction": 1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": null,
+        "godTurns": 0,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "ayu",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      },
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 1,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 1,
+        "profileId": "qinghe",
+        "name": "青禾",
+        "isAI": true,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "PROPERTY",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🌿",
+        "color": "#42b8a6",
+        "colorHex": 4372646,
+        "skillName": "街区园艺师",
+        "skillDesc": "完成焕新委托额外获得 ¥300。",
+        "cash": 15300,
+        "cardPoints": 340,
+        "cards": [
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "stocks": {},
+        "currentTile": 8,
+        "direction": 1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": "GREAT_FORTUNE",
+        "godTurns": 5,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "qinghe",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      },
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 2,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 2,
+        "profileId": "xingluo",
+        "name": "星罗",
+        "isAI": true,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "CARD",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🧭",
+        "color": "#8b72ba",
+        "colorHex": 9138874,
+        "skillName": "行路制图",
+        "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+        "cash": 14300,
+        "cardPoints": 175,
+        "cards": [
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "stocks": {},
+        "currentTile": 9,
+        "direction": 1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": "EARTH",
+        "godTurns": 3,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "xingluo",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      },
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 3,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 3,
+        "profileId": "taoning",
+        "name": "陶宁",
+        "isAI": true,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "ATTACK",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🔧",
+        "color": "#c58a38",
+        "colorHex": 12945976,
+        "skillName": "随身工坊",
+        "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+        "cash": 15050,
+        "cardPoints": 140,
+        "cards": [
+          "OBSTACLE"
+        ],
+        "stocks": {},
+        "currentTile": 2,
+        "direction": -1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": null,
+        "godTurns": 0,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "taoning",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      }
+    ],
+    "properties": [
+      [
+        0,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        1,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        2,
+        {
+          "owner": 0,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        3,
+        {
+          "owner": 2,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        4,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        5,
+        {
+          "owner": 3,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        6,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        7,
+        {
+          "owner": 1,
+          "level": 1,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        8,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        9,
+        {
+          "owner": 2,
+          "level": 2,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        10,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        11,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        12,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": null,
+          "hasMine": false
+        }
+      ],
+      [
+        13,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        14,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        15,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        16,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        17,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        18,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        19,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        20,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        21,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        22,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        23,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ]
+    ],
+    "stocks": [
+      {
+        "id": "TECH",
+        "name": "星河智造",
+        "code": "600001",
+        "price": 86,
+        "prevPrice": 94,
+        "change": -9,
+        "history": [
+          100,
+          98,
+          91,
+          83,
+          89,
+          96,
+          89,
+          96,
+          94,
+          103,
+          94,
+          86
+        ]
+      },
+      {
+        "id": "REALTY",
+        "name": "云庭置业",
+        "code": "600002",
+        "price": 276,
+        "prevPrice": 279,
+        "change": -1,
+        "history": [
+          250,
+          242,
+          235,
+          216,
+          205,
+          210,
+          224,
+          243,
+          246,
+          263,
+          279,
+          276
+        ]
+      },
+      {
+        "id": "BEVERAGE",
+        "name": "青柠气泡",
+        "code": "600003",
+        "price": 49,
+        "prevPrice": 49,
+        "change": 0,
+        "history": [
+          50,
+          47,
+          45,
+          49,
+          54,
+          51,
+          52,
+          55,
+          57,
+          53,
+          49,
+          49
+        ]
+      },
+      {
+        "id": "ENERGY",
+        "name": "曙光能源",
+        "code": "600004",
+        "price": 192,
+        "prevPrice": 186,
+        "change": 3,
+        "history": [
+          180,
+          174,
+          172,
+          164,
+          180,
+          190,
+          197,
+          197,
+          183,
+          187,
+          186,
+          192
+        ]
+      },
+      {
+        "id": "MINING",
+        "name": "远山材料",
+        "code": "600005",
+        "price": 477,
+        "prevPrice": 439,
+        "change": 9,
+        "history": [
+          320,
+          325,
+          350,
+          380,
+          378,
+          400,
+          403,
+          379,
+          374,
+          408,
+          439,
+          477
+        ]
+      },
+      {
+        "id": "HARBOR",
+        "name": "蓝港保险",
+        "code": "600006",
+        "price": 145,
+        "prevPrice": 144,
+        "change": 1,
+        "history": [
+          140,
+          138,
+          130,
+          140,
+          141,
+          148,
+          150,
+          150,
+          138,
+          140,
+          144,
+          145
+        ]
+      }
+    ],
+    "newsEffect": null,
+    "newsHistory": [],
+    "logHistory": [
+      {
+        "msg": "✦ 星罗 已办好便笺上的约定，下一站：8号找小栀取灯罩。",
+        "type": "gold",
+        "time": "1:09:14 AM"
+      },
+      {
+        "msg": "✦ 陶宁：阿澜递来便笺：先完成一份海湾委托，再找8号站的小栀取灯罩。",
+        "type": "gold",
+        "time": "1:09:15 AM"
+      },
+      {
+        "msg": "✉️ 陶宁 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "1:09:15 AM"
+      },
+      {
+        "msg": "🃏 陶宁 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "1:09:15 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！陶宁 从 星罗 身上染上了【FORTUNE】！",
+        "type": "accent",
+        "time": "1:09:15 AM"
+      },
+      {
+        "msg": "💰 陶宁 遇到巡游精灵【大福精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "1:09:16 AM"
+      },
+      {
+        "msg": "🏗️ 陶宁 成功购买【风帆公寓】(花费 $1,200)！",
+        "type": "success",
+        "time": "1:09:17 AM"
+      },
+      {
+        "msg": "✉️ 陶宁 完成【街区焕新】，获得 ¥400 和 35 点券。",
+        "type": "gold",
+        "time": "1:09:17 AM"
+      },
+      {
+        "msg": "✦ 陶宁 已办好便笺上的约定，下一站：8号找小栀取灯罩。",
+        "type": "gold",
+        "time": "1:09:17 AM"
+      },
+      {
+        "msg": "📈 第 2 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:09:17 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！阿屿 从 陶宁 身上染上了【GREAT_FORTUNE】！",
+        "type": "accent",
+        "time": "1:09:27 AM"
+      },
+      {
+        "msg": "🎟️ 阿屿 拾取 30 点券！",
+        "type": "accent",
+        "time": "1:09:29 AM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "1:09:30 AM"
+      },
+      {
+        "msg": "✦ 青禾 社区花市：支付 30 点券，获得 ¥300；第 5 轮可再次使用。",
+        "type": "gold",
+        "time": "1:09:30 AM"
+      },
+      {
+        "msg": "🛒 青禾 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "1:09:30 AM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "1:09:30 AM"
+      },
+      {
+        "msg": "🏗️ 青禾 成功购买【珊瑚巷】(花费 $1,200)！",
+        "type": "success",
+        "time": "1:09:32 AM"
+      },
+      {
+        "msg": "✉️ 青禾 完成【街区焕新】，获得 ¥700 和 35 点券（含专长奖励）。",
+        "type": "gold",
+        "time": "1:09:32 AM"
+      },
+      {
+        "msg": "✉️ 星罗 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "1:09:32 AM"
+      },
+      {
+        "msg": "✦ 星罗 行路制图：支付 ¥500，制作一张遥控骰子；使用时消耗本回合策略机会，第 5 轮可再次制作。",
+        "type": "gold",
+        "time": "1:09:32 AM"
+      },
+      {
+        "msg": "🃏 星罗 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "1:09:32 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！星罗 从 阿屿 身上染上了【GREAT_FORTUNE】！",
+        "type": "accent",
+        "time": "1:09:34 AM"
+      },
+      {
+        "msg": "🎟️ 星罗 拾取 30 点券！",
+        "type": "accent",
+        "time": "1:09:37 AM"
+      },
+      {
+        "msg": "✦ 星罗：小栀递来纸灯罩：带到16号花棚，与木木决定灯该照向哪里。",
+        "type": "gold",
+        "time": "1:09:38 AM"
+      },
+      {
+        "msg": "✉️ 陶宁 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "1:09:38 AM"
+      },
+      {
+        "msg": "🛒 陶宁 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "1:09:38 AM"
+      },
+      {
+        "msg": "🃏 陶宁 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "1:09:38 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！陶宁 从 星罗 身上染上了【GREAT_FORTUNE】！",
+        "type": "accent",
+        "time": "1:09:38 AM"
+      },
+      {
+        "msg": "🎟️ 陶宁 拾取 30 点券！",
+        "type": "accent",
+        "time": "1:09:39 AM"
+      },
+      {
+        "msg": "✦ 陶宁：小栀递来纸灯罩：带到16号花棚，与木木决定灯该照向哪里。",
+        "type": "gold",
+        "time": "1:09:39 AM"
+      },
+      {
+        "msg": "📈 第 3 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:09:39 AM"
+      },
+      {
+        "msg": "✦ 阿屿 在【灯塔下的夜市】选择协助布置摊位：现金 +¥0，点券 +20。",
+        "type": "info",
+        "time": "1:09:43 AM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "🛒 青禾 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "⛰️ 青禾 遇到巡游精灵【拓土精灵】，附身 4 回合！",
+        "type": "gold",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！青禾 的【EARTH】转移到了 星罗 身上！",
+        "type": "accent",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！青禾 从 陶宁 身上染上了【GREAT_FORTUNE】！",
+        "type": "accent",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "🎟️ 青禾 拾取 30 点券！",
+        "type": "accent",
+        "time": "1:09:44 AM"
+      },
+      {
+        "msg": "✦ 青禾：小栀递来纸灯罩：带到16号花棚，与木木决定灯该照向哪里。",
+        "type": "gold",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "✉️ 青禾 的委托已到期，没有扣款，下轮可接新单。",
+        "type": "info",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "🛒 星罗 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "🃏 星罗 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "✨ 星罗 将【灯塔别院】升级至 LV 2(花费 $800)！",
+        "type": "gold",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "✉️ 星罗 完成【街区焕新】，获得 ¥400 和 35 点券。",
+        "type": "gold",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "🃏 陶宁 使用了【转向卡】。",
+        "type": "accent",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "✦ 陶宁：回程路签 → 陶宁。方向已反转。本回合还需普通掷骰。",
+        "type": "accent",
+        "time": "1:09:45 AM"
+      },
+      {
+        "msg": "💸 陶宁 向 阿屿 支付【贝壳花园】过路费 $150！",
+        "type": "danger",
+        "time": "1:09:48 AM"
+      },
+      {
+        "msg": "👑 青禾 以总资产 $19,500 获得胜利！",
+        "type": "gold",
+        "time": "1:09:48 AM"
+      },
+      {
+        "msg": "✉️ 陶宁 的委托已到期，没有扣款，下轮可接新单。",
+        "type": "info",
+        "time": "1:09:48 AM"
+      }
+    ],
+    "winnerId": 1,
+    "winReason": "NET_WORTH",
+    "pendingMove": null,
+    "pendingDebt": null,
+    "phaseBeforePause": null,
+    "lottery": {
+      "pot": 2000,
+      "tickets": [],
+      "lastNumber": null
+    },
+    "boardGods": [
+      {
+        "id": "BOARD_GOD_0",
+        "type": "FORTUNE",
+        "tileId": 13,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_1",
+        "type": "GREAT_FORTUNE",
+        "tileId": 18,
+        "direction": -1
+      },
+      {
+        "id": "BOARD_GOD_2",
+        "type": "LUCK",
+        "tileId": 11,
+        "direction": -1
+      },
+      {
+        "id": "BOARD_GOD_3",
+        "type": "EARTH",
+        "tileId": 19,
+        "direction": -1
+      },
+      {
+        "id": "BOARD_GOD_4",
+        "type": "MISFORTUNE",
+        "tileId": 18,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_5",
+        "type": "BAD",
+        "tileId": 12,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_6",
+        "type": "ANGEL",
+        "tileId": 22,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_7",
+        "type": "DEMON",
+        "tileId": 22,
+        "direction": 1
+      }
+    ],
+    "mechanismState": {
+      "activeRoute": 0,
+      "locked": false
+    },
+    "winningTeamId": null,
+    "roadEntities": [],
+    "companies": [
+      {
+        "id": "AURORA_RETAIL",
+        "name": "极光百货",
+        "stockId": "BEVERAGE",
+        "icon": "🏬",
+        "baseFee": 360,
+        "perk": "SHOP",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "HARBOR_INSURANCE",
+        "name": "蓝港保险",
+        "stockId": "HARBOR",
+        "icon": "🛟",
+        "baseFee": 300,
+        "perk": "INSURANCE",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "SKY_TRANSIT",
+        "name": "天际交通",
+        "stockId": "ENERGY",
+        "icon": "🚝",
+        "baseFee": 420,
+        "perk": "TRANSIT",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "NOVA_BUILD",
+        "name": "新星营造",
+        "stockId": "REALTY",
+        "icon": "🏗️",
+        "baseFee": 440,
+        "perk": "BUILD",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "CLOUD_COMPUTE",
+        "name": "云端计算",
+        "stockId": "TECH",
+        "icon": "💻",
+        "baseFee": 390,
+        "perk": "TECH",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "SUMMIT_MATERIAL",
+        "name": "峰岳材料",
+        "stockId": "MINING",
+        "icon": "⛏️",
+        "baseFee": 410,
+        "perk": "MATERIAL",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      }
+    ],
+    "auction": null,
+    "phaseBeforeAuction": null,
+    "bankruptcyAuctionQueue": [],
+    "marketOffers": [],
+    "marketHistory": [],
+    "researchTasks": [],
+    "economicCycle": {
+      "period": 1,
+      "roundsPerPeriod": 5,
+      "lastSettlementRound": 0,
+      "lastReport": null
+    },
+    "minigameState": null,
+    "turnCheckpoint": {
+      "playerId": 3,
+      "currentTile": 8,
+      "cash": 15200,
+      "deposit": 0,
+      "cards": [
+        "OBSTACLE",
+        "TURN_AROUND"
+      ],
+      "items": [
+        "REMOTE_DICE_ITEM",
+        "BARRIER",
+        "ROBOT_DOLL",
+        "MINE_ITEM"
+      ],
+      "stocks": {},
+      "statuses": {
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "godType": null,
+        "godTurns": 0
+      }
+    },
+    "activeQuests": [],
+    "questHistory": [],
+    "questSequence": 0,
+    "matchStatistics": {
+      "startedAtRound": 1,
+      "players": [
+        {
+          "playerId": 0,
+          "turns": 3,
+          "cashIn": 150,
+          "cashOut": 1200,
+          "rentIncome": 150,
+          "rentExpense": 0,
+          "propertiesBought": 1,
+          "propertiesUpgraded": 0,
+          "cardsUsed": 0,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        },
+        {
+          "playerId": 1,
+          "turns": 3,
+          "cashIn": 0,
+          "cashOut": 2400,
+          "rentIncome": 0,
+          "rentExpense": 0,
+          "propertiesBought": 2,
+          "propertiesUpgraded": 0,
+          "cardsUsed": 3,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        },
+        {
+          "playerId": 2,
+          "turns": 3,
+          "cashIn": 0,
+          "cashOut": 2000,
+          "rentIncome": 0,
+          "rentExpense": 0,
+          "propertiesBought": 1,
+          "propertiesUpgraded": 1,
+          "cardsUsed": 3,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        },
+        {
+          "playerId": 3,
+          "turns": 3,
+          "cashIn": 0,
+          "cashOut": 1350,
+          "rentIncome": 0,
+          "rentExpense": 150,
+          "propertiesBought": 1,
+          "propertiesUpgraded": 0,
+          "cardsUsed": 3,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        }
+      ],
+      "highlights": []
+    },
+    "matchConfig": {
+      "playerConfigs": [
+        {
+          "profileIndex": 8,
+          "name": "阿屿",
+          "isAI": false
+        },
+        {
+          "profileIndex": 8,
+          "name": "青禾",
+          "isAI": true
+        },
+        {
+          "profileIndex": 8,
+          "name": "星罗",
+          "isAI": true
+        },
+        {
+          "profileIndex": 8,
+          "name": "陶宁",
+          "isAI": true
+        }
+      ],
+      "initialCash": 16000,
+      "options": {
+        "mapId": "shanhai-coast",
+        "maxRounds": 3,
+        "mode": "STANDARD"
+      }
+    },
+    "slice": {
+      "version": 1,
+      "focus": null,
+      "lastRoll": null,
+      "landingResolved": false,
+      "decisionMade": false,
+      "cardUsed": false,
+      "careers": {
+        "0": {
+          "active": null,
+          "settledRound": 0,
+          "completed": 0,
+          "earned": 0,
+          "last": null
+        },
+        "1": {
+          "active": null,
+          "settledRound": 3,
+          "completed": 2,
+          "earned": 1400,
+          "last": {
+            "status": "EXPIRED",
+            "kind": "RENEWAL"
+          }
+        },
+        "2": {
+          "active": null,
+          "settledRound": 3,
+          "completed": 2,
+          "earned": 800,
+          "last": {
+            "status": "COMPLETE",
+            "kind": "RENEWAL",
+            "cash": 400,
+            "points": 35,
+            "specialist": false
+          }
+        },
+        "3": {
+          "active": null,
+          "settledRound": 3,
+          "completed": 1,
+          "earned": 400,
+          "last": {
+            "status": "EXPIRED",
+            "kind": "RENEWAL"
+          }
+        }
+      },
+      "pendingEvent": null,
+      "lastTransport": null,
+      "abilities": {
+        "0": {
+          "readyRound": 1,
+          "last": null
+        },
+        "1": {
+          "readyRound": 5,
+          "last": "社区花市：支付 30 点券，获得 ¥300；第 5 轮可再次使用。"
+        },
+        "2": {
+          "readyRound": 5,
+          "last": "行路制图：支付 ¥500，制作一张遥控骰子；使用时消耗本回合策略机会，第 5 轮可再次制作。"
+        },
+        "3": {
+          "readyRound": 1,
+          "last": null
+        }
+      },
+      "stories": {
+        "0": {
+          "stage": 0,
+          "ending": null,
+          "startedRound": null,
+          "commissionKind": null
+        },
+        "1": {
+          "stage": 3,
+          "ending": null,
+          "startedRound": 1,
+          "commissionKind": "RENEWAL"
+        },
+        "2": {
+          "stage": 3,
+          "ending": null,
+          "startedRound": 1,
+          "commissionKind": "RENEWAL"
+        },
+        "3": {
+          "stage": 3,
+          "ending": null,
+          "startedRound": 1,
+          "commissionKind": "RENEWAL"
+        }
+      },
+      "auctionResults": []
+    }
+  },
+  "samples": [
+    {
+      "id": 1,
+      "round": 1,
+      "progress": "第1轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "progress": "第1轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "progress": "第1轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "progress": "第1轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "progress": "第1轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "progress": "第1轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "progress": "第1轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 1,
+      "progress": "第1轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "progress": "第2轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "progress": "第2轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 2,
+      "progress": "第2轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "progress": "第3轮 · 青禾（第1/3位AI） · 速览中。"
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "progress": "第3轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "progress": "第3轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "progress": "第3轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "progress": "第3轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "progress": "第3轮 · 星罗（第2/3位AI） · 速览中。青禾已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    },
+    {
+      "id": 3,
+      "round": 3,
+      "progress": "第3轮 · 陶宁（第3/3位AI） · 速览中。青禾、星罗已完成，可展开下方回顾。"
+    }
+  ],
+  "success": true
+}

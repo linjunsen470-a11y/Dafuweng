@@ -1,0 +1,8 @@
+
+ RUN  v4.1.10 /workspace/dafuweng-cloud
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 30 skipped (32)
+   Start at  01:59:49
+   Duration  904ms (transform 464ms, setup 0ms, import 596ms, tests 33ms, environment 0ms)

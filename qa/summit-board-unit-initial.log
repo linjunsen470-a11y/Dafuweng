@@ -1,0 +1,21 @@
+
+ RUN  v4.1.10 /workspace/dafuweng-cloud
+
+ ❯ summit-board.test.js (2 tests | 1 failed) 384ms
+   × charges the real company treasury once, focuses receipt, and preserves policy through save restore 127ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  summit-board.test.js > charges the real company treasury once, focuses receipt, and preserves policy through save restore
+TypeError: state.loadSnapshot is not a function
+ ❯ summit-board.test.js:20:8
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 5 passed (6)
+   Start at  08:24:45
+   Duration  4.11s (transform 1.79s, setup 0ms, import 2.64s, tests 1.15s, environment 2.07s)
+

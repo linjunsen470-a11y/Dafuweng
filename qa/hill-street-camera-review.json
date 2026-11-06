@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "cameraCodeChanged": false,
+  "conclusion": "No persistent target residue or zoom spring-back reproduced after completed rotation. Keep camera implementation unchanged.",
+  "rotationResidual": 0,
+  "zoomBefore": 35.89997952527957,
+  "zoomImmediate": 27.778719813301617,
+  "zoomAfter160Frames": 27.778719813301617,
+  "panLookDisplacement": 4.285608449080762,
+  "limits": [
+    "Single actual saved desktop scene; not all devices or interruption during animation.",
+    "Slow software WebGL frames are not performance acceptance."
+  ]
+}

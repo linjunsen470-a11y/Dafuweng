@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   clampMinigameScore,
   getAIMinigameScore,
+  getMinigamePerformance,
   scoreHarborAttempt,
   scoreRouteRound,
   scoreSkyObject
@@ -13,6 +14,14 @@ describe('minigame scoring rules', () => {
     expect(clampMinigameScore(42.9)).toBe(42);
     expect(clampMinigameScore(180)).toBe(100);
     expect(clampMinigameScore('invalid')).toBe(0);
+  });
+
+  it('turns scores into stable arcade ranks and reward previews', () => {
+    expect(getMinigamePerformance('SKY_COINS', 94)).toMatchObject({ score: 94, reward: 188, pointsToNext: 0 });
+    expect(getMinigamePerformance('SKY_COINS', 94).rank).toMatchObject({ id: 'S', label: '传奇大师' });
+    expect(getMinigamePerformance('HARBOR_SORT', 68)).toMatchObject({ reward: 136, pointsToNext: 2 });
+    expect(getMinigamePerformance('HARBOR_SORT', 68).rank.id).toBe('B');
+    expect(getMinigamePerformance('ROUTE_MEMORY', -8).rank.id).toBe('D');
   });
 
   it('scores harbor choices without allowing a negative total', () => {

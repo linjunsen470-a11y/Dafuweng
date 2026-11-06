@@ -1,0 +1,302 @@
+{
+  "checks": [
+    {
+      "label": "desktop four on tile 11",
+      "pawns": [
+        {
+          "id": 0,
+          "x": 574.123789643548,
+          "y": 342.118826510085,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 1,
+          "x": 605.8338886791289,
+          "y": 342.118826510085,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 2,
+          "x": 637.5439877147098,
+          "y": 342.118826510085,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 3,
+          "x": 669.2540867502908,
+          "y": 342.11882651008506,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "label": "camera rotated 45 degrees",
+      "pawns": [
+        {
+          "id": 0,
+          "x": 677.6619610094409,
+          "y": 321.72289615613954,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 1,
+          "x": 708.5531675644596,
+          "y": 321.74114557946484,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 2,
+          "x": 739.445952812215,
+          "y": 321.7593959354255,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 3,
+          "x": 770.3403168737278,
+          "y": 321.77764722409313,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        }
+      ]
+    },
+    "Real default street view at 101 fades a blocking old city tower",
+    {
+      "lowAngleTreeView": [
+        {
+          "position": [
+            -42,
+            0,
+            13
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -35,
+            0,
+            16
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -28,
+            0,
+            18
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -18,
+            0,
+            17
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -8,
+            0,
+            17
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -43,
+            0,
+            5
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -32,
+            0,
+            3
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -13,
+            0,
+            2
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -5,
+            0,
+            -7
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -13,
+            0,
+            -13
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -6,
+            0,
+            -21
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -37,
+            0,
+            -25
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -45,
+            0,
+            -28
+          ],
+          "faded": false,
+          "opacity": 1
+        },
+        {
+          "position": [
+            -12,
+            0,
+            34
+          ],
+          "faded": true,
+          "opacity": 0.22
+        },
+        {
+          "position": [
+            8,
+            0,
+            35
+          ],
+          "faded": false,
+          "opacity": 1
+        }
+      ]
+    },
+    "Returning to the normal street camera restores tree opacity; neighboring trees never faded together",
+    {
+      "label": "actual roll joins three occupants on bank 12",
+      "pawns": [
+        {
+          "id": 0,
+          "x": 719.0804415207747,
+          "y": 363.5360050495681,
+          "tile": 12,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 1,
+          "x": 758.9386504308372,
+          "y": 363.47552353027976,
+          "tile": 12,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 2,
+          "x": 798.7905810845787,
+          "y": 363.41505153772357,
+          "tile": 12,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 3,
+          "x": 838.6362349652587,
+          "y": 363.35458906964885,
+          "tile": 12,
+          "scale": 0.72,
+          "count": 4
+        }
+      ]
+    },
+    "Actual move joins the existing bank group without changing its four saved tile IDs",
+    {
+      "label": "390px four on tile 11",
+      "pawns": [
+        {
+          "id": 0,
+          "x": 76.75917278155063,
+          "y": 334.9825807048225,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 1,
+          "x": 102.06896031705912,
+          "y": 334.9825807048225,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 2,
+          "x": 127.37874785256768,
+          "y": 334.98258070482257,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        },
+        {
+          "id": 3,
+          "x": 152.68853538807622,
+          "y": 334.9825807048226,
+          "tile": 11,
+          "scale": 0.72,
+          "count": 4
+        }
+      ]
+    },
+    "390px actual departure leaves three in the source group and one at bank; modal control accessible"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared four-player saves one step before each existing facility; actual roll/dialog/transaction, not a full natural match.",
+    "390px Chromium touch viewport with software WebGL, not a physical phone, FPS or subjective audio test."
+  ],
+  "continuation": "Resume only movement/mobile checks after allowing arrival formation interpolation to settle",
+  "success": true
+}

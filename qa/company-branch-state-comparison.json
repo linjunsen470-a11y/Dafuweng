@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "compared": "All final snapshot fields after the same UI-driven branch journey",
+  "excluded": [
+    "savedAt",
+    "economicCycle.lastReport.generatedAt",
+    "logHistory[*].time"
+  ],
+  "round": 6,
+  "tile": 28,
+  "cash": 21610,
+  "note": "Exclusions are wall-clock timestamps only; players, properties, stock/company accounts, log messages, cards/items, RNG and game phase are identical."
+}

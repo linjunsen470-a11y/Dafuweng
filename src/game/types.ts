@@ -193,6 +193,7 @@ export interface EconomicCycleState {
   period: number;
   roundsPerPeriod: number;
   lastSettlementRound: number;
+  lastReport?: Record<string, unknown> | null;
 }
 
 export interface GameSnapshotV1 {
@@ -231,7 +232,7 @@ export interface GameSnapshotV4 extends Omit<GameSnapshotV3, 'version'> {
   gameMode: 'STANDARD' | 'QUICK' | 'TEAM' | 'CHALLENGE' | 'HEAT';
   lottery: { pot: number; tickets: Array<{ playerId: PlayerId; number: number }>; lastNumber: number | null };
   boardGods: Array<{ id: string; type: string; tileId: TileId; direction: number }>;
-  mechanismState: { activeRoute: number };
+  mechanismState: { activeRoute: number; locked?: boolean };
   winningTeamId: string | number | null;
 }
 
@@ -279,4 +280,10 @@ export interface GameSnapshotV10 extends Omit<GameSnapshotV9, 'version'> {
   version: 10;
 }
 
-export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8 | GameSnapshotV9 | GameSnapshotV10;
+export interface GameSnapshotV11 extends Omit<GameSnapshotV10, 'version'> {
+  version: 11;
+  matchStatistics: Record<string, unknown>;
+  matchConfig: Record<string, unknown> | null;
+}
+
+export type GameSnapshot = GameSnapshotV1 | GameSnapshotV2 | GameSnapshotV3 | GameSnapshotV4 | GameSnapshotV5 | GameSnapshotV6 | GameSnapshotV7 | GameSnapshotV8 | GameSnapshotV9 | GameSnapshotV10 | GameSnapshotV11;

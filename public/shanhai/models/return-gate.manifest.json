@@ -1,0 +1,17 @@
+{
+  "asset": "return-gate.glb",
+  "generator": "scripts/art/create_return_gate.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "models": [
+    {
+      "prefab": "return_tide_gate",
+      "triangles": 384,
+      "size_xyz_blender": [
+        3.4000000953674316,
+        3.0999999046325684,
+        3.8500001430511475
+      ]
+    }
+  ]
+}

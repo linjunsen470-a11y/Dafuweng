@@ -1,0 +1,11 @@
+{
+  "startedAt": "2026-11-05T20:03:28.045Z",
+  "checks": [
+    "Three visible transport signs, sea route preview, both fares/odds and post-purchase balances; cancelling costs no money or RNG.",
+    "Reload during ferry animation resumes tile 9 without duplicate fare, preserves card, resolves property and renewal reward normally.",
+    "390px ticket selection and garden skiff arrival at tile 3; exactly ¥250 fare plus ¥150 ordinary landing rent, no skipped-start bonus, no reroll on refresh."
+  ],
+  "errors": [],
+  "success": true,
+  "finishedAt": "2026-11-05T20:05:46.426Z"
+}

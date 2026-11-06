@@ -1,0 +1,103 @@
+{
+  "kind": "character boarding, landing and event performance",
+  "checks": [
+    "Ayu ferry visibly boards/sails/alights; all four stage callbacks retain the single fare/outcome/RNG; ordinary purchase feedback follows.",
+    "Qinghe skiff with natural seed 1 announces actual diverted tile 4, then presents event choice and the actual failed investment with disappointed animation.",
+    "390px reduced-motion trip completes promptly with readable role/arrival feedback, correct fare, no transient boat or horizontal overflow.",
+    "Reload during boarding resumes the committed arrival, with no repeated fare/RNG draw and normal property decision."
+  ],
+  "errors": [],
+  "trips": [
+    [
+      {
+        "stage": "boarding",
+        "time": 13293.800000000745,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      },
+      {
+        "stage": "sailing",
+        "time": 15509.599999999627,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      },
+      {
+        "stage": "alighting",
+        "time": 17243.099999999627,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      },
+      {
+        "stage": "arrival",
+        "time": 18823.599999999627,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      }
+    ],
+    [
+      {
+        "stage": "boarding",
+        "time": 8678.300000000745,
+        "tile": 4,
+        "cash": 15750,
+        "rng": 3675906095
+      },
+      {
+        "stage": "sailing",
+        "time": 10377.5,
+        "tile": 4,
+        "cash": 15750,
+        "rng": 3675906095
+      },
+      {
+        "stage": "alighting",
+        "time": 12440.400000000373,
+        "tile": 4,
+        "cash": 15750,
+        "rng": 3675906095
+      },
+      {
+        "stage": "arrival",
+        "time": 13469.900000000373,
+        "tile": 4,
+        "cash": 15750,
+        "rng": 3675906095
+      }
+    ],
+    [
+      {
+        "stage": "boarding",
+        "time": 10868.900000000373,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      },
+      {
+        "stage": "sailing",
+        "time": 11052.099999999627,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      },
+      {
+        "stage": "alighting",
+        "time": 11095.599999999627,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      },
+      {
+        "stage": "arrival",
+        "time": 11119.900000000373,
+        "tile": 9,
+        "cash": 15350,
+        "rng": 2298634397
+      }
+    ]
+  ],
+  "success": true
+}

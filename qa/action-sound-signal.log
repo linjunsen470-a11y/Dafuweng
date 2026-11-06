@@ -1,0 +1,41 @@
+[
+  {
+    "file": "ability.wav",
+    "description": "Rising whistle and soft high answer: role ability completed.",
+    "seconds": 0.64,
+    "peak": 0.319976806640625,
+    "rms": 0.11899581833877912,
+    "clippedSamples": 0,
+    "endpointSamples": [
+      0,
+      0
+    ],
+    "sha256": "853e044aaa0ebc59844924139382a580934093f28f6346cb036d64329dbf4ca3"
+  },
+  {
+    "file": "auction-sold.wav",
+    "description": "Two dry wooden strikes and short confirmation: lot sold.",
+    "seconds": 0.62,
+    "peak": 0.318115234375,
+    "rms": 0.07904397459811835,
+    "clippedSamples": 0,
+    "endpointSamples": [
+      0,
+      0
+    ],
+    "sha256": "e9ef207427904b9b897e9b3f21f66a9171c1dc0d8a8bd930f732119dbb98cd08"
+  },
+  {
+    "file": "bankruptcy.wav",
+    "description": "Two low descending tones with a soft release: player exits the season.",
+    "seconds": 0.82,
+    "peak": 0.38787841796875,
+    "rms": 0.11946157369363407,
+    "clippedSamples": 0,
+    "endpointSamples": [
+      0,
+      0
+    ],
+    "sha256": "ede2236576a9169f9213cb54ce174db33d194feb6f74f630bad70cb6244ff6ac"
+  }
+]

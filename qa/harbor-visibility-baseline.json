@@ -1,0 +1,40 @@
+{
+  "checks": [],
+  "errors": [],
+  "limits": [
+    "Prepared scenes and a read-only default-camera obstruction scan before implementation; no gameplay transactions in this baseline.",
+    "The tower screenshot includes a turn banner; tree obstruction was validated separately after implementation at a low viewing angle.",
+    "Mobile viewport simulation, not a physical device."
+  ],
+  "scan": [
+    {
+      "tile": 101,
+      "blockers": [
+        {
+          "kind": "tower",
+          "position": [
+            31,
+            0,
+            -4
+          ]
+        }
+      ]
+    },
+    {
+      "tile": 102,
+      "blockers": [
+        {
+          "kind": "tower",
+          "position": [
+            31,
+            0,
+            -4
+          ]
+        }
+      ]
+    }
+  ],
+  "towerTile": 101,
+  "success": true,
+  "baselineHead": "77837f9c6b4927931a280b9345b55019c653fcba"
+}

@@ -1,0 +1,11 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+06:27:35 | INFO: Starting glTF 2.0 export
+06:27:35 | INFO: Extracting primitive: Cube.001
+06:27:35 | INFO: Primitives created: 7
+06:27:35 | INFO: Finished glTF 2.0 export in 0.03044724464416504 s
+
+Info: Saved "old-town.blend"
+{"asset": "old-town.glb", "generator": "scripts/art/create_old_town.py", "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.", "axes": "GLB Y-up, front +Z, origin ground center", "models": [{"prefab": "old_town_exchange", "triangles": 616, "size_xyz_blender": [4.199999809265137, 3.0, 4.090000152587891]}]}
+Blender 4.3.2
+
+Blender quit

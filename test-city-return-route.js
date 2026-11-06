@@ -1,0 +1,38 @@
+import fs from 'node:fs/promises';import puppeteer from 'puppeteer-core';import {createServer} from 'vite';
+const resume=true;
+const resumeSave=resume?JSON.parse(await fs.readFile('qa/continuity-latest-save.json','utf8')):null;
+const report={actions:[],errors:[],checkpoints:[],limits:['Started through the real setup UI with default four-player standard game; only the built-in 2x speed chosen. No forced dice, teleport, money, god or route-state edits.','Automated clicks on visible UI with conservative purchasing; browser software WebGL, no subjective audio acceptance.']};
+const server=await createServer({plugins:[{name:'qa-controller',transform(c,id){if(id.endsWith('/src/main.js'))return c.replace('new GameController();','window.__qaGame = new GameController();');}}],server:{host:'127.0.0.1',port:5207,strictPort:true}});await server.listen();
+const browser=await puppeteer.launch({executablePath:'/usr/bin/chromium',headless:true,protocolTimeout:180000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});let p;const started=Date.now();
+async function save(name){await fs.writeFile(`qa/return-route-${name}.json`,JSON.stringify(await p.evaluate(()=>__qaGame.gameState.createSnapshot()),null,2)+'\n');}
+try{
+ p=await browser.newPage();p.setDefaultTimeout(90000);await p.setViewport({width:1440,height:900});p.on('pageerror',e=>report.errors.push(e.message));await p.evaluateOnNewDocument(s=>{localStorage.setItem('fortune-empire:tutorial-seen','1');if(s)localStorage.setItem('fortune-empire:auto-save:v1',JSON.stringify(s));},resumeSave);await p.goto('http://127.0.0.1:5207/',{waitUntil:'networkidle0',timeout:120000});await p.click(resume?'#load-auto-save-btn':'#start-game-btn');await p.waitForFunction(()=>document.querySelector('#game-container').dataset.harborArt==='ready');await p.waitForFunction(()=>!document.querySelector('.presentation-turn-banner.is-visible'));await save(resume?'resume-start-save':'initial-save');if(resume)report.resumed=`Exact pre-roll checkpoint at round ${resumeSave.round} tile ${resumeSave.players[0].currentTile}; no game state edits.`;
+ await p.click('#btn-pause-game');await p.waitForSelector('#modal-pause:not(.hidden)');await p.click('[data-speed="2"]');await p.click('#btn-resume-game');
+ await p.evaluate(()=>{window.__walkCommands=[];const engine=__qaGame.gameEngine,run=engine.execute.bind(engine);engine.execute=c=>{const r=run(c);if(true){__walkCommands.push({round:__qaGame.gameState.round,player:c.playerId,command:c.type,tile:__qaGame.gameState.players[c.playerId]?.currentTile,result:r.type,success:r.success,roll:r.steps??r.total,detail:r.chance?.title,events:r.events?.map(e=>e.type),at:performance.now()});}return r;};});
+ let lastRoll='',lastState='',unchangedSince=Date.now();const captures=new Set();
+ while(Date.now()-started<900000){
+  const v=await p.evaluate(()=>{const g=__qaGame,s=g.gameState;const visible=sel=>{const e=document.querySelector(sel);if(!e||e.disabled||e.closest('.hidden'))return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(e).visibility!=='hidden';};
+   const actions=['.news-dismiss','.chance-accept','.economic-report-close','.debt-outcome-overlay button','.auction-result button','.auction-pass-button','[data-action="AUTO_SETTLE_DEBT"]','.minigame-claim','.minigame-skip','.mechanism-close','.magic-house-close','.lottery-close','#stock-modal-close','#shop-modal-close','#btn-land-buy','#btn-land-upgrade','#btn-land-pass','[data-route="84"]','[data-route="96"]','[data-route="108"]','.route-plan','.bank-confirm','.bank-close'];
+   const choices=actions.filter(visible);const state={round:s.round,tile:s.players[0].currentTile,who:s.currentPlayerIndex,phase:s.phase,busy:g.isProcessingAction,cash:s.players[0].cash,deposit:s.players[0].deposit,bankrupt:s.players[0].isBankrupt,banner:!!document.querySelector('.presentation-turn-banner.is-visible'),actions:choices,gameOver:s.phase==='GAME_OVER'};
+   state.noticeOverlap=!!document.querySelector('.news-flash-overlay')&&!!document.querySelector('.economic-report-overlay');state.blockers=Array.from(document.querySelectorAll('.modal:not(.hidden),.news-flash-overlay,.chance-reveal-overlay')).filter(e=>e.getBoundingClientRect().width>0).map(e=>({className:e.className,text:e.textContent.slice(0,220)}));return state;});
+  if(v.noticeOverlap&&!report.noticeOverlap){report.noticeOverlap={round:v.round,tile:v.tile};await p.screenshot({path:'qa/return-route-notice-overlap.png'});}
+  const stateKey=JSON.stringify(v);if(stateKey!==lastState){lastState=stateKey;unchangedSince=Date.now();console.log(JSON.stringify({round:v.round,tile:v.tile,who:v.who,phase:v.phase,actions:v.actions,blockers:v.blockers.map(x=>x.className)}));}
+  if(v.gameOver||v.bankrupt){report.stopped=v.gameOver?'game-over':'human-bankrupt';break;}
+  let action=v.actions[0];if((action==='#btn-land-buy'||action==='#btn-land-upgrade')&&v.cash<6000)action='#btn-land-pass';
+  if(action&&!v.banner){
+   if(action==='.bank-confirm'){await p.$eval('.bank-center input[type=number]',e=>{e.value='1000';e.dispatchEvent(new Event('input',{bubbles:true}));});}
+   report.actions.push({round:v.round,tile:v.tile,action});await p.click(action).catch(e=>{if(!/detached|No element found/.test(e.message))throw e;report.actions.at(-1).staleControl=e.message;});await new Promise(r=>setTimeout(r,200));continue;
+  }
+  const ready=v.who===0&&v.phase==='PRE_ROLL_ACTION'&&!v.busy&&!v.banner&&!v.blockers.length;
+  if(ready){
+   const region=v.tile>=108?'west-branch':v.tile>=96?'east-branch':v.tile>=84?'harbor-branch':v.tile>=79?'west-return':v.tile<24?'harbor-return':v.tile<48?'east-main':'north-main';
+   if(!captures.has(region)){captures.add(region);await p.screenshot({path:`qa/return-route-walk-${region}.png`});report.checkpoints.push({region,round:v.round,tile:v.tile});await save(`at-${region}-save`);}
+   const commands=await p.evaluate(()=>window.__walkCommands);const visited=new Set(commands.filter(c=>c.player===0&&c.command==='ADVANCE_MOVE').map(c=>c.tile));
+   if(visited.has(95)&&visited.has(107)&&visited.has(119)){report.stopped='all-branches-covered';break;}
+   const key=`${v.round}:${v.tile}`;if(key!==lastRoll){lastRoll=key;await save('latest-save');await p.click('#btn-roll');report.actions.push({round:v.round,tile:v.tile,action:'#btn-roll'});}
+  }
+  if(Date.now()-unchangedSince>45000){report.stopped='unchanged-for-45s';report.blocked=v;await p.screenshot({path:'qa/return-route-walk-blocked.png'});break;}
+  await new Promise(r=>setTimeout(r,300));
+ }
+ report.commands=await p.evaluate(()=>window.__walkCommands);await save('final-save');report.final=await p.evaluate(()=>({round:__qaGame.gameState.round,players:__qaGame.gameState.players.map(x=>({id:x.id,tile:x.currentTile,cash:x.cash,deposit:x.deposit,bankrupt:x.isBankrupt})),logs:__qaGame.gameState.logHistory}));report.elapsedSeconds=Math.round((Date.now()-started)/1000);report.stopped??='time-budget';report.success=['all-branches-covered','game-over','human-bankrupt'].includes(report.stopped)&&!report.errors.length;
+}catch(e){report.commands=await p?.evaluate(()=>window.__walkCommands).catch(()=>[]);report.failure=e.stack;process.exitCode=1;await p?.screenshot({path:'qa/return-route-walk-failure.png'}).catch(()=>{});await save('interrupted-save').catch(()=>{});}finally{await browser.close();await server.close();await fs.writeFile(`qa/return-route-walk${resume?'-part2':''}-report.json`,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({success:report.success,stopped:report.stopped,failure:report.failure,elapsedSeconds:report.elapsedSeconds,checkpoints:report.checkpoints,errors:report.errors}));}

@@ -1,0 +1,23 @@
+{
+  "purpose": "Offline geometry validation only; browser/WebGL/UI tests blocked by execution socket policy",
+  "meshCount": 124,
+  "triangleCount": 142147,
+  "materialCount": 79,
+  "invalidGeometry": [],
+  "routeSegmentMin": 2.4865236777477104,
+  "routeSegmentMax": 3.881043674065007,
+  "mapNodeCount": 24,
+  "characterCount": 2,
+  "sceneBounds": {
+    "min": [
+      -125,
+      -1.5499999523162842,
+      -125
+    ],
+    "max": [
+      125,
+      4.010499954223633,
+      125
+    ]
+  }
+}

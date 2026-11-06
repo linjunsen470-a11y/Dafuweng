@@ -15,8 +15,8 @@ function createState() {
 }
 
 describe('CardRules', () => {
-  it('ships thirty data-driven strategy card definitions', () => {
-    expect(CARDS).toHaveLength(30);
+  it('ships thirty-one data-driven strategy card definitions', () => {
+    expect(CARDS).toHaveLength(31);
   });
 
   it('offers every active opponent for player-target cards', () => {

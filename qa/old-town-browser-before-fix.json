@@ -1,0 +1,13 @@
+{
+  "checks": [
+    "Actual roll to the property bought during the walk upgrades lot 38 and renders original old-town level 1",
+    "Stock landmark and four old-town levels loaded in the normal main-game view; legacy snapshot fields unchanged"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared positions reuse the ownership and money of the actual harbor-to-old-town walk. Building levels 1–4 are a visual fixture, not four natural upgrades.",
+    "390px touch viewport, not physical mobile or performance acceptance."
+  ],
+  "success": false,
+  "failure": "AssertionError [ERR_ASSERTION]: stock buy should be reachable\n    at file:///workspace/dafuweng-cloud/test-main-old-town.js:14:371"
+}

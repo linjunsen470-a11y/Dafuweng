@@ -1,0 +1,38 @@
+
+> dafuweng-3d@1.0.0 prebuild
+> node scripts/generate-offline-manifest.mjs
+
+Generated offline manifest with 132 assets.
+
+> dafuweng-3d@1.0.0 build
+> vite build
+
+vite v8.1.5 building client environment for production...
+[2Ktransforming...✓ 130 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/shanhai.html                          12.08 kB │ gzip:   4.70 kB
+dist/index.html                            25.57 kB │ gzip:   7.04 kB
+dist/assets/shanhai-CwHU39qQ.css           44.20 kB │ gzip:  10.20 kB
+dist/assets/main-B7-5tPyl.css             194.71 kB │ gzip:  39.58 kB
+dist/assets/pwa-BcISKToO.js                 0.27 kB │ gzip:   0.24 kB
+dist/assets/InventoryManager-CBBs8_iv.js    0.91 kB │ gzip:   0.52 kB
+dist/assets/ModeUI-CC2uzvJJ.js              2.20 kB │ gzip:   1.05 kB
+dist/assets/MarketUI-FVJNjA2r.js            5.93 kB │ gzip:   2.43 kB
+dist/assets/CardManager-BLxvK9ZH.js         5.99 kB │ gzip:   2.64 kB
+dist/assets/ContentRegistry-0QtY1XEe.js     6.56 kB │ gzip:   3.05 kB
+dist/assets/AssetUI-BvFInuBz.js             7.12 kB │ gzip:   2.87 kB
+dist/assets/StockUI-Bv2mTll7.js             8.25 kB │ gzip:   3.10 kB
+dist/assets/celebration-DxWMmnap.js        10.72 kB │ gzip:   4.28 kB
+dist/assets/ShopUI-VQplVoau.js             11.55 kB │ gzip:   3.99 kB
+dist/assets/GameEngine-CYrLF6_-.js        195.07 kB │ gzip:  63.69 kB
+dist/assets/main-eDZm2OFI.js              285.30 kB │ gzip:  89.66 kB
+dist/assets/three-engine-QZJo5cY_.js      596.17 kB │ gzip: 153.28 kB
+dist/assets/shanhai-Be-cVHHR.js           923.43 kB │ gzip: 260.27 kB
+
+✓ built in 798ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 550 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

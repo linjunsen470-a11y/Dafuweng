@@ -1,0 +1,4374 @@
+[
+  {
+    "mapId": "shanhai-coast",
+    "kind": "PURCHASE",
+    "beforeCash": 3500,
+    "cost": 1200,
+    "rent": 2760,
+    "nextRentCovered": false,
+    "afterCash": 2300,
+    "property": {
+      "owner": 3,
+      "level": 0,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "🏗️ 陶宁 成功购买【晨光小屋】(花费 $1,200)！",
+        "type": "success",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      }
+    ],
+    "fixture": {
+      "version": 11,
+      "contentVersion": "2026.8",
+      "savedAt": "2026-11-06T01:41:02.890Z",
+      "seed": 314,
+      "rngState": 2298634397,
+      "phase": "LANDING_ACTION",
+      "round": 6,
+      "maxRounds": 16,
+      "gameMode": "STANDARD",
+      "mapId": "shanhai-coast",
+      "currentPlayerIndex": 3,
+      "players": [
+        {
+          "id": 0,
+          "profileId": "ayu",
+          "name": "阿屿",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧢",
+          "color": "#f5816c",
+          "colorHex": 16089452,
+          "skillName": "顺风速递",
+          "skillDesc": "完成速递委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 0,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "ayu"
+        },
+        {
+          "id": 1,
+          "profileId": "qinghe",
+          "name": "青禾",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🌿",
+          "color": "#42b8a6",
+          "colorHex": 4372646,
+          "skillName": "街区园艺师",
+          "skillDesc": "完成焕新委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 1,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "qinghe"
+        },
+        {
+          "id": 2,
+          "profileId": "xingluo",
+          "name": "星罗",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧭",
+          "color": "#8b72ba",
+          "colorHex": 9138874,
+          "skillName": "行路制图",
+          "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 2,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "xingluo"
+        },
+        {
+          "id": 3,
+          "profileId": "taoning",
+          "name": "陶宁",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🔧",
+          "color": "#c58a38",
+          "colorHex": 12945976,
+          "skillName": "随身工坊",
+          "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+          "cash": 3500,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 1,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 3,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "taoning"
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          1,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          2,
+          {
+            "owner": 0,
+            "level": 4,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          3,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          5,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          6,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      ],
+      "stocks": [
+        {
+          "id": "TECH",
+          "name": "星河智造",
+          "code": "600001",
+          "price": 103,
+          "prevPrice": 94,
+          "change": 10,
+          "history": [
+            100,
+            98,
+            91,
+            83,
+            89,
+            96,
+            89,
+            96,
+            94,
+            103
+          ]
+        },
+        {
+          "id": "REALTY",
+          "name": "云庭置业",
+          "code": "600002",
+          "price": 263,
+          "prevPrice": 246,
+          "change": 7,
+          "history": [
+            250,
+            242,
+            235,
+            216,
+            205,
+            210,
+            224,
+            243,
+            246,
+            263
+          ]
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "青柠气泡",
+          "code": "600003",
+          "price": 53,
+          "prevPrice": 57,
+          "change": -7,
+          "history": [
+            50,
+            47,
+            45,
+            49,
+            54,
+            51,
+            52,
+            55,
+            57,
+            53
+          ]
+        },
+        {
+          "id": "ENERGY",
+          "name": "曙光能源",
+          "code": "600004",
+          "price": 187,
+          "prevPrice": 183,
+          "change": 2,
+          "history": [
+            180,
+            174,
+            172,
+            164,
+            180,
+            190,
+            197,
+            197,
+            183,
+            187
+          ]
+        },
+        {
+          "id": "MINING",
+          "name": "远山材料",
+          "code": "600005",
+          "price": 408,
+          "prevPrice": 374,
+          "change": 9,
+          "history": [
+            320,
+            325,
+            350,
+            380,
+            378,
+            400,
+            403,
+            379,
+            374,
+            408
+          ]
+        },
+        {
+          "id": "HARBOR",
+          "name": "蓝港保险",
+          "code": "600006",
+          "price": 140,
+          "prevPrice": 138,
+          "change": 1,
+          "history": [
+            140,
+            138,
+            130,
+            140,
+            141,
+            148,
+            150,
+            150,
+            138,
+            140
+          ]
+        }
+      ],
+      "newsEffect": null,
+      "newsHistory": [],
+      "logHistory": [
+        {
+          "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+          "type": "gold",
+          "time": "1:41:02 AM"
+        }
+      ],
+      "winnerId": null,
+      "winReason": null,
+      "pendingMove": null,
+      "pendingDebt": null,
+      "phaseBeforePause": null,
+      "lottery": {
+        "pot": 2000,
+        "tickets": [],
+        "lastNumber": null
+      },
+      "boardGods": [
+        {
+          "id": "BOARD_GOD_0",
+          "type": "FORTUNE",
+          "tileId": 2,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_1",
+          "type": "GREAT_FORTUNE",
+          "tileId": 5,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_2",
+          "type": "LUCK",
+          "tileId": 8,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_3",
+          "type": "EARTH",
+          "tileId": 10,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_4",
+          "type": "MISFORTUNE",
+          "tileId": 13,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_5",
+          "type": "BAD",
+          "tileId": 16,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_6",
+          "type": "ANGEL",
+          "tileId": 18,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_7",
+          "type": "DEMON",
+          "tileId": 21,
+          "direction": -1
+        }
+      ],
+      "mechanismState": {
+        "activeRoute": 0,
+        "locked": false
+      },
+      "winningTeamId": null,
+      "roadEntities": [],
+      "companies": [
+        {
+          "id": "AURORA_RETAIL",
+          "name": "极光百货",
+          "stockId": "BEVERAGE",
+          "icon": "🏬",
+          "baseFee": 360,
+          "perk": "SHOP",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "HARBOR_INSURANCE",
+          "name": "蓝港保险",
+          "stockId": "HARBOR",
+          "icon": "🛟",
+          "baseFee": 300,
+          "perk": "INSURANCE",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SKY_TRANSIT",
+          "name": "天际交通",
+          "stockId": "ENERGY",
+          "icon": "🚝",
+          "baseFee": 420,
+          "perk": "TRANSIT",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "NOVA_BUILD",
+          "name": "新星营造",
+          "stockId": "REALTY",
+          "icon": "🏗️",
+          "baseFee": 440,
+          "perk": "BUILD",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "CLOUD_COMPUTE",
+          "name": "云端计算",
+          "stockId": "TECH",
+          "icon": "💻",
+          "baseFee": 390,
+          "perk": "TECH",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SUMMIT_MATERIAL",
+          "name": "峰岳材料",
+          "stockId": "MINING",
+          "icon": "⛏️",
+          "baseFee": 410,
+          "perk": "MATERIAL",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        }
+      ],
+      "auction": null,
+      "phaseBeforeAuction": null,
+      "bankruptcyAuctionQueue": [],
+      "marketOffers": [],
+      "marketHistory": [],
+      "researchTasks": [],
+      "economicCycle": {
+        "period": 1,
+        "roundsPerPeriod": 5,
+        "lastSettlementRound": 0,
+        "lastReport": null
+      },
+      "minigameState": null,
+      "turnCheckpoint": {
+        "playerId": 0,
+        "currentTile": 0,
+        "cash": 16000,
+        "deposit": 0,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "stocks": {},
+        "statuses": {
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "godType": null,
+          "godTurns": 0
+        }
+      },
+      "activeQuests": [],
+      "questHistory": [],
+      "questSequence": 0,
+      "matchStatistics": {
+        "startedAtRound": 1,
+        "players": [
+          {
+            "playerId": 0,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 1,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 2,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 3,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          }
+        ],
+        "highlights": []
+      },
+      "matchConfig": {
+        "playerConfigs": [
+          {
+            "profileIndex": 8,
+            "name": "阿屿",
+            "isAI": false
+          },
+          {
+            "profileIndex": 8,
+            "name": "青禾",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "星罗",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "陶宁",
+            "isAI": true
+          }
+        ],
+        "initialCash": 16000,
+        "options": {
+          "mapId": "shanhai-coast",
+          "maxRounds": 16,
+          "mode": "STANDARD"
+        }
+      },
+      "slice": {
+        "version": 1,
+        "focus": {
+          "kind": "PURCHASE",
+          "title": "晨光小屋",
+          "description": "从空地到海湾地标，共五个建筑阶段",
+          "tileId": 1,
+          "result": {
+            "success": true,
+            "type": "LANDING_READY",
+            "events": []
+          },
+          "cost": 1200
+        },
+        "lastRoll": null,
+        "landingResolved": true,
+        "decisionMade": false,
+        "cardUsed": false,
+        "careers": {
+          "0": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "1": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "2": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "3": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          }
+        },
+        "pendingEvent": null,
+        "lastTransport": null,
+        "abilities": {
+          "0": {
+            "readyRound": 1,
+            "last": null
+          },
+          "1": {
+            "readyRound": 1,
+            "last": null
+          },
+          "2": {
+            "readyRound": 1,
+            "last": null
+          },
+          "3": {
+            "readyRound": 1,
+            "last": null
+          }
+        },
+        "stories": {
+          "0": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "1": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "2": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "3": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          }
+        },
+        "auctionResults": []
+      }
+    }
+  },
+  {
+    "mapId": "shanhai-coast",
+    "kind": "UPGRADE",
+    "beforeCash": 2800,
+    "cost": 600,
+    "rent": 2760,
+    "nextRentCovered": false,
+    "afterCash": 2200,
+    "property": {
+      "owner": 3,
+      "level": 1,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "✨ 陶宁 将【晨光小屋】升级至 LV 1(花费 $600)！",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      }
+    ],
+    "fixture": {
+      "version": 11,
+      "contentVersion": "2026.8",
+      "savedAt": "2026-11-06T01:41:02.897Z",
+      "seed": 314,
+      "rngState": 2298634397,
+      "phase": "LANDING_ACTION",
+      "round": 6,
+      "maxRounds": 16,
+      "gameMode": "STANDARD",
+      "mapId": "shanhai-coast",
+      "currentPlayerIndex": 3,
+      "players": [
+        {
+          "id": 0,
+          "profileId": "ayu",
+          "name": "阿屿",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧢",
+          "color": "#f5816c",
+          "colorHex": 16089452,
+          "skillName": "顺风速递",
+          "skillDesc": "完成速递委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 0,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "ayu"
+        },
+        {
+          "id": 1,
+          "profileId": "qinghe",
+          "name": "青禾",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🌿",
+          "color": "#42b8a6",
+          "colorHex": 4372646,
+          "skillName": "街区园艺师",
+          "skillDesc": "完成焕新委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 1,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "qinghe"
+        },
+        {
+          "id": 2,
+          "profileId": "xingluo",
+          "name": "星罗",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧭",
+          "color": "#8b72ba",
+          "colorHex": 9138874,
+          "skillName": "行路制图",
+          "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 2,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "xingluo"
+        },
+        {
+          "id": 3,
+          "profileId": "taoning",
+          "name": "陶宁",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🔧",
+          "color": "#c58a38",
+          "colorHex": 12945976,
+          "skillName": "随身工坊",
+          "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+          "cash": 2800,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 1,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 3,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "taoning"
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          1,
+          {
+            "owner": 3,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          2,
+          {
+            "owner": 0,
+            "level": 4,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          3,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          5,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          6,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      ],
+      "stocks": [
+        {
+          "id": "TECH",
+          "name": "星河智造",
+          "code": "600001",
+          "price": 103,
+          "prevPrice": 94,
+          "change": 10,
+          "history": [
+            100,
+            98,
+            91,
+            83,
+            89,
+            96,
+            89,
+            96,
+            94,
+            103
+          ]
+        },
+        {
+          "id": "REALTY",
+          "name": "云庭置业",
+          "code": "600002",
+          "price": 263,
+          "prevPrice": 246,
+          "change": 7,
+          "history": [
+            250,
+            242,
+            235,
+            216,
+            205,
+            210,
+            224,
+            243,
+            246,
+            263
+          ]
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "青柠气泡",
+          "code": "600003",
+          "price": 53,
+          "prevPrice": 57,
+          "change": -7,
+          "history": [
+            50,
+            47,
+            45,
+            49,
+            54,
+            51,
+            52,
+            55,
+            57,
+            53
+          ]
+        },
+        {
+          "id": "ENERGY",
+          "name": "曙光能源",
+          "code": "600004",
+          "price": 187,
+          "prevPrice": 183,
+          "change": 2,
+          "history": [
+            180,
+            174,
+            172,
+            164,
+            180,
+            190,
+            197,
+            197,
+            183,
+            187
+          ]
+        },
+        {
+          "id": "MINING",
+          "name": "远山材料",
+          "code": "600005",
+          "price": 408,
+          "prevPrice": 374,
+          "change": 9,
+          "history": [
+            320,
+            325,
+            350,
+            380,
+            378,
+            400,
+            403,
+            379,
+            374,
+            408
+          ]
+        },
+        {
+          "id": "HARBOR",
+          "name": "蓝港保险",
+          "code": "600006",
+          "price": 140,
+          "prevPrice": 138,
+          "change": 1,
+          "history": [
+            140,
+            138,
+            130,
+            140,
+            141,
+            148,
+            150,
+            150,
+            138,
+            140
+          ]
+        }
+      ],
+      "newsEffect": null,
+      "newsHistory": [],
+      "logHistory": [
+        {
+          "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+          "type": "gold",
+          "time": "1:41:02 AM"
+        }
+      ],
+      "winnerId": null,
+      "winReason": null,
+      "pendingMove": null,
+      "pendingDebt": null,
+      "phaseBeforePause": null,
+      "lottery": {
+        "pot": 2000,
+        "tickets": [],
+        "lastNumber": null
+      },
+      "boardGods": [
+        {
+          "id": "BOARD_GOD_0",
+          "type": "FORTUNE",
+          "tileId": 2,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_1",
+          "type": "GREAT_FORTUNE",
+          "tileId": 5,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_2",
+          "type": "LUCK",
+          "tileId": 8,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_3",
+          "type": "EARTH",
+          "tileId": 10,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_4",
+          "type": "MISFORTUNE",
+          "tileId": 13,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_5",
+          "type": "BAD",
+          "tileId": 16,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_6",
+          "type": "ANGEL",
+          "tileId": 18,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_7",
+          "type": "DEMON",
+          "tileId": 21,
+          "direction": -1
+        }
+      ],
+      "mechanismState": {
+        "activeRoute": 0,
+        "locked": false
+      },
+      "winningTeamId": null,
+      "roadEntities": [],
+      "companies": [
+        {
+          "id": "AURORA_RETAIL",
+          "name": "极光百货",
+          "stockId": "BEVERAGE",
+          "icon": "🏬",
+          "baseFee": 360,
+          "perk": "SHOP",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "HARBOR_INSURANCE",
+          "name": "蓝港保险",
+          "stockId": "HARBOR",
+          "icon": "🛟",
+          "baseFee": 300,
+          "perk": "INSURANCE",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SKY_TRANSIT",
+          "name": "天际交通",
+          "stockId": "ENERGY",
+          "icon": "🚝",
+          "baseFee": 420,
+          "perk": "TRANSIT",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "NOVA_BUILD",
+          "name": "新星营造",
+          "stockId": "REALTY",
+          "icon": "🏗️",
+          "baseFee": 440,
+          "perk": "BUILD",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "CLOUD_COMPUTE",
+          "name": "云端计算",
+          "stockId": "TECH",
+          "icon": "💻",
+          "baseFee": 390,
+          "perk": "TECH",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SUMMIT_MATERIAL",
+          "name": "峰岳材料",
+          "stockId": "MINING",
+          "icon": "⛏️",
+          "baseFee": 410,
+          "perk": "MATERIAL",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        }
+      ],
+      "auction": null,
+      "phaseBeforeAuction": null,
+      "bankruptcyAuctionQueue": [],
+      "marketOffers": [],
+      "marketHistory": [],
+      "researchTasks": [],
+      "economicCycle": {
+        "period": 1,
+        "roundsPerPeriod": 5,
+        "lastSettlementRound": 0,
+        "lastReport": null
+      },
+      "minigameState": null,
+      "turnCheckpoint": {
+        "playerId": 0,
+        "currentTile": 0,
+        "cash": 16000,
+        "deposit": 0,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "stocks": {},
+        "statuses": {
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "godType": null,
+          "godTurns": 0
+        }
+      },
+      "activeQuests": [],
+      "questHistory": [],
+      "questSequence": 0,
+      "matchStatistics": {
+        "startedAtRound": 1,
+        "players": [
+          {
+            "playerId": 0,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 1,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 2,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 3,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          }
+        ],
+        "highlights": []
+      },
+      "matchConfig": {
+        "playerConfigs": [
+          {
+            "profileIndex": 8,
+            "name": "阿屿",
+            "isAI": false
+          },
+          {
+            "profileIndex": 8,
+            "name": "青禾",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "星罗",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "陶宁",
+            "isAI": true
+          }
+        ],
+        "initialCash": 16000,
+        "options": {
+          "mapId": "shanhai-coast",
+          "maxRounds": 16,
+          "mode": "STANDARD"
+        }
+      },
+      "slice": {
+        "version": 1,
+        "focus": {
+          "kind": "UPGRADE",
+          "title": "晨光小屋",
+          "description": "从空地到海湾地标，共五个建筑阶段",
+          "tileId": 1,
+          "result": {
+            "success": true,
+            "type": "LANDING_READY",
+            "events": []
+          },
+          "cost": 600
+        },
+        "lastRoll": null,
+        "landingResolved": true,
+        "decisionMade": false,
+        "cardUsed": false,
+        "careers": {
+          "0": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "1": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "2": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "3": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          }
+        },
+        "pendingEvent": null,
+        "lastTransport": null,
+        "abilities": {
+          "0": {
+            "readyRound": 1,
+            "last": null
+          },
+          "1": {
+            "readyRound": 1,
+            "last": null
+          },
+          "2": {
+            "readyRound": 1,
+            "last": null
+          },
+          "3": {
+            "readyRound": 1,
+            "last": null
+          }
+        },
+        "stories": {
+          "0": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "1": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "2": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "3": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          }
+        },
+        "auctionResults": []
+      }
+    }
+  },
+  {
+    "mapId": "shanhai-highland",
+    "kind": "PURCHASE",
+    "beforeCash": 3500,
+    "cost": 1000,
+    "rent": 2520,
+    "nextRentCovered": false,
+    "afterCash": 2500,
+    "property": {
+      "owner": 3,
+      "level": 0,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "🏗️ 陶宁 成功购买【茶农小院】(花费 $1,000)！",
+        "type": "success",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      }
+    ],
+    "fixture": {
+      "version": 11,
+      "contentVersion": "2026.8",
+      "savedAt": "2026-11-06T01:41:02.899Z",
+      "seed": 314,
+      "rngState": 2298634397,
+      "phase": "LANDING_ACTION",
+      "round": 6,
+      "maxRounds": 16,
+      "gameMode": "STANDARD",
+      "mapId": "shanhai-highland",
+      "currentPlayerIndex": 3,
+      "players": [
+        {
+          "id": 0,
+          "profileId": "ayu",
+          "name": "阿屿",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧢",
+          "color": "#f5816c",
+          "colorHex": 16089452,
+          "skillName": "顺风速递",
+          "skillDesc": "完成速递委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 0,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "ayu"
+        },
+        {
+          "id": 1,
+          "profileId": "qinghe",
+          "name": "青禾",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🌿",
+          "color": "#42b8a6",
+          "colorHex": 4372646,
+          "skillName": "街区园艺师",
+          "skillDesc": "完成焕新委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 1,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "qinghe"
+        },
+        {
+          "id": 2,
+          "profileId": "xingluo",
+          "name": "星罗",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧭",
+          "color": "#8b72ba",
+          "colorHex": 9138874,
+          "skillName": "行路制图",
+          "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 2,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "xingluo"
+        },
+        {
+          "id": 3,
+          "profileId": "taoning",
+          "name": "陶宁",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🔧",
+          "color": "#c58a38",
+          "colorHex": 12945976,
+          "skillName": "随身工坊",
+          "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+          "cash": 3500,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 1,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 3,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "taoning"
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          1,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          2,
+          {
+            "owner": 0,
+            "level": 4,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          3,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          5,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          6,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      ],
+      "stocks": [
+        {
+          "id": "TECH",
+          "name": "星河智造",
+          "code": "600001",
+          "price": 103,
+          "prevPrice": 94,
+          "change": 10,
+          "history": [
+            100,
+            98,
+            91,
+            83,
+            89,
+            96,
+            89,
+            96,
+            94,
+            103
+          ]
+        },
+        {
+          "id": "REALTY",
+          "name": "云庭置业",
+          "code": "600002",
+          "price": 263,
+          "prevPrice": 246,
+          "change": 7,
+          "history": [
+            250,
+            242,
+            235,
+            216,
+            205,
+            210,
+            224,
+            243,
+            246,
+            263
+          ]
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "青柠气泡",
+          "code": "600003",
+          "price": 53,
+          "prevPrice": 57,
+          "change": -7,
+          "history": [
+            50,
+            47,
+            45,
+            49,
+            54,
+            51,
+            52,
+            55,
+            57,
+            53
+          ]
+        },
+        {
+          "id": "ENERGY",
+          "name": "曙光能源",
+          "code": "600004",
+          "price": 187,
+          "prevPrice": 183,
+          "change": 2,
+          "history": [
+            180,
+            174,
+            172,
+            164,
+            180,
+            190,
+            197,
+            197,
+            183,
+            187
+          ]
+        },
+        {
+          "id": "MINING",
+          "name": "远山材料",
+          "code": "600005",
+          "price": 408,
+          "prevPrice": 374,
+          "change": 9,
+          "history": [
+            320,
+            325,
+            350,
+            380,
+            378,
+            400,
+            403,
+            379,
+            374,
+            408
+          ]
+        },
+        {
+          "id": "HARBOR",
+          "name": "蓝港保险",
+          "code": "600006",
+          "price": 140,
+          "prevPrice": 138,
+          "change": 1,
+          "history": [
+            140,
+            138,
+            130,
+            140,
+            141,
+            148,
+            150,
+            150,
+            138,
+            140
+          ]
+        }
+      ],
+      "newsEffect": null,
+      "newsHistory": [],
+      "logHistory": [
+        {
+          "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+          "type": "gold",
+          "time": "1:41:02 AM"
+        }
+      ],
+      "winnerId": null,
+      "winReason": null,
+      "pendingMove": null,
+      "pendingDebt": null,
+      "phaseBeforePause": null,
+      "lottery": {
+        "pot": 2000,
+        "tickets": [],
+        "lastNumber": null
+      },
+      "boardGods": [
+        {
+          "id": "BOARD_GOD_0",
+          "type": "FORTUNE",
+          "tileId": 2,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_1",
+          "type": "GREAT_FORTUNE",
+          "tileId": 5,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_2",
+          "type": "LUCK",
+          "tileId": 8,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_3",
+          "type": "EARTH",
+          "tileId": 10,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_4",
+          "type": "MISFORTUNE",
+          "tileId": 13,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_5",
+          "type": "BAD",
+          "tileId": 16,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_6",
+          "type": "ANGEL",
+          "tileId": 18,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_7",
+          "type": "DEMON",
+          "tileId": 21,
+          "direction": -1
+        }
+      ],
+      "mechanismState": {
+        "activeRoute": 0,
+        "locked": false
+      },
+      "winningTeamId": null,
+      "roadEntities": [],
+      "companies": [
+        {
+          "id": "AURORA_RETAIL",
+          "name": "极光百货",
+          "stockId": "BEVERAGE",
+          "icon": "🏬",
+          "baseFee": 360,
+          "perk": "SHOP",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "HARBOR_INSURANCE",
+          "name": "蓝港保险",
+          "stockId": "HARBOR",
+          "icon": "🛟",
+          "baseFee": 300,
+          "perk": "INSURANCE",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SKY_TRANSIT",
+          "name": "天际交通",
+          "stockId": "ENERGY",
+          "icon": "🚝",
+          "baseFee": 420,
+          "perk": "TRANSIT",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "NOVA_BUILD",
+          "name": "新星营造",
+          "stockId": "REALTY",
+          "icon": "🏗️",
+          "baseFee": 440,
+          "perk": "BUILD",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "CLOUD_COMPUTE",
+          "name": "云端计算",
+          "stockId": "TECH",
+          "icon": "💻",
+          "baseFee": 390,
+          "perk": "TECH",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SUMMIT_MATERIAL",
+          "name": "峰岳材料",
+          "stockId": "MINING",
+          "icon": "⛏️",
+          "baseFee": 410,
+          "perk": "MATERIAL",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        }
+      ],
+      "auction": null,
+      "phaseBeforeAuction": null,
+      "bankruptcyAuctionQueue": [],
+      "marketOffers": [],
+      "marketHistory": [],
+      "researchTasks": [],
+      "economicCycle": {
+        "period": 1,
+        "roundsPerPeriod": 5,
+        "lastSettlementRound": 0,
+        "lastReport": null
+      },
+      "minigameState": null,
+      "turnCheckpoint": {
+        "playerId": 0,
+        "currentTile": 0,
+        "cash": 16000,
+        "deposit": 0,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "stocks": {},
+        "statuses": {
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "godType": null,
+          "godTurns": 0
+        }
+      },
+      "activeQuests": [],
+      "questHistory": [],
+      "questSequence": 0,
+      "matchStatistics": {
+        "startedAtRound": 1,
+        "players": [
+          {
+            "playerId": 0,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 1,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 2,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 3,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          }
+        ],
+        "highlights": []
+      },
+      "matchConfig": {
+        "playerConfigs": [
+          {
+            "profileIndex": 8,
+            "name": "阿屿",
+            "isAI": false
+          },
+          {
+            "profileIndex": 8,
+            "name": "青禾",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "星罗",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "陶宁",
+            "isAI": true
+          }
+        ],
+        "initialCash": 16000,
+        "options": {
+          "mapId": "shanhai-highland",
+          "maxRounds": 16,
+          "mode": "STANDARD"
+        }
+      },
+      "slice": {
+        "version": 1,
+        "focus": {
+          "kind": "PURCHASE",
+          "title": "茶农小院",
+          "description": "山城地产：可购买与升级，参考租金随物价与产权变化。",
+          "tileId": 1,
+          "result": {
+            "success": true,
+            "type": "LANDING_READY",
+            "events": []
+          },
+          "cost": 1000
+        },
+        "lastRoll": null,
+        "landingResolved": true,
+        "decisionMade": false,
+        "cardUsed": false,
+        "careers": {
+          "0": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "1": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "2": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "3": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          }
+        },
+        "pendingEvent": null,
+        "lastTransport": null,
+        "abilities": {
+          "0": {
+            "readyRound": 1,
+            "last": null
+          },
+          "1": {
+            "readyRound": 1,
+            "last": null
+          },
+          "2": {
+            "readyRound": 1,
+            "last": null
+          },
+          "3": {
+            "readyRound": 1,
+            "last": null
+          }
+        },
+        "stories": {
+          "0": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "1": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "2": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "3": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          }
+        },
+        "auctionResults": []
+      }
+    }
+  },
+  {
+    "mapId": "shanhai-highland",
+    "kind": "UPGRADE",
+    "beforeCash": 2800,
+    "cost": 500,
+    "rent": 2520,
+    "nextRentCovered": false,
+    "afterCash": 2300,
+    "property": {
+      "owner": 3,
+      "level": 1,
+      "hasObstacle": false,
+      "hasMine": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL"
+    },
+    "logs": [
+      {
+        "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "✨ 陶宁 将【茶农小院】升级至 LV 1(花费 $500)！",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "1:41:02 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【全民出行周】 - 每位玩家获得 30 卡片积分。",
+        "type": "gold",
+        "time": "1:41:02 AM"
+      }
+    ],
+    "fixture": {
+      "version": 11,
+      "contentVersion": "2026.8",
+      "savedAt": "2026-11-06T01:41:02.901Z",
+      "seed": 314,
+      "rngState": 2298634397,
+      "phase": "LANDING_ACTION",
+      "round": 6,
+      "maxRounds": 16,
+      "gameMode": "STANDARD",
+      "mapId": "shanhai-highland",
+      "currentPlayerIndex": 3,
+      "players": [
+        {
+          "id": 0,
+          "profileId": "ayu",
+          "name": "阿屿",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧢",
+          "color": "#f5816c",
+          "colorHex": 16089452,
+          "skillName": "顺风速递",
+          "skillDesc": "完成速递委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 0,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "ayu"
+        },
+        {
+          "id": 1,
+          "profileId": "qinghe",
+          "name": "青禾",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🌿",
+          "color": "#42b8a6",
+          "colorHex": 4372646,
+          "skillName": "街区园艺师",
+          "skillDesc": "完成焕新委托额外获得 ¥300。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 1,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "qinghe"
+        },
+        {
+          "id": 2,
+          "profileId": "xingluo",
+          "name": "星罗",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧭",
+          "color": "#8b72ba",
+          "colorHex": 9138874,
+          "skillName": "行路制图",
+          "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+          "cash": 16000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 2,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "xingluo"
+        },
+        {
+          "id": 3,
+          "profileId": "taoning",
+          "name": "陶宁",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🔧",
+          "color": "#c58a38",
+          "colorHex": 12945976,
+          "skillName": "随身工坊",
+          "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+          "cash": 2800,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 1,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 3,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "taoning"
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          1,
+          {
+            "owner": 3,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          2,
+          {
+            "owner": 0,
+            "level": 4,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          3,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          5,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          6,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      ],
+      "stocks": [
+        {
+          "id": "TECH",
+          "name": "星河智造",
+          "code": "600001",
+          "price": 103,
+          "prevPrice": 94,
+          "change": 10,
+          "history": [
+            100,
+            98,
+            91,
+            83,
+            89,
+            96,
+            89,
+            96,
+            94,
+            103
+          ]
+        },
+        {
+          "id": "REALTY",
+          "name": "云庭置业",
+          "code": "600002",
+          "price": 263,
+          "prevPrice": 246,
+          "change": 7,
+          "history": [
+            250,
+            242,
+            235,
+            216,
+            205,
+            210,
+            224,
+            243,
+            246,
+            263
+          ]
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "青柠气泡",
+          "code": "600003",
+          "price": 53,
+          "prevPrice": 57,
+          "change": -7,
+          "history": [
+            50,
+            47,
+            45,
+            49,
+            54,
+            51,
+            52,
+            55,
+            57,
+            53
+          ]
+        },
+        {
+          "id": "ENERGY",
+          "name": "曙光能源",
+          "code": "600004",
+          "price": 187,
+          "prevPrice": 183,
+          "change": 2,
+          "history": [
+            180,
+            174,
+            172,
+            164,
+            180,
+            190,
+            197,
+            197,
+            183,
+            187
+          ]
+        },
+        {
+          "id": "MINING",
+          "name": "远山材料",
+          "code": "600005",
+          "price": 408,
+          "prevPrice": 374,
+          "change": 9,
+          "history": [
+            320,
+            325,
+            350,
+            380,
+            378,
+            400,
+            403,
+            379,
+            374,
+            408
+          ]
+        },
+        {
+          "id": "HARBOR",
+          "name": "蓝港保险",
+          "code": "600006",
+          "price": 140,
+          "prevPrice": 138,
+          "change": 1,
+          "history": [
+            140,
+            138,
+            130,
+            140,
+            141,
+            148,
+            150,
+            150,
+            138,
+            140
+          ]
+        }
+      ],
+      "newsEffect": null,
+      "newsHistory": [],
+      "logHistory": [
+        {
+          "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $16,000，祝大家日进斗金！",
+          "type": "gold",
+          "time": "1:41:02 AM"
+        }
+      ],
+      "winnerId": null,
+      "winReason": null,
+      "pendingMove": null,
+      "pendingDebt": null,
+      "phaseBeforePause": null,
+      "lottery": {
+        "pot": 2000,
+        "tickets": [],
+        "lastNumber": null
+      },
+      "boardGods": [
+        {
+          "id": "BOARD_GOD_0",
+          "type": "FORTUNE",
+          "tileId": 2,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_1",
+          "type": "GREAT_FORTUNE",
+          "tileId": 5,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_2",
+          "type": "LUCK",
+          "tileId": 8,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_3",
+          "type": "EARTH",
+          "tileId": 10,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_4",
+          "type": "MISFORTUNE",
+          "tileId": 13,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_5",
+          "type": "BAD",
+          "tileId": 16,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_6",
+          "type": "ANGEL",
+          "tileId": 18,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_7",
+          "type": "DEMON",
+          "tileId": 21,
+          "direction": -1
+        }
+      ],
+      "mechanismState": {
+        "activeRoute": 0,
+        "locked": false
+      },
+      "winningTeamId": null,
+      "roadEntities": [],
+      "companies": [
+        {
+          "id": "AURORA_RETAIL",
+          "name": "极光百货",
+          "stockId": "BEVERAGE",
+          "icon": "🏬",
+          "baseFee": 360,
+          "perk": "SHOP",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "HARBOR_INSURANCE",
+          "name": "蓝港保险",
+          "stockId": "HARBOR",
+          "icon": "🛟",
+          "baseFee": 300,
+          "perk": "INSURANCE",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SKY_TRANSIT",
+          "name": "天际交通",
+          "stockId": "ENERGY",
+          "icon": "🚝",
+          "baseFee": 420,
+          "perk": "TRANSIT",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "NOVA_BUILD",
+          "name": "新星营造",
+          "stockId": "REALTY",
+          "icon": "🏗️",
+          "baseFee": 440,
+          "perk": "BUILD",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "CLOUD_COMPUTE",
+          "name": "云端计算",
+          "stockId": "TECH",
+          "icon": "💻",
+          "baseFee": 390,
+          "perk": "TECH",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SUMMIT_MATERIAL",
+          "name": "峰岳材料",
+          "stockId": "MINING",
+          "icon": "⛏️",
+          "baseFee": 410,
+          "perk": "MATERIAL",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        }
+      ],
+      "auction": null,
+      "phaseBeforeAuction": null,
+      "bankruptcyAuctionQueue": [],
+      "marketOffers": [],
+      "marketHistory": [],
+      "researchTasks": [],
+      "economicCycle": {
+        "period": 1,
+        "roundsPerPeriod": 5,
+        "lastSettlementRound": 0,
+        "lastReport": null
+      },
+      "minigameState": null,
+      "turnCheckpoint": {
+        "playerId": 0,
+        "currentTile": 0,
+        "cash": 16000,
+        "deposit": 0,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "stocks": {},
+        "statuses": {
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "godType": null,
+          "godTurns": 0
+        }
+      },
+      "activeQuests": [],
+      "questHistory": [],
+      "questSequence": 0,
+      "matchStatistics": {
+        "startedAtRound": 1,
+        "players": [
+          {
+            "playerId": 0,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 1,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 2,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 3,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          }
+        ],
+        "highlights": []
+      },
+      "matchConfig": {
+        "playerConfigs": [
+          {
+            "profileIndex": 8,
+            "name": "阿屿",
+            "isAI": false
+          },
+          {
+            "profileIndex": 8,
+            "name": "青禾",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "星罗",
+            "isAI": true
+          },
+          {
+            "profileIndex": 8,
+            "name": "陶宁",
+            "isAI": true
+          }
+        ],
+        "initialCash": 16000,
+        "options": {
+          "mapId": "shanhai-highland",
+          "maxRounds": 16,
+          "mode": "STANDARD"
+        }
+      },
+      "slice": {
+        "version": 1,
+        "focus": {
+          "kind": "UPGRADE",
+          "title": "茶农小院",
+          "description": "山城地产：可购买与升级，参考租金随物价与产权变化。",
+          "tileId": 1,
+          "result": {
+            "success": true,
+            "type": "LANDING_READY",
+            "events": []
+          },
+          "cost": 500
+        },
+        "lastRoll": null,
+        "landingResolved": true,
+        "decisionMade": false,
+        "cardUsed": false,
+        "careers": {
+          "0": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "1": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "2": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          },
+          "3": {
+            "active": null,
+            "settledRound": 0,
+            "completed": 0,
+            "earned": 0,
+            "last": null
+          }
+        },
+        "pendingEvent": null,
+        "lastTransport": null,
+        "abilities": {
+          "0": {
+            "readyRound": 1,
+            "last": null
+          },
+          "1": {
+            "readyRound": 1,
+            "last": null
+          },
+          "2": {
+            "readyRound": 1,
+            "last": null
+          },
+          "3": {
+            "readyRound": 1,
+            "last": null
+          }
+        },
+        "stories": {
+          "0": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "1": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "2": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          },
+          "3": {
+            "stage": 0,
+            "ending": null,
+            "startedRound": null,
+            "commissionKind": null
+          }
+        },
+        "auctionResults": []
+      }
+    }
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "asset": "commerce.glb",
+  "generator": "scripts/art/create_shanhai_commerce.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, entrance +Z, origin ground center",
+  "prefabs": [
+    {
+      "name": "commerce_mall_0",
+      "triangles": 984,
+      "size_xyz_blender": [
+        2.276,
+        2.05,
+        1.21
+      ]
+    },
+    {
+      "name": "commerce_mall_1",
+      "triangles": 1616,
+      "size_xyz_blender": [
+        2.25,
+        2.17,
+        1.305
+      ]
+    },
+    {
+      "name": "commerce_mall_2",
+      "triangles": 2120,
+      "size_xyz_blender": [
+        2.25,
+        2.17,
+        1.955
+      ]
+    },
+    {
+      "name": "commerce_mall_3",
+      "triangles": 2824,
+      "size_xyz_blender": [
+        2.25,
+        2.17,
+        2.575
+      ]
+    },
+    {
+      "name": "commerce_mall_4",
+      "triangles": 3532,
+      "size_xyz_blender": [
+        2.25,
+        2.17,
+        3.93
+      ]
+    },
+    {
+      "name": "commerce_park_0",
+      "triangles": 912,
+      "size_xyz_blender": [
+        2.25,
+        2.07,
+        0.84
+      ]
+    },
+    {
+      "name": "commerce_park_1",
+      "triangles": 1408,
+      "size_xyz_blender": [
+        2.311,
+        2.07,
+        2.14
+      ]
+    }
+  ]
+}

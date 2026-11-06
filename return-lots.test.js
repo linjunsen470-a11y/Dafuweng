@@ -1,0 +1,11 @@
+import {it, expect} from 'vitest';
+import {readFileSync} from 'node:fs';
+import * as THREE from 'three';
+import {GRAND_BAY_MAP as map} from './src/game/GrandMapData.js';
+import {BoardBuilder} from './src/engine/BoardBuilder.js';
+import {Scene3D} from './src/engine/Scene3D.js';
+
+function clear(x,z,radius){const c=new THREE.Vector3(x,0,z);for(const a of map.tiles)for(const next of a.next){const b=map.tiles[next],line=new THREE.Line3(new THREE.Vector3(a.position.x,0,a.position.z),new THREE.Vector3(b.position.x,0,b.position.z));expect(c.distanceTo(line.closestPointToPoint(c,true,new THREE.Vector3())),`${a.id}→${next}`).toBeGreaterThan(radius+1.75);}}
+it('moves only three visual lots while preserving every road, rule and economic field',()=>{const before=JSON.parse(readFileSync('qa/return-lots-map-before.json')),after=structuredClone(map);for(const id of [106,116,118]){clear(after.tiles[id].lot.position.x,after.tiles[id].lot.position.z,Math.SQRT2*1.75);after.tiles[id].lot=before.tiles[id].lot;}expect(after).toEqual(before);});
+it('puts the original hospital outside roads and clears the neighboring property pads',()=>{const b=Object.create(BoardBuilder.prototype);b.activeMapDefinition=map;const anchor=b.getRoadsideAnchor(map.tiles[72],map.tiles[72].position);expect(anchor).toEqual({x:-59,z:-16});clear(anchor.x,anchor.z,1.92);for(const id of [71,73]){const lot=map.tiles[id].lot.position;expect(Math.abs(anchor.z-lot.z)-1.75).toBeGreaterThan(1.92);}expect(b.getRoadsideAnchor(map.tiles[112],map.tiles[112].position)).not.toEqual(anchor);});
+it('frames the compact supply corner without changing desktop or other street views',()=>{const view=Object.create(Scene3D.prototype);view.activeMapId='grand-bay';view.container={clientWidth:360};view.camera=new THREE.PerspectiveCamera();view.controls={target:new THREE.Vector3(),update(){}};view.showStreetView(new THREE.Vector3(30,.28,-16));expect(view.controls.target.x).toBe(29);expect(view.targetCameraPos).toBe(null);view.container.clientWidth=1280;view.showStreetView(new THREE.Vector3(30,.28,-16));expect(view.controls.target.x).toBe(34);view.container.clientWidth=360;view.showStreetView(new THREE.Vector3(-50,.28,-16));expect(view.controls.target.x).toBe(-46);});

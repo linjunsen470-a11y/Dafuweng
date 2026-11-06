@@ -1,5 +1,15 @@
+import { createIslandCoast, COAST_WATER_Y } from './IslandCoast.js';
+import { CITY_BLOCK_SITES, createCityBlock } from './CityBlocks.js';
+import { createCityGround } from './CityGround.js';
+import { createHospitalClinic } from './HospitalStreet.js';
+import { isOldTownHome } from './OldTownStreet.js';
+import { isCivicHome } from './CivicStreet.js';
+import { harborTileStyle, harborForkDirections } from './HarborBoardStyle.js';
+import { HarborStreets, isHarborHome, facingRoad } from './HarborStreets.js';
+import { harborFacility, facilityFacing } from './HarborFacilities.js';
 import * as THREE from 'three';
 import { BOARD_TILES, COLOR_GROUPS, TileType, isPropertyTile } from '../game/BoardData.js';
+import { getBoardThemeProfile, getTileVisualSpec } from '../game/BoardVisualRules.js';
 
 export class BoardBuilder {
   constructor(scene3D) {
@@ -13,7 +23,9 @@ export class BoardBuilder {
     this.vacantLotMeshes = new Map();
     this.activeMapDefinition = null;
     this.roadGroup = null;
+    this.tileDetailGroup = null;
     this.mapEnvironmentGroup = null;
+    this.roadTileTextures = new Map();
 
     this.boardSize = 8;
     this.tileSize = 4.4;
@@ -211,13 +223,18 @@ export class BoardBuilder {
   }
 
   createTiles(tileDefinitions = BOARD_TILES, tileSize = this.tileSize) {
-    const tileGeo = new THREE.BoxGeometry(tileSize - 0.25, 0.34, tileSize - 0.25);
+    const tileGeo = new THREE.BoxGeometry(tileSize - 0.3, 0.34, tileSize - 0.3);
+    const detailGroup = new THREE.Group();
+    detailGroup.name = `tile-plinths-${this.activeMapDefinition?.id || 'classic'}`;
+    this.scene3D.scene.add(detailGroup);
+    this.tileDetailGroup = detailGroup;
 
     tileDefinitions.forEach((tileData, i) => {
       const pos = tileData.position
         ? new THREE.Vector3(tileData.position.x, 0.28, tileData.position.z)
         : this.calculateTilePosition(i);
       this.tilePositions[tileData.id ?? i] = pos;
+      const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
 
       let tileColor = '#ffffff';
       if (tileData.group && COLOR_GROUPS[tileData.group]) {
@@ -229,7 +246,7 @@ export class BoardBuilder {
       else if (tileData.type === TileType.GOD_FORTUNE) tileColor = '#ffda79';
       else if (tileData.type === TileType.GOD_MISFORTUNE) tileColor = '#84817a';
 
-      const sideMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.5 });
+      const sideMat = new THREE.MeshStandardMaterial({ color: this.activeMapDefinition?.id === 'grand-bay' ? '#b6b59e' : visual.plinth, roughness: 0.7, metalness: 0.08 });
       const materials = [
         sideMat, sideMat,
         new THREE.MeshStandardMaterial({ color: tileColor, roughness: 0.3, metalness: 0.1 }),
@@ -238,11 +255,29 @@ export class BoardBuilder {
 
       const tileMesh = new THREE.Mesh(tileGeo, materials);
       tileMesh.position.copy(pos);
+      if (tileData.type === TileType.ROAD && tileData.position && this.activeMapDefinition?.id !== 'grand-bay') {
+        const next = tileDefinitions.find(item => item.id === tileData.next?.[0]);
+        if (next?.position) tileMesh.rotation.y = Math.atan2(next.position.x - tileData.position.x, next.position.z - tileData.position.z);
+      }
       tileMesh.receiveShadow = true;
       tileMesh.castShadow = true;
       this.scene3D.scene.add(tileMesh);
       tileMesh.userData.tileData = tileData;
       this.tileMeshes[tileData.id ?? i] = tileMesh;
+
+      const plinth = new THREE.Mesh(
+        new THREE.BoxGeometry(tileSize - 0.08, 0.1, tileSize - 0.08),
+        new THREE.MeshStandardMaterial({
+          color: this.activeMapDefinition?.id === 'grand-bay' ? '#b6b59e' : visual.plinth, roughness: 0.8, metalness: 0.05,
+          emissive: visual.accent, emissiveIntensity: this.activeMapDefinition?.id === 'grand-bay' ? .03 : tileData.type === TileType.ROAD ? 0.16 : 0.34
+        })
+      );
+      plinth.position.set(pos.x, pos.y - 0.2, pos.z);
+      plinth.rotation.y = tileMesh.rotation.y;
+      plinth.receiveShadow = true;
+      plinth.userData.isTilePlinth = true;
+      plinth.userData.districtId = visual.districtId;
+      detailGroup.add(plinth);
 
       // 应用自定义生成的贴图与 Canvas 贴图
       this.applyTileTextures(tileMesh, tileData);
@@ -273,6 +308,7 @@ export class BoardBuilder {
     });
     this.rebuildMapLandmarks(mapDefinition);
     this.createMapEnvironment(mapDefinition);
+    if (mapDefinition.id === 'grand-bay') this.loadHarborStreets();
     const island = mapDefinition.theme === 'ISLAND';
     const crossroads = mapDefinition.theme === 'CROSSROADS';
     const grand = mapDefinition.theme === 'GRAND_BAY';
@@ -320,11 +356,16 @@ export class BoardBuilder {
       this.scene3D.scene.remove(this.roadGroup);
       this.disposeObject(this.roadGroup);
     }
+    if (this.tileDetailGroup) {
+      this.scene3D.scene.remove(this.tileDetailGroup);
+      this.disposeObject(this.tileDetailGroup);
+    }
     if (this.mapEnvironmentGroup) {
       this.scene3D.scene.remove(this.mapEnvironmentGroup);
       this.disposeObject(this.mapEnvironmentGroup);
     }
     this.roadGroup = null;
+    this.tileDetailGroup = null;
     this.mapEnvironmentGroup = null;
   }
 
@@ -341,13 +382,16 @@ export class BoardBuilder {
 
   createRoadNetwork(mapDefinition) {
     const roadWidth = mapDefinition.roadWidth || Math.max(2.8, (mapDefinition.tileSize || 4.4) * 0.82);
+    const profile = getBoardThemeProfile(mapDefinition.theme);
     const group = new THREE.Group();
     group.name = `roads-${mapDefinition.id}`;
-    const roadMaterial = new THREE.MeshBasicMaterial({
-      color: mapDefinition.theme === 'GRAND_BAY' ? '#566170' : '#3d4654',
+    const roadMaterial = new THREE.MeshStandardMaterial({
+      color: mapDefinition.id === 'grand-bay' ? '#788b88' : profile.road, roughness: 0.88, metalness: 0.03
     });
-    const shoulderMaterial = new THREE.MeshBasicMaterial({ color: mapDefinition.theme === 'GRAND_BAY' ? '#d9c99d' : '#f2c66d' });
+    const shoulderMaterial = new THREE.MeshStandardMaterial({ color: profile.shoulder, roughness: 0.74, metalness: 0.06 });
+    const laneMaterials = new Map();
     const seen = new Set();
+    let segmentCount = 0;
     mapDefinition.tiles.forEach(tile => {
       (tile.next || []).forEach(nextId => {
         const key = [tile.id, nextId].sort((a, b) => a - b).join(':');
@@ -360,6 +404,12 @@ export class BoardBuilder {
         const length = Math.hypot(dx, dz);
         const angle = Math.atan2(dx, dz);
         const midpoint = { x: (tile.position.x + next.position.x) / 2, z: (tile.position.z + next.position.z) / 2 };
+        const visual = getTileVisualSpec(mapDefinition, tile);
+        if (!laneMaterials.has(visual.lane)) {
+          laneMaterials.set(visual.lane, new THREE.MeshBasicMaterial({
+            color: visual.lane, transparent: true, opacity: 0.72, depthWrite: false
+          }));
+        }
         const shoulder = new THREE.Mesh(new THREE.BoxGeometry(roadWidth + 0.7, 0.12, length + 0.35), shoulderMaterial);
         shoulder.position.set(midpoint.x, 0.035, midpoint.z);
         shoulder.rotation.y = angle;
@@ -370,43 +420,77 @@ export class BoardBuilder {
         road.rotation.y = angle;
         road.receiveShadow = true;
         group.add(road);
+        const lane = new THREE.Mesh(new THREE.BoxGeometry(Math.max(0.07, roadWidth * 0.035), 0.035, Math.max(0.3, length * 0.6)), laneMaterials.get(visual.lane));
+        lane.position.set(midpoint.x, 0.222, midpoint.z);
+        lane.rotation.y = angle;
+        lane.userData.isDistrictLane = true;
+        lane.userData.districtId = visual.districtId;
+        group.add(lane);
+        segmentCount++;
       });
     });
+    for (const direction of harborForkDirections(mapDefinition)) {
+      const {x,z,dx,dz} = direction;
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute([
+        x + dx * .35, .255, z + dz * .35,
+        x - dx * .25 + dz * .24, .255, z - dz * .25 - dx * .24,
+        x - dx * .25 - dz * .24, .255, z - dz * .25 + dx * .24
+      ], 3));
+      const arrow = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:'#fff2be',side:THREE.DoubleSide}));
+      arrow.userData.forkDirection = direction;
+      group.add(arrow);
+    }
+    group.userData.segmentCount = segmentCount;
+    group.userData.detailCount = segmentCount;
     this.scene3D.scene.add(group);
     this.roadGroup = group;
+    if (this.scene3D.container) {
+      this.scene3D.container.dataset.roadSegmentCount = String(segmentCount);
+      this.scene3D.container.dataset.roadDetailCount = String(segmentCount);
+    }
   }
 
   createMapEnvironment(mapDefinition) {
     const group = new THREE.Group();
     group.name = `environment-${mapDefinition.id}`;
+    this.harborWaves = [];
+    this.harborFerries = [];
     if (mapDefinition.theme !== 'GRAND_BAY') {
       this.mapEnvironmentGroup = group;
       this.scene3D.scene.add(group);
       return;
     }
 
-    const island = new THREE.Mesh(
-      new THREE.BoxGeometry(142, 0.75, 92),
-      new THREE.MeshBasicMaterial({ map: this.textures.parkV2, color: '#f2fff0' })
-    );
-    island.position.set(0, -0.48, -3);
-    island.receiveShadow = true;
-    group.add(island);
+    group.add(createIslandCoast());
+    const districtGround = createCityGround(mapDefinition);
+    if (districtGround) group.add(districtGround);
 
     const ocean = new THREE.Mesh(
-      new THREE.PlaneGeometry(180, 52),
-      new THREE.MeshBasicMaterial({ color: '#3ea9c4', transparent: true, opacity: 0.92 })
+      new THREE.PlaneGeometry(600, 600),
+      new THREE.MeshStandardMaterial({
+        color: '#2396bb', roughness: 0.28, metalness: 0.12,
+        transparent: true, opacity: 0.94
+      })
     );
     ocean.rotation.x = -Math.PI / 2;
-    ocean.position.set(0, -0.04, 54);
+    // Surround the island below land and playable surfaces; never overlay property pads.
+    ocean.name = 'island-sea';
+    ocean.position.set(0, COAST_WATER_Y, -3);
     group.add(ocean);
 
-    const beach = new THREE.Mesh(
-      new THREE.BoxGeometry(142, 0.18, 8),
-      new THREE.MeshBasicMaterial({ color: '#f3d58a' })
-    );
-    beach.position.set(0, -0.02, 38);
-    group.add(beach);
+    [-56, -20, 18, 55].forEach((x, index) => {
+      const wave = new THREE.Mesh(
+        new THREE.PlaneGeometry(26, 0.34),
+        new THREE.MeshBasicMaterial({ color: '#bff6ff', transparent: true, opacity: 0.34, depthWrite: false })
+      );
+      wave.rotation.x = -Math.PI / 2;
+      wave.position.set(x, COAST_WATER_Y + 0.02 + index * 0.002, 49 + index * 4.8);
+      wave.userData.originX = x;
+      wave.userData.speed = 0.65 + index * 0.12;
+      group.add(wave);
+      this.harborWaves.push(wave);
+    });
 
     const trunkMaterial = new THREE.MeshBasicMaterial({ color: '#76543b' });
     const leafMaterial = new THREE.MeshBasicMaterial({ color: '#3e9f62' });
@@ -417,18 +501,19 @@ export class BoardBuilder {
     ];
     treePositions.forEach(([x, z], index) => {
       const tree = new THREE.Group();
-      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.34, 1.8, 8), trunkMaterial);
+      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.34, 1.8, 8), trunkMaterial.clone());
       trunk.position.y = 0.9;
-      const crown = new THREE.Mesh(new THREE.DodecahedronGeometry(1.15 + (index % 3) * 0.12, 1), leafMaterial);
+      const crown = new THREE.Mesh(new THREE.DodecahedronGeometry(1.15 + (index % 3) * 0.12, 1), leafMaterial.clone());
       crown.position.y = 2.25;
       crown.castShadow = true;
       tree.add(trunk, crown);
+      tree.userData.harborOccluder = 'tree';
       tree.position.set(x, 0, z);
       group.add(tree);
     });
 
     const mountainMaterial = new THREE.MeshBasicMaterial({ color: '#668b6b' });
-    [[-38, -3, 8], [-27, -7, 6], [-43, -17, 7], [-30, -23, 5]].forEach(([x, z, radius], index) => {
+    [[-36, -1, 5.2], [-27, -7, 6], [-40, -21, 3], [-35, -28, 3.2]].forEach(([x, z, radius], index) => {
       const mountain = new THREE.Mesh(new THREE.ConeGeometry(radius, radius * 0.75, 7), mountainMaterial);
       mountain.position.set(x, radius * 0.36 - 0.15, z);
       mountain.rotation.y = index * 0.55;
@@ -436,33 +521,38 @@ export class BoardBuilder {
       group.add(mountain);
     });
 
-    const cityColors = ['#dfe8f5', '#b8cee7', '#f0d7c2', '#c7c5e9'];
-    [[8, -7], [14, -7], [8, -14], [14, -14], [2, -13], [17, 0], [3, 0], [31, -4]].forEach(([x, z], index) => {
-      const height = 5 + (index % 4) * 2.2;
-      const tower = new THREE.Mesh(
-        new THREE.BoxGeometry(3.6, height, 3.6),
-        new THREE.MeshBasicMaterial({ color: cityColors[index % cityColors.length] })
-      );
-      tower.position.set(x, height / 2, z);
-      tower.castShadow = true;
-      group.add(tower);
-      const roof = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.45, 2.6), new THREE.MeshBasicMaterial({ color: '#6c76c5' }));
-      roof.position.set(x, height + 0.22, z);
-      group.add(roof);
+    CITY_BLOCK_SITES.forEach(({x,z,height},index) => {
+      const block = createCityBlock(height,index);
+      block.position.set(x,0,z);
+      group.add(block);
     });
 
-    const fieldColors = ['#a8cf58', '#d9bd55', '#85bd62'];
-    [[-16, -4], [-8, -4], [-16, -10], [-8, -10]].forEach(([x, z], index) => {
-      const field = new THREE.Mesh(new THREE.BoxGeometry(6.2, 0.12, 4.6), new THREE.MeshBasicMaterial({ color: fieldColors[index % 3] }));
-      field.position.set(x, 0.02, z);
-      group.add(field);
-    });
-
-    const pierMaterial = new THREE.MeshBasicMaterial({ color: '#8b6549' });
+    const pierCanvas = document.createElement('canvas');
+    pierCanvas.width = 64; pierCanvas.height = 256;
+    const pierContext = pierCanvas.getContext('2d');
+    pierContext.fillStyle = '#a17e5c'; pierContext.fillRect(0,0,64,256);
+    pierContext.fillStyle = '#72543e';
+    for (let y=0; y<256; y+=24) pierContext.fillRect(0,y,64,2);
+    const pierTexture = new THREE.CanvasTexture(pierCanvas); pierTexture.colorSpace = THREE.SRGBColorSpace;
+    const pierMaterial = new THREE.MeshStandardMaterial({ map: pierTexture, roughness: 1 });
     [-24, -8, 12, 32].forEach(x => {
-      const pier = new THREE.Mesh(new THREE.BoxGeometry(5, 0.28, 12), pierMaterial);
-      pier.position.set(x, 0.08, 43);
+      const pier = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.18, 12.5), pierMaterial);
+      // Shore end z=36.25 overlaps the existing waterfront walk ending at36.35.
+      pier.name = 'harbor-pier';
+      pier.position.set(x, 0.08, 42.5);
+      for (const z of [39,47]) {
+        const support = new THREE.Mesh(new THREE.BoxGeometry(.28,1.1,.28),pierMaterial);
+        support.position.set(x,-.5,z); group.add(support);
+      }
       group.add(pier);
+    });
+    [[-46, 50, 0.38], [22, 58, -0.28]].forEach(([x, z, speed], index) => {
+      const ferry = this.createGrandBayFerry(index);
+      ferry.position.set(x, COAST_WATER_Y - .22, z);
+      ferry.userData.originX = x;
+      ferry.userData.speed = speed;
+      group.add(ferry);
+      this.harborFerries.push(ferry);
     });
     const lighthouse = new THREE.Group();
     const lighthouseBody = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.1, 5.5, 16), new THREE.MeshBasicMaterial({ color: '#f4f4ea' }));
@@ -473,8 +563,54 @@ export class BoardBuilder {
     lighthouse.position.set(60, 0, 37);
     group.add(lighthouse);
 
+    if (this.harborArt?.prefabs) group.add(this.harborArt.streets(mapDefinition));
     this.scene3D.scene.add(group);
     this.mapEnvironmentGroup = group;
+  }
+
+  loadHarborStreets() {
+    if (this.harborArtLoading) return;
+    this.harborArt = new HarborStreets();
+    this.scene3D.container.dataset.harborArt = 'loading';
+    this.harborArtLoading = this.harborArt.load().then(() => {
+      this.scene3D.container.dataset.harborArt = 'ready';
+      if (this.activeMapDefinition?.id !== 'grand-bay') return;
+      this.mapEnvironmentGroup.add(this.harborArt.streets(this.activeMapDefinition));
+      const records = [...this.buildingMeshes].map(([id, mesh]) => [id, mesh.userData.propertyVisual]);
+      this.rebuildMapLandmarks(this.activeMapDefinition);
+      for (const [id, record] of records) if (record) this.updateBuildingMesh(id, ...record);
+    }).catch(error => {
+      this.scene3D.container.dataset.harborArt = 'fallback';
+      console.warn('Original harbor models unavailable; keeping procedural buildings.', error);
+    });
+  }
+
+  createGrandBayFerry(variant = 0) {
+    const group = new THREE.Group();
+    const hull = new THREE.Mesh(
+      new THREE.BoxGeometry(5.4, 0.55, 1.7),
+      new THREE.MeshStandardMaterial({ color: variant ? '#f06b5b' : '#f7f5e8', roughness: 0.42 })
+    );
+    hull.position.y = 0.34;
+    hull.castShadow = true;
+    const deck = new THREE.Mesh(
+      new THREE.BoxGeometry(3.25, 0.82, 1.35),
+      new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.38 })
+    );
+    deck.position.set(-0.3, 0.96, 0);
+    const glass = new THREE.Mesh(
+      new THREE.BoxGeometry(2.5, 0.38, 1.39),
+      new THREE.MeshStandardMaterial({ color: '#174b68', emissive: '#12334a', emissiveIntensity: 0.35, roughness: 0.14 })
+    );
+    glass.position.set(-0.35, 1.04, 0);
+    const wake = new THREE.Mesh(
+      new THREE.PlaneGeometry(5.5, 1.5),
+      new THREE.MeshBasicMaterial({ color: '#e8fbff', transparent: true, opacity: 0.42, side: THREE.DoubleSide, depthWrite: false })
+    );
+    wake.rotation.x = -Math.PI / 2;
+    wake.position.set(-4.2, 0.01, 0);
+    group.add(hull, deck, glass, wake);
+    return group;
   }
 
   setRouteChoices(tileIds = []) {
@@ -489,9 +625,31 @@ export class BoardBuilder {
   }
 
   applyTileTextures(tileMesh, tileData) {
+    if (this.activeMapDefinition?.id === 'grand-bay') {
+      const spec = harborTileStyle(tileData);
+      const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
+      const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = spec.background; ctx.fillRect(0,0,256,256);
+      ctx.strokeStyle = '#d1c5a5'; ctx.lineWidth = 8; ctx.strokeRect(4,4,248,248);
+      ctx.fillStyle = visual.accent; ctx.fillRect(10,10,236,22);
+      ctx.fillStyle = spec.ink; ctx.textAlign = 'center';
+      ctx.font = 'bold 60px sans-serif'; ctx.fillText(spec.label,128,143);
+      ctx.font = 'bold 35px sans-serif'; ctx.fillText(`${tileData.id}${spec.fork ? ' · 分岔' : spec.district ? ` · ${spec.district}` : ''}`,128,218);
+      const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = Math.min(8,this.scene3D.renderer.capabilities.getMaxAnisotropy());
+      tileMesh.material[2].dispose();
+      tileMesh.material[2] = new THREE.MeshStandardMaterial({map:texture,roughness:1,metalness:0});
+      tileMesh.userData.harborLabel = spec.label;
+      return;
+    }
     let customTex = null;
     if (tileData.type === TileType.ROAD) {
-      tileMesh.material[2] = new THREE.MeshStandardMaterial({ color: '#77808d', roughness: 0.9, metalness: 0.02 });
+      const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
+      tileMesh.material[2] = new THREE.MeshStandardMaterial({
+        map: this.createRoadTileTexture(visual), color: '#ffffff', roughness: 0.86, metalness: 0.04,
+        emissive: visual.accent, emissiveIntensity: 0.06
+      });
       return;
     }
     if (tileData.type === TileType.START) customTex = this.textures.start;
@@ -506,58 +664,133 @@ export class BoardBuilder {
     }
   }
 
+  createRoadTileTexture(visual) {
+    const key = `${visual.asphalt}:${visual.lane}`;
+    if (this.roadTileTextures.has(key)) return this.roadTileTextures.get(key);
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = visual.asphalt;
+    ctx.fillRect(0, 0, 256, 256);
+    const asphalt = ctx.createLinearGradient(0, 0, 256, 256);
+    asphalt.addColorStop(0, 'rgba(255,255,255,.07)');
+    asphalt.addColorStop(.45, 'rgba(255,255,255,0)');
+    asphalt.addColorStop(1, 'rgba(0,0,0,.14)');
+    ctx.fillStyle = asphalt;
+    ctx.fillRect(0, 0, 256, 256);
+    ctx.strokeStyle = visual.lane;
+    ctx.globalAlpha = 0.72;
+    ctx.lineWidth = 9;
+    ctx.setLineDash([34, 28]);
+    ctx.beginPath();
+    ctx.moveTo(128, -10);
+    ctx.lineTo(128, 266);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 0.24;
+    ctx.lineWidth = 5;
+    ctx.strokeRect(10, 10, 236, 236);
+    ctx.globalAlpha = 0.52;
+    ctx.fillStyle = visual.lane;
+    ctx.beginPath();
+    ctx.moveTo(128, 48);
+    ctx.lineTo(105, 82);
+    ctx.lineTo(119, 82);
+    ctx.lineTo(119, 108);
+    ctx.lineTo(137, 108);
+    ctx.lineTo(137, 82);
+    ctx.lineTo(151, 82);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(8, this.scene3D.renderer.capabilities.getMaxAnisotropy());
+    texture.userData.sharedBoardTexture = true;
+    this.roadTileTextures.set(key, texture);
+    return texture;
+  }
+
   createTileLabelCanvas(tileMesh, tileData) {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
 
-    let colorHex = '#ffffff';
+    const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
+    let colorHex = visual.accent;
     if (tileData.group && COLOR_GROUPS[tileData.group]) colorHex = COLOR_GROUPS[tileData.group].color;
     else if (tileData.type === TileType.COUPON) colorHex = '#ffca3a';
     else if (tileData.type === TileType.MONSTER) colorHex = '#8b5cf6';
     else if (tileData.type === TileType.TREASURE) colorHex = '#f97316';
     else if (tileData.type === TileType.GOD_FORTUNE) colorHex = '#ffe66d';
     else if (tileData.type === TileType.CHANCE) colorHex = '#22d3ee';
-    ctx.fillStyle = colorHex;
+    ctx.fillStyle = '#0b2030';
     ctx.fillRect(0, 0, 512, 512);
-
-    ctx.fillStyle = '#ffffff';
+    const backdrop = ctx.createLinearGradient(0, 0, 512, 512);
+    backdrop.addColorStop(0, 'rgba(255,255,255,.10)');
+    backdrop.addColorStop(.5, 'rgba(255,255,255,0)');
+    backdrop.addColorStop(1, 'rgba(0,0,0,.22)');
+    ctx.fillStyle = backdrop;
     ctx.beginPath();
-    ctx.roundRect(24, 24, 464, 464, 32);
+    ctx.roundRect(18, 18, 476, 476, 38);
     ctx.fill();
-
-    if (tileData.group && COLOR_GROUPS[tileData.group]) {
-      ctx.fillStyle = colorHex;
+    ctx.strokeStyle = colorHex;
+    ctx.globalAlpha = 0.72;
+    ctx.lineWidth = 15;
+    ctx.stroke();
+    ctx.globalAlpha = 0.1;
+    ctx.lineWidth = 2;
+    for (let offset = -512; offset < 512; offset += 54) {
       ctx.beginPath();
-      ctx.roundRect(24, 24, 464, 120, [32, 32, 0, 0]);
-      ctx.fill();
+      ctx.moveTo(offset, 512);
+      ctx.lineTo(offset + 512, 0);
+      ctx.stroke();
     }
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = colorHex;
+    ctx.beginPath();
+    ctx.roundRect(18, 18, 476, 92, [38, 38, 8, 8]);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(2,12,25,.55)';
+    ctx.fillRect(18, 93, 476, 17);
 
-    ctx.fillStyle = '#1e272e';
+    ctx.fillStyle = '#f4fbff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
     const icon = tileData.icon || '🏠';
-    ctx.font = 'bold 96px sans-serif';
-    ctx.fillText(icon, 256, 230);
+    ctx.font = 'bold 118px sans-serif';
+    ctx.shadowColor = colorHex;
+    ctx.shadowBlur = 28;
+    ctx.fillText(icon, 256, 232);
+    ctx.shadowBlur = 0;
 
-    ctx.font = '900 48px "Noto Sans SC", sans-serif';
-    ctx.fillText(tileData.name, 256, 360);
+    ctx.font = '900 42px "Noto Sans SC", sans-serif';
+    const displayName = tileData.name.length > 8 ? `${tileData.name.slice(0, 8)}…` : tileData.name;
+    ctx.fillText(displayName, 256, 354);
+
+    ctx.fillStyle = 'rgba(190,222,232,.8)';
+    ctx.font = '800 24px "Outfit", sans-serif';
+    ctx.fillText(visual.districtName || tileData.type.replaceAll('_', ' '), 256, 403);
 
     if (tileData.price) {
-      ctx.fillStyle = '#ee5253';
-      ctx.font = 'bold 42px "Outfit", sans-serif';
-      ctx.fillText(`$${tileData.price.toLocaleString()}`, 256, 430);
+      ctx.fillStyle = '#ffd166';
+      ctx.font = 'bold 38px "Outfit", sans-serif';
+      ctx.fillText(`$${tileData.price.toLocaleString()}`, 256, 456);
     }
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.anisotropy = 8;
-    tileMesh.material[2] = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.3 });
+    tileMesh.material[2] = new THREE.MeshStandardMaterial({
+      map: texture, roughness: 0.38, metalness: 0.08,
+      emissive: colorHex, emissiveIntensity: 0.08
+    });
   }
 
   rebuildMapLandmarks(mapDefinition) {
-    this.specialTileMeshes.forEach(group => this.scene3D.scene.remove(group));
+    this.specialTileMeshes.forEach(group => { this.scene3D.scene.remove(group); this.disposeObject(group); });
     this.specialTileMeshes.clear();
     this.vacantLotMeshes.clear();
 
@@ -565,7 +798,9 @@ export class BoardBuilder {
       const position = this.tilePositions[tile.id];
       if (!position) return;
       let group = null;
-      if (isPropertyTile(tile)) {
+      const service = harborFacility(mapDefinition, tile);
+      if (service) group = this.createHarborFacility(tile, service);
+      else if (isPropertyTile(tile)) {
         group = this.createVacantLotMarker(tile);
         this.vacantLotMeshes.set(tile.id, group);
       } else if (tile.type === TileType.MONSTER) group = this.createMonsterLandmark();
@@ -577,11 +812,11 @@ export class BoardBuilder {
         group = this.createFacilityLandmark(tile);
       }
       if (!group) return;
-      const anchor = isPropertyTile(tile) && tile.lot?.position
+      const anchor = service || (isPropertyTile(tile) && tile.lot?.position
         ? tile.lot.position
-        : this.getRoadsideAnchor(tile, position);
-      group.position.set(anchor.x, position.y + 0.35, anchor.z);
-      group.rotation.y = tile.lot?.rotation || 0;
+        : this.getRoadsideAnchor(tile, position));
+      group.position.set(anchor.x, service || group.userData.originalHospital ? .22 : position.y + 0.35, anchor.z);
+      group.rotation.y = service ? facilityFacing(tile, service) : tile.lot?.rotation || 0;
       group.userData.baseY = group.position.y;
       group.userData.phase = tile.id * 0.71;
       group.userData.tileType = tile.type;
@@ -590,15 +825,50 @@ export class BoardBuilder {
     });
   }
 
+  createHarborFacility(tile, spec) {
+    const model = this.harborArt?.clone(spec.model);
+    const group = new THREE.Group();
+    group.userData.serviceTile = tile.id;
+    group.userData.isStaticFacility = true;
+    if (model) {
+      group.add(model);
+      group.userData.originalModel = spec.model;
+    } else {
+      // Existing procedural fallback remains available if asset loading fails.
+      group.add(this.createFacilityLandmark(tile));
+      return group;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = 320; canvas.height = 112;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff2d5'; ctx.fillRect(0, 0, 320, 112);
+    ctx.fillStyle = spec.color; ctx.fillRect(0, 0, 320, 8);
+    ctx.textAlign = 'center'; ctx.fillStyle = '#142e30';
+    ctx.font = 'bold 42px sans-serif'; ctx.fillText(spec.title, 160, 54);
+    ctx.font = '25px sans-serif'; ctx.fillText(spec.detail, 160, 96);
+    const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
+    const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthWrite: false, toneMapped: false }));
+    sign.position.set(0, spec.height + .85, 0); sign.scale.set(4.8, 1.68, 1);
+    group.add(sign);
+    return group;
+  }
+
   createVacantLotMarker(tile) {
     const group = new THREE.Group();
+    const accent = getTileVisualSpec(this.activeMapDefinition, tile).accent;
     const pad = new THREE.Mesh(
-      new THREE.BoxGeometry(2.65, 0.12, 2.65),
-      new THREE.MeshBasicMaterial({ color: '#8fd694' })
+      new THREE.BoxGeometry(2.72, 0.14, 2.72),
+      new THREE.MeshStandardMaterial({ color: '#17372f', roughness: 0.76, emissive: accent, emissiveIntensity: 0.12 })
     );
     pad.position.y = 0.08;
     group.add(pad);
-    const postMaterial = new THREE.MeshBasicMaterial({ color: '#f4d58d' });
+    const edgeMaterial = new THREE.MeshStandardMaterial({ color: accent, roughness: 0.3, metalness: 0.34, emissive: accent, emissiveIntensity: 0.28 });
+    [[0, 1.36, 2.72, .09], [0, -1.36, 2.72, .09], [1.36, 0, .09, 2.72], [-1.36, 0, .09, 2.72]].forEach(([x, z, width, depth]) => {
+      const edge = new THREE.Mesh(new THREE.BoxGeometry(width, .1, depth), edgeMaterial);
+      edge.position.set(x, .17, z);
+      group.add(edge);
+    });
+    const postMaterial = new THREE.MeshStandardMaterial({ color: '#f6e6b7', roughness: .56 });
     [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([x, z]) => {
       const post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.65, 8), postMaterial);
       post.position.set(x, 0.38, z);
@@ -613,7 +883,7 @@ export class BoardBuilder {
     group.add(sign);
     const badge = new THREE.Mesh(
       new THREE.CircleGeometry(0.2, 16),
-      new THREE.MeshBasicMaterial({ color: tile.group && COLOR_GROUPS[tile.group] ? COLOR_GROUPS[tile.group].color : '#2ed573' })
+      new THREE.MeshBasicMaterial({ color: accent })
     );
     badge.position.set(0, 0.72, 0.956);
     group.add(badge);
@@ -621,6 +891,8 @@ export class BoardBuilder {
   }
 
   getRoadsideAnchor(tile, position) {
+    // The default outward normal of 72 points directly onto branch tile118.
+    if (this.activeMapDefinition?.id === 'grand-bay' && tile.id === 72) return {x:-59,z:-16};
     if (this.activeMapDefinition?.theme !== 'GRAND_BAY' || (tile.next || []).length > 1) return position;
     const next = this.activeMapDefinition.tiles.find(item => item.id === tile.next?.[0]);
     if (!next?.position) return position;
@@ -645,15 +917,37 @@ export class BoardBuilder {
       ,[TileType.MINIGAME]: ['#ec4899', '#fce7f3']
     };
     const [roofColor, wallColor] = palette[tile.type] || ['#7bed9f', '#ffffff'];
-    const group = new THREE.Group();
-    const base = new THREE.Mesh(new THREE.BoxGeometry(2.5, 1.7, 2.2), new THREE.MeshBasicMaterial({ color: wallColor }));
-    base.position.y = 0.85;
-    base.castShadow = true;
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(1.75, 0.8, 4), new THREE.MeshBasicMaterial({ color: roofColor }));
-    roof.position.y = 2.1;
-    roof.rotation.y = Math.PI / 4;
-    roof.castShadow = true;
-    group.add(base, roof);
+    const clinic = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 72;
+    const group = clinic ? createHospitalClinic() : new THREE.Group();
+    if (!clinic) {
+      const plinth = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.82, 1.92, .24, 16),
+        new THREE.MeshStandardMaterial({ color: '#0b2234', roughness: .34, metalness: .4, emissive: roofColor, emissiveIntensity: .3 })
+      );
+      plinth.position.y = .12;
+      const base = new THREE.Mesh(new THREE.BoxGeometry(2.5, 1.7, 2.2), new THREE.MeshStandardMaterial({ color: wallColor, roughness: .48, metalness: .06 }));
+      base.position.y = 0.85;
+      base.castShadow = true;
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(1.75, 0.8, 4), new THREE.MeshStandardMaterial({ color: roofColor, roughness: .28, metalness: .24, emissive: roofColor, emissiveIntensity: .22 }));
+      roof.position.y = 2.1;
+      roof.rotation.y = Math.PI / 4;
+      roof.castShadow = true;
+      const halo = new THREE.Mesh(
+        new THREE.TorusGeometry(1.72, .045, 8, 36),
+        new THREE.MeshBasicMaterial({ color: roofColor, transparent: true, opacity: .7, depthWrite: false })
+      );
+      halo.rotation.x = Math.PI / 2;
+      halo.position.y = .29;
+      halo.userData.isFacilityHalo = true;
+      group.add(plinth, base, roof, halo);
+      const windowMaterial = new THREE.MeshStandardMaterial({ color: '#dff9ff', emissive: roofColor, emissiveIntensity: .78, roughness: .2 });
+      [-.72, 0, .72].forEach(x => {
+        const window = new THREE.Mesh(new THREE.BoxGeometry(.42, .5, .06), windowMaterial);
+        window.position.set(x, .92, 1.13);
+        window.userData.isWindow = true;
+        group.add(window);
+      });
+    }
     const canvas = document.createElement('canvas');
     canvas.width = 192;
     canvas.height = 128;
@@ -665,16 +959,21 @@ export class BoardBuilder {
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '56px sans-serif';
-    ctx.fillText(tile.icon || '🏛️', 96, 47);
-    ctx.font = 'bold 23px "Noto Sans SC", sans-serif';
-    ctx.fillText(tile.name, 96, 94);
+    if (clinic) {
+      ctx.font = 'bold 24px sans-serif'; ctx.fillText(`72 · ${tile.name}`, 96, 40);
+      ctx.font = '21px sans-serif'; ctx.fillText('停留后休养1次', 96, 78);
+      ctx.font = '18px sans-serif'; ctx.fillText('恢复后从原格继续', 96, 105);
+    } else {
+      ctx.font = '56px sans-serif'; ctx.fillText(tile.icon || '🏛️', 96, 47);
+      ctx.font = 'bold 23px "Noto Sans SC", sans-serif'; ctx.fillText(tile.name, 96, 94);
+    }
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true }));
     sign.position.set(0, 3.15, 0);
     sign.scale.set(3, 2, 1);
     group.add(sign);
+    group.userData.isFacilityLandmark = true;
     return group;
   }
 
@@ -774,14 +1073,74 @@ export class BoardBuilder {
     return group;
   }
 
+  updateHarborPawnVisibility(pawns, now = performance.now()) {
+    if (this.activeMapDefinition?.id !== 'grand-bay' || now - (this.lastPawnVisibilityCheck ?? -Infinity) < 180) return;
+    this.lastPawnVisibilityCheck = now;
+    const camera = this.scene3D.camera.position;
+    const targets = [];
+    const occupied = new Set();
+    for (const pawn of pawns.filter(p=>p.mesh.visible)) {
+      targets.push(pawn.mesh.position.clone().add(new THREE.Vector3(0,1.25 * (pawn.characterMesh?.scale.y || 1),0)));
+      if (!occupied.has(pawn.currentTile) && this.tilePositions[pawn.currentTile]) {
+        targets.push(this.tilePositions[pawn.currentTile].clone().add(new THREE.Vector3(0,.25,0)));
+        occupied.add(pawn.currentTile);
+      }
+    }
+    const visibleTargets = targets.filter(target=>{
+      const screen = target.clone().project(this.scene3D.camera);
+      return Math.abs(screen.x)<1.1 && Math.abs(screen.y)<1.1 && screen.z<1;
+    });
+    const scenery = this.mapEnvironmentGroup?.children.filter(o=>o.userData.harborOccluder) || [];
+    const candidates = [...this.buildingMeshes.values(),...scenery];
+    const ray = new THREE.Ray(), hit = new THREE.Vector3(), box = new THREE.Box3();
+    for (const group of candidates) {
+      if (group.userData.propertyVisual?.[0] === 0) continue;
+      const model = group.userData.originalModel ? group.getObjectByName(group.userData.originalModel) : group;
+      if (!model) continue;
+      model.updateWorldMatrix(true,true); box.setFromObject(model);
+      const obstructs = visibleTargets.some(target => {
+        ray.set(camera,target.clone().sub(camera).normalize());
+        return ray.intersectBox(box,hit) && camera.distanceTo(hit) < camera.distanceTo(target) - .35;
+      });
+      if (Boolean(group.userData.isPawnOccluder) === obstructs) continue;
+      group.userData.isPawnOccluder = obstructs;
+      model.traverse(child => {
+        if (child.userData.isOwnerLight || child.userData.isOwnerBeacon) return;
+        for (const material of (Array.isArray(child.material) ? child.material : [child.material])) {
+          if (!material) continue;
+          material.userData.harborOpaqueState ??= {opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite};
+          const normal = material.userData.harborOpaqueState;
+          material.opacity = obstructs ? .22 : normal.opacity;
+          material.transparent = obstructs || normal.transparent;
+          material.depthWrite = obstructs ? false : normal.depthWrite;
+          material.needsUpdate = true;
+        }
+      });
+    }
+  }
+
   animateMapLandmarks() {
     const time = performance.now() * 0.0018;
     this.specialTileMeshes.forEach(group => {
-      if (isPropertyTile({ type: group.userData.tileType })) return;
+      if (isPropertyTile({ type: group.userData.tileType }) || group.userData.isStaticFacility) return;
       group.position.y = group.userData.baseY + Math.sin(time + group.userData.phase) * 0.16;
       if ([TileType.MONSTER, TileType.COUPON, TileType.TREASURE, TileType.GOD_FORTUNE].includes(group.userData.tileType)) {
         group.rotation.y += group.userData.tileType === TileType.MONSTER ? 0.008 : 0.015;
       }
+      group.traverse(child => {
+        if (child.userData?.isFacilityHalo) child.rotation.z = time * .32 + group.userData.phase;
+      });
+    });
+    this.harborWaves?.forEach((wave, index) => {
+      wave.position.x = wave.userData.originX + Math.sin(time * wave.userData.speed + index) * 9;
+      wave.material.opacity = 0.22 + (Math.sin(time * 1.4 + index) + 1) * 0.09;
+    });
+    this.harborFerries?.forEach((ferry, index) => {
+      ferry.position.x += ferry.userData.speed * 0.04;
+      if (ferry.userData.speed > 0 && ferry.position.x > 78) ferry.position.x = -78;
+      if (ferry.userData.speed < 0 && ferry.position.x < -78) ferry.position.x = 78;
+      ferry.rotation.y = ferry.userData.speed < 0 ? Math.PI : 0;
+      ferry.position.y = COAST_WATER_Y - .22 + Math.sin(time * 1.8 + index) * 0.05;
     });
   }
 
@@ -977,8 +1336,15 @@ export class BoardBuilder {
     this.buildingMeshes.forEach(group => {
       group.traverse(child => {
         if (child.userData?.isWindow) child.material.emissiveIntensity = enabled ? 1.6 : 0.35;
+        if (child.userData?.isOwnerLight) child.material.emissiveIntensity = enabled ? 1.25 : 0.5;
+        if (child.userData?.isOwnerBeacon) child.material.opacity = enabled ? 1 : .78;
         if (child.userData?.isBuildingStandee) child.material.color.set(enabled ? '#9aa8c8' : '#ffffff');
       });
+    });
+    this.mapEnvironmentGroup?.traverse(child => {
+      if (child.userData?.isOriginalCityWindow && child.material?.emissive) {
+        child.material.emissiveIntensity = enabled ? .5 : 0;
+      }
     });
   }
 
@@ -1030,6 +1396,7 @@ export class BoardBuilder {
     if (this.buildingMeshes.has(tileIndex)) {
       const oldGroup = this.buildingMeshes.get(tileIndex);
       this.scene3D.scene.remove(oldGroup);
+      this.disposeObject(oldGroup);
       this.buildingMeshes.delete(tileIndex);
     }
 
@@ -1042,6 +1409,20 @@ export class BoardBuilder {
     const group = new THREE.Group();
     group.position.set(buildingAnchor.x, tilePos.y + 0.25, buildingAnchor.z);
     group.rotation.y = tile?.lot?.rotation || 0;
+    group.userData.propertyVisual = [level, ownerColor, buildingType];
+    const originalDistrict = isCivicHome(this.activeMapDefinition,tile,buildingType) ? 'civic'
+      : isOldTownHome(this.activeMapDefinition,tile,buildingType) ? 'market'
+        : isHarborHome(this.activeMapDefinition,tile,buildingType) ? 'harbor' : null;
+    const originalHome = originalDistrict && level > 0 && this.harborArt?.residence(level,originalDistrict);
+    if (originalHome) {
+      group.rotation.y = facingRoad(tile);
+      group.add(originalHome);
+      this.addBuildingOwnerLighting(group, ownerColor, false);
+      group.userData.originalModel = originalHome.name;
+      this.scene3D.scene.add(group);
+      this.buildingMeshes.set(tileIndex, group);
+      return;
+    }
 
     const roofMat = new THREE.MeshStandardMaterial({ color: ownerColor ?? 0xffaa00, roughness: 0.3 });
     const wallMat = new THREE.MeshStandardMaterial({ color: '#f8f9fa', roughness: 0.4 });
@@ -1190,6 +1571,7 @@ export class BoardBuilder {
     }
 
     if (level > 0) {
+      this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
       this.addBuildingWindows(group, level);
       if (!tile?.large) group.add(this.createBuildingArtworkSprite(level, ownerColor));
     }
@@ -1210,6 +1592,29 @@ export class BoardBuilder {
     anim();
 
     this.scene3D.createSparkles(tilePos, ownerColor, 30);
+  }
+
+  addBuildingOwnerLighting(group, ownerColor, large = false) {
+    const accent = new THREE.Color(ownerColor ?? 0xffaa00);
+    const sizeX = large ? 4.45 : 3.05;
+    const sizeZ = large ? 3.5 : 3.05;
+    const foundation = new THREE.Mesh(
+      new THREE.BoxGeometry(sizeX, .14, sizeZ),
+      new THREE.MeshStandardMaterial({
+        color: '#0a1a28', roughness: .34, metalness: .42,
+        emissive: accent, emissiveIntensity: .5
+      })
+    );
+    foundation.position.y = .07;
+    foundation.userData.isOwnerLight = true;
+    group.add(foundation);
+    const beaconMaterial = new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: .8 });
+    [[-sizeX * .43, -sizeZ * .43], [sizeX * .43, -sizeZ * .43], [-sizeX * .43, sizeZ * .43], [sizeX * .43, sizeZ * .43]].forEach(([x, z]) => {
+      const beacon = new THREE.Mesh(new THREE.CylinderGeometry(.035, .035, .72, 6), beaconMaterial);
+      beacon.position.set(x, .42, z);
+      beacon.userData.isOwnerBeacon = true;
+      group.add(beacon);
+    });
   }
 
   addBuildingWindows(group, level) {

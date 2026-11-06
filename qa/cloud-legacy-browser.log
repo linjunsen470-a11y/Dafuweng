@@ -1,0 +1,112 @@
+
+> dafuweng-3d@1.0.0 test:e2e
+> node test-monopoly.js
+
+🚀 Starting Detailed Puppeteer Automated Test for 3D Monopoly...
+
+--- Step 1: Navigating to http://localhost:5173/ ---
+
+--- Step 2: Inspecting Setup Screen ---
+✅ Five modes, deposit options, and five maps are available.
+
+--- Step 3: Clicking "开启富翁之旅" to enter Game HUD ---
+✅ Game HUD successfully entered.
+
+--- Step 3-Mode: Testing mode objective center ---
+✅ Mode rules, round progress, economy cycle, and live standings rendered.
+
+--- Step 3-Character: Testing character reactions and dialogue ---
+✅ Character portrait, personality title, and event dialogue rendered.
+
+--- Step 3-Facility: Testing differentiated commercial services ---
+✅ Hotel service, independent stay state, facility toast, and character response rendered.
+
+--- Step 3-Quest: Testing continuous fate quest tracker ---
+✅ Quest assignment, progress bar, deadline context, completion reward, and character response rendered.
+
+--- Step 3-God: Testing differentiated roaming gods ---
+✅ Eight god rules, named HUD buff, duration, collision toast, and character response rendered.
+
+--- Step 3a: Testing 120-node flagship map navigation ---
+✅ 120 road nodes, 52 lots, overview, rotation, follow camera, and minimap rendered.
+
+--- Step 3b: Testing weather, night lighting, and extended character models ---
+✅ Snow, night lighting, park texture, and extended character models rendered.
+
+--- Step 3c: Testing city news broadcast and archive ---
+✅ News broadcast, impact summary, ticker entry, and archive rendered.
+
+--- Step 3d: Testing multi-round auction hall interface ---
+✅ Auction property card, bidders, bid history, custom controls, and sold result rendered.
+
+--- Step 3e: Testing financial crisis settlement center ---
+✅ Debt gap, liquidity portfolio, staged actions, outcome, and bankruptcy confirmation rendered.
+
+--- Step 4: Testing Stock Market Modal ---
+✅ Stock Market modal opened.
+Found 6 stocks in stock market list.
+✅ Clicked Buy stock button.
+✅ Stock trading, six company cards, chairman perk, and board policy activation passed.
+
+--- Step 4b: Testing rotating card shop visit ---
+✅ Limited shelf, visit bonus, discount, purchase, and next-round refresh messaging rendered.
+
+--- Step 5: Testing Card Shop Modal ---
+✅ Card Shop modal opened.
+Found 38 items in Card Shop.
+✅ Card Shop modal closed.
+
+--- Step 6: Testing Inventory Modal ---
+✅ Inventory modal opened.
+✅ Inventory modal closed.
+
+--- Step 6b: Testing Asset and Property Management Center ---
+✅ Asset ranking, property controls, rent/value cards, and monopoly district overview rendered.
+
+--- Step 6c: Testing Player Asset Market ---
+✅ Market hall listed an asset and rendered valuation, expiry, and seller controls.
+
+--- Step 6d: Testing Pause, Speed, and V11 Save Slot ---
+✅ Pause menu, speed control, and manual slot save passed.
+
+--- Step 6e: Testing three distinct minigames ---
+✅ Harbor sorting, sky collection, and route memory minigames passed.
+
+--- Step 7: Testing Dice Roll (Click & Space bar) and Movement & AI Turns ---
+Clicking "掷骰子" button for Player 1 turn...
+[Turn 1] 🎲 Human player active. Pressing Space key to roll...
+[Turn 2] 🎲 Human player active. Pressing Space key to roll...
+[Turn 3] 🏡 Land purchase modal open. Responding...
+✅ Land bought with cash presentation.
+[Turn 3] 🎲 Human player active. Pressing Space key to roll...
+[Turn 4] 🎲 Human player active. Pressing Space key to roll...
+[Turn 5] 🎲 Human player active. Pressing Space key to roll...
+[Turn 6] 🏡 Land purchase modal open. Responding...
+✅ Land bought with cash presentation.
+[Turn 6] 🎲 Human player active. Pressing Space key to roll...
+[Turn 7] 🎲 Human player active. Pressing Space key to roll...
+[Turn 8] 🎲 Human player active. Pressing Space key to roll...
+[Turn 9] 🎲 Human player active. Pressing Space key to roll...
+[Turn 10] 🎲 Human player active. Pressing Space key to roll...
+[Turn 11] 🎲 Human player active. Pressing Space key to roll...
+[Turn 12] 🎲 Human player active. Pressing Space key to roll...
+
+--- Step 8: Audio & View reset button tests ---
+✅ Mute/Unmute button toggled.
+✅ Reset 3D camera view button clicked.
+
+--- Step 9: Returning to setup without page reload ---
+✅ Returned to setup without reloading the page.
+
+--- Step 10: Testing legacy 40-node map rendering ---
+✅ Legacy Taiwan map rendered all 40 nodes after a live map switch.
+
+🎉 ALL GAMEPLAY TESTS COMPLETED!
+
+================ FULL TEST REPORT ================
+Total Console Messages logged: 2
+Network / HTTP Errors (0):
+JS Console Errors (0):
+Page Uncaught Errors (0):
+Screenshots: /tmp/fortune-empire-e2e-aIeLSy
+==================================================

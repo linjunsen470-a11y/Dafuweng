@@ -1,0 +1,20 @@
+
+> dafuweng-3d@1.0.0 build:shanhai
+> node scripts/build-shanhai.mjs
+
+vite v8.1.5 building client environment for production...
+[2K
+transforming...✓ 74 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-shanhai/shanhai.html                    11.19 kB │ gzip:   4.44 kB
+dist-shanhai/assets/shanhai-CN0eFM25.css     41.73 kB │ gzip:   9.71 kB
+dist-shanhai/assets/shanhai-mqbDggsK.js   1,107.65 kB │ gzip: 320.73 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 800 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 503ms
+Built an isolated coastal chapter. No legacy binary artwork was copied.

@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "compared": "All final snapshot fields after identical UI-driven branch journey",
+  "excluded": [
+    "savedAt",
+    "economicCycle.lastReport.generatedAt",
+    "logHistory[*].time"
+  ],
+  "round": 6,
+  "tile": 75,
+  "keyboard": {
+    "baselineEnterClaimed": false,
+    "finalEnterClaimed": true
+  },
+  "humanRoute": [
+    60,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    72,
+    73,
+    74,
+    75
+  ],
+  "bankTransferCompletedInFullJourney": false,
+  "note": "Both full journeys confirmed then closed bank before its animation completed, cancelling transfer. Separate view-report waits and verifies cash -1000/deposit +1000. No economic result difference."
+}

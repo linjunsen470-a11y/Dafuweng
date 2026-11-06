@@ -1,0 +1,12 @@
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {SliceSession} from '../../src/shanhai/SliceSession.js';
+const runs=[];const baseline=process.argv.includes('--baseline');
+for(const mapId of ['shanhai-coast','shanhai-highland'])for(const seed of [17,41,73,101,211,314,509,811,1201,2027,4093,7132]){
+ const s=new SliceSession({storage:null,mapId});s.start({seed});s.state.players.forEach(p=>p.isAI=true);if(baseline)s.chooseAIConstruction=()=>null;const rounds=[];let turns=0,upgradeOffers=0,rentVisits=0,construction=0;
+ const snap=()=>{const props=[...s.state.propertyManager.properties.values()].filter(p=>p.owner!==null);return{round:s.state.round,cash:s.state.players.map(p=>p.cash),net:s.state.players.map(p=>s.state.calculateNetWorth(p)),owned:props.length,levels:props.reduce((n,p)=>n+p.level,0),zeroLevel:props.filter(p=>!p.level).length,points:s.state.players.map(p=>p.cardPoints)};};
+ while(s.state.phase!=='GAME_OVER'&&turns++<40){if([1,8,12,16].includes(s.state.round)&&!rounds.some(r=>r.round===s.state.round))rounds.push(snap());const r=await s.playAITurn({onAbility:async result=>{if(result.type==='CONSTRUCTION_COMPLETED')construction++;},onLanding:async f=>{if(f?.kind==='UPGRADE')upgradeOffers++;if(f?.kind==='RENT')rentVisits++;}});assert.ok(r.success,r.reason);}
+ assert.equal(s.state.phase,'GAME_OVER');runs.push({mapId,seed,rounds,final:snap(),turns,upgradeOffers,rentVisits,construction});
+}
+const summaries=['shanhai-coast','shanhai-highland'].map(mapId=>{const all=runs.filter(r=>r.mapId===mapId),avg=f=>Math.round(all.reduce((n,r)=>n+f(r),0)/all.length*100)/100;return{mapId,games:all.length,meanFinalCash:avg(r=>r.final.cash.reduce((a,b)=>a+b)/2),meanOwned:avg(r=>r.final.owned),meanLevels:avg(r=>r.final.levels),meanZeroLevel:avg(r=>r.final.zeroLevel),meanUpgradeLandings:avg(r=>r.upgradeOffers),meanRentVisits:avg(r=>r.rentVisits),meanConstruction:avg(r=>r.construction),observedRound8Games:all.filter(r=>r.rounds.some(x=>x.round===8)).length};});
+const output={baseline,method:'24 deterministic AI-vs-AI full games; both original roles, 12 fixed seeds per map. Diagnostic only, not a human balance verdict.',summaries,runs};await fs.writeFile(process.argv.slice(2).find(arg=>!arg.startsWith('--'))||(baseline?'qa/midgame-baseline.json':'qa/midgame-after.json'),JSON.stringify(output,null,2)+'\n');console.log(JSON.stringify(summaries,null,2));

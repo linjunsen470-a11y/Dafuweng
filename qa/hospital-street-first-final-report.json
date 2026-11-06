@@ -1,0 +1,9 @@
+{
+  "errors": [],
+  "limits": [
+    "Prepared original four-player save at71; original remote card/item used via UI. No injected turn skips or hospital flags.",
+    "Desktop software WebGL and mobile viewport, not physical phone or complete natural game."
+  ],
+  "success": false,
+  "failure": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:692:23)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:118:20)\n    at async CdpElementHandle.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:722:30)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:129:24)\n    at async CdpFrame.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:749:17)\n    at async remote (file:///workspace/dafuweng-cloud/test-hospital-street.js:19:29)\n    at async file:///workspace/dafuweng-cloud/test-hospital-street.js:26:370"
+}

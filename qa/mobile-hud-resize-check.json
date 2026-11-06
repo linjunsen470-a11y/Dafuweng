@@ -1,0 +1,4 @@
+{
+  "success": true,
+  "check": "Real Chromium: opening at 390px then resizing to desktop closes toolbar and clears shortcut suppression"
+}

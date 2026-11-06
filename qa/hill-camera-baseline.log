@@ -1,0 +1,109 @@
+{
+  "errors": [],
+  "limits": [
+    "Actual saved position99 loaded unchanged; real rotate button, wheel zoom and mouse drag. Software WebGL desktop."
+  ],
+  "before": {
+    "position": [
+      46.99999999999999,
+      22.28,
+      15.000000000000004
+    ],
+    "look": [
+      41.99999999999999,
+      0.28,
+      -12.999999999999996
+    ],
+    "target": null,
+    "lookTarget": null,
+    "follow": false,
+    "distance": 35.958309192730404,
+    "remaining": 0
+  },
+  "rotated": {
+    "position": [
+      65.17090192089569,
+      22.27999999999999,
+      3.3681958104039396
+    ],
+    "look": [
+      41.99999999999999,
+      0.28,
+      -12.999999999999996
+    ],
+    "target": null,
+    "lookTarget": null,
+    "follow": false,
+    "distance": 35.89997952527957,
+    "remaining": 0
+  },
+  "zoomImmediate": {
+    "position": [
+      59.92920221107121,
+      17.30318062499999,
+      -0.3346021006420745
+    ],
+    "look": [
+      41.99999999999999,
+      0.28,
+      -12.999999999999996
+    ],
+    "target": null,
+    "lookTarget": null,
+    "follow": false,
+    "distance": 27.778719813301617,
+    "remaining": 0
+  },
+  "zoomSettled": {
+    "position": [
+      59.92920221107121,
+      17.30318062499999,
+      -0.3346021006420745
+    ],
+    "look": [
+      41.99999999999999,
+      0.28,
+      -12.999999999999996
+    ],
+    "target": null,
+    "lookTarget": null,
+    "follow": false,
+    "distance": 27.778719813301617,
+    "remaining": 0
+  },
+  "panSettled": {
+    "position": [
+      56.92926847684791,
+      18.31332027509869,
+      2.5544211350554065
+    ],
+    "look": [
+      39.000066265776695,
+      1.2901396500987028,
+      -10.110976764302515
+    ],
+    "target": null,
+    "lookTarget": null,
+    "follow": false,
+    "distance": 27.778719813301617,
+    "remaining": 0
+  },
+  "secondRotation": {
+    "position": [
+      42.88594348838868,
+      18.313336985189054,
+      11.419286682959838
+    ],
+    "look": [
+      38.99961936181131,
+      1.2902901319056443,
+      -10.110546382831073
+    ],
+    "target": null,
+    "lookTarget": null,
+    "follow": false,
+    "distance": 27.720413980074742,
+    "remaining": 0
+  },
+  "success": true
+}

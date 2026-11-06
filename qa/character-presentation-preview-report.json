@@ -1,0 +1,141 @@
+{
+  "previewOnly": true,
+  "checks": [
+    {
+      "map": "coast",
+      "looks": [
+        {
+          "id": "ayu",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 16348,
+            "geometries": 230
+          },
+          "title": "阿屿 · 海岛快递员",
+          "afterReselection": 230
+        },
+        {
+          "id": "qinghe",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18652,
+            "geometries": 230
+          },
+          "title": "青禾 · 植物学家",
+          "afterReselection": 230
+        },
+        {
+          "id": "xingluo",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18336,
+            "geometries": 236
+          },
+          "title": "星罗 · 地图测绘师",
+          "afterReselection": 230
+        },
+        {
+          "id": "taoning",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 33,
+            "triangles": 17332,
+            "geometries": 236
+          },
+          "title": "陶宁 · 街区修缮师",
+          "afterReselection": 230
+        }
+      ],
+      "previewDoesNotMutateGame": true,
+      "geometryDoesNotGrow": true
+    },
+    {
+      "map": "highland",
+      "looks": [
+        {
+          "id": "ayu",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 16348,
+            "geometries": 199
+          },
+          "title": "阿屿 · 海岛快递员",
+          "afterReselection": 199
+        },
+        {
+          "id": "qinghe",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18652,
+            "geometries": 199
+          },
+          "title": "青禾 · 植物学家",
+          "afterReselection": 199
+        },
+        {
+          "id": "xingluo",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18336,
+            "geometries": 199
+          },
+          "title": "星罗 · 地图测绘师",
+          "afterReselection": 199
+        },
+        {
+          "id": "taoning",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 33,
+            "triangles": 17332,
+            "geometries": 199
+          },
+          "title": "陶宁 · 街区修缮师",
+          "afterReselection": 199
+        }
+      ],
+      "previewDoesNotMutateGame": true,
+      "geometryDoesNotGrow": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

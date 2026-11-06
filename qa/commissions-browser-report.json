@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-11-05T19:31:32.396Z",
+  "checks": [
+    "Accept delivery through UI; 3D target marker and pending order survive refresh.",
+    "Courier earns exactly ¥900 + 15 points; completed save reload does not pay twice.",
+    "Botanist AI accepts and completes renewal using the same rules.",
+    "Botanist human earns exactly ¥700 + 35 points after a real property purchase.",
+    "Commission summary remains readable at 390 px without horizontal overflow."
+  ],
+  "errors": [],
+  "success": true,
+  "finishedAt": "2026-11-05T19:32:50.883Z"
+}

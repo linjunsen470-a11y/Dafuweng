@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "kind": "human kiosk",
+      "width": 1100,
+      "actualModelPick": true,
+      "remoteArrival20": true,
+      "points": 150,
+      "depositAndWithdrawal": true,
+      "keyboardAndReload": true,
+      "fourSeatRound": true
+    },
+    {
+      "kind": "human kiosk",
+      "width": 390,
+      "actualModelPick": true,
+      "remoteArrival20": true,
+      "points": 150,
+      "depositAndWithdrawal": true,
+      "keyboardAndReload": true,
+      "fourSeatRound": true
+    },
+    {
+      "kind": "fourth AI",
+      "deposit": 1050,
+      "interest": 50,
+      "cash": 15000,
+      "points": 150
+    },
+    {
+      "kind": "coast unchanged",
+      "points": 150,
+      "noKiosk": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

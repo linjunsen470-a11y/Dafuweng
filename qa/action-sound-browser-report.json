@@ -1,0 +1,95 @@
+{
+  "checks": [
+    {
+      "map": "coast",
+      "kind": "ability and audio controls",
+      "strictAutoplayInitialContext": "suspended",
+      "ability": {
+        "rate": 44100,
+        "peak": 0.17596584558486938,
+        "rms": 0.04219197580434586
+      },
+      "sold": {
+        "rate": 44100,
+        "peak": 0.17929589748382568,
+        "rms": 0.029731628274761467
+      },
+      "bankruptcy": {
+        "rate": 44100,
+        "peak": 0.2133599817752838,
+        "rms": 0.04692928777012502
+      },
+      "volumePeakRatio": 2,
+      "sfxOnlyMutePeak": 0,
+      "musicIndependent": true,
+      "savedMuteAndGameRestored": true
+    },
+    {
+      "map": "coast",
+      "kind": "four-seat bankruptcy and auction",
+      "bankruptSound": {
+        "rate": 44100,
+        "peak": 0.3872138261795044,
+        "rms": 0.059019074834703235
+      },
+      "auctionStatus": "RESOLVED",
+      "expected": "auction-sold",
+      "auctionSound": {
+        "rate": 44100,
+        "peak": 0.17929589748382568,
+        "rms": 0.02519746869101968
+      },
+      "restoredReceiptDoesNotReplay": true
+    },
+    {
+      "map": "highland",
+      "kind": "ability and audio controls",
+      "strictAutoplayInitialContext": "suspended",
+      "ability": {
+        "rate": 44100,
+        "peak": 0.17596584558486938,
+        "rms": 0.0506617638462043
+      },
+      "sold": {
+        "rate": 44100,
+        "peak": 0.16917085647583008,
+        "rms": 0.027273818818044814
+      },
+      "bankruptcy": {
+        "rate": 44100,
+        "peak": 0.2133599817752838,
+        "rms": 0.052505799000277326
+      },
+      "volumePeakRatio": 2,
+      "sfxOnlyMutePeak": 0,
+      "musicIndependent": true,
+      "savedMuteAndGameRestored": true
+    },
+    {
+      "map": "highland",
+      "kind": "four-seat bankruptcy and auction",
+      "bankruptSound": {
+        "rate": 44100,
+        "peak": 0.24572423100471497,
+        "rms": 0.04083341718325314
+      },
+      "auctionStatus": "CANCELLED",
+      "expected": "event-fail",
+      "auctionSound": {
+        "rate": 44100,
+        "peak": 0.24425245821475983,
+        "rms": 0.05907488119785683
+      },
+      "restoredReceiptDoesNotReplay": true
+    }
+  ],
+  "errors": [],
+  "recordings": [
+    "qa/action-sound-coast-ability-playback.wav",
+    "qa/action-sound-auction-sold-playback.wav",
+    "qa/action-sound-bankruptcy-playback.wav",
+    "qa/action-sound-highland-ability-playback.wav"
+  ],
+  "subjectiveListening": "Not completed. The audio input tool returned: audio content omitted because you do not support audio input. PCM measurements are not a listening verdict.",
+  "success": true
+}

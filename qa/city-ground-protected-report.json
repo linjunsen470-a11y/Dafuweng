@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "errors": [],
+  "comparedTo": "65d3b5be8fa3918892fbea54ec685fe6762d095b",
+  "unchangedFiles": {
+    "src/game/GrandMapData.js": "3e7d183dd9247d49668a70871deca51ed63289d3271137cdb19232c37d669d55",
+    "src/game/GameEngine.js": "d16db53417efb2d6e45aa041f8d2f3ac8255709ae187f0dc2d660f0f1927dd60",
+    "src/game/GameState.js": "aad1dd0e944d031f004edaf8266e01d16e7f0a75d3d20a893c54806ef9189152",
+    "src/game/PropertyManager.js": "58baa637d234dbc8705a24a67c8330ac772ed03e27af405927dba60d3b10942e",
+    "src/game/AIPlayer.js": "b397ed3672a5dfd3d5398bcdb64403a8a2ced8085d88735a33ee1c7e28a229c1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "Desktop: actual saved west-return view, new mechanism and stock buildings, two existing residential plots; state unchanged"
+  ],
+  "errors": [],
+  "branches": [],
+  "limits": [
+    "Independent prepared art, news and branch fixtures, not part of the natural continuation.",
+    "Branch fixtures place a car at each existing fork; subsequent movement and choices use visible controls, no specified dice rolls.",
+    "390px Chromium software WebGL is not a physical phone."
+  ],
+  "success": false,
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    activeQuests: [],\n    auction: null,\n    bankruptcyAuctionQueue: [],\n    boardGods: [\n...\n    round: 39,\n+   savedAt: '2026-11-06T07:32:15.167Z',\n-   savedAt: '2026-11-06T07:32:10.463Z',\n    seed: 2947061402,\n    stocks: [\n      {\n        change: 6,\n        code: '600001',\n\n    at file:///workspace/dafuweng-cloud/test-city-return-fixes.js:22:273"
+}

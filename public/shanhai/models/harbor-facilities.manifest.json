@@ -1,0 +1,26 @@
+{
+  "asset": "harbor-facilities.glb",
+  "generator": "scripts/art/create_harbor_facilities.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "models": [
+    {
+      "prefab": "harbor_bank",
+      "triangles": 336,
+      "size_xyz_blender": [
+        3.5999999046325684,
+        2.8000001907348633,
+        3.1549999713897705
+      ]
+    },
+    {
+      "prefab": "harbor_lottery",
+      "triangles": 240,
+      "size_xyz_blender": [
+        2.6500000953674316,
+        2.647289752960205,
+        2.440000057220459
+      ]
+    }
+  ]
+}

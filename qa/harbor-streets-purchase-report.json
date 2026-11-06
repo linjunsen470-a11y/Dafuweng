@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "Actual main-game setup enters a readable, lit harbor street",
+    "Human rolls, buys harbor lot 1, then three AI turns return control"
+  ],
+  "errors": [],
+  "success": false,
+  "failure": "Error: Waiting for selector `#btn-land-upgrade` failed\n    at CSSQueryHandler.waitFor (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/common/QueryHandler.js:211:46)\n    at async CdpFrame.waitForSelector (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:541:21)\n    at async CdpPage.waitForSelector (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1387:20)\n    at async file:///workspace/dafuweng-cloud/test-main-harbor.js:31:55",
+  "state": null
+}

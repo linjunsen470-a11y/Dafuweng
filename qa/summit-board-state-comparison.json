@@ -1,0 +1,73 @@
+{
+  "success": true,
+  "compared": "Every final save field after the same UI-driven company visit, stock purchase, policy decision and return route",
+  "excluded": [
+    "savedAt",
+    "economicCycle.lastReport.generatedAt",
+    "logHistory[*].time"
+  ],
+  "round": 5,
+  "tile": 49,
+  "humanRoute": [
+    36,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    48,
+    49
+  ],
+  "settledCompany": {
+    "id": "SUMMIT_MATERIAL",
+    "name": "峰岳材料",
+    "stockId": "MINING",
+    "icon": "⛏️",
+    "baseFee": 410,
+    "perk": "MATERIAL",
+    "treasury": 1030,
+    "periodRevenue": 0,
+    "chairmanId": 0,
+    "lastDividend": 180,
+    "policyId": null,
+    "policyStartedRound": null,
+    "policyHistory": [
+      {
+        "policyId": "RESERVE",
+        "round": 2,
+        "dividendPool": 180,
+        "operation": -50
+      }
+    ]
+  },
+  "policyReceipt": {
+    "cash": 16060,
+    "holding": {
+      "shares": 10,
+      "avgPrice": 353
+    },
+    "company": {
+      "id": "SUMMIT_MATERIAL",
+      "name": "峰岳材料",
+      "stockId": "MINING",
+      "icon": "⛏️",
+      "baseFee": 410,
+      "perk": "MATERIAL",
+      "treasury": 1260,
+      "periodRevenue": 410,
+      "chairmanId": 0,
+      "lastDividend": 0,
+      "policyId": "RESERVE",
+      "policyStartedRound": 2,
+      "policyHistory": []
+    }
+  },
+  "note": "Initial position36 is prepared. Actual remote card4/item6 and normal dice used. Last copy-only guidance/frontage reposition checked separately by final view test."
+}

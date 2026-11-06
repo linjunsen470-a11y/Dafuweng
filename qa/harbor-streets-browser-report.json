@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "Actual main-game setup enters a readable, lit harbor street",
+    "Purchase and AI return verified in the prior run; see harbor-streets-purchase-report.json",
+    "Real upgrade dialog drives the original level-1 residence",
+    "Four prepared building levels render and recover from an unchanged legacy save",
+    "Existing fork 12 exposes both 13/84 routes and coastal purchase still resolves",
+    "390px mobile viewport draws the main game without horizontal overflow (simulation only)"
+  ],
+  "errors": [],
+  "success": true,
+  "limitations": [
+    "Manual screenshot review: at 390px the existing main-game HUD obscures the board and clips controls. Rendering check passed; mobile playability NOT accepted.",
+    "Prepared situations were used for upgrade levels and fork/save checks; no full-match balance or subjective audio acceptance."
+  ]
+}

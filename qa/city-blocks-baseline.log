@@ -1,0 +1,3 @@
+9:32:45 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+9:33:20 AM [vite] (client) [console.warn] WARNING: Multiple instances of Three.js being imported.
+{"success":true,"errors":[]}
