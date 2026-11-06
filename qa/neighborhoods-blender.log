@@ -1,0 +1,23 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+20:11:38 | INFO: Starting glTF 2.0 export
+20:11:38 | INFO: Extracting primitive: Cone
+20:11:38 | INFO: Primitives created: 8
+20:11:38 | INFO: Extracting primitive: Cube.030
+20:11:38 | INFO: Primitives created: 7
+20:11:38 | INFO: Extracting primitive: Cube.076
+20:11:38 | INFO: Primitives created: 10
+20:11:38 | INFO: Extracting primitive: Cone.074
+20:11:38 | INFO: Primitives created: 5
+20:11:38 | INFO: Extracting primitive: Cone.080
+20:11:38 | INFO: Primitives created: 5
+20:11:38 | INFO: Extracting primitive: Cube.115
+20:11:38 | INFO: Primitives created: 6
+20:11:38 | INFO: Extracting primitive: Cone.099
+20:11:38 | INFO: Primitives created: 5
+20:11:38 | INFO: Finished glTF 2.0 export in 0.28093814849853516 s
+
+Info: Saved "neighborhoods.blend"
+NEIGHBORHOOD_ASSETS_COMPLETE {"asset": "neighborhoods.glb", "generator": "scripts/art/create_shanhai_neighborhoods.py", "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.", "axes": "GLB Y-up, front +Z, origin ground center", "prefabs": [{"name": "harbor_boathouse", "triangles": 1604, "size_xyz_blender": [3.1, 2.7, 2.525]}, {"name": "market_clock_gallery", "triangles": 2280, "size_xyz_blender": [3.065, 2.64, 3.62]}, {"name": "garden_conservatory", "triangles": 1476, "size_xyz_blender": [3.25, 3.145, 3.12]}, {"name": "harbor_fishing_rack", "triangles": 407, "size_xyz_blender": [1.5, 0.655, 1.35]}, {"name": "market_cafe_set", "triangles": 392, "size_xyz_blender": [2.0, 2.0, 2.245]}, {"name": "garden_flower_cart", "triangles": 772, "size_xyz_blender": [1.471, 1.285, 1.24]}, {"name": "garden_easel", "triangles": 217, "size_xyz_blender": [1.459, 1.417, 1.564]}]}
+Blender 4.3.2
+
+Blender quit

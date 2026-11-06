@@ -1,0 +1,60 @@
+{
+  "checks": [],
+  "commands": [
+    {
+      "round": 1,
+      "player": 0,
+      "command": "USE_CARD",
+      "tile": 12,
+      "result": "CARD_USED",
+      "success": true
+    },
+    {
+      "round": 1,
+      "player": 0,
+      "command": "BEGIN_MOVE",
+      "tile": 12,
+      "result": "MOVE_STARTED",
+      "success": true
+    },
+    {
+      "round": 1,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 12,
+      "result": "ROUTE_CHOICE_REQUIRED",
+      "success": true
+    },
+    {
+      "round": 1,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 84,
+      "result": "PLAYER_STEPPED",
+      "success": true
+    },
+    {
+      "round": 1,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 85,
+      "result": "PLAYER_STEPPED",
+      "success": true
+    },
+    {
+      "round": 1,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 86,
+      "result": "PLAYER_STEPPED",
+      "success": true
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared original opening snapshot at fork 12. Existing remote card/item consumed through UI; no injected dice or engine actions.",
+    "Desktop software WebGL; no physical mobile or audio acceptance."
+  ],
+  "success": false,
+  "failure": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:692:23)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:118:20)\n    at async CdpElementHandle.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:722:30)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:129:24)\n    at async CdpFrame.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:749:17)\n    at async file:///workspace/dafuweng-cloud/test-company-branch.js:23:35"
+}

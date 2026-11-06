@@ -1,0 +1,35 @@
+{
+  "checks": [
+    "Actual policy save reload: accounts, RNG and chosen policy unchanged, no second policy button; original model and rotation inspected.",
+    "Mobile visible policy effect, treasury preview, real selection costs company350/unchanged personal cash, receipt and return to map."
+  ],
+  "errors": [],
+  "limits": [
+    "Desktop loads actual prior policy save; mobile explicitly prepares that snapshot with pre-policy company account to exercise choices.",
+    "360×640 Chromium software WebGL, not physical phone."
+  ],
+  "camera": {
+    "position": [
+      65.06124540339975,
+      22.279999999999994,
+      3.4383906276550746
+    ],
+    "remainingTargetDistance": 0.3244737370771956
+  },
+  "mobileChoices": {
+    "text": "🛡️ 稳健储备 · $350\n限制经营亏损，保留更多公司金库。\n金库余 $1,260",
+    "top": 433.5625,
+    "bottom": 512.5,
+    "left": 40.796875,
+    "right": 319.1875,
+    "viewport": [
+      360,
+      640
+    ]
+  },
+  "receipt": {
+    "text": "🛡️\n执行中 · 稳健储备\n限制经营亏损，保留更多公司金库。\n已支出公司金库 $350，金库余 $1,260；个人现金不变。",
+    "focused": true
+  },
+  "success": true
+}

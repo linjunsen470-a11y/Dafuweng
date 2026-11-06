@@ -1,0 +1,21 @@
+{
+  "kind": "counterplay from two normal simulated fence situations",
+  "checks": [
+    {
+      "map": "coast",
+      "round": 15,
+      "fence": 17,
+      "action": "CLEAR_ROAD",
+      "checks": "Normal simulation produced the fence; real page preview/keep/Esc are free, missing card goes to explicit supply, correct target preselected, confirmation spends exactly one card and locks second strategy; result survives reload and ordinary roll/AI continue."
+    },
+    {
+      "map": "highland",
+      "round": 7,
+      "fence": 2,
+      "action": "TURN_AROUND",
+      "checks": "Normal simulation produced the fence; real page preview/keep/Esc are free, missing card goes to explicit supply, correct target preselected, confirmation spends exactly one card and locks second strategy; result survives reload and ordinary roll/AI continue."
+    }
+  ],
+  "errors": [],
+  "success": true
+}

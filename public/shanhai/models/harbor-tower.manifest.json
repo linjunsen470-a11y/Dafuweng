@@ -1,0 +1,13 @@
+{
+  "asset": "harbor-tower.glb",
+  "generator": "scripts/art/create_harbor_tower.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "prefab": "res_harbor_5",
+  "triangles": 1132,
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "size_xyz_blender": [
+    2.6,
+    2.35,
+    6.43
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "checks": [
+    {
+      "map": "coast",
+      "kind": "human route and event",
+      "title": "林间拓印试展",
+      "choice": "exhibit",
+      "won": false,
+      "cashDelta": 0,
+      "pointsDelta": -15,
+      "pendingAndSettledReload": true,
+      "fourSeatRound": true,
+      "keyboard": false
+    },
+    {
+      "map": "coast",
+      "kind": "fourth AI event",
+      "sameRulesAndRng": true,
+      "log": {
+        "msg": "✦ 陶宁 在【林间拓印试展】选择认领拓印展位：拓印画顺利展出，画坊付清展位分成。现金 +¥900，点券 -30。",
+        "type": "info",
+        "time": "3:47:45 AM"
+      }
+    },
+    {
+      "map": "highland",
+      "kind": "human route and event",
+      "title": "雨后晒场抢晴",
+      "choice": "sun",
+      "won": false,
+      "cashDelta": -250,
+      "pointsDelta": 0,
+      "pendingAndSettledReload": true,
+      "fourSeatRound": true,
+      "keyboard": true
+    },
+    {
+      "map": "highland",
+      "kind": "fourth AI event",
+      "sameRulesAndRng": true,
+      "log": {
+        "msg": "✦ 陶宁 在【雨后晒场抢晴】选择抢晴露天晾晒：晴窗持续到收工，整批干茶售出。现金 +¥900，点券 +0。",
+        "type": "info",
+        "time": "3:47:57 AM"
+      }
+    }
+  ],
+  "errors": [],
+  "success": true
+}

@@ -75,7 +75,7 @@ describe('roaming god system', () => {
     expect(AIPlayer.scoreBoardGod(player, 'MISFORTUNE')).toBeLessThan(0);
   });
 
-  it('writes V10 while restoring a V9 roaming-god save', () => {
+  it('writes V11 while restoring a V9 roaming-god save', () => {
     const { state, player } = setup();
     attachGod(player, 'DEMON', 3);
     const legacy = state.createSnapshot();
@@ -83,6 +83,6 @@ describe('roaming god system', () => {
     const restored = new GameState({ seed: 1 });
     restored.restoreSnapshot(legacy);
     expect(restored.players[0]).toMatchObject({ godType: 'DEMON', godTurns: 3 });
-    expect(restored.createSnapshot().version).toBe(10);
+    expect(restored.createSnapshot().version).toBe(11);
   });
 });

@@ -1,3 +1,5 @@
+import { createCityCharacter, poseCityCharacter, disposeCityCharacter } from './CityCharacters.js';
+import { harborPawnSlot } from './HarborPawnLayout.js';
 import * as THREE from 'three';
 import { PLAYER_PROFILES } from '../game/BoardData.js';
 
@@ -18,11 +20,14 @@ export class PawnManager {
       const group = new THREE.Group();
 
       // 创建精致 Q 版 3D 角色模型
-      const characterMesh = this.createDetailedCharacter(profile.id, profile);
+      const harbor = this.boardBuilder.activeMapDefinition?.id === 'grand-bay';
+      const characterMesh = (harbor ? createCityCharacter(profile) : null) || this.createDetailedCharacter(profile.id, profile);
+      if (harbor) characterMesh.scale.setScalar(1.15);
+      group.userData.originalHarborPawn = harbor;
       group.add(characterMesh);
 
       let standee = null;
-      if (profile.avatarAtlas || profile.avatarImg) {
+      if (!harbor && (profile.avatarAtlas || profile.avatarImg)) {
         standee = this.createCharacterStandee(profile, () => {
           characterMesh.visible = false;
         });
@@ -30,7 +35,7 @@ export class PawnManager {
       }
 
       // 角色脚下炫彩 3D 光圈底座
-      const ringGeo = new THREE.RingGeometry(0.8, 1.0, 32);
+      const ringGeo = new THREE.RingGeometry(harbor ? .48 : .8, harbor ? .66 : 1, 24);
       const ringMat = new THREE.MeshBasicMaterial({
         color: profile.colorHex,
         side: THREE.DoubleSide,
@@ -43,8 +48,9 @@ export class PawnManager {
       group.add(ring);
 
       // 头顶 3D 悬浮名字标牌
-      const namePlate = this.createNamePlate(cfg.name || profile.name, profile.color);
-      namePlate.position.y = 2.72;
+      const namePlate = this.createNamePlate(harbor ? String(index + 1) : cfg.name || profile.name, profile.color, harbor);
+      const labelHeight = characterMesh.cityRig ? 3 : 2.72;
+      namePlate.position.y = labelHeight;
       group.add(namePlate);
 
       const startPos = this.boardBuilder.tilePositions[0];
@@ -58,20 +64,36 @@ export class PawnManager {
         mesh: group,
         characterMesh: characterMesh,
         standee,
+        namePlate,
+        labelHeight,
         ring,
         currentTile: 0,
         targetPos: group.position.clone()
       });
     });
 
+    // Register once: restores replace pawns, not the animation callback.
+    if (this.pawnAnimationRegistered) return;
+    this.pawnAnimationRegistered = true;
     // 悬浮 Idle 呼吸动画
     this.scene3D.addUpdatable({
       update: () => {
+        this.layoutHarborPawns();
         const time = performance.now() * 0.003;
+        const reduced = document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         this.pawns.forEach((pawn, idx) => {
+          if (pawn.characterMesh?.cityRig) {
+            if (!pawn.mesh.userData.isMoving) {
+              poseCityCharacter(pawn.characterMesh,0,true);
+              pawn.characterMesh.position.y = reduced ? 0 : Math.sin(time + idx) * .012;
+              pawn.characterMesh.rotation.y = this.harborFacing || 0;
+            }
+            pawn.ring.material.opacity = reduced ? .85 : .8 + Math.sin(time + idx) * .1;
+            return;
+          }
           if (pawn.characterMesh) {
             pawn.characterMesh.position.y = Math.sin(time + idx * 1.5) * 0.08;
-            pawn.characterMesh.rotation.y = Math.sin(time * 0.35 + idx) * 0.08;
+            pawn.characterMesh.rotation.y = (pawn.mesh.userData.originalHarborPawn ? this.harborFacing || 0 : 0) + Math.sin(time * 0.35 + idx) * 0.08;
             if (pawn.standee) {
               pawn.standee.position.y = 1.35 + Math.sin(time + idx * 1.5) * 0.045;
               pawn.standee.material.rotation = Math.sin(time * 0.55 + idx) * 0.025;
@@ -81,12 +103,16 @@ export class PawnManager {
             pawn.ring.rotation.z += 0.006;
           }
         });
+        this.boardBuilder.updateHarborPawnVisibility?.(this.pawns);
       }
     });
   }
 
   clearPawns() {
-    this.pawns.forEach(pawn => this.scene3D.scene.remove(pawn.mesh));
+    this.pawns.forEach(pawn => {
+      if (pawn.characterMesh?.cityRig) disposeCityCharacter(pawn.characterMesh);
+      this.scene3D.scene.remove(pawn.mesh);
+    });
     this.boardGodMeshes.forEach(mesh => this.scene3D.scene.remove(mesh));
     this.pawns = [];
     this.godAuraMeshes.clear();
@@ -376,9 +402,9 @@ export class PawnManager {
     return charGroup;
   }
 
-  createNamePlate(nameText, colorHex) {
+  createNamePlate(nameText, colorHex, compact = false) {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
+    canvas.width = compact ? 96 : 256;
     canvas.height = 64;
     const ctx = canvas.getContext('2d');
 
@@ -388,27 +414,56 @@ export class PawnManager {
 
     // 圆角矩形
     ctx.beginPath();
-    ctx.roundRect(6, 6, 244, 52, 16);
+    ctx.roundRect(6, 6, canvas.width - 12, 52, 16);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 28px "Noto Sans SC", sans-serif';
+    ctx.font = compact ? 'bold 44px sans-serif' : 'bold 28px "Noto Sans SC", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(nameText, 128, 32);
+    ctx.fillText(nameText, canvas.width / 2, 32);
 
     const texture = new THREE.CanvasTexture(canvas);
-    const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+    const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: !compact, depthWrite: !compact });
     const sprite = new THREE.Sprite(spriteMat);
-    sprite.scale.set(2.2, 0.55, 1);
+    // Only the small identity marker stays readable behind scenery; the body keeps normal depth.
+    if (compact) sprite.renderOrder = 20;
+    sprite.scale.set(compact ? .75 : 2.2, 0.55, 1);
     return sprite;
+  }
+
+  layoutHarborPawns() {
+    if (this.boardBuilder.activeMapDefinition?.id !== 'grand-bay') return;
+    const right = new THREE.Vector3().setFromMatrixColumn(this.scene3D.camera.matrixWorld,0);
+    right.y = 0; right.normalize();
+    this.harborFacing = Math.atan2(-right.z,right.x);
+    const reduced = document.documentElement.classList.contains('reduce-motion')
+      || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const groups = new Map();
+    for (const pawn of this.pawns) {
+      if (pawn.mesh.userData.isMoving) continue;
+      if (!groups.has(pawn.currentTile)) groups.set(pawn.currentTile,[]);
+      groups.get(pawn.currentTile).push(pawn);
+    }
+    for (const [tileId,occupants] of groups) {
+      const center = this.boardBuilder.tilePositions[tileId]; if (!center) continue;
+      occupants.sort((a,b)=>a.id-b.id).forEach((pawn,rank)=>{
+        const slot = occupants.length > 1 ? harborPawnSlot(rank,occupants.length,right) : {...this.getPawnOffset(pawn.id),scale:1.15};
+        const destination = center.clone().add(new THREE.Vector3(slot.x,.20,slot.z));
+        pawn.mesh.position.lerp(destination,reduced ? 1 : .22);
+        pawn.characterMesh.scale.lerp(new THREE.Vector3(slot.scale,slot.scale,slot.scale),reduced ? 1 : .22);
+        pawn.namePlate.position.y = (pawn.labelHeight || 2.72) * slot.scale / 1.15;
+        pawn.ring.scale.setScalar(occupants.length > 1 ? .72 : 1);
+        pawn.mesh.userData.crowdCount = occupants.length;
+      });
+    }
   }
 
   getPawnOffset(playerIndex) {
     const angle = (playerIndex / 4) * Math.PI * 2;
     const dist = 0.95;
-    return new THREE.Vector3(Math.cos(angle) * dist, 0, Math.sin(angle) * dist);
+    return new THREE.Vector3(Math.cos(angle) * dist, this.boardBuilder.activeMapDefinition?.id === 'grand-bay' ? .20 : 0, Math.sin(angle) * dist);
   }
 
   // 沿路径跳跃移动动画（支持正向与反向，并实时同步回到 GameState）
@@ -446,6 +501,10 @@ export class PawnManager {
   }
 
   animateHop(mesh, targetPos) {
+    const cityModel = mesh.children.find(child => child.cityRig);
+    const reduced = document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (cityModel) cityModel.rotation.y = Math.atan2(targetPos.x-mesh.position.x,targetPos.z-mesh.position.z);
+    mesh.userData.isMoving = true;
     return new Promise((resolve) => {
       const startPos = mesh.position.clone();
       const duration = this.animateHopDuration || 220; // ms
@@ -454,9 +513,11 @@ export class PawnManager {
       const finish = () => {
         if (completed) return;
         completed = true;
+        mesh.userData.isMoving = false;
         mesh.position.copy(targetPos);
         mesh.rotation.z = 0;
         mesh.scale.set(1, 1, 1);
+        if (cityModel) poseCityCharacter(cityModel,0,true);
         resolve();
       };
       const watchdog = setTimeout(finish, duration + 1200);
@@ -469,11 +530,16 @@ export class PawnManager {
         mesh.position.x = THREE.MathUtils.lerp(startPos.x, targetPos.x, progress);
         mesh.position.z = THREE.MathUtils.lerp(startPos.z, targetPos.z, progress);
 
+        if (cityModel) {
+          mesh.position.y = THREE.MathUtils.lerp(startPos.y,targetPos.y,progress);
+          poseCityCharacter(cityModel,progress,reduced);
+        } else {
         const jumpHeight = 1.3;
         mesh.position.y = startPos.y + Math.sin(progress * Math.PI) * jumpHeight;
         mesh.rotation.z = Math.sin(progress * Math.PI * 2) * 0.08;
         const squash = Math.sin(progress * Math.PI);
         mesh.scale.set(1 + squash * 0.06, 1 - squash * 0.05, 1 + squash * 0.06);
+        }
 
         if (progress < 1.0) {
           requestAnimationFrame(update);
@@ -493,10 +559,29 @@ export class PawnManager {
     if (!pawn || !tilePosition) return;
     pawn.currentTile = tileId;
     const target = tilePosition.clone().add(this.getPawnOffset(playerIndex));
+    const reducedMotion = document.documentElement.classList.contains('reduce-motion')
+      || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const color = pawn.ring?.material?.color?.getHex?.() ?? 0xffd166;
+    if (!reducedMotion) this.scene3D.createMovementTrail?.(pawn.mesh.position.clone(), target, color);
     const original = this.animateHopDuration;
     this.animateHopDuration = duration;
     await this.animateHop(pawn.mesh, target);
     this.animateHopDuration = original;
+    if (!reducedMotion) this.scene3D.createSparkles?.(target, color, 5);
+  }
+
+  getPawnMesh(playerIndex) {
+    return this.pawns[playerIndex]?.mesh || null;
+  }
+
+  celebrateLanding(playerIndex, intensity = 1) {
+    const pawn = this.pawns[playerIndex];
+    if (!pawn) return;
+    const reducedMotion = document.documentElement.classList.contains('reduce-motion')
+      || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+    const color = pawn.ring?.material?.color?.getHex?.() ?? 0xffd166;
+    this.scene3D.createLandingPulse?.(pawn.mesh.position, color, intensity);
   }
 
   syncFromGameState(gameState) {

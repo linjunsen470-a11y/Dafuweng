@@ -1,0 +1,168 @@
+{
+  "checks": [
+    {
+      "mapId": "shanhai-coast",
+      "lot": 3,
+      "rent": 300,
+      "neighbors": [
+        {
+          "id": 1,
+          "before": 150,
+          "after": 300
+        },
+        {
+          "id": 2,
+          "before": 150,
+          "after": 300
+        },
+        {
+          "id": 5,
+          "before": 150,
+          "after": 300
+        },
+        {
+          "id": 6,
+          "before": 150,
+          "after": 300
+        },
+        {
+          "id": 7,
+          "before": 150,
+          "after": 300
+        }
+      ],
+      "actual": {
+        "owner": 0,
+        "cash": 12000,
+        "rent": 300,
+        "neighbors": [
+          300,
+          300,
+          300,
+          300,
+          300
+        ],
+        "sale": {
+          "id": "BANKRUPTCY_1_3",
+          "sellerId": null,
+          "beneficiaryId": 2,
+          "bankruptcy": true,
+          "tileId": 3,
+          "minimumBid": 600,
+          "bidderOrder": [
+            0,
+            2,
+            3
+          ],
+          "bidderIndex": 2,
+          "highestBid": 4000,
+          "highestBidderId": 0,
+          "activeBidderIds": [
+            0
+          ],
+          "passedBidderIds": [
+            2,
+            3
+          ],
+          "bidHistory": [
+            {
+              "playerId": 0,
+              "amount": 4000,
+              "action": "BID",
+              "round": 1
+            },
+            {
+              "playerId": 2,
+              "amount": 0,
+              "action": "PASS",
+              "round": 1
+            },
+            {
+              "playerId": 3,
+              "amount": 0,
+              "action": "PASS",
+              "round": 1
+            }
+          ],
+          "biddingRound": 1,
+          "status": "RESOLVED"
+        }
+      },
+      "previewAndSaleMatch": true
+    },
+    {
+      "mapId": "shanhai-highland",
+      "lot": 12,
+      "rent": 0,
+      "neighbors": [
+        {
+          "id": 11,
+          "before": 210,
+          "after": 252
+        },
+        {
+          "id": 13,
+          "before": 210,
+          "after": 252
+        }
+      ],
+      "actual": {
+        "owner": 0,
+        "cash": 12000,
+        "rent": 0,
+        "neighbors": [
+          252,
+          252
+        ],
+        "sale": {
+          "id": "BANKRUPTCY_1_12",
+          "sellerId": null,
+          "beneficiaryId": 2,
+          "bankruptcy": true,
+          "tileId": 12,
+          "minimumBid": 1600,
+          "bidderOrder": [
+            0,
+            2,
+            3
+          ],
+          "bidderIndex": 2,
+          "highestBid": 4000,
+          "highestBidderId": 0,
+          "activeBidderIds": [
+            0
+          ],
+          "passedBidderIds": [
+            2,
+            3
+          ],
+          "bidHistory": [
+            {
+              "playerId": 0,
+              "amount": 4000,
+              "action": "BID",
+              "round": 1
+            },
+            {
+              "playerId": 2,
+              "amount": 0,
+              "action": "PASS",
+              "round": 1
+            },
+            {
+              "playerId": 3,
+              "amount": 0,
+              "action": "PASS",
+              "round": 1
+            }
+          ],
+          "biddingRound": 1,
+          "status": "RESOLVED"
+        }
+      },
+      "previewAndSaleMatch": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

@@ -1,0 +1,442 @@
+{"tile":55,"round":1,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":true}
+{"tile":55,"round":1,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{"tile":55,"round":1,"phase":"ROLLING","who":0,"busy":true,"banner":false}
+{"tile":56,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":57,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":58,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":59,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":60,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":60,"round":1,"phase":"ROUTE_CHOICE","who":0,"busy":true,"banner":false,"action":"[data-route=\"61\"]"}
+{"tile":61,"round":1,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false,"action":"[data-route=\"61\"]"}
+{"tile":61,"round":1,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false,"action":"#btn-land-buy"}
+{"tile":61,"round":1,"phase":"ROLLING","who":1,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"ROLLING","who":1,"busy":true,"banner":true}
+{"tile":61,"round":1,"phase":"ROLLING","who":1,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"LANDING_ACTION","who":1,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"ROLLING","who":2,"busy":true,"banner":true}
+{"tile":61,"round":1,"phase":"ROLLING","who":2,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"LANDING_ACTION","who":2,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"ROLLING","who":3,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"ROLLING","who":3,"busy":true,"banner":true}
+{"tile":61,"round":1,"phase":"ROLLING","who":3,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"MOVING","who":3,"busy":true,"banner":false}
+{"tile":61,"round":1,"phase":"LANDING_ACTION","who":3,"busy":true,"banner":false}
+{"tile":61,"round":2,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":true}
+{"tile":61,"round":2,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{"tile":61,"round":2,"phase":"ROLLING","who":0,"busy":true,"banner":false}
+{"tile":63,"round":2,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":64,"round":2,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":65,"round":2,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":66,"round":2,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false}
+{"tile":66,"round":2,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false,"action":"#btn-land-buy"}
+{"tile":66,"round":3,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":true}
+{"tile":66,"round":3,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{
+  "steps": [
+    {
+      "tile": 55,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 55,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 55,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 56,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 57,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 58,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 59,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 60,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 60,
+      "round": 1,
+      "phase": "ROUTE_CHOICE",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "[data-route=\"61\"]"
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "[data-route=\"61\"]"
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "#btn-land-buy"
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 2,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 2,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 61,
+      "round": 2,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 61,
+      "round": 2,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 63,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 64,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 65,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 66,
+      "round": 2,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 66,
+      "round": 2,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "#btn-land-buy"
+    },
+    {
+      "tile": 66,
+      "round": 3,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 66,
+      "round": 3,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Continuous UI play from a prepared four-player save at existing northern street tile 55; normal random dice and AI, not a whole game from the title screen."
+  ],
+  "reachedOldTown": 66,
+  "rollClicks": 2,
+  "final": {
+    "round": 3,
+    "players": [
+      {
+        "id": 0,
+        "tile": 66,
+        "cash": 55138
+      },
+      {
+        "id": 1,
+        "tile": 56,
+        "cash": 52240
+      },
+      {
+        "id": 2,
+        "tile": 56,
+        "cash": 51930
+      },
+      {
+        "id": 3,
+        "tile": 60,
+        "cash": 54930
+      }
+    ],
+    "logs": [
+      {
+        "msg": "🏗️ 玩家2 成功购买【锦绣里 3号】(花费 $2,690)！",
+        "type": "success",
+        "time": "6:43:12 AM"
+      },
+      {
+        "msg": "🧰 玩家3 购买了【风驰机车】。",
+        "type": "accent",
+        "time": "6:43:13 AM"
+      },
+      {
+        "msg": "🃏 玩家3 使用了【路障卡】。",
+        "type": "accent",
+        "time": "6:43:13 AM"
+      },
+      {
+        "msg": "🎲 玩家3 掷出了 6 点（1 + 5）！",
+        "type": "gold",
+        "time": "6:43:16 AM"
+      },
+      {
+        "msg": "💎 玩家3 触发商业人脉，免除【锦绣里 3号】过路费！",
+        "type": "gold",
+        "time": "6:43:17 AM"
+      },
+      {
+        "msg": "🧰 玩家4 购买了【战术飞弹】。",
+        "type": "accent",
+        "time": "6:43:17 AM"
+      },
+      {
+        "msg": "🛒 玩家4 消费 60 积分兑换了【核弹卡】！",
+        "type": "accent",
+        "time": "6:43:17 AM"
+      },
+      {
+        "msg": "☢️ 核弹爆发！【山海启航站】周围建筑化为平地！",
+        "type": "danger",
+        "time": "6:43:17 AM"
+      },
+      {
+        "msg": "🃏 玩家4 使用了【核弹卡】。",
+        "type": "accent",
+        "time": "6:43:17 AM"
+      },
+      {
+        "msg": "🎲 玩家4 掷出了 5 点！",
+        "type": "gold",
+        "time": "6:43:21 AM"
+      },
+      {
+        "msg": "📈 第 2 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "6:43:22 AM"
+      },
+      {
+        "msg": "🎲 玩家1 掷出了 5 点！",
+        "type": "gold",
+        "time": "6:43:32 AM"
+      },
+      {
+        "msg": "🏗️ 玩家1 成功购买【星河商务区 3号】(花费 $2,567)！",
+        "type": "success",
+        "time": "6:43:34 AM"
+      },
+      {
+        "msg": "🏥 玩家2 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:43:35 AM"
+      },
+      {
+        "msg": "🏥 玩家3 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:43:35 AM"
+      },
+      {
+        "msg": "🏥 玩家4 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:43:35 AM"
+      },
+      {
+        "msg": "📈 第 3 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "6:43:35 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【普惠储蓄奖励】 - 所有存款账户获得 2% 奖励。",
+        "type": "gold",
+        "time": "6:43:35 AM"
+      }
+    ]
+  },
+  "effectiveRolls": [
+    "🎲 玩家1 掷出了 6 点！",
+    "🎲 玩家1 掷出了 5 点！"
+  ],
+  "success": true
+}

@@ -7,9 +7,9 @@ import { MAP_DEFINITIONS, TAIWAN_MAP } from '../src/game/MapData.js';
 import { GameSimulator } from '../src/game/GameSimulator.js';
 
 describe('P0 Features Validation', () => {
-  it('has 30 card definitions and 12 player profiles', () => {
+  it('has 30 card definitions and 16 player profiles', () => {
     expect(CARDS).toHaveLength(30);
-    expect(PLAYER_PROFILES).toHaveLength(12);
+    expect(PLAYER_PROFILES).toHaveLength(16);
     expect(MAP_DEFINITIONS).toHaveLength(5);
     expect(TAIWAN_MAP.tiles).toHaveLength(40);
   });

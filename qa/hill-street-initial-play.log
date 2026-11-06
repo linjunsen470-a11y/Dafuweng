@@ -1,0 +1,29 @@
+{
+  "errors": [],
+  "limits": [
+    "Prepared only initial human position101; existing remote card1/item6 and real shop purchase through UI.",
+    "Desktop/360px software WebGL, not physical phone or long-game acceptance."
+  ],
+  "beforeBuy": {
+    "tile": 102,
+    "cash": 20000,
+    "points": 180,
+    "cards": [
+      "OBSTACLE",
+      "TURN_AROUND"
+    ],
+    "banner": "✨ 到店会员价已生效\n到店获赠 60 PTS；本轮供应 8 张卡片与 4 件道具，下一轮自动更新。\nROUND SPECIAL"
+  },
+  "purchaseKey": "CARD:REMOTE_DICE",
+  "afterBuy": {
+    "cash": 20000,
+    "points": 147,
+    "cards": [
+      "OBSTACLE",
+      "TURN_AROUND",
+      "REMOTE_DICE"
+    ]
+  },
+  "success": false,
+  "failure": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:692:23)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:118:20)\n    at async CdpElementHandle.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:722:30)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:129:24)\n    at async CdpFrame.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:749:17)\n    at async remote (file:///workspace/dafuweng-cloud/test-hill-street.js:5:136)\n    at async file:///workspace/dafuweng-cloud/test-hill-street.js:13:953"
+}

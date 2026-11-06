@@ -1,0 +1,133 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "rects": [
+        {
+          "sel": "#btn-mobile-tools",
+          "x": 278,
+          "y": 6,
+          "w": 104,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#dice-count-select",
+          "x": 61.5,
+          "y": 735,
+          "w": 50,
+          "h": 40,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-roll",
+          "x": 137,
+          "y": 729,
+          "w": 237,
+          "h": 48,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-use-card",
+          "x": 16,
+          "y": 784,
+          "w": 116,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-stock-market",
+          "x": 137,
+          "y": 784,
+          "w": 116,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-card-shop",
+          "x": 258,
+          "y": 784,
+          "w": 116,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        }
+      ],
+      "boardGap": 518
+    },
+    {
+      "width": 360,
+      "rects": [
+        {
+          "sel": "#btn-mobile-tools",
+          "x": 248,
+          "y": 6,
+          "w": 104,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#dice-count-select",
+          "x": 56.5,
+          "y": 735,
+          "w": 50,
+          "h": 40,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-roll",
+          "x": 127,
+          "y": 729,
+          "w": 217,
+          "h": 48,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-use-card",
+          "x": 16,
+          "y": 784,
+          "w": 106,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-stock-market",
+          "x": 127,
+          "y": 784,
+          "w": 106,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        },
+        {
+          "sel": "#btn-card-shop",
+          "x": 238,
+          "y": 784,
+          "w": 106,
+          "h": 44,
+          "inside": true,
+          "hit": true
+        }
+      ],
+      "boardGap": 518
+    },
+    "Keyboard opens menu without rolling; Escape returns focus; save slot and resume are reachable",
+    "Pause and resume work through the compact toolbar",
+    "Actual mobile roll and purchase buttons work; property 1 acquired",
+    "Desktop retains the original toolbar"
+  ],
+  "errors": [],
+  "limits": [
+    "Browser mobile viewport simulation, not a physical-device or frame-rate acceptance test."
+  ],
+  "success": true
+}

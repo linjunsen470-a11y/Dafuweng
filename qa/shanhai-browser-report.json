@@ -1,0 +1,141 @@
+{
+  "startedAt": "2026-11-05T18:22:20.378Z",
+  "tests": [
+    {
+      "name": "loads real WebGL scene and original character assets",
+      "success": true,
+      "ms": 7842,
+      "details": {
+        "canvas": {
+          "width": 1096,
+          "height": 875
+        },
+        "renderer": {
+          "frame": 12,
+          "calls": 154,
+          "triangles": 142547,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "name": "starts with real UI and purchases using a consumed remote dice card",
+      "success": true,
+      "ms": 11744,
+      "details": {
+        "tile": 1,
+        "beforeCash": 16000,
+        "afterCash": 14800,
+        "cost": 1200,
+        "doubleClickChargedOnce": true
+      }
+    },
+    {
+      "name": "plays three full human and AI rounds through click controls",
+      "success": true,
+      "ms": 36460,
+      "details": {
+        "rounds": [
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "name": "exchanges real points once and previews destinations before consuming a card",
+      "success": true,
+      "ms": 7559,
+      "details": {
+        "cost": 45,
+        "beforePoints": 240,
+        "afterPoints": 195,
+        "options": [
+          "1 步蓝湾市集可购买 · ¥3,200",
+          "2 步青石小院可购买 · ¥1,600",
+          "3 步白帆旅居可购买 · ¥1,600",
+          "4 步栈桥人家可购买 · ¥1,600",
+          "5 步远方来信沿途事件 · 抵达后结算",
+          "6 步云朵画室可购买 · ¥2,000"
+        ]
+      }
+    },
+    {
+      "name": "manual save and reload restore exact economy, dice RNG and ownership",
+      "success": true,
+      "ms": 11990,
+      "details": {
+        "round": 5,
+        "playerCash": [
+          9900,
+          10800
+        ],
+        "rngState": 2369261824
+      }
+    },
+    {
+      "name": "music and sound effects switch independently",
+      "success": true,
+      "ms": 2119,
+      "details": {
+        "independent": true,
+        "context": "running",
+        "decodedEffects": 8,
+        "musicTime": 4.376005,
+        "musicDuration": 43.640375
+      }
+    },
+    {
+      "name": "mobile viewport contains controls without horizontal overflow",
+      "success": true,
+      "ms": 18874,
+      "details": {
+        "viewport": 390,
+        "width": 390,
+        "body": 390,
+        "roll": {
+          "left": 24,
+          "right": 366,
+          "top": 518.578125,
+          "bottom": 563.578125
+        }
+      }
+    },
+    {
+      "name": "finishes a real complete match through UI and replays from the result screen",
+      "success": true,
+      "ms": 46812,
+      "details": {
+        "round": 16,
+        "winnerId": 0,
+        "uiActions": 22,
+        "replay": true
+      }
+    },
+    {
+      "name": "real browser webgl failure remains recoverable",
+      "success": true,
+      "ms": 1141,
+      "details": {
+        "handled": true,
+        "uncaughtErrors": []
+      }
+    },
+    {
+      "name": "real browser storage failure remains recoverable",
+      "success": true,
+      "ms": 3860,
+      "details": {
+        "handled": true,
+        "uncaughtErrors": []
+      }
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "networkErrors": [],
+  "screenshotErrors": [],
+  "success": true,
+  "finishedAt": "2026-11-05T18:24:51.381Z"
+}

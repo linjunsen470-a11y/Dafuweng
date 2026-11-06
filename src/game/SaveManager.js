@@ -1,6 +1,7 @@
 const AUTO_SAVE_KEY = 'fortune-empire:auto-save:v1';
 const MANUAL_SAVE_KEY = 'fortune-empire:manual-save:v1';
-const SLOT_PREFIX = 'fortune-empire:slot:v10:';
+const SLOT_PREFIX = 'fortune-empire:slot:v11:';
+const V10_SLOT_PREFIX = 'fortune-empire:slot:v10:';
 const V9_SLOT_PREFIX = 'fortune-empire:slot:v9:';
 const V8_SLOT_PREFIX = 'fortune-empire:slot:v8:';
 const V7_SLOT_PREFIX = 'fortune-empire:slot:v7:';
@@ -8,7 +9,14 @@ const V6_SLOT_PREFIX = 'fortune-empire:slot:v6:';
 const V5_SLOT_PREFIX = 'fortune-empire:slot:v5:';
 const V4_SLOT_PREFIX = 'fortune-empire:slot:v4:';
 const LEGACY_SLOT_PREFIX = 'fortune-empire:slot:v3:';
-const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const SUPPORTED_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+export function migrateSnapshotToV11(snapshot) {
+  if (!snapshot || !SUPPORTED_VERSIONS.includes(snapshot.version) || snapshot.version === 11) return snapshot;
+  return { ...snapshot, version: 11,
+    matchStatistics: snapshot.matchStatistics || { startedAtRound: 1, players: (snapshot.players || []).map(player => ({ playerId: player.id })), highlights: [] },
+    matchConfig: snapshot.matchConfig || null };
+}
 
 class IndexedSaveMirror {
   constructor() {
@@ -66,8 +74,13 @@ class IndexedSaveMirror {
   }
 }
 
+export function getBrowserStorage() {
+  try { return globalThis.localStorage ?? null; }
+  catch { return null; }
+}
+
 export class SaveManager {
-  constructor(storage = globalThis.localStorage) {
+  constructor(storage = getBrowserStorage()) {
     this.storage = storage;
     this.indexedMirror = new IndexedSaveMirror();
   }
@@ -96,6 +109,8 @@ export class SaveManager {
   loadSlot(slotId) {
     const current = this.read(`${SLOT_PREFIX}${slotId}`);
     if (current.success) return current;
+    const v10 = this.read(`${V10_SLOT_PREFIX}${slotId}`);
+    if (v10.success) return v10;
     const v9 = this.read(`${V9_SLOT_PREFIX}${slotId}`);
     if (v9.success) return v9;
     const v8 = this.read(`${V8_SLOT_PREFIX}${slotId}`);
@@ -113,12 +128,13 @@ export class SaveManager {
   async loadSlotAsync(slotId) {
     const local = this.loadSlot(slotId);
     if (local.success) return local;
-    for (const prefix of [SLOT_PREFIX, V9_SLOT_PREFIX, V8_SLOT_PREFIX, V7_SLOT_PREFIX, V6_SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
+    for (const prefix of [SLOT_PREFIX, V10_SLOT_PREFIX, V9_SLOT_PREFIX, V8_SLOT_PREFIX, V7_SLOT_PREFIX, V6_SLOT_PREFIX, V5_SLOT_PREFIX, V4_SLOT_PREFIX, LEGACY_SLOT_PREFIX]) {
       try {
         const snapshot = await this.indexedMirror.get(`${prefix}${slotId}`);
         if (snapshot && SUPPORTED_VERSIONS.includes(snapshot.version)) {
-          this.write(`${SLOT_PREFIX}${slotId}`, snapshot);
-          return { success: true, snapshot };
+          const migrated = migrateSnapshotToV11(snapshot);
+          this.write(`${SLOT_PREFIX}${slotId}`, migrated);
+          return { success: true, snapshot: migrated };
         }
       } catch {}
     }
@@ -128,6 +144,7 @@ export class SaveManager {
   deleteSlot(slotId) {
     try {
       this.storage?.removeItem(`${SLOT_PREFIX}${slotId}`);
+      this.storage?.removeItem(`${V10_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V9_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V8_SLOT_PREFIX}${slotId}`);
       this.storage?.removeItem(`${V7_SLOT_PREFIX}${slotId}`);
@@ -167,7 +184,7 @@ export class SaveManager {
       if (!raw) return { success: false, msg: '未找到存档' };
       const snapshot = JSON.parse(raw);
       if (!SUPPORTED_VERSIONS.includes(snapshot.version)) return { success: false, msg: '存档版本不兼容' };
-      return { success: true, snapshot };
+      return { success: true, snapshot: migrateSnapshotToV11(snapshot) };
     } catch (error) {
       return { success: false, msg: `存档损坏：${error.message}` };
     }
@@ -190,7 +207,7 @@ export class SaveManager {
       if (!Array.isArray(snapshot.players) || !Array.isArray(snapshot.properties)) {
         return { success: false, msg: '存档结构不完整' };
       }
-      return { success: true, snapshot };
+      return { success: true, snapshot: migrateSnapshotToV11(snapshot) };
     } catch (error) {
       return { success: false, msg: `导入失败：${error.message}` };
     }

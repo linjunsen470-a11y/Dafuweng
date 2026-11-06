@@ -1,0 +1,11 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+07:48:16 | INFO: Starting glTF 2.0 export
+07:48:16 | INFO: Extracting primitive: Cube.001
+07:48:16 | INFO: Primitives created: 6
+07:48:16 | INFO: Finished glTF 2.0 export in 0.02351856231689453 s
+
+Info: Saved "company-court.blend"
+{"asset": "company-court.glb", "generator": "scripts/art/create_company_court.py", "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.", "axes": "GLB Y-up, front +Z, origin ground center", "models": [{"prefab": "company_cloud_court", "triangles": 384, "size_xyz_blender": [3.799999952316284, 3.200000047683716, 3.2249999046325684]}]}
+Blender 4.3.2
+
+Blender quit

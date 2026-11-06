@@ -1,0 +1,5 @@
+{
+  "errors": [],
+  "failure": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:692:23)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:118:20)\n    at async CdpElementHandle.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:722:30)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:129:24)\n    at async CdpFrame.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:749:17)\n    at async file:///workspace/dafuweng-cloud/test-dice-route.js:4:35",
+  "success": false
+}

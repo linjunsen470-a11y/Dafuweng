@@ -1,0 +1,11 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+05:27:29 | INFO: Starting glTF 2.0 export
+05:27:29 | INFO: Extracting primitive: Cube.001
+05:27:29 | INFO: Primitives created: 7
+05:27:29 | INFO: Finished glTF 2.0 export in 0.026900053024291992 s
+
+Info: Saved "harbor-tower.blend"
+{"asset": "harbor-tower.glb", "generator": "scripts/art/create_harbor_tower.py", "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.", "prefab": "res_harbor_5", "triangles": 1132, "axes": "GLB Y-up, front +Z, origin ground center", "size_xyz_blender": [2.6, 2.35, 6.43]}
+Blender 4.3.2
+
+Blender quit

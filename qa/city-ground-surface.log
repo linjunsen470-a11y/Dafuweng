@@ -1,0 +1,2 @@
+9:27:31 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+{"errors":[],"result":{"unchanged":true,"stable":true,"textureSHA256":"c04aa8c76dc15fa76d3a7ce043d8390a1948e0e42064895f950f255f2b8ef9e4","width":1024,"height":664,"triangles":2,"bounds":{"min":[-71,-0.09500000000001022,-49],"max":[71,-0.09499999999998979,43]},"otherMap":true,"disposed":1},"success":true}

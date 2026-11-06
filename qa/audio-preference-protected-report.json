@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "base": "1558a76dbdd6695deb5e48f6cbd598f7f85a73c6",
+  "changed": [
+    "src/engine/AudioManager.js",
+    "src/main.js"
+  ],
+  "trackedSourceFiles": 130,
+  "note": "main.js changes confined to mute button binding; other tracked src files, rules, maps, AI and save handling unchanged"
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "real purchase and management UI plus explicitly prepared upgrade/visit save fixtures",
+  "checks": [
+    "From a new game, a paid ferry and real remote-dice trip reach stop 12; choosing the garden charges the displayed engine price (including any existing luck discount) and updates the actual scene to park L0.",
+    "Normal pre-roll management converts garden to mall for ¥300, disables same-type repeat actions and survives reload.",
+    "A disclosed L3 save fixture upgrades through the real landing button for ¥1380, previews ¥2565 → ¥4050 and displays the L4 clock-tower mall.",
+    "L4 → park warns about permanently losing three levels with no refund; applying it displays L1 pavilion and persists the capped level.",
+    "At 390px the operating ledger, both choices and conversion buttons remain readable without horizontal overflow.",
+    "An opponent-owned L1 garden visit fixture charges zero rent, reports +30 points and does not pay the benefit again after reload."
+  ],
+  "errors": [],
+  "purchase": {
+    "quotedCost": 0,
+    "godType": "LUCK"
+  },
+  "render": {
+    "drawCalls": 169,
+    "triangles": 123457
+  },
+  "success": true
+}

@@ -1,0 +1,87 @@
+{
+  "errors": [],
+  "scope": "Prepared four-human save: Gu owns tile1 at level0, all pawns at start. UI load, remote dice, purchase, rent, then owner upgrade preview. Not a natural full match.",
+  "quote": "发现投资机会 · 蓝湾码头 3号\n蓝湾码头 · 🏡 精品住宅\n×\n蓝湾码头 1/4\nLV 0 待开发地块\n蓝湾码头 3号\n\n逐级建设可显著提高到访租金。 商业奇才 · 购地85折，已计入报价\n\n基础价格:\n$1,122\n当前过路费:\n$200\n升级后过路费:\n$200\n单次收益率:\n17.8%\n租金成长预测\n约 6 次收费回本\nLV0\n$200\nLV1\n$590\nLV2\n$1,320\nLV3\n$2,900\nLV4\n$6,340\n当前现金\n$20,000\n−\n投资支出\n−$1,122\n=\n投资后现金\n$18,878\n确认投资 $1,122\n放弃操作",
+  "discount": {
+    "settlement": {
+      "result": {
+        "success": true,
+        "type": "PROPERTY_PURCHASED",
+        "tileId": 6,
+        "level": 0,
+        "cost": 1122,
+        "buildingType": "RESIDENTIAL",
+        "events": [
+          {
+            "type": "PROPERTY_PURCHASED",
+            "success": true,
+            "tileId": 6,
+            "level": 0,
+            "cost": 1122,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      },
+      "before": [
+        20000,
+        23000,
+        20000,
+        23000
+      ],
+      "after": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    "messages": [
+      "🃏策略卡发动REMOTE_DICE",
+      "发动策略卡 · 元气创业家“嘿嘿，今天的运气真不错！”林小满",
+      "🏡成功购入地产林小满 · 蓝湾码头 3号 · $1,122 · 商业奇才 · 购地85折，已计入报价",
+      "成功购入地产 · 元气创业家“我的商业版图又亮了一块！”林小满"
+    ]
+  },
+  "rent": {
+    "settlement": {
+      "result": {
+        "success": true,
+        "type": "RENT_PAID",
+        "amount": 180,
+        "amountDue": 180,
+        "ownerId": 1,
+        "events": [
+          {
+            "type": "RENT_PAID",
+            "success": true,
+            "amount": 180,
+            "amountDue": 180,
+            "ownerId": 1
+          }
+        ]
+      },
+      "before": [
+        20000,
+        23000,
+        20000,
+        23000
+      ],
+      "after": [
+        19820,
+        23180,
+        20000,
+        23000
+      ]
+    },
+    "messages": [
+      "🃏策略卡发动REMOTE_DICE",
+      "发动策略卡 · 元气创业家“嘿嘿，今天的运气真不错！”林小满",
+      "💸过路费结算林小满 向 顾田野 AI 支付 $180 · 土地公庇护 · 地主租金 +20%，已计入本次结算",
+      "支付 $180 过路费 · 元气创业家“没关系，小满马上追回来！”林小满"
+    ]
+  },
+  "preview": "地产升级规划 · 蓝湾码头 1号\n蓝湾码头 · 🏡 精品住宅\n×\n蓝湾码头 1/4\nLV 0 → LV 1\n蓝湾码头 1号\n\n逐级建设可显著提高到访租金。 土地公庇护 · 地主租金 +20%，已计入预估；访客减免另结算\n\n基础价格:\n$550\n当前过路费:\n$180\n升级后过路费:\n$540\n单次收益率:\n98.2%\n租金成长预测\n约 2 次收费回本\nLV0\n$180\nLV1\n$540\nLV2\n$1,200\nLV3\n$2,640\nLV4\n$5,760\n当前现金\n$23,180\n−\n投资支出\n−$550\n=\n投资后现金\n$22,630\n升级至 LV 1 · $550\n放弃操作",
+  "currentToll": "$180",
+  "matchesBaseline": true,
+  "success": true
+}

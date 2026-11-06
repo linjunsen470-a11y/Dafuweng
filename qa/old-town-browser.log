@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "Actual roll to the property bought during the walk upgrades lot 38 and renders original old-town level 1",
+    "Stock landmark and four old-town levels loaded in the normal main-game view; legacy snapshot fields unchanged",
+    "Actual 390px landing at stock tile 32 shows read-only visit guidance and disables unavailable trades, preserving existing timing",
+    "Pre-roll one-share buy/sell changes actual holdings and cash; buttons remain reachable at 390/360px, company tab opens and closes",
+    "Existing old-town fork still offers 37/96 and travels to the selected branch"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared positions reuse the ownership and money of the actual harbor-to-old-town walk. Building levels 1–4 are a visual fixture, not four natural upgrades.",
+    "390px touch viewport, not physical mobile or performance acceptance."
+  ],
+  "success": true
+}

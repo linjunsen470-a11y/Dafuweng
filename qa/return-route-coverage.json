@@ -1,0 +1,144 @@
+{
+  "success": true,
+  "start": "Unchanged prior pre-roll save at round 27 tile 76; replays prior arrival at 79 before new coverage",
+  "endRound": 40,
+  "endTile": 11,
+  "humanRolls": 5,
+  "humanVisited": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83
+  ],
+  "humanBranchTiles": [],
+  "aiBranchTiles": [
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+  ],
+  "actualHumanActions": [
+    "79 mechanism offer viewed and closed, no route change",
+    "80 road arrival",
+    "Passed 83→0 and received existing start reward",
+    "Paid rent at 1 and 6",
+    "Upgraded previously owned 11",
+    "Reached original round-40 result; AI Gu Tianye won"
+  ],
+  "noticeOverlap": {
+    "round": 35,
+    "tile": 1
+  },
+  "notNaturallyCovered": [
+    "Human branch routes 84–119",
+    "Landing and stock trading at 82",
+    "Company decisions at 89/99",
+    "Human minigame at 109",
+    "Changing mechanism routes"
+  ],
+  "limits": [
+    "No forced dice or snapshot edits in the natural continuation",
+    "Five rolls include the replayed previous 76→79 arrival",
+    "No full-match balance or physical-mobile acceptance; this completes an earlier resumed match rather than one uninterrupted session"
+  ],
+  "preparedBranchChecks": [
+    {
+      "fork": 12,
+      "end": 95,
+      "join": 24,
+      "joined": true,
+      "humanTiles": [
+        12,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "fork": 36,
+      "end": 107,
+      "join": 48,
+      "joined": true,
+      "humanTiles": [
+        36,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        48,
+        49,
+        50,
+        51
+      ]
+    },
+    {
+      "fork": 60,
+      "end": 119,
+      "join": 72,
+      "joined": true,
+      "humanTiles": [
+        60,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        72,
+        73,
+        74,
+        75
+      ]
+    }
+  ]
+}

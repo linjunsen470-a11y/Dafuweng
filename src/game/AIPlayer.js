@@ -1,5 +1,7 @@
 import { cardManager } from './CardManager.js';
+import { getMagicPreview } from './MagicRules.js';
 import { MAX_PROPERTY_LEVEL } from './GameRules.js';
+import { chooseRouteByPlan } from './RouteDecisionRules.js';
 
 export class AIPlayer {
   static evaluateLandPurchase(aiPlayer, landData, gameState = null) {
@@ -53,10 +55,16 @@ export class AIPlayer {
   }
 
   static chooseMagic(aiPlayer, gameState) {
-    if (aiPlayer.cash < 6000) return { conditionId: 'SELF', effectId: 'CASH_RAIN' };
     const ownProperties = [...gameState.propertyManager.properties.values()].filter(property => property.owner === aiPlayer.id).length;
-    if (ownProperties >= 2) return { conditionId: 'SELF', effectId: 'PROPERTY_BOOM' };
-    return { conditionId: 'ALL_OPPONENTS', effectId: gameState.rng.next() < 0.5 ? 'STOP_ONE' : 'DEPOSIT_ALL' };
+    const candidates = [
+      ...(aiPlayer.cash < 6000 ? [{ conditionId: 'SELF', effectId: 'CASH_RAIN' }] : []),
+      ...(ownProperties >= 2 ? [{ conditionId: 'SELF', effectId: 'PROPERTY_BOOM' }] : []),
+      { conditionId: 'ALL_OPPONENTS', effectId: gameState.rng.next() < 0.5 ? 'STOP_ONE' : 'DEPOSIT_ALL' },
+      { conditionId: 'SELF', effectId: 'GAIN_CARD' },
+      { conditionId: 'SELF', effectId: 'CASH_RAIN' }
+    ];
+    return candidates.find(decision => getMagicPreview(gameState, aiPlayer, decision.conditionId, decision.effectId).enabled)
+      || { conditionId: 'SELF', effectId: 'CASH_RAIN' };
   }
 
   static decideItemPurchase(aiPlayer, gameEngine) {
@@ -189,7 +197,7 @@ export class AIPlayer {
     return null;
   }
 
-  static chooseRoute(aiPlayer, options, gameState) {
+  static chooseRouteLegacy(aiPlayer, options, gameState) {
     const score = (tileId) => {
       const tile = gameState.getTile(tileId);
       const property = gameState.propertyManager.getProperty(tileId);
@@ -215,6 +223,10 @@ export class AIPlayer {
       return 0;
     };
     return [...options].sort((a, b) => score(b) - score(a))[0];
+  }
+
+  static chooseRoute(aiPlayer, options, gameState, remainingSteps = gameState.pendingMove?.remainingSteps || 1) {
+    return chooseRouteByPlan(aiPlayer, options, gameState, remainingSteps);
   }
 
   static scoreBoardGod(aiPlayer, godType) {

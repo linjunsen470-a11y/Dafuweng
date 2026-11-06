@@ -13,6 +13,10 @@ import { expireMarketOffers, normalizeMarketOffer } from './MarketRules.js';
 import { applyModeCycleEffects, getModeCycleRounds } from './ModeRules.js';
 import { processQuestDeadlines } from './QuestRules.js';
 import { attachGod, tickGodAtTurnStart } from './GodRules.js';
+import { normalizeMatchStatistics } from './MatchStatistics.js';
+import { createMatchReport } from './MatchReportRules.js';
+import { createEconomicCycleReport } from './EconomicReportRules.js';
+import { BANK_INTEREST_RATE } from './BankRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -59,7 +63,7 @@ export class GameState {
     this.gameMode = 'STANDARD';
     this.lottery = { pot: 2000, tickets: [], lastNumber: null };
     this.boardGods = [];
-    this.mechanismState = { activeRoute: 0 };
+    this.mechanismState = { activeRoute: 0, locked: false };
     this.roadEntities = [];
     this.auction = null;
     this.phaseBeforeAuction = null;
@@ -67,13 +71,15 @@ export class GameState {
     this.marketOffers = [];
     this.marketHistory = [];
     this.researchTasks = [];
-    this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0 };
+    this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0, lastReport: null };
     this.minigameState = null;
     this.turnCheckpoint = null;
     this.pendingDomainEvents = [];
     this.activeQuests = [];
     this.questHistory = [];
     this.questSequence = 0;
+    this.matchStatistics = normalizeMatchStatistics(null, []);
+    this.matchConfig = null;
     this.setMap('city-loop');
   }
 
@@ -109,7 +115,7 @@ export class GameState {
     this.phaseBeforePause = null;
     this.gameMode = options.mode || 'STANDARD';
     this.lottery = { pot: 2000, tickets: [], lastNumber: null };
-    this.mechanismState = { activeRoute: 0 };
+    this.mechanismState = { activeRoute: 0, locked: false };
     this.roadEntities = [];
     this.auction = null;
     this.phaseBeforeAuction = null;
@@ -117,7 +123,7 @@ export class GameState {
     this.marketOffers = [];
     this.marketHistory = [];
     this.researchTasks = [];
-    this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0 };
+    this.economicCycle = { period: 1, roundsPerPeriod: getModeCycleRounds(this.gameMode), lastSettlementRound: 0, lastReport: null };
     this.minigameState = null;
     this.pendingDomainEvents = [];
     this.activeQuests = [];
@@ -191,6 +197,9 @@ export class GameState {
         isBankrupt: false
       };
     });
+
+    this.matchConfig = structuredClone({ playerConfigs, initialCash, options: { ...options, mapId: this.mapId, mode: this.gameMode, maxRounds: this.maxRounds } });
+    this.matchStatistics = normalizeMatchStatistics(null, this.players);
 
     if (this.gameMode === 'CHALLENGE' && this.players.length > 1) {
       const lord = this.players[this.players.length - 1];
@@ -269,8 +278,10 @@ export class GameState {
     const winners = this.lottery.tickets.filter(ticket => ticket.number === number)
       .map(ticket => this.players[ticket.playerId])
       .filter(player => player && !player.isBankrupt);
+    let prize = 0;
+    const potBefore = this.lottery.pot;
     if (winners.length) {
-      const prize = Math.floor(this.lottery.pot / winners.length);
+      prize = Math.floor(this.lottery.pot / winners.length);
       winners.forEach(player => { player.cash += prize; });
       this.addLog(`🎰 乐透开奖 ${number} 号！${winners.map(player => player.name).join('、')} 各获得 $${prize.toLocaleString()}。`, 'gold');
       this.lottery.pot = 2000;
@@ -278,6 +289,15 @@ export class GameState {
       this.addLog(`🎰 乐透开奖 ${number} 号无人命中，奖池累积至 $${this.lottery.pot.toLocaleString()}。`, 'accent');
     }
     this.lottery.tickets = [];
+    return {
+      number,
+      winnerIds: winners.map(player => player.id),
+      winnerNames: winners.map(player => player.name),
+      prize,
+      potBefore,
+      potAfter: this.lottery.pot,
+      rollover: winners.length === 0
+    };
   }
 
   nextTurn() {
@@ -396,10 +416,14 @@ export class GameState {
     const expiredOffers = expireMarketOffers(this);
     if (expiredOffers.length) this.addLog(`⌛ 交易大厅有 ${expiredOffers.length} 笔挂牌到期下架。`, 'accent');
     if (this.round % this.economicCycle.roundsPerPeriod === 0) {
-      this.drawLottery();
+      const period = this.economicCycle.period;
+      const before = this.players.map(player => ({ playerId: player.id, cash: player.cash, deposit: player.deposit, cardPoints: player.cardPoints || 0 }));
+      const lottery = this.drawLottery();
+      const interestPayments = [];
       this.players.filter(player => !player.isBankrupt && player.deposit > 0).forEach(player => {
-        const interest = Math.round(player.deposit * 0.05);
+        const interest = Math.round(player.deposit * BANK_INTEREST_RATE);
         player.deposit += interest;
+        interestPayments.push({ playerId: player.id, amount: interest });
         this.addLog(`🏦 ${player.name} 获得五轮定期利息 $${interest.toLocaleString()}。`, 'gold');
       });
       const settlements = this.companyManager.settle(this.players, this.rng);
@@ -408,10 +432,13 @@ export class GameState {
         this.addLog(`🏢 【${company.name}】周期结算：分红 $${settlement.dividendPool.toLocaleString()}${settlement.policyId ? `，完成 ${settlement.policyId} 政策` : ''}。`, settlement.dividendPool > 0 ? 'gold' : 'accent');
         this.pendingDomainEvents.push({ type: 'COMPANY_SETTLED', ...settlement });
       });
-      this.pendingDomainEvents.push(...applyModeCycleEffects(this));
+      const modeEvents = applyModeCycleEffects(this);
+      this.pendingDomainEvents.push(...modeEvents);
       this.economicCycle.period++;
       this.economicCycle.lastSettlementRound = this.round;
-      this.pendingDomainEvents.push({ type: 'ECONOMIC_CYCLE_ENDED', round: this.round, period: this.economicCycle.period - 1 });
+      const report = createEconomicCycleReport({ state: this, period, round: this.round, before, lottery, interestPayments, settlements, modeEvents });
+      this.economicCycle.lastReport = report;
+      this.pendingDomainEvents.push({ type: 'ECONOMIC_CYCLE_ENDED', round: this.round, period, report });
     }
     this.addLog(`📈 第 ${this.round} 轮开始！【当前物价指数: ${this.priceIndex.toFixed(1)}x】股市大盘已刷新！`, 'accent');
 
@@ -468,7 +495,7 @@ export class GameState {
       this.addLog(added.success
         ? `🧪 ${player.name} 完成【${item?.name || task.itemId}】研发。`
         : `🧪 ${player.name} 的研发已完成，但道具栏已满。`, added.success ? 'gold' : 'danger');
-      this.pendingDomainEvents.push({ type: 'RESEARCH_COMPLETED', playerId: player.id, itemId: task.itemId, success: added.success });
+      this.pendingDomainEvents.push({ type: 'RESEARCH_COMPLETED', playerId: player.id, itemId: task.itemId, itemName: item?.name, itemIcon: item?.icon, success: added.success });
     });
     this.researchTasks = this.researchTasks.filter(task => task.roundsRemaining > 0);
   }
@@ -627,13 +654,17 @@ export class GameState {
       buildingValue += (tile.buildCost || 0) * prop.level;
     });
     const deposit = Math.round(player.deposit || 0);
-    const total = Math.round(player.cash + deposit + stockValue + landValue + buildingValue);
+    const commercialValue = this.companyManager.companies
+      .filter(company => company.chairmanId === player.id)
+      .reduce((sum, company) => sum + Math.max(0, Math.round(company.treasury * 0.1)), 0);
+    const total = Math.round(player.cash + deposit + stockValue + landValue + buildingValue + commercialValue);
     return {
       cash: Math.round(player.cash),
       deposit,
       stockValue: Math.round(stockValue),
       landValue: Math.round(landValue),
       buildingValue: Math.round(buildingValue),
+      commercialValue,
       propertyCount,
       cardCount: player.cards?.length || 0,
       total
@@ -646,6 +677,10 @@ export class GameState {
       .sort((a, b) => b.assets.total - a.assets.total);
   }
 
+  createMatchReport() {
+    return createMatchReport(this);
+  }
+
   checkWinCondition(force = false) {
     const activePlayers = this.players.filter(p => !p.isBankrupt);
     if (this.gameMode === 'CHALLENGE') {
@@ -654,7 +689,7 @@ export class GameState {
       if (lord?.isBankrupt || challengers.length === 0 || force || this.round > this.maxRounds) {
         this.phase = GamePhase.GAME_OVER;
         if (lord?.isBankrupt) {
-          this.winner = challengers.sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0] || null;
+          this.winner = challengers.sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a) || b.cash - a.cash || a.id - b.id)[0] || null;
           this.winReason = 'LORD_DEFEATED';
           this.winningTeamId = 'CHALLENGERS';
         } else if (challengers.length === 0) {
@@ -664,7 +699,7 @@ export class GameState {
         } else {
           const challengerAssets = challengers.reduce((sum, player) => sum + this.calculateNetWorth(player), 0);
           this.winner = challengerAssets > this.calculateNetWorth(lord)
-            ? challengers.sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0]
+            ? challengers.sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a) || b.cash - a.cash || a.id - b.id)[0]
             : lord;
           this.winningTeamId = this.winner?.isLord ? 'LORD' : 'CHALLENGERS';
           this.winReason = 'TEAM_NET_WORTH';
@@ -681,9 +716,9 @@ export class GameState {
         this.phase = GamePhase.GAME_OVER;
         const teamAssets = new Map();
         activePlayers.forEach(player => teamAssets.set(player.teamId, (teamAssets.get(player.teamId) || 0) + this.calculateNetWorth(player)));
-        this.winningTeamId = [...teamAssets.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+        this.winningTeamId = [...teamAssets.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])))[0]?.[0] ?? null;
         this.winner = activePlayers.filter(player => player.teamId === this.winningTeamId)
-          .sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0] || null;
+          .sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a) || b.cash - a.cash || a.id - b.id)[0] || null;
         this.winReason = activeTeams.size === 1 ? 'LAST_TEAM' : 'TEAM_NET_WORTH';
         if (this.winner) this.addLog(`👑 队伍 ${this.winningTeamId} 获胜，代表玩家 ${this.winner.name}！`, 'gold');
         return true;
@@ -692,7 +727,7 @@ export class GameState {
     }
     if (activePlayers.length === 1 || force || this.round > this.maxRounds) {
       this.phase = GamePhase.GAME_OVER;
-      this.winner = [...activePlayers].sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a))[0];
+      this.winner = [...activePlayers].sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a) || b.cash - a.cash || a.id - b.id)[0];
       this.winReason = activePlayers.length === 1 ? 'LAST_PLAYER' : 'NET_WORTH';
       this.addLog(`👑 ${this.winner.name} 以总资产 $${this.calculateNetWorth(this.winner).toLocaleString()} 获得胜利！`, 'gold');
       return true;
@@ -703,7 +738,7 @@ export class GameState {
   createSnapshot() {
     const random = this.rng.exportState();
     return {
-      version: 10,
+      version: 11,
       contentVersion: '2026.8',
       savedAt: new Date().toISOString(),
       seed: random.seed,
@@ -743,11 +778,13 @@ export class GameState {
       activeQuests: structuredClone(this.activeQuests),
       questHistory: structuredClone(this.questHistory),
       questSequence: this.questSequence
+      ,matchStatistics: structuredClone(this.matchStatistics)
+      ,matchConfig: structuredClone(this.matchConfig)
     };
   }
 
   restoreSnapshot(snapshot) {
-    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(snapshot.version)) throw new Error('不兼容的存档版本');
+    if (!snapshot || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(snapshot.version)) throw new Error('不兼容的存档版本');
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
@@ -797,7 +834,8 @@ export class GameState {
     this.lottery = structuredClone(snapshot.lottery || { pot: 2000, tickets: [], lastNumber: null });
     this.boardGods = structuredClone(snapshot.boardGods || []);
     if (!this.boardGods.length) this.initializeBoardGods();
-    this.mechanismState = structuredClone(snapshot.mechanismState || { activeRoute: 0 });
+    this.mechanismState = structuredClone(snapshot.mechanismState || { activeRoute: 0, locked: false });
+    this.mechanismState.locked ??= Boolean(this.mechanismState.activeRoute);
     this.winningTeamId = snapshot.winningTeamId ?? null;
     this.roadEntities = structuredClone(snapshot.roadEntities || []);
     this.companyManager.importState(structuredClone(snapshot.companies || []));
@@ -808,7 +846,8 @@ export class GameState {
     this.marketHistory = structuredClone(snapshot.marketHistory || []);
     this.researchTasks = structuredClone(snapshot.researchTasks || []);
     const cycleRounds = getModeCycleRounds(this.gameMode);
-    this.economicCycle = structuredClone(snapshot.economicCycle || { period: Math.floor(this.round / cycleRounds) + 1, roundsPerPeriod: cycleRounds, lastSettlementRound: 0 });
+    this.economicCycle = structuredClone(snapshot.economicCycle || { period: Math.floor(this.round / cycleRounds) + 1, roundsPerPeriod: cycleRounds, lastSettlementRound: 0, lastReport: null });
+    this.economicCycle.lastReport ??= null;
     // The cycle length is a mode rule rather than mutable save data. Re-derive it
     // so older quick-mode saves immediately adopt the current four-round cycle.
     this.economicCycle.roundsPerPeriod = cycleRounds;
@@ -817,7 +856,13 @@ export class GameState {
     this.activeQuests = structuredClone(snapshot.activeQuests || []);
     this.questHistory = structuredClone(snapshot.questHistory || []);
     this.questSequence = Number(snapshot.questSequence) || 0;
-    if (this.mechanismState.activeRoute) {
+    this.matchStatistics = normalizeMatchStatistics(snapshot.matchStatistics, this.players);
+    this.matchConfig = structuredClone(snapshot.matchConfig || {
+      playerConfigs: this.players.map(player => ({ name: player.name, profileIndex: player.profileId, isAI: player.isAI, aiDifficulty: player.aiDifficulty, aiStrategy: player.aiStrategy, teamId: player.teamId })),
+      initialCash: 20000,
+      options: { maxRounds: this.maxRounds, mapId: this.mapId, mode: this.gameMode, teams: this.gameMode === 'TEAM', initialDeposit: 0 }
+    });
+    if (this.mechanismState.locked) {
       this.mapDefinition.tiles.filter(tile => (tile.next || []).length > 1).forEach(tile => {
         this.mapRuntime.setNextOptions(tile.id, [tile.next[this.mechanismState.activeRoute % tile.next.length]]);
       });

@@ -1,0 +1,1057 @@
+{
+  "mode": "baseline",
+  "checks": [
+    {
+      "map": "coast",
+      "firstTile": 2,
+      "focus": "PURCHASE",
+      "afterDecision": "DONE",
+      "afterFirstRound": 2,
+      "startGuide": "目标：本季结束时，净值最高获胜净值包含现金、地产等资产。先掷骰，再决定买地、升级或路过，最后结束回合。委托、花灯故事和职业能力都是可选玩法；留些现金应付租金。",
+      "boardInspectionDoesNotBuy": true,
+      "cashBeforeDecision": 16000,
+      "cashAfterDecision": 14800,
+      "players": [
+        {
+          "id": 0,
+          "profileId": "ayu",
+          "name": "阿屿",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧢",
+          "color": "#f5816c",
+          "colorHex": 16089452,
+          "skillName": "顺风速递",
+          "skillDesc": "完成速递委托额外获得 ¥300。",
+          "cash": 14800,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 2,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 0,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "ayu",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        },
+        {
+          "id": 1,
+          "profileId": "qinghe",
+          "name": "青禾",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🌿",
+          "color": "#42b8a6",
+          "colorHex": 4372646,
+          "skillName": "街区园艺师",
+          "skillDesc": "完成焕新委托额外获得 ¥300。",
+          "cash": 15500,
+          "deposit": 0,
+          "cardPoints": 155,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 1,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 1,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "qinghe",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        },
+        {
+          "id": 2,
+          "profileId": "xingluo",
+          "name": "星罗",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧭",
+          "color": "#8b72ba",
+          "colorHex": 9138874,
+          "skillName": "行路制图",
+          "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+          "cash": 15200,
+          "deposit": 0,
+          "cardPoints": 155,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 3,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 2,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "xingluo",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        },
+        {
+          "id": 3,
+          "profileId": "taoning",
+          "name": "陶宁",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🔧",
+          "color": "#c58a38",
+          "colorHex": 12945976,
+          "skillName": "随身工坊",
+          "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+          "cash": 15200,
+          "deposit": 0,
+          "cardPoints": 155,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 5,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 3,
+          "isLord": false,
+          "godType": "GREAT_FORTUNE",
+          "godTurns": 5,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "taoning",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          1,
+          {
+            "owner": 1,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          2,
+          {
+            "owner": 0,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          3,
+          {
+            "owner": 2,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          5,
+          {
+            "owner": 3,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          6,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      ],
+      "rng": 2127028528
+    },
+    {
+      "map": "highland",
+      "firstTile": 2,
+      "focus": "PURCHASE",
+      "afterDecision": "DONE",
+      "afterFirstRound": 2,
+      "startGuide": "目标：本季结束时，净值最高获胜净值包含现金、地产等资产。先掷骰，再决定买地、升级或路过，最后结束回合。委托、山城故事和职业能力都是可选玩法；留些现金应付租金。",
+      "boardInspectionDoesNotBuy": true,
+      "cashBeforeDecision": 16000,
+      "cashAfterDecision": 15000,
+      "players": [
+        {
+          "id": 0,
+          "profileId": "ayu",
+          "name": "阿屿",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧢",
+          "color": "#f5816c",
+          "colorHex": 16089452,
+          "skillName": "顺风速递",
+          "skillDesc": "完成速递委托额外获得 ¥300。",
+          "cash": 15000,
+          "deposit": 0,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 2,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 0,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "ayu",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        },
+        {
+          "id": 1,
+          "profileId": "qinghe",
+          "name": "青禾",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🌿",
+          "color": "#42b8a6",
+          "colorHex": 4372646,
+          "skillName": "街区园艺师",
+          "skillDesc": "完成焕新委托额外获得 ¥300。",
+          "cash": 15700,
+          "deposit": 0,
+          "cardPoints": 155,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 1,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 1,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "qinghe",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        },
+        {
+          "id": 2,
+          "profileId": "xingluo",
+          "name": "星罗",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🧭",
+          "color": "#8b72ba",
+          "colorHex": 9138874,
+          "skillName": "行路制图",
+          "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+          "cash": 15400,
+          "deposit": 0,
+          "cardPoints": 155,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 3,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 2,
+          "isLord": false,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "xingluo",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        },
+        {
+          "id": 3,
+          "profileId": "taoning",
+          "name": "陶宁",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": null,
+          "avatarAtlas": null,
+          "avatarPosition": "0% 100%",
+          "avatar": "🔧",
+          "color": "#c58a38",
+          "colorHex": 12945976,
+          "skillName": "随身工坊",
+          "skillDesc": "每三轮可用20点券制作一份清路工具包；已有时不重复制作，无委托加成。",
+          "cash": 15400,
+          "deposit": 0,
+          "cardPoints": 155,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "stocks": {},
+          "currentTile": 5,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "turtleTurns": 0,
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "teamId": 3,
+          "isLord": false,
+          "godType": "GREAT_FORTUNE",
+          "godTurns": 5,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false,
+          "characterId": "taoning",
+          "moveLimitThisTurn": null,
+          "rentShieldActiveThisTurn": false,
+          "negativeImmuneActiveThisTurn": false
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          1,
+          {
+            "owner": 1,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          2,
+          {
+            "owner": 0,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          3,
+          {
+            "owner": 2,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          5,
+          {
+            "owner": 3,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          6,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "hasMine": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      ],
+      "rng": 2127028528
+    }
+  ],
+  "errors": [],
+  "success": true
+}

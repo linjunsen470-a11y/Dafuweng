@@ -1,0 +1,42 @@
+{
+  "base": "916ccd22279b67f0e7e586fc25149e67768e324a",
+  "success": true,
+  "files": {
+    "src/game/BoardData.js": {
+      "unchanged": true,
+      "sha256": "05281a51eee66c0e8e54da282906f27838e224976aff490e320a51a32c9ad4b5"
+    },
+    "src/game/GrandMapData.js": {
+      "unchanged": true,
+      "sha256": "3e7d183dd9247d49668a70871deca51ed63289d3271137cdb19232c37d669d55"
+    },
+    "src/game/GameState.js": {
+      "unchanged": true,
+      "sha256": "aad1dd0e944d031f004edaf8266e01d16e7f0a75d3d20a893c54806ef9189152"
+    },
+    "src/game/GameEngine.js": {
+      "unchanged": true,
+      "sha256": "d16db53417efb2d6e45aa041f8d2f3ac8255709ae187f0dc2d660f0f1927dd60"
+    },
+    "src/game/AIPlayer.js": {
+      "unchanged": true,
+      "sha256": "b397ed3672a5dfd3d5398bcdb64403a8a2ced8085d88735a33ee1c7e28a229c1"
+    },
+    "src/game/PropertyManager.js": {
+      "unchanged": true,
+      "sha256": "58baa637d234dbc8705a24a67c8330ac772ed03e27af405927dba60d3b10942e"
+    },
+    "src/main.js": {
+      "unchanged": true,
+      "sha256": "86e5a15b011869725cc794e47530358a38d3533ec7f3cda0ddaed3a1b51d3c4c"
+    },
+    "src/ui/PresentationUI.js": {
+      "unchanged": true,
+      "sha256": "924e6b58d6d2895321398a561a1ae02a0d2785e1ec6861bea2e4a8b6797f49d8"
+    },
+    "src/engine/PawnManager.js": {
+      "unchanged": true,
+      "sha256": "c5f7273f9713a3f2d7650a96ab58fc3c352ec25f2971ef2c16850caf13b33fb2"
+    }
+  }
+}

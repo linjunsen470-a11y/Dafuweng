@@ -1,0 +1,33 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+20:29:46 | INFO: Starting glTF 2.0 export
+20:29:46 | INFO: Extracting primitive: Cube.001
+20:29:46 | INFO: Primitives created: 8
+20:29:46 | INFO: Extracting primitive: Cube.042
+20:29:46 | INFO: Primitives created: 8
+20:29:46 | INFO: Extracting primitive: Cube.120
+20:29:46 | INFO: Primitives created: 8
+20:29:46 | INFO: Extracting primitive: Cube.242
+20:29:46 | INFO: Primitives created: 8
+20:29:46 | INFO: Extracting primitive: Cube.402
+20:29:46 | INFO: Primitives created: 5
+20:29:46 | INFO: Extracting primitive: Cube.442
+20:29:46 | INFO: Primitives created: 5
+20:29:46 | INFO: Extracting primitive: Cube.514
+20:29:46 | INFO: Primitives created: 9
+20:29:46 | INFO: Extracting primitive: Cube.592
+20:29:46 | INFO: Primitives created: 9
+20:29:46 | INFO: Extracting primitive: Cube.702
+20:29:46 | INFO: Primitives created: 7
+20:29:46 | INFO: Extracting primitive: Cube.736
+20:29:46 | INFO: Primitives created: 8
+20:29:46 | INFO: Extracting primitive: Cube.803
+20:29:46 | INFO: Primitives created: 10
+20:29:46 | INFO: Extracting primitive: Cube.887
+20:29:46 | INFO: Primitives created: 11
+20:29:47 | INFO: Finished glTF 2.0 export in 0.1971125602722168 s
+
+Info: Saved "residences.blend"
+RESIDENCES_COMPLETE {"asset": "residences.glb", "generator": "scripts/art/create_shanhai_residences.py", "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.", "axes": "GLB Y-up, entrance +Z, origin ground center", "prefabs": [{"name": "res_harbor_1", "triangles": 1468, "size_xyz_blender": [2.25, 2.05, 1.625]}, {"name": "res_harbor_2", "triangles": 2216, "size_xyz_blender": [2.25, 2.05, 2.265]}, {"name": "res_harbor_3", "triangles": 3652, "size_xyz_blender": [2.25, 2.05, 3.215]}, {"name": "res_harbor_4", "triangles": 4984, "size_xyz_blender": [2.25, 2.05, 3.855]}, {"name": "res_market_1", "triangles": 1248, "size_xyz_blender": [2.25, 2.13, 1.2]}, {"name": "res_market_2", "triangles": 1856, "size_xyz_blender": [2.25, 2.13, 1.9]}, {"name": "res_market_3", "triangles": 2656, "size_xyz_blender": [2.25, 2.13, 2.645]}, {"name": "res_market_4", "triangles": 3352, "size_xyz_blender": [2.25, 2.13, 3.82]}, {"name": "res_garden_1", "triangles": 1228, "size_xyz_blender": [2.25, 2.12, 1.305]}, {"name": "res_garden_2", "triangles": 2052, "size_xyz_blender": [2.25, 2.12, 1.945]}, {"name": "res_garden_3", "triangles": 2808, "size_xyz_blender": [2.25, 2.12, 3.015]}, {"name": "res_garden_4", "triangles": 3264, "size_xyz_blender": [2.25, 2.12, 3.93]}]}
+Blender 4.3.2
+
+Blender quit

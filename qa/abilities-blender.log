@@ -1,0 +1,497 @@
+ERROR Draco mesh compression is not available because library could not be found at /usr/bin/4.3/python/lib/python3.13/site-packages/libextern_draco.so
+20:46:03 | INFO: Starting glTF 2.0 export
+20:46:03 | INFO: Extracting primitive: Cube.011
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.003
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.002
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.004
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.019
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.007
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.006
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.008
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.001
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.021
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.016
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.022
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.031
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.020
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.032
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.015
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.021
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.011
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.017
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.012
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.018
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.013
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.019
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.010
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.024
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.025
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.026
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.027
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.028
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.029
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.030
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.009
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.023
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.001
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.002
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.003
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.004
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.005
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.006
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.007
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.008
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.014
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.020
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.001
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Sphere.005
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.009
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.010
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.007
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.006
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.008
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.005
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.017
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.018
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.015
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.014
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.016
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.013
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.025
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.027
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.026
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.004
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.012
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.022
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.024
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.023
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder.009
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.002
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cube.003
+20:46:03 | INFO: Primitives created: 1
+20:46:03 | INFO: Extracting primitive: Cylinder
+20:46:03 | INFO: Primitives created: 1
+20:46:04 | INFO: Finished glTF 2.0 export in 1.0938434600830078 s
+
+20:46:06 | INFO: Starting glTF 2.0 export
+20:46:06 | INFO: Extracting primitive: Cube.047
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.048
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.038
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.036
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.035
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.037
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.046
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.040
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.039
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.041
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.049
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.050
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.028
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.078
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.073
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.074
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.075
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.076
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.077
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.049
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.055
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.064
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.065
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.048
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.054
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.044
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.050
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.045
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.051
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.046
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.052
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.043
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.057
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.058
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.059
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.060
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.061
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.062
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.063
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.042
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.066
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.067
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.068
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.056
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.011
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.012
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.013
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.014
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.015
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.016
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.017
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.018
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.047
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.053
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.033
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.034
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.038
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.036
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.037
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.034
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.033
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.035
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.032
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.044
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.045
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.042
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.041
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.043
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.040
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.070
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.071
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.020
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.021
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.022
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.031
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.039
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.072
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.051
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.029
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Sphere.069
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.019
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cube.030
+20:46:06 | INFO: Primitives created: 1
+20:46:06 | INFO: Extracting primitive: Cylinder.010
+20:46:06 | INFO: Primitives created: 1
+20:46:08 | INFO: Finished glTF 2.0 export in 1.7583675384521484 s
+Blender 4.3.2
+Fra:0 Mem:30.46M (Peak 30.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_jacket
+Fra:0 Mem:30.47M (Peak 30.47M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_zipper
+Fra:0 Mem:32.49M (Peak 32.49M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_waistband
+Fra:0 Mem:32.50M (Peak 32.50M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_jacket_pocket-1
+Fra:0 Mem:32.51M (Peak 32.51M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_pocket_stitch-1
+Fra:0 Mem:32.63M (Peak 32.63M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_trouser-1
+Fra:0 Mem:32.60M (Peak 32.63M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_shoe-1
+Fra:0 Mem:32.66M (Peak 32.66M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_sole-1
+Fra:0 Mem:32.70M (Peak 32.70M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Preview floor
+Fra:0 Mem:32.73M (Peak 32.73M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_flower_center
+Fra:0 Mem:32.71M (Peak 32.73M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_lace-10
+Fra:0 Mem:32.73M (Peak 32.73M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_lace-10.035
+Fra:0 Mem:32.73M (Peak 32.73M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_flower_pin4
+Fra:0 Mem:32.77M (Peak 32.77M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_flower_pin3
+Fra:0 Mem:32.76M (Peak 32.77M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_flower_pin2
+Fra:0 Mem:32.79M (Peak 32.79M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_sleeve-1
+Fra:0 Mem:32.82M (Peak 32.82M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cuff-1
+Fra:0 Mem:32.80M (Peak 32.82M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_hand-1
+Fra:0 Mem:32.81M (Peak 32.82M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_thumb-1
+Fra:0 Mem:32.83M (Peak 32.83M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_jacket_pocket1
+Fra:0 Mem:32.83M (Peak 32.83M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_pocket_stitch1
+Fra:0 Mem:32.88M (Peak 32.88M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_trouser1
+Fra:0 Mem:32.92M (Peak 32.92M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_sock1
+Fra:0 Mem:32.92M (Peak 32.92M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_shoe1
+Fra:0 Mem:32.93M (Peak 32.93M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_sole1
+Fra:0 Mem:32.97M (Peak 32.97M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_lace10
+Fra:0 Mem:33.00M (Peak 33.00M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_lace10.035
+Fra:0 Mem:33.07M (Peak 33.07M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_sleeve1
+Fra:0 Mem:33.08M (Peak 33.08M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cuff1
+Fra:0 Mem:33.06M (Peak 33.08M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_hand1
+Fra:0 Mem:33.07M (Peak 33.08M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_thumb1
+Fra:0 Mem:33.08M (Peak 33.08M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_hair_mass
+Fra:0 Mem:33.11M (Peak 33.11M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_face
+Fra:0 Mem:33.11M (Peak 33.11M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_ear-1
+Fra:0 Mem:33.12M (Peak 33.12M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_ear_inner-1
+Fra:0 Mem:33.13M (Peak 33.13M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_eye-1
+Fra:0 Mem:33.14M (Peak 33.14M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_spark-1
+Fra:0 Mem:33.15M (Peak 33.15M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cheek-1
+Fra:0 Mem:33.16M (Peak 33.16M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_brow-1
+Fra:0 Mem:33.17M (Peak 33.17M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_ear1
+Fra:0 Mem:33.16M (Peak 33.17M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_ear_inner1
+Fra:0 Mem:33.19M (Peak 33.19M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_eye1
+Fra:0 Mem:33.22M (Peak 33.22M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_spark1
+Fra:0 Mem:33.23M (Peak 33.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cheek1
+Fra:0 Mem:33.23M (Peak 33.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_brow1
+Fra:0 Mem:33.24M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_nose
+Fra:0 Mem:33.23M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile0
+Fra:0 Mem:33.23M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile2
+Fra:0 Mem:33.23M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile3
+Fra:0 Mem:33.24M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile4
+Fra:0 Mem:33.24M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile5
+Fra:0 Mem:33.24M (Peak 33.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile6
+Fra:0 Mem:33.25M (Peak 33.25M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_smile7
+Fra:0 Mem:33.25M (Peak 33.25M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe0
+Fra:0 Mem:33.27M (Peak 33.27M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe1
+Fra:0 Mem:33.28M (Peak 33.28M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe2
+Fra:0 Mem:33.29M (Peak 33.29M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe3
+Fra:0 Mem:33.30M (Peak 33.30M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe4
+Fra:0 Mem:33.31M (Peak 33.31M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe5
+Fra:0 Mem:33.32M (Peak 33.32M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_fringe6
+Fra:0 Mem:33.33M (Peak 33.33M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cap
+Fra:0 Mem:33.36M (Peak 33.36M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cap_brim
+Fra:0 Mem:33.37M (Peak 33.37M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_cap_badge
+Fra:0 Mem:33.40M (Peak 33.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_badge_mail
+Fra:0 Mem:33.42M (Peak 33.42M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_satchel_strap
+Fra:0 Mem:33.41M (Peak 33.42M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_satchel
+Fra:0 Mem:33.41M (Peak 33.42M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_satchel_flap
+Fra:0 Mem:33.46M (Peak 33.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_satchel_clasp
+Fra:0 Mem:33.49M (Peak 33.49M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_parcel
+Fra:0 Mem:33.60M (Peak 33.60M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_seed_emblem
+Fra:0 Mem:33.60M (Peak 33.60M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_seed_packet
+Fra:0 Mem:33.58M (Peak 33.60M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | courier_parcel_tape
+Fra:0 Mem:33.60M (Peak 33.60M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_pack_leaf1
+Fra:0 Mem:33.61M (Peak 33.61M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_pack_leaf-1
+Fra:0 Mem:33.62M (Peak 33.62M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_plant_stem
+Fra:0 Mem:33.62M (Peak 33.62M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_pack_strap1
+Fra:0 Mem:33.63M (Peak 33.63M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_pack_strap-1
+Fra:0 Mem:33.63M (Peak 33.63M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_backpack_flap
+Fra:0 Mem:33.64M (Peak 33.64M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_jacket
+Fra:0 Mem:33.62M (Peak 33.64M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_shirt
+Fra:0 Mem:33.62M (Peak 33.64M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_zipper
+Fra:0 Mem:33.64M (Peak 33.64M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_waistband
+Fra:0 Mem:33.69M (Peak 33.69M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_pocket_stitch-1
+Fra:0 Mem:33.76M (Peak 33.76M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_trouser-1
+Fra:0 Mem:33.77M (Peak 33.77M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_sock-1
+Fra:0 Mem:33.86M (Peak 33.86M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_shoe-1
+Fra:0 Mem:33.81M (Peak 33.86M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_sole-1
+Fra:0 Mem:33.81M (Peak 33.86M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_trowel_blade
+Fra:0 Mem:33.87M (Peak 33.87M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_trowel_handle
+Fra:0 Mem:33.90M (Peak 33.90M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_apron_pocket
+Fra:0 Mem:33.88M (Peak 33.90M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_lace-10.035
+Fra:0 Mem:33.89M (Peak 33.90M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_sleeve-1
+Fra:0 Mem:33.94M (Peak 33.93M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_cuff-1
+Fra:0 Mem:33.93M (Peak 33.93M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_apron
+Fra:0 Mem:33.98M (Peak 33.98M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_hand-1
+Fra:0 Mem:33.95M (Peak 33.98M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_jacket_pocket1
+Fra:0 Mem:33.96M (Peak 33.98M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_pocket_stitch1
+Fra:0 Mem:33.98M (Peak 33.98M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_trouser1
+Fra:0 Mem:34.01M (Peak 34.01M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_sock1
+Fra:0 Mem:34.03M (Peak 34.03M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_shoe1
+Fra:0 Mem:34.05M (Peak 34.05M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_sole1
+Fra:0 Mem:34.15M (Peak 34.15M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_lace10
+Fra:0 Mem:34.13M (Peak 34.15M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_lace10.035
+Fra:0 Mem:34.16M (Peak 34.16M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_sleeve1
+Fra:0 Mem:34.15M (Peak 34.16M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_cuff1
+Fra:0 Mem:34.17M (Peak 34.17M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_hand1
+Fra:0 Mem:34.18M (Peak 34.18M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_thumb1
+Fra:0 Mem:34.19M (Peak 34.19M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_hair_mass
+Fra:0 Mem:34.21M (Peak 34.21M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_ear-1
+Fra:0 Mem:34.24M (Peak 34.24M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_ear_inner-1
+Fra:0 Mem:34.27M (Peak 34.27M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_eye-1
+Fra:0 Mem:34.29M (Peak 34.29M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_spark-1
+Fra:0 Mem:34.30M (Peak 34.30M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_cheek-1
+Fra:0 Mem:34.31M (Peak 34.31M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_brow-1
+Fra:0 Mem:34.36M (Peak 34.36M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_ear1
+Fra:0 Mem:34.38M (Peak 34.38M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_ear_inner1
+Fra:0 Mem:34.40M (Peak 34.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_eye1
+Fra:0 Mem:34.35M (Peak 34.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_spark1
+Fra:0 Mem:34.34M (Peak 34.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_brow1
+Fra:0 Mem:34.38M (Peak 34.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_nose
+Fra:0 Mem:34.39M (Peak 34.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_smile2
+Fra:0 Mem:34.39M (Peak 34.40M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_smile3
+Fra:0 Mem:34.41M (Peak 34.41M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_smile4
+Fra:0 Mem:34.41M (Peak 34.41M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_smile5
+Fra:0 Mem:34.41M (Peak 34.41M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_smile7
+Fra:0 Mem:34.41M (Peak 34.41M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe0
+Fra:0 Mem:34.42M (Peak 34.42M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe1
+Fra:0 Mem:34.44M (Peak 34.44M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe2
+Fra:0 Mem:34.44M (Peak 34.44M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe3
+Fra:0 Mem:34.45M (Peak 34.45M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe4
+Fra:0 Mem:34.46M (Peak 34.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe5
+Fra:0 Mem:34.47M (Peak 34.47M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_fringe6
+Fra:0 Mem:34.48M (Peak 34.48M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_bun
+Fra:0 Mem:34.49M (Peak 34.49M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_bun_tie
+Fra:0 Mem:34.51M (Peak 34.51M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_leaf_clip0
+Fra:0 Mem:34.52M (Peak 34.52M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | botanist_leaf_clip1
+Fra:0 Mem:34.55M (Peak 34.55M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:0 Mem:27.88M (Peak 34.55M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:0 Mem:27.88M (Peak 34.55M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:0 Mem:27.88M (Peak 34.55M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:0 Mem:27.88M (Peak 34.55M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:0 Mem:27.97M (Peak 34.55M) | Time:00:00.03 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:0 Mem:27.97M (Peak 34.55M) | Time:00:00.03 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:0 Mem:27.97M (Peak 34.55M) | Time:00:00.03 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:0 Mem:27.97M (Peak 34.55M) | Time:00:00.03 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:0 Mem:27.97M (Peak 34.55M) | Time:00:00.04 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:0 Mem:27.97M (Peak 34.55M) | Time:00:00.04 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:0 Mem:28.01M (Peak 34.55M) | Time:00:00.04 | Mem:0.05M, Peak:0.05M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:0 Mem:28.01M (Peak 34.55M) | Time:00:00.04 | Mem:0.05M, Peak:0.05M | Scene, ViewLayer | Updating Particle Systems
+Fra:0 Mem:28.01M (Peak 34.55M) | Time:00:00.04 | Mem:0.05M, Peak:0.05M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:0 Mem:28.01M (Peak 34.55M) | Time:00:00.04 | Mem:0.05M, Peak:0.05M | Scene, ViewLayer | Updating Meshes
+Fra:0 Mem:28.54M (Peak 34.55M) | Time:00:00.04 | Mem:0.05M, Peak:0.05M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:0 Mem:28.94M (Peak 34.55M) | Time:00:00.04 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:0 Mem:28.92M (Peak 34.55M) | Time:00:00.04 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:0 Mem:28.92M (Peak 34.55M) | Time:00:00.04 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:0 Mem:28.92M (Peak 34.55M) | Time:00:00.05 | Mem:1.48M, Peak:1.48M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:0 Mem:28.92M (Peak 34.55M) | Time:00:00.06 | Mem:2.64M, Peak:3.69M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:0 Mem:28.92M (Peak 34.55M) | Time:00:00.06 | Mem:2.64M, Peak:3.69M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:2.64M, Peak:3.69M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.28M, Peak:4.28M | Scene, ViewLayer | Updating Objects Flags
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.29M, Peak:4.29M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.29M, Peak:4.29M | Scene, ViewLayer | Updating Images
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.29M, Peak:4.29M | Scene, ViewLayer | Updating Camera Volume
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.29M, Peak:4.29M | Scene, ViewLayer | Updating Lookup Tables
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Updating Lights
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Updating Integrator
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Updating Film
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.29M, Peak:4.37M | Scene, ViewLayer | Updating Lookup Tables
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Updating Baking
+Fra:0 Mem:30.57M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:0 Mem:30.58M (Peak 34.55M) | Time:00:00.06 | Mem:4.37M, Peak:4.37M | Scene, ViewLayer | Sample 0/64
+Fra:0 Mem:71.80M (Peak 71.80M) | Time:00:01.19 | Remaining:01:11.25 | Mem:45.57M, Peak:45.57M | Scene, ViewLayer | Sample 1/64
+Fra:0 Mem:71.80M (Peak 71.80M) | Time:00:44.22 | Remaining:00:41.48 | Mem:45.57M, Peak:45.57M | Scene, ViewLayer | Sample 33/64
+Fra:0 Mem:90.11M (Peak 126.74M) | Time:01:29.71 | Mem:45.57M, Peak:45.57M | Scene, ViewLayer | Sample 64/64
+Fra:0 Mem:90.11M (Peak 126.74M) | Time:01:29.71 | Mem:45.57M, Peak:45.57M | Scene, ViewLayer | Finished
+Saved: '/workspace/dafuweng-cloud/art-source/shanhai/characters-preview.png'
+Time: 01:30.43 (Saving: 00:00.70)
+
+
+Info: Saved "characters.blend"
+CHARACTER_MANIFEST [{"file": "character-courier.glb", "boundsYUp": {"min": [-0.392, 0.0, -0.369], "max": [0.392, 1.7, 0.422]}, "height": 1.7, "triangles": 16172, "meshCount": 70, "clips": {"idle": 2.4, "walk": 0.8, "celebrate": 1.6, "disappointed": 1.8, "ability": 1.2, "notice": 1.0}, "forward": "+Z", "up": "+Y", "rightsStatement": "Original project asset; no separate third-party license granted", "animation": "Articulated rigid meshes; named object-transform NLA clips"}, {"file": "character-botanist.glb", "boundsYUp": {"min": [-0.392, 0.0, -0.3275], "max": [0.4094, 1.7708, 0.324]}, "height": 1.771, "triangles": 18476, "meshCount": 83, "clips": {"idle": 2.4, "walk": 0.8, "celebrate": 1.6, "disappointed": 1.8, "ability": 1.2, "notice": 1.0}, "forward": "+Z", "up": "+Y", "rightsStatement": "Original project asset; no separate third-party license granted", "animation": "Articulated rigid meshes; named object-transform NLA clips"}]
+
+Blender quit

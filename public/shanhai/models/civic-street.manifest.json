@@ -1,0 +1,71 @@
+{
+  "asset": "civic-street.glb",
+  "generator": "scripts/art/create_civic_street.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "models": [
+    {
+      "prefab": "res_civic_1",
+      "triangles": 108,
+      "size_xyz_blender": [
+        2.8499999046325684,
+        2.805000066757202,
+        1.7300000190734863
+      ]
+    },
+    {
+      "prefab": "res_civic_2",
+      "triangles": 276,
+      "size_xyz_blender": [
+        2.8499999046325684,
+        2.805000066757202,
+        2.929999828338623
+      ]
+    },
+    {
+      "prefab": "res_civic_3",
+      "triangles": 348,
+      "size_xyz_blender": [
+        2.8499999046325684,
+        2.805000066757202,
+        4.230000019073486
+      ]
+    },
+    {
+      "prefab": "res_civic_4",
+      "triangles": 432,
+      "size_xyz_blender": [
+        2.8499999046325684,
+        2.805000066757202,
+        6.21999979019165
+      ]
+    },
+    {
+      "prefab": "civic_bank",
+      "triangles": 276,
+      "size_xyz_blender": [
+        4.199999809265137,
+        2.9000000953674316,
+        3.7249999046325684
+      ]
+    },
+    {
+      "prefab": "civic_notice",
+      "triangles": 252,
+      "size_xyz_blender": [
+        3.4000000953674316,
+        2.7249999046325684,
+        2.5899999141693115
+      ]
+    },
+    {
+      "prefab": "civic_arcade",
+      "triangles": 240,
+      "size_xyz_blender": [
+        3.5999999046325684,
+        2.786799907684326,
+        2.700000047683716
+      ]
+    }
+  ]
+}

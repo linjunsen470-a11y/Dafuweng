@@ -114,7 +114,7 @@ export class PropertyManager {
     }
 
     const nearbyPark = [...this.properties.entries()].some(([otherTileId, other]) => other.owner === prop.owner
-      && other.buildingType === 'PARK' && Math.abs(Number(otherTileId) - Number(tileIndex)) <= 2);
+      && !other.isMortgaged && other.buildingType === 'PARK' && Math.abs(Number(otherTileId) - Number(tileIndex)) <= 2);
     if (nearbyPark && prop.buildingType !== 'PARK') baseToll *= 1.2;
 
     // 新闻翻倍大事件

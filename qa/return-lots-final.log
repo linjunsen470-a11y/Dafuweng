@@ -1,0 +1,225 @@
+{
+  "errors": [],
+  "views": [
+    {
+      "tile": 106,
+      "mobile": false,
+      "lots": [
+        {
+          "id": 106,
+          "anchor": [
+            17.4,
+            0.53,
+            -30
+          ],
+          "model": "res_market_4"
+        },
+        {
+          "id": 116,
+          "anchor": [
+            -45.4,
+            0.53,
+            -3.4
+          ],
+          "model": "res_civic_2"
+        },
+        {
+          "id": 118,
+          "anchor": [
+            -45.4,
+            0.53,
+            -17
+          ],
+          "model": "res_civic_4"
+        }
+      ],
+      "supplyLabel": {
+        "left": 278.36820168362095,
+        "right": 515.3207939436394,
+        "top": 757.4200593694256,
+        "bottom": 840.3534666604322
+      },
+      "viewport": [
+        1280,
+        800
+      ]
+    },
+    {
+      "tile": 118,
+      "mobile": false,
+      "lots": [
+        {
+          "id": 106,
+          "anchor": [
+            17.4,
+            0.53,
+            -30
+          ],
+          "model": "res_market_4"
+        },
+        {
+          "id": 116,
+          "anchor": [
+            -45.4,
+            0.53,
+            -3.4
+          ],
+          "model": "res_civic_2"
+        },
+        {
+          "id": 118,
+          "anchor": [
+            -45.4,
+            0.53,
+            -17
+          ],
+          "model": "res_civic_4"
+        }
+      ],
+      "supplyLabel": {
+        "left": 3551.8710177113303,
+        "right": 3762.476249380409,
+        "top": 634.623769232798,
+        "bottom": 708.3356003169756
+      },
+      "viewport": [
+        1280,
+        800
+      ]
+    },
+    {
+      "tile": 106,
+      "mobile": true,
+      "lots": [
+        {
+          "id": 106,
+          "anchor": [
+            17.4,
+            0.53,
+            -30
+          ],
+          "model": "res_market_4"
+        },
+        {
+          "id": 116,
+          "anchor": [
+            -45.4,
+            0.53,
+            -3.4
+          ],
+          "model": "res_civic_2"
+        },
+        {
+          "id": 118,
+          "anchor": [
+            -45.4,
+            0.53,
+            -17
+          ],
+          "model": "res_civic_4"
+        }
+      ],
+      "supplyLabel": {
+        "left": -19.8975672743601,
+        "right": 118.44797268875364,
+        "top": 556.0131958628266,
+        "bottom": 604.4341348499165
+      },
+      "viewport": [
+        360,
+        640
+      ]
+    },
+    {
+      "tile": 118,
+      "mobile": true,
+      "lots": [
+        {
+          "id": 106,
+          "anchor": [
+            17.4,
+            0.53,
+            -30
+          ],
+          "model": "res_market_4"
+        },
+        {
+          "id": 116,
+          "anchor": [
+            -45.4,
+            0.53,
+            -3.4
+          ],
+          "model": "res_civic_2"
+        },
+        {
+          "id": 118,
+          "anchor": [
+            -45.4,
+            0.53,
+            -17
+          ],
+          "model": "res_civic_4"
+        }
+      ],
+      "supplyLabel": {
+        "left": 1876.8475470349135,
+        "right": 1999.0120730747649,
+        "top": 450.2935138961808,
+        "bottom": 493.0510980101287
+      },
+      "viewport": [
+        360,
+        640
+      ]
+    },
+    {
+      "tile": 101,
+      "mobile": true,
+      "lots": [
+        {
+          "id": 106,
+          "anchor": [
+            17.4,
+            0.53,
+            -30
+          ],
+          "model": "res_market_4"
+        },
+        {
+          "id": 116,
+          "anchor": [
+            -45.4,
+            0.53,
+            -3.4
+          ],
+          "model": "res_civic_2"
+        },
+        {
+          "id": 118,
+          "anchor": [
+            -45.4,
+            0.53,
+            -17
+          ],
+          "model": "res_civic_4"
+        }
+      ],
+      "supplyLabel": {
+        "left": 33.253971593549856,
+        "right": 128.06137091210735,
+        "top": 271.55398927723775,
+        "bottom": 304.7365790387328
+      },
+      "viewport": [
+        360,
+        640
+      ]
+    }
+  ],
+  "limits": [
+    "Prepared positions and owned building levels for visibility checks; original funds/RNG kept.",
+    "Software WebGL desktop/360px viewport; not a physical device."
+  ],
+  "success": true
+}

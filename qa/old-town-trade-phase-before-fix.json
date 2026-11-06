@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "Actual roll to the property bought during the walk upgrades lot 38 and renders original old-town level 1",
+    "Stock landmark and four old-town levels loaded in the normal main-game view; legacy snapshot fields unchanged"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared positions reuse the ownership and money of the actual harbor-to-old-town walk. Building levels 1–4 are a visual fixture, not four natural upgrades.",
+    "390px touch viewport, not physical mobile or performance acceptance."
+  ],
+  "resumed": "Prior desktop upgrade and model/snapshot checks preserved; only mobile CSS changed.",
+  "success": false,
+  "failure": "TimeoutError: Waiting failed: 90000ms exceeded\n    at new WaitTask (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46:34)\n    at IsolatedWorld.waitForFunction (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Realm.js:49:26)\n    at CdpFrame.waitForFunction (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:580:43)\n    at CdpFrame.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)\n    at CdpPage.waitForFunction (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1447:37)\n    at file:///workspace/dafuweng-cloud/test-main-old-town.js:18:614"
+}

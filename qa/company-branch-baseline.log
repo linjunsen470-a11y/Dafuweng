@@ -1,0 +1,1 @@
+{"success":true,"visit":{"success":true,"type":"COMPANY_VISIT","companyId":"CLOUD_COMPUTE","fee":390,"chairmanId":null,"events":[{"type":"COMPANY_VISIT","success":true,"companyId":"CLOUD_COMPUTE","fee":390,"chairmanId":null}],"before":{"cash":20000,"treasury":1200,"revenue":0},"after":{"cash":19610,"treasury":1590,"revenue":390},"toast":"","arrival":""},"joined":true,"errors":[]}

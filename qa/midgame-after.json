@@ -1,0 +1,2378 @@
+{
+  "baseline": false,
+  "method": "24 deterministic AI-vs-AI full games; both original roles, 12 fixed seeds per map. Diagnostic only, not a human balance verdict.",
+  "summaries": [
+    {
+      "mapId": "shanhai-coast",
+      "games": 12,
+      "meanFinalCash": 16805.29,
+      "meanOwned": 12.17,
+      "meanLevels": 11.42,
+      "meanZeroLevel": 5,
+      "meanUpgradeLandings": 4.08,
+      "meanRentVisits": 3.5,
+      "meanConstruction": 3.33,
+      "observedRound8Games": 12
+    },
+    {
+      "mapId": "shanhai-highland",
+      "games": 12,
+      "meanFinalCash": 16999.17,
+      "meanOwned": 12.33,
+      "meanLevels": 12.67,
+      "meanZeroLevel": 4.83,
+      "meanUpgradeLandings": 4.83,
+      "meanRentVisits": 3.33,
+      "meanConstruction": 3.33,
+      "observedRound8Games": 12
+    }
+  ],
+  "runs": [
+    {
+      "mapId": "shanhai-coast",
+      "seed": 17,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18775,
+            18025
+          ],
+          "net": [
+            29775,
+            28825
+          ],
+          "owned": 11,
+          "levels": 4,
+          "zeroLevel": 8,
+          "points": [
+            40,
+            190
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            18075,
+            19125
+          ],
+          "net": [
+            29675,
+            33925
+          ],
+          "owned": 13,
+          "levels": 7,
+          "zeroLevel": 8,
+          "points": [
+            85,
+            395
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            19875,
+            21325
+          ],
+          "net": [
+            34875,
+            36925
+          ],
+          "owned": 14,
+          "levels": 10,
+          "zeroLevel": 7,
+          "points": [
+            105,
+            295
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          19325,
+          21725
+        ],
+        "net": [
+          34325,
+          38325
+        ],
+        "owned": 14,
+        "levels": 11,
+        "zeroLevel": 6,
+        "points": [
+          120,
+          205
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 5,
+      "rentVisits": 2,
+      "construction": 3
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 41,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            16200,
+            14500
+          ],
+          "net": [
+            20200,
+            33300
+          ],
+          "owned": 10,
+          "levels": 8,
+          "zeroLevel": 6,
+          "points": [
+            65,
+            65
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            21700,
+            12400
+          ],
+          "net": [
+            25700,
+            38200
+          ],
+          "owned": 13,
+          "levels": 10,
+          "zeroLevel": 8,
+          "points": [
+            60,
+            85
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            21650,
+            14000
+          ],
+          "net": [
+            25650,
+            41400
+          ],
+          "owned": 13,
+          "levels": 12,
+          "zeroLevel": 6,
+          "points": [
+            135,
+            150
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          25590,
+          14360
+        ],
+        "net": [
+          29590,
+          41760
+        ],
+        "owned": 13,
+        "levels": 12,
+        "zeroLevel": 6,
+        "points": [
+          70,
+          90
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 7,
+      "rentVisits": 3,
+      "construction": 2
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 73,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            12530,
+            15880
+          ],
+          "net": [
+            24930,
+            35080
+          ],
+          "owned": 14,
+          "levels": 10,
+          "zeroLevel": 7,
+          "points": [
+            25,
+            105
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            16500,
+            17910
+          ],
+          "net": [
+            29500,
+            37710
+          ],
+          "owned": 14,
+          "levels": 11,
+          "zeroLevel": 7,
+          "points": [
+            25,
+            140
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            14340,
+            19170
+          ],
+          "net": [
+            32940,
+            42170
+          ],
+          "owned": 14,
+          "levels": 22,
+          "zeroLevel": 2,
+          "points": [
+            55,
+            120
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          14340,
+          19070
+        ],
+        "net": [
+          32940,
+          42070
+        ],
+        "owned": 14,
+        "levels": 22,
+        "zeroLevel": 2,
+        "points": [
+          55,
+          110
+        ]
+      },
+      "turns": 28,
+      "upgradeOffers": 9,
+      "rentVisits": 4,
+      "construction": 3
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 101,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            15870,
+            16190
+          ],
+          "net": [
+            24270,
+            24190
+          ],
+          "owned": 9,
+          "levels": 2,
+          "zeroLevel": 8,
+          "points": [
+            0,
+            260
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            15570,
+            16211
+          ],
+          "net": [
+            25970,
+            28211
+          ],
+          "owned": 11,
+          "levels": 6,
+          "zeroLevel": 8,
+          "points": [
+            25,
+            370
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            14470,
+            18111
+          ],
+          "net": [
+            28070,
+            30711
+          ],
+          "owned": 12,
+          "levels": 9,
+          "zeroLevel": 7,
+          "points": [
+            255,
+            510
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          13670,
+          18711
+        ],
+        "net": [
+          28870,
+          31911
+        ],
+        "owned": 12,
+        "levels": 12,
+        "zeroLevel": 6,
+        "points": [
+          255,
+          500
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 6,
+      "rentVisits": 4,
+      "construction": 4
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 211,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            16300,
+            13900
+          ],
+          "net": [
+            23500,
+            29500
+          ],
+          "owned": 11,
+          "levels": 6,
+          "zeroLevel": 7,
+          "points": [
+            200,
+            175
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            18520,
+            16380
+          ],
+          "net": [
+            35720,
+            32980
+          ],
+          "owned": 14,
+          "levels": 11,
+          "zeroLevel": 6,
+          "points": [
+            70,
+            225
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            17920,
+            16180
+          ],
+          "net": [
+            35720,
+            36180
+          ],
+          "owned": 15,
+          "levels": 15,
+          "zeroLevel": 5,
+          "points": [
+            70,
+            235
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          19820,
+          16180
+        ],
+        "net": [
+          38620,
+          36180
+        ],
+        "owned": 15,
+        "levels": 16,
+        "zeroLevel": 5,
+        "points": [
+          40,
+          235
+        ]
+      },
+      "turns": 21,
+      "upgradeOffers": 6,
+      "rentVisits": 1,
+      "construction": 3
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 314,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            14730,
+            13570
+          ],
+          "net": [
+            23530,
+            18370
+          ],
+          "owned": 8,
+          "levels": 1,
+          "zeroLevel": 7,
+          "points": [
+            50,
+            120
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            16730,
+            11713
+          ],
+          "net": [
+            25530,
+            17113
+          ],
+          "owned": 8,
+          "levels": 2,
+          "zeroLevel": 6,
+          "points": [
+            0,
+            10
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            17830,
+            14013
+          ],
+          "net": [
+            30230,
+            22013
+          ],
+          "owned": 9,
+          "levels": 8,
+          "zeroLevel": 4,
+          "points": [
+            50,
+            55
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          17830,
+          13513
+        ],
+        "net": [
+          30230,
+          22713
+        ],
+        "owned": 10,
+        "levels": 8,
+        "zeroLevel": 5,
+        "points": [
+          50,
+          165
+        ]
+      },
+      "turns": 28,
+      "upgradeOffers": 2,
+      "rentVisits": 4,
+      "construction": 4
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 509,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            15700,
+            17000
+          ],
+          "net": [
+            23300,
+            25200
+          ],
+          "owned": 9,
+          "levels": 3,
+          "zeroLevel": 7,
+          "points": [
+            190,
+            50
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            12186,
+            19340
+          ],
+          "net": [
+            23786,
+            27540
+          ],
+          "owned": 10,
+          "levels": 5,
+          "zeroLevel": 7,
+          "points": [
+            400,
+            0
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            10847,
+            16679
+          ],
+          "net": [
+            30647,
+            27879
+          ],
+          "owned": 14,
+          "levels": 11,
+          "zeroLevel": 6,
+          "points": [
+            290,
+            35
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          14547,
+          16679
+        ],
+        "net": [
+          34347,
+          29079
+        ],
+        "owned": 14,
+        "levels": 13,
+        "zeroLevel": 5,
+        "points": [
+          260,
+          35
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 2,
+      "rentVisits": 4,
+      "construction": 4
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 811,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18575,
+            16725
+          ],
+          "net": [
+            19775,
+            19125
+          ],
+          "owned": 3,
+          "levels": 0,
+          "zeroLevel": 3,
+          "points": [
+            70,
+            55
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            19955,
+            16445
+          ],
+          "net": [
+            22755,
+            18845
+          ],
+          "owned": 4,
+          "levels": 0,
+          "zeroLevel": 4,
+          "points": [
+            55,
+            0
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            19955,
+            19045
+          ],
+          "net": [
+            22755,
+            25245
+          ],
+          "owned": 5,
+          "levels": 3,
+          "zeroLevel": 3,
+          "points": [
+            120,
+            180
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          17955,
+          19545
+        ],
+        "net": [
+          22755,
+          25745
+        ],
+        "owned": 6,
+        "levels": 3,
+        "zeroLevel": 4,
+        "points": [
+          80,
+          150
+        ]
+      },
+      "turns": 23,
+      "upgradeOffers": 2,
+      "rentVisits": 3,
+      "construction": 1
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 1201,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            12756,
+            16190
+          ],
+          "net": [
+            20756,
+            19790
+          ],
+          "owned": 8,
+          "levels": 0,
+          "zeroLevel": 8,
+          "points": [
+            70,
+            120
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            10739,
+            13850
+          ],
+          "net": [
+            18739,
+            21250
+          ],
+          "owned": 9,
+          "levels": 1,
+          "zeroLevel": 8,
+          "points": [
+            70,
+            255
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            13168,
+            12759
+          ],
+          "net": [
+            23168,
+            22759
+          ],
+          "owned": 10,
+          "levels": 5,
+          "zeroLevel": 5,
+          "points": [
+            35,
+            170
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          13168,
+          11459
+        ],
+        "net": [
+          23168,
+          23459
+        ],
+        "owned": 11,
+        "levels": 5,
+        "zeroLevel": 6,
+        "points": [
+          35,
+          160
+        ]
+      },
+      "turns": 21,
+      "upgradeOffers": 0,
+      "rentVisits": 4,
+      "construction": 1
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 2027,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            16300,
+            13600
+          ],
+          "net": [
+            17500,
+            24800
+          ],
+          "owned": 8,
+          "levels": 2,
+          "zeroLevel": 6,
+          "points": [
+            60,
+            45
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            16550,
+            9360
+          ],
+          "net": [
+            19750,
+            21360
+          ],
+          "owned": 9,
+          "levels": 3,
+          "zeroLevel": 6,
+          "points": [
+            65,
+            125
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            17990,
+            7700
+          ],
+          "net": [
+            21190,
+            20900
+          ],
+          "owned": 9,
+          "levels": 5,
+          "zeroLevel": 4,
+          "points": [
+            185,
+            130
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          17750,
+          7146
+        ],
+        "net": [
+          20950,
+          19746
+        ],
+        "owned": 9,
+        "levels": 4,
+        "zeroLevel": 5,
+        "points": [
+          155,
+          130
+        ]
+      },
+      "turns": 20,
+      "upgradeOffers": 1,
+      "rentVisits": 6,
+      "construction": 3
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 4093,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18580,
+            18100
+          ],
+          "net": [
+            28780,
+            24900
+          ],
+          "owned": 10,
+          "levels": 1,
+          "zeroLevel": 9,
+          "points": [
+            295,
+            85
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            20480,
+            19520
+          ],
+          "net": [
+            35480,
+            35920
+          ],
+          "owned": 14,
+          "levels": 10,
+          "zeroLevel": 6,
+          "points": [
+            330,
+            225
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          21280,
+          21220
+        ],
+        "net": [
+          39480,
+          43620
+        ],
+        "owned": 15,
+        "levels": 20,
+        "zeroLevel": 3,
+        "points": [
+          280,
+          335
+        ]
+      },
+      "turns": 29,
+      "upgradeOffers": 7,
+      "rentVisits": 1,
+      "construction": 4
+    },
+    {
+      "mapId": "shanhai-coast",
+      "seed": 7132,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            11103,
+            15041
+          ],
+          "net": [
+            22303,
+            21441
+          ],
+          "owned": 10,
+          "levels": 1,
+          "zeroLevel": 9,
+          "points": [
+            40,
+            150
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            10803,
+            16541
+          ],
+          "net": [
+            24003,
+            26141
+          ],
+          "owned": 11,
+          "levels": 6,
+          "zeroLevel": 7,
+          "points": [
+            40,
+            185
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            11413,
+            15431
+          ],
+          "net": [
+            27413,
+            29231
+          ],
+          "owned": 13,
+          "levels": 11,
+          "zeroLevel": 7,
+          "points": [
+            60,
+            335
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          11413,
+          17031
+        ],
+        "net": [
+          27413,
+          30831
+        ],
+        "owned": 13,
+        "levels": 11,
+        "zeroLevel": 7,
+        "points": [
+          60,
+          425
+        ]
+      },
+      "turns": 28,
+      "upgradeOffers": 2,
+      "rentVisits": 6,
+      "construction": 8
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 17,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18455,
+            18745
+          ],
+          "net": [
+            28705,
+            30145
+          ],
+          "owned": 11,
+          "levels": 4,
+          "zeroLevel": 8,
+          "points": [
+            40,
+            190
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            17966,
+            21934
+          ],
+          "net": [
+            29616,
+            34834
+          ],
+          "owned": 12,
+          "levels": 6,
+          "zeroLevel": 7,
+          "points": [
+            40,
+            285
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            17466,
+            25134
+          ],
+          "net": [
+            29616,
+            40534
+          ],
+          "owned": 12,
+          "levels": 10,
+          "zeroLevel": 4,
+          "points": [
+            40,
+            225
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          17616,
+          25634
+        ],
+        "net": [
+          32866,
+          41034
+        ],
+        "owned": 13,
+        "levels": 12,
+        "zeroLevel": 4,
+        "points": [
+          55,
+          225
+        ]
+      },
+      "turns": 24,
+      "upgradeOffers": 7,
+      "rentVisits": 4,
+      "construction": 1
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 41,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            17200,
+            14500
+          ],
+          "net": [
+            24200,
+            24400
+          ],
+          "owned": 10,
+          "levels": 2,
+          "zeroLevel": 8,
+          "points": [
+            155,
+            10
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            21128,
+            16852
+          ],
+          "net": [
+            28628,
+            31002
+          ],
+          "owned": 11,
+          "levels": 8,
+          "zeroLevel": 5,
+          "points": [
+            60,
+            135
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            19353,
+            17807
+          ],
+          "net": [
+            29653,
+            32707
+          ],
+          "owned": 11,
+          "levels": 11,
+          "zeroLevel": 4,
+          "points": [
+            120,
+            105
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          19353,
+          18007
+        ],
+        "net": [
+          29653,
+          33407
+        ],
+        "owned": 11,
+        "levels": 12,
+        "zeroLevel": 4,
+        "points": [
+          90,
+          95
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 3,
+      "rentVisits": 3,
+      "construction": 5
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 73,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            20700,
+            11300
+          ],
+          "net": [
+            25900,
+            21800
+          ],
+          "owned": 9,
+          "levels": 4,
+          "zeroLevel": 6,
+          "points": [
+            55,
+            40
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            17712,
+            10338
+          ],
+          "net": [
+            26112,
+            24438
+          ],
+          "owned": 11,
+          "levels": 8,
+          "zeroLevel": 5,
+          "points": [
+            10,
+            70
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            14909,
+            12191
+          ],
+          "net": [
+            25909,
+            26291
+          ],
+          "owned": 12,
+          "levels": 9,
+          "zeroLevel": 7,
+          "points": [
+            50,
+            135
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          17509,
+          11281
+        ],
+        "net": [
+          28509,
+          26781
+        ],
+        "owned": 12,
+        "levels": 10,
+        "zeroLevel": 6,
+        "points": [
+          140,
+          125
+        ]
+      },
+      "turns": 29,
+      "upgradeOffers": 3,
+      "rentVisits": 5,
+      "construction": 8
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 101,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            15892,
+            16768
+          ],
+          "net": [
+            23892,
+            25768
+          ],
+          "owned": 10,
+          "levels": 2,
+          "zeroLevel": 9,
+          "points": [
+            0,
+            265
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            13692,
+            17868
+          ],
+          "net": [
+            23892,
+            32068
+          ],
+          "owned": 12,
+          "levels": 6,
+          "zeroLevel": 8,
+          "points": [
+            25,
+            330
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            10678,
+            22932
+          ],
+          "net": [
+            25478,
+            40882
+          ],
+          "owned": 13,
+          "levels": 15,
+          "zeroLevel": 6,
+          "points": [
+            190,
+            275
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          10678,
+          22632
+        ],
+        "net": [
+          25478,
+          41582
+        ],
+        "owned": 13,
+        "levels": 16,
+        "zeroLevel": 5,
+        "points": [
+          190,
+          265
+        ]
+      },
+      "turns": 24,
+      "upgradeOffers": 4,
+      "rentVisits": 4,
+      "construction": 5
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 211,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            17700,
+            17400
+          ],
+          "net": [
+            24700,
+            39400
+          ],
+          "owned": 13,
+          "levels": 8,
+          "zeroLevel": 6,
+          "points": [
+            200,
+            280
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            12636,
+            20100
+          ],
+          "net": [
+            22786,
+            44100
+          ],
+          "owned": 14,
+          "levels": 14,
+          "zeroLevel": 2,
+          "points": [
+            120,
+            400
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          13855,
+          21964
+        ],
+        "net": [
+          24005,
+          49664
+        ],
+        "owned": 15,
+        "levels": 16,
+        "zeroLevel": 2,
+        "points": [
+          120,
+          490
+        ]
+      },
+      "turns": 20,
+      "upgradeOffers": 6,
+      "rentVisits": 1,
+      "construction": 3
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 314,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            21843,
+            19030
+          ],
+          "net": [
+            23843,
+            24230
+          ],
+          "owned": 6,
+          "levels": 0,
+          "zeroLevel": 6,
+          "points": [
+            45,
+            225
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            22047,
+            17657
+          ],
+          "net": [
+            24047,
+            25057
+          ],
+          "owned": 7,
+          "levels": 0,
+          "zeroLevel": 7,
+          "points": [
+            0,
+            190
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            22747,
+            19491
+          ],
+          "net": [
+            24747,
+            29391
+          ],
+          "owned": 8,
+          "levels": 3,
+          "zeroLevel": 5,
+          "points": [
+            0,
+            120
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          22747,
+          19191
+        ],
+        "net": [
+          26347,
+          30691
+        ],
+        "owned": 10,
+        "levels": 3,
+        "zeroLevel": 7,
+        "points": [
+          0,
+          80
+        ]
+      },
+      "turns": 23,
+      "upgradeOffers": 3,
+      "rentVisits": 3,
+      "construction": 0
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 509,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            15900,
+            15400
+          ],
+          "net": [
+            23500,
+            24100
+          ],
+          "owned": 10,
+          "levels": 3,
+          "zeroLevel": 8,
+          "points": [
+            145,
+            35
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            7866,
+            15650
+          ],
+          "net": [
+            21866,
+            27300
+          ],
+          "owned": 13,
+          "levels": 6,
+          "zeroLevel": 9,
+          "points": [
+            415,
+            65
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            7666,
+            19250
+          ],
+          "net": [
+            24766,
+            34900
+          ],
+          "owned": 14,
+          "levels": 15,
+          "zeroLevel": 6,
+          "points": [
+            405,
+            185
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          7666,
+          19250
+        ],
+        "net": [
+          24766,
+          34900
+        ],
+        "owned": 14,
+        "levels": 15,
+        "zeroLevel": 6,
+        "points": [
+          435,
+          185
+        ]
+      },
+      "turns": 24,
+      "upgradeOffers": 7,
+      "rentVisits": 0,
+      "construction": 4
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 811,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18665,
+            17135
+          ],
+          "net": [
+            19665,
+            19135
+          ],
+          "owned": 3,
+          "levels": 0,
+          "zeroLevel": 3,
+          "points": [
+            75,
+            25
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            20915,
+            10785
+          ],
+          "net": [
+            27315,
+            20635
+          ],
+          "owned": 8,
+          "levels": 3,
+          "zeroLevel": 5,
+          "points": [
+            0,
+            105
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            18963,
+            9427
+          ],
+          "net": [
+            27363,
+            24227
+          ],
+          "owned": 11,
+          "levels": 8,
+          "zeroLevel": 5,
+          "points": [
+            70,
+            145
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          17963,
+          8684
+        ],
+        "net": [
+          27363,
+          23984
+        ],
+        "owned": 12,
+        "levels": 9,
+        "zeroLevel": 6,
+        "points": [
+          25,
+          255
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 3,
+      "rentVisits": 3,
+      "construction": 5
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 1201,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            14627,
+            15690
+          ],
+          "net": [
+            26927,
+            19690
+          ],
+          "owned": 9,
+          "levels": 4,
+          "zeroLevel": 5,
+          "points": [
+            340,
+            60
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            6713,
+            18503
+          ],
+          "net": [
+            27813,
+            23503
+          ],
+          "owned": 12,
+          "levels": 8,
+          "zeroLevel": 7,
+          "points": [
+            495,
+            0
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          6713,
+          18503
+        ],
+        "net": [
+          27813,
+          23503
+        ],
+        "owned": 12,
+        "levels": 8,
+        "zeroLevel": 7,
+        "points": [
+          495,
+          30
+        ]
+      },
+      "turns": 22,
+      "upgradeOffers": 4,
+      "rentVisits": 5,
+      "construction": 0
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 2027,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            16816,
+            17724
+          ],
+          "net": [
+            17816,
+            34124
+          ],
+          "owned": 9,
+          "levels": 9,
+          "zeroLevel": 4,
+          "points": [
+            55,
+            60
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            14466,
+            18924
+          ],
+          "net": [
+            27866,
+            35824
+          ],
+          "owned": 12,
+          "levels": 16,
+          "zeroLevel": 4,
+          "points": [
+            55,
+            60
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            14488,
+            17402
+          ],
+          "net": [
+            28888,
+            37502
+          ],
+          "owned": 13,
+          "levels": 20,
+          "zeroLevel": 3,
+          "points": [
+            20,
+            60
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          14488,
+          17402
+        ],
+        "net": [
+          28888,
+          37502
+        ],
+        "owned": 13,
+        "levels": 20,
+        "zeroLevel": 3,
+        "points": [
+          20,
+          45
+        ]
+      },
+      "turns": 21,
+      "upgradeOffers": 6,
+      "rentVisits": 3,
+      "construction": 1
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 4093,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18342,
+            15462
+          ],
+          "net": [
+            28942,
+            25362
+          ],
+          "owned": 10,
+          "levels": 7,
+          "zeroLevel": 6,
+          "points": [
+            260,
+            70
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            18780,
+            15414
+          ],
+          "net": [
+            32980,
+            28214
+          ],
+          "owned": 11,
+          "levels": 13,
+          "zeroLevel": 4,
+          "points": [
+            250,
+            110
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            22962,
+            14022
+          ],
+          "net": [
+            39162,
+            30822
+          ],
+          "owned": 12,
+          "levels": 18,
+          "zeroLevel": 4,
+          "points": [
+            210,
+            125
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          22962,
+          14722
+        ],
+        "net": [
+          39162,
+          31522
+        ],
+        "owned": 12,
+        "levels": 18,
+        "zeroLevel": 4,
+        "points": [
+          180,
+          105
+        ]
+      },
+      "turns": 32,
+      "upgradeOffers": 8,
+      "rentVisits": 4,
+      "construction": 5
+    },
+    {
+      "mapId": "shanhai-highland",
+      "seed": 7132,
+      "rounds": [
+        {
+          "round": 1,
+          "cash": [
+            16000,
+            16000
+          ],
+          "net": [
+            16000,
+            16000
+          ],
+          "owned": 0,
+          "levels": 0,
+          "zeroLevel": 0,
+          "points": [
+            120,
+            120
+          ]
+        },
+        {
+          "round": 8,
+          "cash": [
+            18795,
+            16315
+          ],
+          "net": [
+            26395,
+            24165
+          ],
+          "owned": 9,
+          "levels": 4,
+          "zeroLevel": 6,
+          "points": [
+            145,
+            0
+          ]
+        },
+        {
+          "round": 12,
+          "cash": [
+            20977,
+            14383
+          ],
+          "net": [
+            28577,
+            26433
+          ],
+          "owned": 10,
+          "levels": 6,
+          "zeroLevel": 6,
+          "points": [
+            190,
+            235
+          ]
+        },
+        {
+          "round": 16,
+          "cash": [
+            20070,
+            18890
+          ],
+          "net": [
+            27670,
+            32940
+          ],
+          "owned": 10,
+          "levels": 10,
+          "zeroLevel": 5,
+          "points": [
+            210,
+            300
+          ]
+        }
+      ],
+      "final": {
+        "round": 16,
+        "cash": [
+          19254,
+          19906
+        ],
+        "net": [
+          27354,
+          38156
+        ],
+        "owned": 11,
+        "levels": 13,
+        "zeroLevel": 4,
+        "points": [
+          300,
+          290
+        ]
+      },
+      "turns": 26,
+      "upgradeOffers": 4,
+      "rentVisits": 5,
+      "construction": 3
+    }
+  ]
+}

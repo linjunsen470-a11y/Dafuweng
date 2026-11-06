@@ -1,0 +1,14 @@
+{
+  "kind": "garden map interaction with a disclosed mixed-ownership save fixture",
+  "checks": [
+    "Mixed-ownership save fixture: preview marks 11/12/13/14, matches each row to the map, explains enemy and mortgaged plots, changes no gameplay state and has no overlapping number labels.",
+    "Real ¥300 conversion refreshes the map from hypothetical to active, with current rent and exact contribution; opening the map from the ledger closes the modal.",
+    "Closing and reopening removes old marks and labels, restores the camera and never accumulates duplicate geometry.",
+    "At 390px map numbers remain separated, the explanation is below the board with no horizontal overflow, and the close button stays reachable after scrolling a long ledger.",
+    "Reload retains the real park and property ownership, starts with the optional view closed, and reopening recomputes the same active influence without new save fields.",
+    "Actual canvas clicks select the matching numbered plot; rotation keeps labels apart; ordinary property details show ¥1140 current rent including ¥190 garden contribution and link back to that map selection.",
+    "Starting an ordinary dice action automatically closes the inspection view and restores the normal scene without blocking the turn."
+  ],
+  "errors": [],
+  "success": true
+}

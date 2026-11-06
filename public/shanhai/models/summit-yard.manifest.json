@@ -1,0 +1,17 @@
+{
+  "asset": "summit-yard.glb",
+  "generator": "scripts/art/create_summit_yard.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "models": [
+    {
+      "prefab": "company_summit_yard",
+      "triangles": 276,
+      "size_xyz_blender": [
+        3.799999952316284,
+        3.200000047683716,
+        3.3315744400024414
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+PASS: gesture gating, one-time fetch, independent controls, throttling, visibility silence, disposal, map track/fallback, new event cues, zero volume
+PASS: three action cues, zero-volume tail stop, blocked playback and later gesture recovery without reloading effects

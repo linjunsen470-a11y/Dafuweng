@@ -1,0 +1,137 @@
+{
+  "actions": [
+    {
+      "round": 1,
+      "tile": 0,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 2,
+      "tile": 5,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 2,
+      "tile": 5,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 2,
+      "tile": 11,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 3,
+      "tile": 11,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 3,
+      "tile": 12,
+      "action": "[data-route=\"13\"]"
+    },
+    {
+      "round": 3,
+      "tile": 12,
+      "action": "[data-route=\"13\"]"
+    },
+    {
+      "round": 4,
+      "tile": 14,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 5,
+      "tile": 17,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 5,
+      "tile": 23,
+      "action": "#btn-land-buy"
+    },
+    {
+      "round": 6,
+      "tile": 23,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 7,
+      "tile": 27,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 7,
+      "tile": 32,
+      "action": "#stock-modal-close"
+    },
+    {
+      "round": 8,
+      "tile": 32,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 8,
+      "tile": 32,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 8,
+      "tile": 36,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "round": 8,
+      "tile": 36,
+      "action": "[data-route=\"37\"]"
+    }
+  ],
+  "errors": [],
+  "checkpoints": [
+    {
+      "region": "harbor",
+      "round": 1,
+      "tile": 0
+    },
+    {
+      "region": "old-town",
+      "round": 8,
+      "tile": 32
+    }
+  ],
+  "limits": [
+    "Started through the real setup UI with default four-player standard game; only the built-in 2x speed chosen. No forced dice, teleport, money, god or route-state edits.",
+    "Automated clicks on visible UI with conservative purchasing; browser software WebGL, no subjective audio acceptance."
+  ],
+  "failure": "Error: Node is detached from document\n    at CdpElementHandle.assertConnectedElement (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:1300:23)\n    at async CdpElementHandle.scrollIntoView (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/ElementHandle.js:104:13)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:118:20)\n    at async CdpElementHandle.scrollIntoViewIfNeeded (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:1312:13)\n    at async CdpElementHandle.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:721:13)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:129:24)\n    at async CdpFrame.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:749:17)\n    at async file:///workspace/dafuweng-cloud/test-city-continuity-walk.js:21:60"
+}

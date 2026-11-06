@@ -1,0 +1,100 @@
+{
+  "dice.wav": {
+    "seconds": 0.62,
+    "peak": 0.3012886047363281,
+    "rms": 0.02569509670138359,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "event-fail.wav": {
+    "seconds": 0.55,
+    "peak": 0.3139771521091461,
+    "rms": 0.11048292368650436,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "event-success.wav": {
+    "seconds": 0.55,
+    "peak": 0.528603732585907,
+    "rms": 0.163827046751976,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "event.wav": {
+    "seconds": 0.48,
+    "peak": 0.31529349088668823,
+    "rms": 0.11380203068256378,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "maple-tea-waltz.mp3": {
+    "seconds": 37.89475,
+    "peak": 0.6269917488098145,
+    "rms": 0.14386878907680511,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0021636411547660828
+  },
+  "maple-tea-waltz.ogg": {
+    "seconds": 37.89475,
+    "peak": 0.6681337952613831,
+    "rms": 0.15178829431533813,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0023642852902412415
+  },
+  "purchase.wav": {
+    "seconds": 0.48,
+    "peak": 0.5654825568199158,
+    "rms": 0.17475473880767822,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "rent.wav": {
+    "seconds": 0.55,
+    "peak": 0.3393974304199219,
+    "rms": 0.09253519028425217,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "saltwind-promenade.mp3": {
+    "seconds": 43.636375,
+    "peak": 0.7550265789031982,
+    "rms": 0.12319362908601761,
+    "clippedSamples": 0,
+    "endpointDelta": 0.009739663451910019
+  },
+  "saltwind-promenade.ogg": {
+    "seconds": 43.636375,
+    "peak": 0.7512328624725342,
+    "rms": 0.12991108000278473,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0033286213874816895
+  },
+  "step.wav": {
+    "seconds": 0.12,
+    "peak": 0.19701796770095825,
+    "rms": 0.022725079208612442,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "turn.wav": {
+    "seconds": 0.6,
+    "peak": 0.3111071288585663,
+    "rms": 0.08698409795761108,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "upgrade.wav": {
+    "seconds": 0.85,
+    "peak": 0.4595935046672821,
+    "rms": 0.10155851393938065,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  },
+  "win.wav": {
+    "seconds": 1.4,
+    "peak": 0.4595935046672821,
+    "rms": 0.12384117394685745,
+    "clippedSamples": 0,
+    "endpointDelta": 0.0
+  }
+}

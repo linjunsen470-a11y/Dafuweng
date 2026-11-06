@@ -64,6 +64,7 @@ describe('card effect registry contract', () => {
       case 'REMOTE_DICE': expect(result.followUp).toMatchObject({ mode: 'ROLL', steps: 3 }); break;
       case 'OBSTACLE': expect(engine.state.propertyManager.getProperty(target).hasObstacle).toBe(true); break;
       case 'TURN_AROUND': expect(engine.state.players[target].direction).toBe(-1); break;
+      case 'SWAP_STOPS': expect(player.currentTile).toBe(0); expect(opponent.currentTile).toBe(1); expect(opponent.cash).toBe(opponentCashBefore); break;
       case 'DEMOLISH': expect(engine.state.propertyManager.getProperty(target).level).toBe(0); break;
       case 'EQUAL_WEALTH': expect(player.cash).toBe(opponent.cash); break;
       case 'STEAL_LAND': expect(engine.state.propertyManager.getProperty(target).owner).toBe(player.id); break;

@@ -1,0 +1,106 @@
+{
+  "models": [
+    {
+      "kind": "courier",
+      "bytes": 712848,
+      "addedBytes": 86208,
+      "expandedFacePositionBytes": 217584
+    },
+    {
+      "kind": "botanist",
+      "bytes": 766304,
+      "addedBytes": 86572,
+      "expandedFacePositionBytes": 211356
+    },
+    {
+      "kind": "cartographer",
+      "bytes": 781600,
+      "addedBytes": 86572,
+      "expandedFacePositionBytes": 265140
+    }
+  ],
+  "portraits": [
+    {
+      "file": "ayu-concern.png",
+      "bytes": 98129,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "ayu-happy.png",
+      "bytes": 98356,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "ayu-surprise.png",
+      "bytes": 98481,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "qinghe-concern.png",
+      "bytes": 99195,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "qinghe-happy.png",
+      "bytes": 99664,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "qinghe-surprise.png",
+      "bytes": 99456,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "xingluo-concern.png",
+      "bytes": 96619,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "xingluo-happy.png",
+      "bytes": 96832,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "file": "xingluo-surprise.png",
+      "bytes": 97082,
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA"
+    }
+  ],
+  "noNewTrianglesOrDrawCalls": true
+}

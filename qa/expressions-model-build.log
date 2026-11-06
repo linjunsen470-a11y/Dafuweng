@@ -1,0 +1,44 @@
+[
+  {
+    "file": "character-courier.glb",
+    "bytes": 712848,
+    "originalDrawCalls": 70,
+    "drawCallsPerNormalPass": 28,
+    "meshCount": 6,
+    "triangles": 16172,
+    "maxWorldVertexError": 2.60770320892334e-08,
+    "facialTargets": [
+      "happy",
+      "concern",
+      "surprise"
+    ]
+  },
+  {
+    "file": "character-botanist.glb",
+    "bytes": 766304,
+    "originalDrawCalls": 83,
+    "drawCallsPerNormalPass": 28,
+    "meshCount": 6,
+    "triangles": 18476,
+    "maxWorldVertexError": 2.9802322387695312e-08,
+    "facialTargets": [
+      "happy",
+      "concern",
+      "surprise"
+    ]
+  },
+  {
+    "file": "character-cartographer.glb",
+    "bytes": 781600,
+    "originalDrawCalls": 105,
+    "drawCallsPerNormalPass": 28,
+    "meshCount": 6,
+    "triangles": 18160,
+    "maxWorldVertexError": 2.9802322387695312e-08,
+    "facialTargets": [
+      "happy",
+      "concern",
+      "surprise"
+    ]
+  }
+]

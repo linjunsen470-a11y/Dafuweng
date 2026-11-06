@@ -1,0 +1,17 @@
+{
+  "kind": "regional docks and waiting neighbors",
+  "checks": [
+    "At starting dock, both original conversations work and trigger a wave without changing the complete gameplay snapshot; remote neighbors remain preview-only.",
+    "All three distinct original docks render in close-up; clicking the garden resident on the real WebGL canvas opens the correct neighbor.",
+    "390px conversation and ticket buttons fit; reduced motion keeps residents still, and dock geometry adds at most nine visible draw calls.",
+    "Conversation leads into the unchanged ticket purchase: exactly ¥650, ordinary arrival at tile 9, then AI completes its normal turn.",
+    "Older save resumes unchanged at tile 1; remote dock conversations remain correctly unavailable."
+  ],
+  "errors": [],
+  "drawCalls": {
+    "withDocks": 173,
+    "withoutDocks": 164,
+    "added": 9
+  },
+  "success": true
+}

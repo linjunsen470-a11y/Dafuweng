@@ -1,0 +1,28 @@
+
+ RUN  v4.1.10 /workspace/dafuweng-cloud
+
+ ❯ city-characters.test.js (5 tests | 1 failed) 137ms
+   × alternates arms against legs and resets all motion for reduced/idle poses 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  city-characters.test.js > alternates arms against legs and resets all motion for reduced/idle poses
+AssertionError: expected -0 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ -0
+
+ ❯ city-characters.test.js:9:398
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 6 passed (7)
+   Start at  15:16:23
+   Duration  924ms (transform 552ms, setup 0ms, import 891ms, tests 147ms, environment 0ms)
+

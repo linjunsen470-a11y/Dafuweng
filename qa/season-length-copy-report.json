@@ -1,0 +1,15 @@
+{
+  "copyOnly": true,
+  "checks": [
+    {
+      "mapId": "shanhai-coast",
+      "finalCopyAndLayout": true
+    },
+    {
+      "mapId": "shanhai-highland",
+      "finalCopyAndLayout": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

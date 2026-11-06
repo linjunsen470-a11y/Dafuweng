@@ -1,5 +1,6 @@
 import { BOARD_TILES, TileType } from './BoardData.js';
 import { GRAND_BAY_MAP } from './GrandMapData.js';
+import { SHANHAI_COAST_MAP, SHANHAI_HIGHLAND_MAP } from '../shanhai/SliceMap.js';
 
 function loopPosition(index) {
   const step = 4.4;
@@ -205,5 +206,7 @@ export { GRAND_BAY_MAP };
 export const MAP_DEFINITIONS = [GRAND_BAY_MAP, FORTUNE_CROSSROADS_MAP, CITY_LOOP_MAP, ISLAND_FORK_MAP, TAIWAN_MAP];
 
 export function getMapDefinition(mapId = CITY_LOOP_MAP.id) {
+  if (mapId === SHANHAI_HIGHLAND_MAP.id) return SHANHAI_HIGHLAND_MAP;
+  if (mapId === SHANHAI_COAST_MAP.id) return SHANHAI_COAST_MAP;
   return MAP_DEFINITIONS.find(map => map.id === mapId) || CITY_LOOP_MAP;
 }

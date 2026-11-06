@@ -1,0 +1,359 @@
+6:21:33 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+6:21:35 AM [vite] (client) [optimizer] bundling dependencies...
+{"tile":23,"round":1,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":true}
+{"tile":23,"round":1,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{"tile":23,"round":1,"phase":"ROLLING","who":0,"busy":true,"banner":false}
+{"tile":24,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":25,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":26,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":27,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":28,"round":1,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false,"action":".magic-house-cancel"}
+{"tile":29,"round":1,"phase":"ROLLING","who":1,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"ROLLING","who":1,"busy":true,"banner":true}
+{"tile":29,"round":1,"phase":"ROLLING","who":1,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"LANDING_ACTION","who":1,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"PRE_ROLL_ACTION","who":2,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"ROLLING","who":2,"busy":true,"banner":true}
+{"tile":29,"round":1,"phase":"ROLLING","who":2,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"LANDING_ACTION","who":2,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"ROLLING","who":3,"busy":true,"banner":true}
+{"tile":29,"round":1,"phase":"ROLLING","who":3,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"MOVING","who":3,"busy":true,"banner":false}
+{"tile":29,"round":1,"phase":"LANDING_ACTION","who":3,"busy":true,"banner":false}
+{"tile":29,"round":2,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":true}
+{"tile":29,"round":2,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{"tile":29,"round":2,"phase":"ROLLING","who":0,"busy":true,"banner":false}
+{"tile":31,"round":2,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":32,"round":2,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":33,"round":2,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":34,"round":2,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false}
+{"tile":34,"round":3,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{"tile":34,"round":3,"phase":"ROLLING","who":0,"busy":true,"banner":false}
+{"tile":35,"round":3,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":36,"round":3,"phase":"MOVING","who":0,"busy":true,"banner":false}
+{"tile":36,"round":3,"phase":"ROUTE_CHOICE","who":0,"busy":true,"banner":false,"action":"[data-route=\"37\"]"}
+{"tile":37,"round":3,"phase":"MOVING","who":0,"busy":true,"banner":false,"action":"[data-route=\"37\"]"}
+{"tile":38,"round":3,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false}
+{"tile":38,"round":3,"phase":"LANDING_ACTION","who":0,"busy":true,"banner":false,"action":"#btn-land-buy"}
+{"tile":38,"round":4,"phase":"PRE_ROLL_ACTION","who":0,"busy":false,"banner":false}
+{
+  "steps": [
+    {
+      "tile": 23,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 23,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 23,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 24,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 25,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 26,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 27,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 28,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": ".magic-house-cancel"
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 2,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 2,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 2,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 2,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 31,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 32,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 33,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 34,
+      "round": 2,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 34,
+      "round": 3,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 34,
+      "round": 3,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 35,
+      "round": 3,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 36,
+      "round": 3,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 36,
+      "round": 3,
+      "phase": "ROUTE_CHOICE",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "tile": 37,
+      "round": 3,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "tile": 38,
+      "round": 3,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 38,
+      "round": 3,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "#btn-land-buy"
+    },
+    {
+      "tile": 38,
+      "round": 4,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Continuous UI play from a prepared four-player save at harbor tile 23; normal random dice and AI, not a whole game from the title screen."
+  ],
+  "reachedOldTown": 38,
+  "rolls": 4,
+  "failure": "TypeError: Cannot read properties of undefined (reading 'slice')\n    at evaluate (evaluate at file:///workspace/dafuweng-cloud/test-old-town-walk.js:8:41, <anonymous>:0:153)\n    at #evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:388:19)\n    at async ExecutionContext.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:274:16)\n    at async IsolatedWorld.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/IsolatedWorld.js:102:16)\n    at async CdpFrame.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:359:20)\n    at async CdpPage.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:826:20)\n    at async file:///workspace/dafuweng-cloud/test-old-town-walk.js:8:33"
+}

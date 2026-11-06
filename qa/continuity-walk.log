@@ -1,0 +1,100 @@
+{"round":1,"tile":0,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":0,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":2,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":1,"tile":3,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":1,"tile":4,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":1,"tile":5,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":2,"tile":5,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-property is-visible"]}
+{"round":2,"tile":5,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-property is-visible"]}
+{"round":2,"tile":5,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":2,"tile":5,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":2,"tile":6,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":2,"tile":7,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":2,"tile":8,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":2,"tile":9,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":2,"tile":10,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":2,"tile":11,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":2,"tile":11,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":2,"tile":11,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":3,"tile":11,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":3,"tile":11,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":3,"tile":11,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":3,"tile":12,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"13\"]",".route-plan"],"blockers":["modal route-choice-overlay"]}
+{"round":3,"tile":12,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"13\"]",".route-plan"],"blockers":["modal route-choice-overlay is-visible"]}
+{"round":3,"tile":13,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":3,"tile":14,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":4,"tile":14,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":4,"tile":14,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":4,"tile":14,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":4,"tile":15,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":4,"tile":16,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":4,"tile":17,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":5,"tile":17,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-city is-visible"]}
+{"round":5,"tile":17,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-city is-visible"]}
+{"round":5,"tile":17,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".economic-report-close"],"blockers":["modal economic-report-overlay is-visible"]}
+{"round":5,"tile":17,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":5,"tile":17,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":5,"tile":18,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":5,"tile":19,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":5,"tile":20,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":5,"tile":21,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":5,"tile":22,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":5,"tile":23,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":5,"tile":23,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":5,"tile":23,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":6,"tile":23,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":6,"tile":23,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":6,"tile":23,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":6,"tile":25,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":6,"tile":26,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":6,"tile":27,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":27,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":27,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":27,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":28,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":7,"tile":29,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":7,"tile":30,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":7,"tile":31,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":0,"phase":"LANDING_ACTION","actions":["#stock-modal-close"],"blockers":["modal"]}
+{"round":7,"tile":32,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":7,"tile":32,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":32,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":8,"tile":32,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":32,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":32,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":8,"tile":33,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":34,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":35,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":36,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":36,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"37\"]",".route-plan"],"blockers":["modal route-choice-overlay"]}
+{"round":8,"tile":36,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"37\"]",".route-plan"],"blockers":["modal route-choice-overlay is-visible"]}
+{"failure":"Error: Node is detached from document\n    at CdpElementHandle.assertConnectedElement (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:1300:23)\n    at async CdpElementHandle.scrollIntoView (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/ElementHandle.js:104:13)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:118:20)\n    at async CdpElementHandle.scrollIntoViewIfNeeded (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:1312:13)\n    at async CdpElementHandle.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:721:13)\n    at async CdpElementHandle.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/ElementHandle.js:129:24)\n    at async CdpFrame.click (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:749:17)\n    at async file:///workspace/dafuweng-cloud/test-city-continuity-walk.js:21:60","checkpoints":[{"region":"harbor","round":1,"tile":0},{"region":"old-town","round":8,"tile":32}],"errors":[]}

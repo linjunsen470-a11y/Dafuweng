@@ -1,0 +1,125 @@
+{
+  "asset": "buildings.glb",
+  "generator": "scripts/art/create_shanhai_buildings.py",
+  "license": "Original project artwork. No third-party models, textures, fonts or game assets. Project owner may use, modify and redistribute.",
+  "axes": "GLB Y-up; front faces +Z; origin at ground center",
+  "prefabs": [
+    {
+      "name": "property_level0",
+      "triangles": 1200,
+      "size_xyz_blender": [
+        2.25,
+        2.0,
+        0.545
+      ]
+    },
+    {
+      "name": "property_level1",
+      "triangles": 3924,
+      "size_xyz_blender": [
+        2.25,
+        2.0,
+        1.62
+      ]
+    },
+    {
+      "name": "property_level2",
+      "triangles": 8936,
+      "size_xyz_blender": [
+        2.25,
+        2.178,
+        2.23
+      ]
+    },
+    {
+      "name": "property_level3",
+      "triangles": 10400,
+      "size_xyz_blender": [
+        2.25,
+        2.155,
+        2.91
+      ]
+    },
+    {
+      "name": "property_level4",
+      "triangles": 11732,
+      "size_xyz_blender": [
+        2.25,
+        2.207,
+        3.7
+      ]
+    },
+    {
+      "name": "market",
+      "triangles": 7876,
+      "size_xyz_blender": [
+        2.95,
+        2.615,
+        2.67
+      ]
+    },
+    {
+      "name": "lighthouse",
+      "triangles": 2352,
+      "size_xyz_blender": [
+        1.72,
+        1.72,
+        3.99
+      ]
+    },
+    {
+      "name": "tree_round",
+      "triangles": 436,
+      "size_xyz_blender": [
+        1.528,
+        1.24,
+        2.2
+      ]
+    },
+    {
+      "name": "palm",
+      "triangles": 418,
+      "size_xyz_blender": [
+        1.977,
+        2.028,
+        1.91
+      ]
+    },
+    {
+      "name": "shrub",
+      "triangles": 240,
+      "size_xyz_blender": [
+        1.067,
+        0.86,
+        0.72
+      ]
+    },
+    {
+      "name": "flower_planter",
+      "triangles": 228,
+      "size_xyz_blender": [
+        0.65,
+        0.238,
+        0.345
+      ]
+    },
+    {
+      "name": "bench",
+      "triangles": 1028,
+      "size_xyz_blender": [
+        1.07,
+        0.515,
+        0.8
+      ]
+    },
+    {
+      "name": "streetlight",
+      "triangles": 256,
+      "size_xyz_blender": [
+        0.44,
+        0.44,
+        1.97
+      ]
+    }
+  ]
+}

@@ -12,3 +12,17 @@ test_step*.png
 /scripts/*
 !/scripts/generate-offline-manifest.mjs
 !/scripts/simulate-matrix.mjs
+
+# Reproducible original coastal chapter sources
+!/scripts/art/
+!/scripts/art/**
+!/scripts/audio/
+!/scripts/audio/**
+qa/*.png
+qa/*.json
+
+/dist-shanhai/
+!/scripts/build-shanhai.mjs
+!/scripts/inspect-shanhai-scene.mjs
+
+!/scripts/simulate-shanhai.mjs

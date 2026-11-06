@@ -1,0 +1,49 @@
+{
+  "checks": [
+    {
+      "loadedOriginalFacilities": [
+        {
+          "id": 7,
+          "model": "market_clock_gallery",
+          "position": [
+            -22,
+            0.22,
+            23.2
+          ],
+          "static": true
+        },
+        {
+          "id": 9,
+          "model": "harbor_lottery",
+          "position": [
+            -14,
+            0.22,
+            23.2
+          ],
+          "static": true
+        },
+        {
+          "id": 12,
+          "model": "harbor_bank",
+          "position": [
+            -3,
+            0.22,
+            21.6
+          ],
+          "static": true
+        }
+      ],
+      "legacySnapshotUnchanged": true
+    },
+    "Tile 7 real roll opens its discounted card offer; exchange consumes points and adds a card",
+    "Tile 9 real roll opens lottery; choosing 3 and buying records the ticket",
+    "390px: original HUD controls accessible; tile 12 bank deposits 1000 into the existing account",
+    "Bank tile 12 retains both original route choices; selecting inland 84 moves the pawn there"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared four-player saves one step before each existing facility; actual roll/dialog/transaction, not a full natural match.",
+    "390px Chromium touch viewport with software WebGL, not a physical phone, FPS or subjective audio test."
+  ],
+  "success": true
+}

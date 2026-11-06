@@ -1,0 +1,517 @@
+{
+  "checks": [
+    "Desktop: actual saved west-return view, new mechanism and stock buildings, two existing residential plots; state unchanged",
+    "Desktop: same-round natural news fully shown in one report, scroll/close/reopen work, entire snapshot unchanged",
+    "Mobile: actual saved west-return view, new mechanism and stock buildings, two existing residential plots; state unchanged",
+    "Mobile: same-round natural news fully shown in one report, scroll/close/reopen work, entire snapshot unchanged"
+  ],
+  "errors": [],
+  "branches": [
+    {
+      "fork": 12,
+      "end": 95,
+      "join": 24,
+      "joined": true,
+      "commands": [
+        {
+          "command": "ROLL_DICE",
+          "player": 0,
+          "tile": 12,
+          "result": "DICE_ROLLED",
+          "steps": 16,
+          "success": true
+        },
+        {
+          "command": "BEGIN_MOVE",
+          "player": 0,
+          "tile": 12,
+          "result": "MOVE_STARTED",
+          "steps": 16,
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 12,
+          "result": "ROUTE_CHOICE_REQUIRED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 84,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 85,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 86,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 87,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 88,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 89,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 90,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 91,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 92,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 93,
+          "result": "PROPERTY_CHANGED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 94,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 95,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 24,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 25,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 26,
+          "result": "BOARD_GOD_COLLECTED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 27,
+          "result": "MOVEMENT_FINISHED",
+          "success": true
+        },
+        {
+          "command": "RESOLVE_LANDING",
+          "player": 0,
+          "tile": 27,
+          "result": "COUPON_COLLECTED",
+          "success": true
+        },
+        {
+          "command": "END_TURN",
+          "player": 0,
+          "tile": 27,
+          "result": "TURN_CHANGED",
+          "success": true
+        },
+        {
+          "command": "SELECT_DICE_COUNT",
+          "player": 1,
+          "tile": 0,
+          "result": "DICE_COUNT_SELECTED",
+          "success": true
+        },
+        {
+          "command": "BUY_ITEM",
+          "player": 1,
+          "tile": 0,
+          "result": "INVENTORY_CHANGED",
+          "success": true
+        },
+        {
+          "command": "USE_ITEM",
+          "player": 1,
+          "tile": 0,
+          "result": "ITEM_USED",
+          "success": true
+        },
+        {
+          "command": "BUY_CARD",
+          "player": 1,
+          "tile": 0,
+          "result": "CARD_BOUGHT",
+          "success": true
+        },
+        {
+          "command": "USE_CARD",
+          "player": 1,
+          "tile": 0,
+          "result": "CARD_USED",
+          "success": true
+        },
+        {
+          "command": "BUY_STOCK",
+          "player": 1,
+          "tile": 0,
+          "result": "STOCK_BOUGHT",
+          "success": true
+        },
+        {
+          "command": "SET_COMPANY_POLICY",
+          "player": 1,
+          "tile": 0,
+          "result": "COMPANY_POLICY_SET",
+          "success": true
+        },
+        {
+          "command": "ROLL_DICE",
+          "player": 1,
+          "tile": 0,
+          "result": "DICE_ROLLED",
+          "steps": 6,
+          "success": true
+        }
+      ]
+    },
+    {
+      "fork": 36,
+      "end": 107,
+      "join": 48,
+      "joined": true,
+      "commands": [
+        {
+          "command": "ROLL_DICE",
+          "player": 0,
+          "tile": 36,
+          "result": "DICE_ROLLED",
+          "steps": 16,
+          "success": true
+        },
+        {
+          "command": "BEGIN_MOVE",
+          "player": 0,
+          "tile": 36,
+          "result": "MOVE_STARTED",
+          "steps": 16,
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 36,
+          "result": "ROUTE_CHOICE_REQUIRED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 96,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 97,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 98,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 99,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 100,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 101,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 102,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 103,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 104,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 105,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 106,
+          "result": "BOARD_GOD_COLLECTED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 107,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 48,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 49,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 50,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 51,
+          "result": "MOVEMENT_FINISHED",
+          "success": true
+        }
+      ]
+    },
+    {
+      "fork": 60,
+      "end": 119,
+      "join": 72,
+      "joined": true,
+      "commands": [
+        {
+          "command": "ROLL_DICE",
+          "player": 0,
+          "tile": 60,
+          "result": "DICE_ROLLED",
+          "steps": 16,
+          "success": true
+        },
+        {
+          "command": "BEGIN_MOVE",
+          "player": 0,
+          "tile": 60,
+          "result": "MOVE_STARTED",
+          "steps": 16,
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 60,
+          "result": "ROUTE_CHOICE_REQUIRED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 108,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 109,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 110,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 111,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 112,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 113,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 114,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 115,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 116,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 117,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 118,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 119,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 72,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 73,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 74,
+          "result": "PLAYER_STEPPED",
+          "success": true
+        },
+        {
+          "command": "ADVANCE_MOVE",
+          "player": 0,
+          "tile": 75,
+          "result": "MOVEMENT_FINISHED",
+          "success": true
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Independent prepared art, news and branch fixtures, not part of the natural continuation.",
+    "Branch fixtures place a car at each existing fork; subsequent movement and choices use visible controls, no specified dice rolls.",
+    "390px Chromium software WebGL is not a physical phone."
+  ],
+  "success": true
+}

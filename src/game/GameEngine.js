@@ -6,7 +6,11 @@ import { MAX_PROPERTY_LEVEL } from './GameRules.js';
 import { validateCommand } from './CommandPolicy.js';
 import { BUILDINGS, COMPANIES, ITEMS, MAGIC_CONDITIONS, MAGIC_EFFECTS, MINIGAMES } from './ContentRegistry.js';
 import { CARD_CAPACITY, ITEM_CAPACITY } from './InventoryManager.js';
-import { clampMinigameScore } from './MinigameRules.js';
+import { clampMinigameScore, getMinigamePerformance } from './MinigameRules.js';
+import { getLotteryOffer, getLotteryPurchasePreview } from './LotteryRules.js';
+import { getBankTransferPreview } from './BankRules.js';
+import { getResearchProjectPreview } from './ResearchRules.js';
+import { getMechanismRoutePlans } from './MechanismRules.js';
 import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from './AuctionRules.js';
 import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
 import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
@@ -16,6 +20,8 @@ import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
 import { applyCommercialFacilityVisit } from './CommercialFacilityRules.js';
 import { advanceQuestsForEvent, startQuest } from './QuestRules.js';
 import { attachGod } from './GodRules.js';
+import { recordMatchCommand, recordMatchEvents } from './MatchStatistics.js';
+import { getMagicPreview, getMagicTargets } from './MagicRules.js';
 
 /**
  * Rules-facing facade. Presentation code asks this object for legal actions and
@@ -148,6 +154,7 @@ export class GameEngine {
     const rejected = validateCommand(this.state, player, command);
     if (rejected) return { ...rejected, events: [] };
 
+    const cashBefore = player.cash;
     let result;
     switch (command.type) {
       case 'PURCHASE_PROPERTY':
@@ -166,7 +173,7 @@ export class GameEngine {
         result = this.bankTransfer(player, payload.direction, payload.amount);
         break;
       case 'BUY_LOTTERY':
-        result = this.buyLottery(player, payload.number);
+        result = this.buyLottery(player, payload.numbers ?? payload.number);
         break;
       case 'CAST_MAGIC':
         result = this.castMagic(player, payload.magicId);
@@ -203,6 +210,9 @@ export class GameEngine {
         break;
       case 'START_RESEARCH':
         result = this.startResearch(player, payload.tileId, payload.itemId);
+        break;
+      case 'SET_MECHANISM_ROUTE':
+        result = this.triggerMapMechanism(player, payload.routeIndex);
         break;
       case 'START_AUCTION':
         result = this.startAuction(player, payload.tileId, payload.minimumBid);
@@ -282,6 +292,8 @@ export class GameEngine {
     const events = result.events || (result.type ? [{ type: result.type, ...result }] : []);
     const questEvents = events.flatMap(event => advanceQuestsForEvent(this.state, event, player.id));
     const allEvents = [...events, ...questEvents];
+    recordMatchCommand(this.state.matchStatistics, { playerId: player.id, commandType: command.type, result, cashBefore, cashAfter: player.cash, round: this.state.round });
+    recordMatchEvents(this.state.matchStatistics, allEvents, this.state.round);
     this.emitAll(allEvents);
     return { ...result, events: allEvents };
   }
@@ -583,12 +595,7 @@ export class GameEngine {
       this.state.addLog(`📉 ${player.name} 受到衰运影响，买地失败！`, 'danger');
       return { success: false, reason: '衰运状态禁止买地' };
     }
-    let cost = Math.round(tile.price * getModePropertyCostMultiplier(this.state.gameMode));
-    if (player.godType === 'LUCK') cost = 0;
-    else {
-      if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
-      if (hasChairmanPerk(this.state, player.id, 'BUILD')) cost = Math.round(cost * 0.85);
-    }
+    const cost = this.getPropertyActionCost(player, tileId, 'BUY');
     if (player.cash < cost) {
       this.state.addLog(`⚠️ ${player.name} 现金不足，无法购买【${tile.name}】。`, 'danger');
       return { success: false, reason: '现金不足', cost };
@@ -617,13 +624,7 @@ export class GameEngine {
       this.state.addLog(`📉 ${player.name} 受到衰运影响，升级失败！`, 'danger');
       return { success: false, reason: '衰运状态禁止升级' };
     }
-    let cost = Math.round(tile.buildCost * (building?.buildMultiplier || 1) * getModePropertyCostMultiplier(this.state.gameMode));
-    if (player.godType === 'LUCK') cost = 0;
-    else {
-      if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
-      else if (player.skillName === '商业神童') cost = Math.round(cost * 0.75);
-      if (hasChairmanPerk(this.state, player.id, 'BUILD')) cost = Math.round(cost * 0.85);
-    }
+    const cost = this.getPropertyActionCost(player, tileId, 'UPGRADE');
     if (player.cash < cost) {
       this.state.addLog(`⚠️ ${player.name} 现金不足，无法升级【${tile.name}】。`, 'danger');
       return { success: false, reason: '现金不足', cost };
@@ -633,6 +634,21 @@ export class GameEngine {
     this.state.assetRevision++;
     this.state.addLog(`✨ ${player.name} 将【${tile.name}】升级至 LV ${property.level}(花费 $${cost.toLocaleString()})！`, 'gold');
     return { success: true, type: 'PROPERTY_UPGRADED', tileId, level: property.level, cost };
+  }
+
+  getPropertyActionCost(player, tileId, action = 'BUY') {
+    const tile = this.state.getTile(tileId);
+    if (!tile || !player) return 0;
+    const property = this.state.propertyManager.getProperty(tileId);
+    const building = BUILDINGS.find(definition => definition.id === property?.buildingType);
+    let cost = action === 'UPGRADE'
+      ? Math.round((tile.buildCost || 0) * (building?.buildMultiplier || 1) * getModePropertyCostMultiplier(this.state.gameMode))
+      : Math.round((tile.price || 0) * getModePropertyCostMultiplier(this.state.gameMode));
+    if (player.godType === 'LUCK') return 0;
+    if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
+    else if (action === 'UPGRADE' && player.skillName === '商业神童') cost = Math.round(cost * 0.75);
+    if (hasChairmanPerk(this.state, player.id, 'BUILD')) cost = Math.round(cost * 0.85);
+    return cost;
   }
 
   settleRent(player, tileId) {
@@ -977,7 +993,7 @@ export class GameEngine {
       return { type: 'OPEN_BANK', cash: player.cash, deposit: player.deposit || 0 };
     }
     if (tile.type === TileType.LOTTERY) {
-      return { type: 'LOTTERY_OFFER', ticketPrice: 200, pot: this.state.lottery.pot };
+      return { type: 'LOTTERY_OFFER', ...getLotteryOffer(this.state, player) };
     }
     if (tile.type === TileType.MAGIC_HOUSE) {
       return {
@@ -992,7 +1008,7 @@ export class GameEngine {
       };
     }
     if (tile.type === TileType.MECHANISM) {
-      return this.triggerMapMechanism(player);
+      return { type: 'MECHANISM_OFFER', plans: getMechanismRoutePlans(this.state, player) };
     }
     if (tile.type === TileType.COMPANY) {
       const company = this.state.companyManager.get(tile.companyId);
@@ -1173,34 +1189,32 @@ export class GameEngine {
   }
 
   bankTransfer(player, direction, amount) {
-    const value = Math.max(0, Math.floor(Number(amount)));
-    if (!value) return { success: false, reason: '请输入有效金额' };
-    if (direction === 'DEPOSIT') {
-      if (player.cash < value) return { success: false, reason: '现金不足' };
-      player.cash -= value;
-      player.deposit = (player.deposit || 0) + value;
-    } else if (direction === 'WITHDRAW') {
-      if ((player.deposit || 0) < value) return { success: false, reason: '存款不足' };
-      player.deposit -= value;
-      player.cash += value;
-    } else {
-      return { success: false, reason: '银行操作无效' };
-    }
+    if (!['DEPOSIT', 'WITHDRAW'].includes(direction)) return { success: false, reason: '银行操作无效' };
+    const preview = getBankTransferPreview(this.state, player, direction, amount);
+    if (!preview.enabled) return { success: false, reason: preview.reason };
+    player.cash = preview.cashAfter;
+    player.deposit = preview.depositAfter;
     this.state.assetRevision++;
-    this.state.addLog(`🏦 ${player.name} ${direction === 'DEPOSIT' ? '存入' : '取出'} $${value.toLocaleString()}。`, 'accent');
-    return { success: true, type: 'BANK_TRANSFERRED', direction, amount: value, cash: player.cash, deposit: player.deposit };
+    this.state.addLog(`🏦 ${player.name} ${direction === 'DEPOSIT' ? '存入' : '取出'} $${preview.amount.toLocaleString()}，预计下期利息 $${preview.projectedInterest.toLocaleString()}。`, 'accent');
+    return { success: true, type: 'BANK_TRANSFERRED', direction, amount: preview.amount, cash: player.cash, deposit: player.deposit, projectedInterest: preview.projectedInterest, risk: preview.risk.id };
   }
 
-  buyLottery(player, number) {
-    const selected = Number(number);
-    const ticketPrice = 200;
-    if (!Number.isInteger(selected) || selected < 1 || selected > 10) return { success: false, reason: '乐透号码无效' };
-    if (player.cash < ticketPrice) return { success: false, reason: '现金不足' };
-    player.cash -= ticketPrice;
-    this.state.lottery.pot += ticketPrice;
-    this.state.lottery.tickets.push({ playerId: player.id, number: selected });
-    this.state.addLog(`🎰 ${player.name} 购买了 ${selected} 号乐透券，当前奖池 $${this.state.lottery.pot.toLocaleString()}。`, 'accent');
-    return { success: true, type: 'LOTTERY_BOUGHT', number: selected, cost: ticketPrice, pot: this.state.lottery.pot };
+  buyLottery(player, numbers) {
+    const preview = getLotteryPurchasePreview(this.state, player, numbers);
+    if (!preview.enabled) return { success: false, reason: preview.reason };
+    player.cash -= preview.cost;
+    this.state.lottery.pot = preview.projectedPot;
+    preview.selections.forEach(number => this.state.lottery.tickets.push({ playerId: player.id, number }));
+    this.state.addLog(`🎰 ${player.name} 购买了 ${preview.selections.join('、')} 号乐透券，当前奖池 $${this.state.lottery.pot.toLocaleString()}。`, 'accent');
+    return {
+      success: true,
+      type: 'LOTTERY_BOUGHT',
+      number: preview.selections[0],
+      numbers: preview.selections,
+      cost: preview.cost,
+      pot: this.state.lottery.pot,
+      winChance: preview.winChance
+    };
   }
 
   castMagic(player, magicId) {
@@ -1231,25 +1245,9 @@ export class GameEngine {
       || !MAGIC_EFFECTS.some(effect => effect.id === effectId)) {
       return { success: false, reason: '魔法条件或效果无效' };
     }
-    const active = this.state.players.filter(item => !item.isBankrupt);
-    const byAssets = list => [...list].sort((a, b) => this.state.calculateNetWorth(b) - this.state.calculateNetWorth(a));
-    const byLand = list => [...list].sort((a, b) => {
-      const count = ownerId => [...this.state.propertyManager.properties.values()].filter(property => property.owner === ownerId).length;
-      return count(b.id) - count(a.id);
-    });
-    const targetsByCondition = {
-      SELF: [player],
-      RICH_CASH: [...active].sort((a, b) => b.cash - a.cash).slice(0, 1),
-      POOR_CASH: [...active].sort((a, b) => a.cash - b.cash).slice(0, 1),
-      RICH_ASSET: byAssets(active).slice(0, 1),
-      MOST_LAND: byLand(active).slice(0, 1),
-      MOST_DEPOSIT: [...active].sort((a, b) => (b.deposit || 0) - (a.deposit || 0)).slice(0, 1),
-      HAS_VEHICLE: active.filter(item => item.vehicle !== 'WALK'),
-      ON_FOOT: active.filter(item => item.vehicle === 'WALK'),
-      HAS_GOD: active.filter(item => item.godType),
-      ALL_OPPONENTS: active.filter(item => item.id !== player.id)
-    };
-    const targets = targetsByCondition[conditionId] || [];
+    const preview = getMagicPreview(this.state, player, conditionId, effectId);
+    if (!preview.enabled) return { success: false, reason: preview.reason };
+    const targets = getMagicTargets(this.state, player, conditionId);
     targets.forEach(target => {
       if (effectId === 'CASH_RAIN') target.cash += 800;
       else if (effectId === 'DEPOSIT_ALL') { target.deposit += target.cash; target.cash = 0; }
@@ -1274,7 +1272,17 @@ export class GameEngine {
     }
     this.state.assetRevision++;
     this.state.addLog(`🔮 ${player.name} 对“${MAGIC_CONDITIONS.find(item => item.id === conditionId).name}”发动“${MAGIC_EFFECTS.find(item => item.id === effectId).name}”。`, 'gold');
-    return { success: true, type: 'MAGIC_CAST', conditionId, effectId, targetIds: targets.map(target => target.id) };
+    return {
+      success: true,
+      type: 'MAGIC_CAST',
+      conditionId,
+      effectId,
+      conditionLabel: MAGIC_CONDITIONS.find(item => item.id === conditionId).name,
+      effectLabel: MAGIC_EFFECTS.find(item => item.id === effectId).name,
+      targetIds: targets.map(target => target.id),
+      targetNames: targets.map(target => target.name),
+      outcome: preview.outcome
+    };
   }
 
   getResearchOptions(level) {
@@ -1306,21 +1314,20 @@ export class GameEngine {
   }
 
   startResearch(player, tileId, itemId) {
-    const property = this.state.propertyManager.getProperty(Number(tileId));
     const item = ITEMS.find(definition => definition.id === itemId);
-    if (!property || property.owner !== player.id || property.buildingType !== 'LAB') return { success: false, reason: '必须在自己的研究所研发' };
-    if (!item?.researchLevel || item.researchLevel > property.level + 1) return { success: false, reason: '研究所等级不足' };
-    if (this.state.researchTasks.some(task => task.playerId === player.id && task.tileId === Number(tileId))) return { success: false, reason: '研究所已有任务' };
+    const preview = getResearchProjectPreview(this.state, player, tileId, itemId);
+    if (!item?.researchLevel || !preview) return { success: false, reason: '未知研发项目' };
+    if (!preview.enabled) return { success: false, reason: preview.reason };
     const task = {
       id: `RESEARCH_${this.state.round}_${player.id}_${itemId}`,
       playerId: player.id,
       tileId: Number(tileId),
       itemId,
-      roundsRemaining: Math.max(1, (item.researchRounds || 1) - (hasChairmanPerk(this.state, player.id, 'TECH') ? 1 : 0))
+      roundsRemaining: preview.rounds
     };
     this.state.researchTasks.push(task);
     this.state.addLog(`🧪 ${player.name} 开始研发【${item.name}】，需要 ${task.roundsRemaining} 轮。`, 'accent');
-    return { success: true, type: 'RESEARCH_STARTED', task };
+    return { success: true, type: 'RESEARCH_STARTED', task, itemName: item.name, itemIcon: item.icon, discipline: preview.label, completesRound: preview.completesRound, accelerated: preview.accelerated };
   }
 
   buyItem(player, itemId, tileId = null) {
@@ -1428,7 +1435,10 @@ export class GameEngine {
     if (!result.success) return result;
     this.state.inventoryManager.removeItem(player, itemId);
     this.state.assetRevision++;
-    return { ...result, events: [{ type: 'INVENTORY_CHANGED', playerId: player.id, itemId }, ...(result.events || [])] };
+    const placementEvents = result.entity?.type === 'BARRIER'
+      ? [{ type: 'ROAD_ENTITY_CHANGED', entity: result.entity }]
+      : [];
+    return { ...result, events: [{ type: 'INVENTORY_CHANGED', playerId: player.id, itemId }, ...placementEvents, ...(result.events || [])] };
   }
 
   blastArea(player, centerTileId, radius, destructive) {
@@ -1633,23 +1643,40 @@ export class GameEngine {
     const active = this.state.minigameState;
     const value = clampMinigameScore(score, definition?.maxScore || 0);
     if (!definition || !active || active.playerId !== player.id || active.gameId !== gameId) return { success: false, reason: '小游戏状态无效' };
+    const performance = getMinigamePerformance(gameId, value);
     const reward = value * definition.rewardPerPoint;
     player.cardPoints += reward;
     this.state.minigameState = null;
     this.state.addLog(`🎮 ${player.name} 在【${definition.name}】获得 ${value} 分与 ${reward} 点券。`, 'gold');
-    return { success: true, type: 'MINIGAME_COMPLETED', gameId, score: value, reward };
+    return {
+      success: true,
+      type: 'MINIGAME_COMPLETED',
+      gameId,
+      score: value,
+      reward,
+      rank: performance.rank.id,
+      rankLabel: performance.rank.label,
+      rankIcon: performance.rank.icon
+    };
   }
 
-  triggerMapMechanism(player) {
+  triggerMapMechanism(player, requestedRoute = null) {
     const branchTiles = this.state.mapDefinition.tiles.filter(tile => (tile.next || []).length > 1);
-    if (!branchTiles.length) return { type: 'NO_ACTION' };
-    this.state.mechanismState.activeRoute = (this.state.mechanismState.activeRoute + 1) % 2;
+    if (!branchTiles.length) return { success: false, reason: '当前地图没有可控制的岔路' };
+    const routeIndex = requestedRoute === null
+      ? (this.state.mechanismState.activeRoute + 1) % 2
+      : Number(requestedRoute);
+    if (![0, 1].includes(routeIndex)) return { success: false, reason: '路线方案无效' };
+    if (this.state.mechanismState.locked && this.state.mechanismState.activeRoute === routeIndex) return { success: false, reason: '当前方案已在运行' };
+    this.state.mechanismState.activeRoute = routeIndex;
+    this.state.mechanismState.locked = true;
     branchTiles.forEach(tile => {
-      const option = tile.next[this.state.mechanismState.activeRoute % tile.next.length];
+      const option = tile.next[routeIndex % tile.next.length];
       this.state.mapRuntime.setNextOptions(tile.id, [option]);
     });
-    this.state.addLog(`⚙️ ${player.name} 启动地图机关，全部岔路切换至 ${this.state.mechanismState.activeRoute ? '支线' : '主线'}。`, 'gold');
-    return { type: 'MECHANISM_TRIGGERED', activeRoute: this.state.mechanismState.activeRoute };
+    const plan = getMechanismRoutePlans(this.state, player).find(candidate => candidate.routeIndex === routeIndex);
+    this.state.addLog(`⚙️ ${player.name} 启动潮汐机关塔，三处岔路锁定为【${plan?.name || (routeIndex ? '潮汐支线' : '环城主线')}】。`, 'gold');
+    return { success: true, type: 'MECHANISM_TRIGGERED', activeRoute: routeIndex, routeName: plan?.name, routeIcon: plan?.icon, branchCount: branchTiles.length, nodeCount: plan?.nodeCount };
   }
 
   tradeStock(player, action, stockId, shares) {
@@ -1742,6 +1769,15 @@ export class GameEngine {
         this.state.propertyManager.getProperty(targetTile).hasObstacle = true;
         events.push({ type: 'OBSTACLE_CHANGED', tileId: targetTile, active: true });
         break;
+      case 'BORROW_PASS':
+        player.rentShieldActiveThisTurn=true;
+        events.push({type:'TURN_RENT_WAIVER',playerId:player.id});
+        break;
+      case 'SWAP_STOPS': {
+        const from=player.currentTile,to=targetPlayer.currentTile;player.currentTile=to;targetPlayer.currentTile=from;
+        events.push({type:'POSITIONS_SWAPPED',playerId:player.id,targetId:targetPlayer.id,from,to});
+        break;
+      }
       case 'TURN_AROUND':
         targetPlayer.direction = (targetPlayer.direction || 1) * -1;
         break;

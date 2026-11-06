@@ -1,0 +1,108 @@
+[
+  {
+    "file": "character-courier.glb",
+    "bytes": 626640,
+    "originalDrawCalls": 70,
+    "drawCallsPerNormalPass": 28,
+    "meshCount": 6,
+    "triangles": 16172,
+    "maxWorldVertexError": 2.60770320892334e-08,
+    "clips": [
+      {
+        "name": "idle",
+        "duration": 2.4000000953674316,
+        "channels": 4,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 4.286263818611965e-18
+      },
+      {
+        "name": "walk",
+        "duration": 0.800000011920929,
+        "channels": 6,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 8.817456809217617e-17
+      },
+      {
+        "name": "celebrate",
+        "duration": 1.600000023841858,
+        "channels": 4,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 2.4492935397342132e-17
+      },
+      {
+        "name": "disappointed",
+        "duration": 1.7999999523162842,
+        "channels": 5,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 2.3996155968602314e-33
+      },
+      {
+        "name": "ability",
+        "duration": 1.2000000476837158,
+        "channels": 4,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 8.623619044832248e-33
+      },
+      {
+        "name": "notice",
+        "duration": 1.0,
+        "channels": 3,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 2.6245796853396853e-33
+      }
+    ]
+  },
+  {
+    "file": "character-botanist.glb",
+    "bytes": 679732,
+    "originalDrawCalls": 83,
+    "drawCallsPerNormalPass": 28,
+    "meshCount": 6,
+    "triangles": 18476,
+    "maxWorldVertexError": 2.9802322387695312e-08,
+    "clips": [
+      {
+        "name": "idle",
+        "duration": 2.4000000953674316,
+        "channels": 4,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 4.286263818611965e-18
+      },
+      {
+        "name": "walk",
+        "duration": 0.800000011920929,
+        "channels": 6,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 5.878304760059908e-17
+      },
+      {
+        "name": "celebrate",
+        "duration": 1.600000023841858,
+        "channels": 4,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 2.4492935397342132e-17
+      },
+      {
+        "name": "disappointed",
+        "duration": 1.7999999523162842,
+        "channels": 5,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 2.3996155968602314e-33
+      },
+      {
+        "name": "ability",
+        "duration": 1.2000000476837158,
+        "channels": 4,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 5.999039175821571e-33
+      },
+      {
+        "name": "notice",
+        "duration": 1.0,
+        "channels": 3,
+        "animationSamplesUnchanged": true,
+        "loopSeamMaxError": 2.6245796853396853e-33
+      }
+    ]
+  }
+]

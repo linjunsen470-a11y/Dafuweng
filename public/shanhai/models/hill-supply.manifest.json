@@ -1,0 +1,17 @@
+{
+  "asset": "hill-supply.glb",
+  "generator": "scripts/art/create_hill_supply.py",
+  "license": "Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.",
+  "axes": "GLB Y-up, front +Z, origin ground center",
+  "models": [
+    {
+      "prefab": "hill_supply_pavilion",
+      "triangles": 216,
+      "size_xyz_blender": [
+        3.799999952316284,
+        3.200000047683716,
+        2.759999990463257
+      ]
+    }
+  ]
+}

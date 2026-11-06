@@ -1,0 +1,29 @@
+{
+  "kind": "complete original lantern story via real UI",
+  "checks": [
+    "New game accepts the letter through A-Lan, then a real delivery commission advances the story; only the ordinary ¥900/15-point reward is granted.",
+    "Actual landing at stop 8 unlocks Xiaozhi’s lampshade; refresh preserves the handoff, balances and next objective at stop 16.",
+    "At stop 16 the pending island event blocks story completion; after resolving it, the garden ending completes once with a title and no extra money, points or random draw.",
+    "AI independently accepts its own letter, completes its normal commission and reaches the stop-8 story handoff through the same rules.",
+    "Completed ending persists after reload and remains readable at 390px.",
+    "Older save without a story ledger loads unaccepted, with no retroactive credit, movement or monetary change."
+  ],
+  "errors": [],
+  "aiProgress": [
+    2,
+    2,
+    3
+  ],
+  "completed": {
+    "round": 4,
+    "cash": 17400,
+    "points": 30,
+    "story": {
+      "stage": 4,
+      "ending": "garden",
+      "startedRound": 1,
+      "commissionKind": "DELIVERY"
+    }
+  },
+  "success": true
+}

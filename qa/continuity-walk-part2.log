@@ -1,0 +1,349 @@
+{"round":8,"tile":32,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":32,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":8,"tile":33,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":34,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":35,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":36,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":36,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"37\"]",".route-plan"],"blockers":["modal route-choice-overlay"]}
+{"round":8,"tile":37,"who":0,"phase":"LANDING_ACTION","actions":["[data-route=\"37\"]",".route-plan"],"blockers":["modal route-choice-overlay"]}
+{"round":8,"tile":37,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":8,"tile":37,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":9,"tile":37,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":9,"tile":37,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":9,"tile":37,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":9,"tile":38,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":9,"tile":40,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":9,"tile":40,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":9,"tile":40,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":9,"tile":40,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":9,"tile":40,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":9,"tile":40,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":40,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".economic-report-close"],"blockers":["modal economic-report-overlay is-visible"]}
+{"round":10,"tile":40,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":40,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":40,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":10,"tile":41,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":10,"tile":42,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":10,"tile":43,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":10,"tile":44,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":10,"tile":45,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":10,"tile":46,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":10,"tile":46,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":11,"tile":46,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-benefit is-visible"]}
+{"round":11,"tile":46,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":11,"tile":46,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":11,"tile":46,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":11,"tile":48,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":11,"tile":48,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":11,"tile":48,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":48,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":48,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":12,"tile":48,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":12,"tile":50,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":12,"tile":51,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":12,"tile":52,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":12,"tile":53,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":12,"tile":54,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":54,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-benefit is-visible"]}
+{"round":13,"tile":54,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":54,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":54,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":55,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":13,"tile":56,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":13,"tile":56,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":56,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-benefit is-visible"]}
+{"round":14,"tile":56,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":56,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":56,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":0,"phase":"LANDING_ACTION","actions":[".bank-confirm",".bank-close"],"blockers":["modal bank-center-overlay is-visible"]}
+{"round":14,"tile":57,"who":0,"phase":"LANDING_ACTION","actions":[".bank-confirm",".bank-close"],"blockers":["modal bank-center-overlay is-visible"]}
+{"round":14,"tile":57,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":14,"tile":57,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":57,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay","news-flash-overlay tone-market is-visible"]}
+{"round":15,"tile":57,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-market is-visible"]}
+{"round":15,"tile":57,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-market is-visible"]}
+{"round":15,"tile":57,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".economic-report-close"],"blockers":["modal economic-report-overlay is-visible"]}
+{"round":15,"tile":57,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":57,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":58,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":15,"tile":59,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":59,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":59,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":59,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":16,"tile":60,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":16,"tile":60,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"61\"]",".route-plan"],"blockers":["modal route-choice-overlay"]}
+{"round":16,"tile":60,"who":0,"phase":"ROUTE_CHOICE","actions":["[data-route=\"61\"]",".route-plan"],"blockers":["modal route-choice-overlay is-visible"]}
+{"round":16,"tile":61,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":16,"tile":61,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":16,"tile":61,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":61,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-property is-visible"]}
+{"round":17,"tile":61,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-property is-visible"]}
+{"round":17,"tile":61,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":61,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":17,"tile":63,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":17,"tile":63,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":63,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":18,"tile":63,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":18,"tile":63,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":63,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":18,"tile":64,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":18,"tile":65,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":18,"tile":67,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":18,"tile":68,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":18,"tile":68,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":68,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":68,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":68,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":19,"tile":70,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":70,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".economic-report-close"],"blockers":["modal economic-report-overlay is-visible"]}
+{"round":20,"tile":70,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":70,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":70,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":20,"tile":71,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":20,"tile":72,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":1,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-benefit is-visible"]}
+{"round":21,"tile":72,"who":1,"phase":"ROLLING","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-benefit is-visible"]}
+{"round":21,"tile":72,"who":1,"phase":"ROLLING","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-benefit is-visible"]}
+{"round":21,"tile":72,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":21,"tile":72,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":72,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":72,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":72,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":73,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":22,"tile":74,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-upgrade","#btn-land-pass"],"blockers":["modal"]}
+{"round":22,"tile":75,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":22,"tile":75,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":1,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":23,"tile":75,"who":1,"phase":"ROLLING","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":23,"tile":75,"who":1,"phase":"ROLLING","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":23,"tile":75,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":2,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":2,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":2,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":2,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":23,"tile":75,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":1,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-market is-visible"]}
+{"round":24,"tile":75,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":24,"tile":75,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":1,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-market is-visible"]}
+{"round":25,"tile":75,"who":1,"phase":"ROLLING","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-market is-visible"]}
+{"round":25,"tile":75,"who":1,"phase":"ROLLING","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-market is-visible"]}
+{"round":25,"tile":75,"who":1,"phase":"MOVING","actions":[".news-dismiss",".economic-report-close"],"blockers":["modal economic-report-overlay is-visible","news-flash-overlay tone-market is-visible"]}
+{"round":25,"tile":75,"who":1,"phase":"LANDING_ACTION","actions":[".economic-report-close"],"blockers":["modal economic-report-overlay is-visible"]}
+{"round":25,"tile":75,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":3,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":25,"tile":75,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":75,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":75,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":26,"tile":75,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":0,"phase":"LANDING_ACTION","actions":["#btn-land-buy","#btn-land-pass"],"blockers":["modal"]}
+{"round":26,"tile":76,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":3,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":3,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":26,"tile":76,"who":3,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":27,"tile":76,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-property is-visible"]}
+{"round":27,"tile":76,"who":0,"phase":"PRE_ROLL_ACTION","actions":[".news-dismiss"],"blockers":["news-flash-overlay tone-property is-visible"]}
+{"round":27,"tile":76,"who":0,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":27,"tile":76,"who":0,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":27,"tile":77,"who":0,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":0,"phase":"LANDING_ACTION","actions":[".mechanism-close"],"blockers":["modal mechanism-tower-overlay"]}
+{"round":27,"tile":79,"who":0,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":1,"phase":"PRE_ROLL_ACTION","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":1,"phase":"ROLLING","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":1,"phase":"MOVING","actions":[],"blockers":[]}
+{"round":27,"tile":79,"who":1,"phase":"LANDING_ACTION","actions":[],"blockers":[]}
+{"failure":"TargetCloseError: Protocol error (Runtime.callFunctionOn): Target closed\n    at CallbackRegistry.clear (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/common/CallbackRegistry.js:82:36)\n    at CdpCDPSession.onClosed (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/CdpSession.js:121:25)\n    at Connection.onMessage (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/Connection.js:159:25)\n    at WebSocket.<anonymous> (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/node/NodeWebSocketTransport.js:38:32)\n    at callListener (/workspace/dafuweng-cloud/node_modules/ws/lib/event-target.js:290:14)\n    at WebSocket.onMessage (/workspace/dafuweng-cloud/node_modules/ws/lib/event-target.js:209:9)\n    at WebSocket.emit (node:events:514:28)\n    at Receiver.receiverOnMessage (/workspace/dafuweng-cloud/node_modules/ws/lib/websocket.js:1239:20)\n    at Receiver.emit (node:events:514:28)\n    at Immediate.<anonymous> (/workspace/dafuweng-cloud/node_modules/ws/lib/receiver.js:638:16)","checkpoints":[{"region":"connector","round":11,"tile":46},{"region":"business","round":17,"tile":61},{"region":"other","round":20,"tile":70}],"errors":[]}

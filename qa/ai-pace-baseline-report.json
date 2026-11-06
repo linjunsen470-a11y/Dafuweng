@@ -1,0 +1,2630 @@
+{
+  "mode": "baseline",
+  "scenario": "Three-round coast season from a legal initial save, all actions through UI, normal motion at 1x",
+  "turns": [
+    {
+      "round": 1,
+      "tile": 2,
+      "kind": "PURCHASE",
+      "aiWaitMs": 6932,
+      "nextPhase": "PRE_ROLL_ACTION",
+      "recapCount": 2
+    },
+    {
+      "round": 2,
+      "tile": 8,
+      "kind": "SPECIAL",
+      "aiWaitMs": 11165,
+      "nextPhase": "PRE_ROLL_ACTION",
+      "recapCount": 2
+    },
+    {
+      "round": 3,
+      "tile": 14,
+      "kind": "PURCHASE",
+      "aiWaitMs": 6513,
+      "nextPhase": "GAME_OVER",
+      "recapCount": 2
+    }
+  ],
+  "errors": [],
+  "final": {
+    "version": 11,
+    "contentVersion": "2026.8",
+    "savedAt": "2026-11-06T00:30:11.182Z",
+    "seed": 314,
+    "rngState": 542832076,
+    "phase": "GAME_OVER",
+    "round": 3,
+    "maxRounds": 3,
+    "gameMode": "STANDARD",
+    "mapId": "shanhai-coast",
+    "currentPlayerIndex": 2,
+    "players": [
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 0,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 0,
+        "profileId": "ayu",
+        "name": "阿屿",
+        "isAI": false,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "ECONOMY",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🧢",
+        "color": "#f5816c",
+        "colorHex": 16089452,
+        "skillName": "顺风速递",
+        "skillDesc": "完成速递委托额外获得 ¥300。",
+        "cash": 13200,
+        "cardPoints": 150,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "stocks": {},
+        "currentTile": 14,
+        "direction": 1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": "FORTUNE",
+        "godTurns": 5,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "ayu",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      },
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 1,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 1,
+        "profileId": "qinghe",
+        "name": "青禾",
+        "isAI": true,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "PROPERTY",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🌿",
+        "color": "#42b8a6",
+        "colorHex": 4372646,
+        "skillName": "街区园艺师",
+        "skillDesc": "完成焕新委托额外获得 ¥300。",
+        "cash": 15300,
+        "cardPoints": 220,
+        "cards": [
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "stocks": {},
+        "currentTile": 8,
+        "direction": 1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": "EARTH",
+        "godTurns": 4,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "qinghe",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      },
+      {
+        "hibernateTurns": 0,
+        "sleepwalkTurns": 0,
+        "isSleepwalkingThisTurn": false,
+        "penaltyTransferTargetId": null,
+        "deposit": 0,
+        "teamId": 2,
+        "isLord": false,
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "selectedDiceCount": 1,
+        "engineeringTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "id": 2,
+        "profileId": "xingluo",
+        "name": "星罗",
+        "isAI": true,
+        "aiDifficulty": "NORMAL",
+        "aiStrategy": "CARD",
+        "avatarImg": null,
+        "avatarAtlas": null,
+        "avatarPosition": "0% 100%",
+        "avatar": "🧭",
+        "color": "#8b72ba",
+        "colorHex": 9138874,
+        "skillName": "行路制图",
+        "skillDesc": "每三轮可花 ¥500 制作一张遥控骰子；已有时不能制作，无委托加成。",
+        "cash": 14000,
+        "cardPoints": 175,
+        "cards": [
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "stocks": {},
+        "currentTile": 9,
+        "direction": 1,
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "turtleTurns": 0,
+        "godType": "GREAT_FORTUNE",
+        "godTurns": 4,
+        "rentShieldTurns": 0,
+        "negativeImmuneTurns": 0,
+        "isBankrupt": false,
+        "characterId": "xingluo",
+        "moveLimitThisTurn": null,
+        "rentShieldActiveThisTurn": false,
+        "negativeImmuneActiveThisTurn": false
+      }
+    ],
+    "properties": [
+      [
+        0,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        1,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        2,
+        {
+          "owner": 0,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        3,
+        {
+          "owner": 2,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        4,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        5,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        6,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        7,
+        {
+          "owner": 1,
+          "level": 1,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        8,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        9,
+        {
+          "owner": 2,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        10,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        11,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        12,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": null,
+          "hasMine": false
+        }
+      ],
+      [
+        13,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        14,
+        {
+          "owner": 0,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        15,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        16,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        17,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        18,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        19,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        20,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        21,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        22,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        23,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ]
+    ],
+    "stocks": [
+      {
+        "id": "TECH",
+        "name": "星河智造",
+        "code": "600001",
+        "price": 111,
+        "prevPrice": 112,
+        "change": -1,
+        "history": [
+          100,
+          98,
+          91,
+          83,
+          89,
+          96,
+          89,
+          96,
+          94,
+          103,
+          112,
+          111
+        ]
+      },
+      {
+        "id": "REALTY",
+        "name": "云庭置业",
+        "code": "600002",
+        "price": 243,
+        "prevPrice": 241,
+        "change": 1,
+        "history": [
+          250,
+          242,
+          235,
+          216,
+          205,
+          210,
+          224,
+          243,
+          246,
+          263,
+          241,
+          243
+        ]
+      },
+      {
+        "id": "BEVERAGE",
+        "name": "青柠气泡",
+        "code": "600003",
+        "price": 58,
+        "prevPrice": 56,
+        "change": 4,
+        "history": [
+          50,
+          47,
+          45,
+          49,
+          54,
+          51,
+          52,
+          55,
+          57,
+          53,
+          56,
+          58
+        ]
+      },
+      {
+        "id": "ENERGY",
+        "name": "曙光能源",
+        "code": "600004",
+        "price": 189,
+        "prevPrice": 174,
+        "change": 9,
+        "history": [
+          180,
+          174,
+          172,
+          164,
+          180,
+          190,
+          197,
+          197,
+          183,
+          187,
+          174,
+          189
+        ]
+      },
+      {
+        "id": "MINING",
+        "name": "远山材料",
+        "code": "600005",
+        "price": 409,
+        "prevPrice": 407,
+        "change": 0,
+        "history": [
+          320,
+          325,
+          350,
+          380,
+          378,
+          400,
+          403,
+          379,
+          374,
+          408,
+          407,
+          409
+        ]
+      },
+      {
+        "id": "HARBOR",
+        "name": "蓝港保险",
+        "code": "600006",
+        "price": 154,
+        "prevPrice": 151,
+        "change": 2,
+        "history": [
+          140,
+          138,
+          130,
+          140,
+          141,
+          148,
+          150,
+          150,
+          138,
+          140,
+          151,
+          154
+        ]
+      }
+    ],
+    "newsEffect": null,
+    "newsHistory": [],
+    "logHistory": [
+      {
+        "msg": "🧧 阿屿 遇到巡游精灵【金运精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "12:29:31 AM"
+      },
+      {
+        "msg": "🏗️ 阿屿 成功购买【贝壳花园】(花费 $1,200)！",
+        "type": "success",
+        "time": "12:29:33 AM"
+      },
+      {
+        "msg": "✦ 青禾：阿澜递来便笺：先完成一份海湾委托，再找8号站的小栀取灯罩。",
+        "type": "gold",
+        "time": "12:29:36 AM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "12:29:36 AM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "12:29:36 AM"
+      },
+      {
+        "msg": "🏗️ 青禾 成功购买【晨光小屋】(花费 $1,200)！",
+        "type": "success",
+        "time": "12:29:38 AM"
+      },
+      {
+        "msg": "✉️ 青禾 完成【街区焕新】，获得 ¥700 和 35 点券（含专长奖励）。",
+        "type": "gold",
+        "time": "12:29:38 AM"
+      },
+      {
+        "msg": "✦ 青禾 已办好便笺上的约定，下一站：8号找小栀取灯罩。",
+        "type": "gold",
+        "time": "12:29:38 AM"
+      },
+      {
+        "msg": "✦ 星罗：阿澜递来便笺：先完成一份海湾委托，再找8号站的小栀取灯罩。",
+        "type": "gold",
+        "time": "12:29:38 AM"
+      },
+      {
+        "msg": "✉️ 星罗 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "12:29:38 AM"
+      },
+      {
+        "msg": "🃏 星罗 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "12:29:38 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！星罗 从 阿屿 身上染上了【FORTUNE】！",
+        "type": "accent",
+        "time": "12:29:40 AM"
+      },
+      {
+        "msg": "🏗️ 星罗 成功购买【海盐面包坊】(花费 $1,200)！",
+        "type": "success",
+        "time": "12:29:42 AM"
+      },
+      {
+        "msg": "✉️ 星罗 完成【街区焕新】，获得 ¥400 和 35 点券。",
+        "type": "gold",
+        "time": "12:29:42 AM"
+      },
+      {
+        "msg": "✦ 星罗 已办好便笺上的约定，下一站：8号找小栀取灯罩。",
+        "type": "gold",
+        "time": "12:29:42 AM"
+      },
+      {
+        "msg": "📈 第 2 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "12:29:42 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！阿屿 从 星罗 身上染上了【FORTUNE】！",
+        "type": "accent",
+        "time": "12:29:43 AM"
+      },
+      {
+        "msg": "💰 阿屿 遇到巡游精灵【大福精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "12:29:44 AM"
+      },
+      {
+        "msg": "🎟️ 阿屿 拾取 30 点券！",
+        "type": "accent",
+        "time": "12:29:46 AM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "12:29:47 AM"
+      },
+      {
+        "msg": "✦ 青禾 社区花市：支付 30 点券，获得 ¥300；第 5 轮可再次使用。",
+        "type": "gold",
+        "time": "12:29:47 AM"
+      },
+      {
+        "msg": "🛒 青禾 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "12:29:48 AM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "12:29:48 AM"
+      },
+      {
+        "msg": "🏗️ 青禾 成功购买【风帆公寓】(花费 $1,200)！",
+        "type": "success",
+        "time": "12:29:52 AM"
+      },
+      {
+        "msg": "✉️ 青禾 完成【街区焕新】，获得 ¥700 和 35 点券（含专长奖励）。",
+        "type": "gold",
+        "time": "12:29:52 AM"
+      },
+      {
+        "msg": "✉️ 星罗 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "12:29:52 AM"
+      },
+      {
+        "msg": "✦ 星罗 行路制图：支付 ¥500，制作一张遥控骰子；使用时消耗本回合策略机会，第 5 轮可再次制作。",
+        "type": "gold",
+        "time": "12:29:52 AM"
+      },
+      {
+        "msg": "🃏 星罗 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "12:29:53 AM"
+      },
+      {
+        "msg": "✨ 擦肩而过！星罗 从 阿屿 身上染上了【GREAT_FORTUNE】！",
+        "type": "accent",
+        "time": "12:29:56 AM"
+      },
+      {
+        "msg": "🎟️ 星罗 拾取 30 点券！",
+        "type": "accent",
+        "time": "12:29:57 AM"
+      },
+      {
+        "msg": "✦ 星罗：小栀递来纸灯罩：带到16号花棚，与木木决定灯该照向哪里。",
+        "type": "gold",
+        "time": "12:29:57 AM"
+      },
+      {
+        "msg": "📈 第 3 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "12:29:57 AM"
+      },
+      {
+        "msg": "🌟 阿屿 遇到巡游精灵【筑梦精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "12:30:00 AM"
+      },
+      {
+        "msg": "📉 阿屿 遇到巡游精灵【失意精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "12:30:00 AM"
+      },
+      {
+        "msg": "🧧 阿屿 遇到巡游精灵【金运精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "12:30:01 AM"
+      },
+      {
+        "msg": "🏗️ 阿屿 成功购买【白帆旅居】(花费 $1,600)！",
+        "type": "success",
+        "time": "12:30:02 AM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：实际停靠后买地或升级一次；异地施工和改建不计入。 第 3 轮结束前有效。",
+        "type": "info",
+        "time": "12:30:05 AM"
+      },
+      {
+        "msg": "🛒 青禾 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "12:30:05 AM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "12:30:05 AM"
+      },
+      {
+        "msg": "🌟 青禾 遇到巡游精灵【筑梦精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "12:30:06 AM"
+      },
+      {
+        "msg": "⛰️ 青禾 遇到巡游精灵【拓土精灵】，附身 4 回合！",
+        "type": "gold",
+        "time": "12:30:06 AM"
+      },
+      {
+        "msg": "🎟️ 青禾 拾取 30 点券！",
+        "type": "accent",
+        "time": "12:30:07 AM"
+      },
+      {
+        "msg": "✦ 青禾：小栀递来纸灯罩：带到16号花棚，与木木决定灯该照向哪里。",
+        "type": "gold",
+        "time": "12:30:08 AM"
+      },
+      {
+        "msg": "💰 星罗 获得精灵收益 $500。",
+        "type": "gold",
+        "time": "12:30:08 AM"
+      },
+      {
+        "msg": "✉️ 青禾 的委托已到期，没有扣款，下轮可接新单。",
+        "type": "info",
+        "time": "12:30:08 AM"
+      },
+      {
+        "msg": "🛒 星罗 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "12:30:08 AM"
+      },
+      {
+        "msg": "🃏 星罗 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "12:30:08 AM"
+      },
+      {
+        "msg": "🏗️ 星罗 成功购买【灯塔别院】(花费 $1,600)！",
+        "type": "success",
+        "time": "12:30:10 AM"
+      },
+      {
+        "msg": "✉️ 星罗 完成【街区焕新】，获得 ¥400 和 35 点券。",
+        "type": "gold",
+        "time": "12:30:10 AM"
+      },
+      {
+        "msg": "👑 青禾 以总资产 $19,500 获得胜利！",
+        "type": "gold",
+        "time": "12:30:11 AM"
+      }
+    ],
+    "winnerId": 1,
+    "winReason": "NET_WORTH",
+    "pendingMove": null,
+    "pendingDebt": null,
+    "phaseBeforePause": null,
+    "lottery": {
+      "pot": 2000,
+      "tickets": [],
+      "lastNumber": null
+    },
+    "boardGods": [
+      {
+        "id": "BOARD_GOD_0",
+        "type": "FORTUNE",
+        "tileId": 10,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_1",
+        "type": "GREAT_FORTUNE",
+        "tileId": 22,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_2",
+        "type": "LUCK",
+        "tileId": 5,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_3",
+        "type": "EARTH",
+        "tileId": 3,
+        "direction": -1
+      },
+      {
+        "id": "BOARD_GOD_4",
+        "type": "MISFORTUNE",
+        "tileId": 19,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_5",
+        "type": "BAD",
+        "tileId": 19,
+        "direction": -1
+      },
+      {
+        "id": "BOARD_GOD_6",
+        "type": "ANGEL",
+        "tileId": 23,
+        "direction": 1
+      },
+      {
+        "id": "BOARD_GOD_7",
+        "type": "DEMON",
+        "tileId": 21,
+        "direction": 1
+      }
+    ],
+    "mechanismState": {
+      "activeRoute": 0,
+      "locked": false
+    },
+    "winningTeamId": null,
+    "roadEntities": [
+      {
+        "id": "ROAD_3_3875",
+        "type": "COUPON_CHEST",
+        "tileId": 15,
+        "ownerId": null,
+        "expiresRound": 11
+      }
+    ],
+    "companies": [
+      {
+        "id": "AURORA_RETAIL",
+        "name": "极光百货",
+        "stockId": "BEVERAGE",
+        "icon": "🏬",
+        "baseFee": 360,
+        "perk": "SHOP",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "HARBOR_INSURANCE",
+        "name": "蓝港保险",
+        "stockId": "HARBOR",
+        "icon": "🛟",
+        "baseFee": 300,
+        "perk": "INSURANCE",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "SKY_TRANSIT",
+        "name": "天际交通",
+        "stockId": "ENERGY",
+        "icon": "🚝",
+        "baseFee": 420,
+        "perk": "TRANSIT",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "NOVA_BUILD",
+        "name": "新星营造",
+        "stockId": "REALTY",
+        "icon": "🏗️",
+        "baseFee": 440,
+        "perk": "BUILD",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "CLOUD_COMPUTE",
+        "name": "云端计算",
+        "stockId": "TECH",
+        "icon": "💻",
+        "baseFee": 390,
+        "perk": "TECH",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      },
+      {
+        "id": "SUMMIT_MATERIAL",
+        "name": "峰岳材料",
+        "stockId": "MINING",
+        "icon": "⛏️",
+        "baseFee": 410,
+        "perk": "MATERIAL",
+        "treasury": 1200,
+        "periodRevenue": 0,
+        "chairmanId": null,
+        "lastDividend": 0,
+        "policyId": null,
+        "policyStartedRound": null,
+        "policyHistory": []
+      }
+    ],
+    "auction": null,
+    "phaseBeforeAuction": null,
+    "bankruptcyAuctionQueue": [],
+    "marketOffers": [],
+    "marketHistory": [],
+    "researchTasks": [],
+    "economicCycle": {
+      "period": 1,
+      "roundsPerPeriod": 5,
+      "lastSettlementRound": 0,
+      "lastReport": null
+    },
+    "minigameState": null,
+    "turnCheckpoint": {
+      "playerId": 2,
+      "currentTile": 8,
+      "cash": 15200,
+      "deposit": 0,
+      "cards": [
+        "OBSTACLE",
+        "TURN_AROUND"
+      ],
+      "items": [
+        "REMOTE_DICE_ITEM",
+        "BARRIER",
+        "ROBOT_DOLL",
+        "MINE_ITEM"
+      ],
+      "stocks": {},
+      "statuses": {
+        "vehicle": "WALK",
+        "jailTurns": 0,
+        "hospitalTurns": 0,
+        "hotelTurns": 0,
+        "fuelBoostTurns": 0,
+        "godType": "GREAT_FORTUNE",
+        "godTurns": 4
+      }
+    },
+    "activeQuests": [],
+    "questHistory": [],
+    "questSequence": 0,
+    "matchStatistics": {
+      "startedAtRound": 1,
+      "players": [
+        {
+          "playerId": 0,
+          "turns": 3,
+          "cashIn": 0,
+          "cashOut": 2800,
+          "rentIncome": 0,
+          "rentExpense": 0,
+          "propertiesBought": 2,
+          "propertiesUpgraded": 0,
+          "cardsUsed": 0,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        },
+        {
+          "playerId": 1,
+          "turns": 3,
+          "cashIn": 0,
+          "cashOut": 2400,
+          "rentIncome": 0,
+          "rentExpense": 0,
+          "propertiesBought": 2,
+          "propertiesUpgraded": 0,
+          "cardsUsed": 3,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        },
+        {
+          "playerId": 2,
+          "turns": 3,
+          "cashIn": 0,
+          "cashOut": 2800,
+          "rentIncome": 0,
+          "rentExpense": 0,
+          "propertiesBought": 2,
+          "propertiesUpgraded": 0,
+          "cardsUsed": 3,
+          "itemsUsed": 0,
+          "investmentTrades": 0,
+          "minigamesPlayed": 0,
+          "minigamesWon": 0,
+          "minigameEarnings": 0,
+          "questsCompleted": 0,
+          "bankruptRound": null
+        }
+      ],
+      "highlights": []
+    },
+    "matchConfig": {
+      "playerConfigs": [
+        {
+          "profileIndex": 8,
+          "name": "阿屿",
+          "isAI": false
+        },
+        {
+          "profileIndex": 8,
+          "name": "青禾",
+          "isAI": true
+        },
+        {
+          "profileIndex": 8,
+          "name": "星罗",
+          "isAI": true
+        }
+      ],
+      "initialCash": 16000,
+      "options": {
+        "mapId": "shanhai-coast",
+        "maxRounds": 3,
+        "mode": "STANDARD"
+      }
+    },
+    "slice": {
+      "version": 1,
+      "focus": null,
+      "lastRoll": null,
+      "landingResolved": false,
+      "decisionMade": false,
+      "cardUsed": false,
+      "careers": {
+        "0": {
+          "active": null,
+          "settledRound": 0,
+          "completed": 0,
+          "earned": 0,
+          "last": null
+        },
+        "1": {
+          "active": null,
+          "settledRound": 3,
+          "completed": 2,
+          "earned": 1400,
+          "last": {
+            "status": "EXPIRED",
+            "kind": "RENEWAL"
+          }
+        },
+        "2": {
+          "active": null,
+          "settledRound": 3,
+          "completed": 2,
+          "earned": 800,
+          "last": {
+            "status": "COMPLETE",
+            "kind": "RENEWAL",
+            "cash": 400,
+            "points": 35,
+            "specialist": false
+          }
+        }
+      },
+      "pendingEvent": null,
+      "lastTransport": null,
+      "abilities": {
+        "0": {
+          "readyRound": 1,
+          "last": null
+        },
+        "1": {
+          "readyRound": 5,
+          "last": "社区花市：支付 30 点券，获得 ¥300；第 5 轮可再次使用。"
+        },
+        "2": {
+          "readyRound": 5,
+          "last": "行路制图：支付 ¥500，制作一张遥控骰子；使用时消耗本回合策略机会，第 5 轮可再次制作。"
+        }
+      },
+      "stories": {
+        "0": {
+          "stage": 0,
+          "ending": null,
+          "startedRound": null,
+          "commissionKind": null
+        },
+        "1": {
+          "stage": 3,
+          "ending": null,
+          "startedRound": 1,
+          "commissionKind": "RENEWAL"
+        },
+        "2": {
+          "stage": 3,
+          "ending": null,
+          "startedRound": 1,
+          "commissionKind": "RENEWAL"
+        }
+      }
+    }
+  },
+  "samples": [
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 1,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 1,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 2,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 2,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 1,
+      "round": 3,
+      "action": "青禾正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在前往下一站",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    },
+    {
+      "id": 2,
+      "round": 3,
+      "action": "星罗正在经营蓝湾海岸",
+      "recapHidden": true
+    }
+  ],
+  "success": true
+}

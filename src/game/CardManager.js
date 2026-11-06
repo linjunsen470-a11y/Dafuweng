@@ -268,11 +268,13 @@ export const CARDS = [
     id: 'AUCTION_CARD',
     name: '竞价令',
     icon: '🔨',
-    cardImg: '/assets/card_equal_wealth.svg',
+    cardImg: '/assets/card_auction_card.svg',
     cost: 55,
     targetType: 'PROPERTY',
     desc: '将自己的一块地产公开拍卖给其他玩家'
-  }
+  },
+  {id:'BORROW_PASS',name:'借道通行旗',icon:'⚑',cardImg:'/shanhai/icons/borrow-pass.svg',cost:50,targetType:'PLAYER',desc:'掷骰前为自己举旗，仅本回合免付地产租金。仍被围栏拦停，其他费用照常；未遇租金也消耗此卡。'},
+  {id:'SWAP_STOPS',name:'换站风筝',icon:'↔',cardImg:'/shanhai/icons/swap-kite.svg',cost:60,targetType:'PLAYER',desc:'与前后六格内一名自由行动对手互换站位；方向不变，不立即结算落点。对方下回合可转向、遥控或换站应对。'}
 ];
 
 export class CardManager {

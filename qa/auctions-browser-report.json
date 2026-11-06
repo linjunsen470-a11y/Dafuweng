@@ -1,0 +1,11 @@
+{
+  "kind": "Declared debt fixtures, real UI bidding / passing / reload / continuation",
+  "checks": [
+    "Coast: AI debtor pauses, invalid amount disabled, human/AI raise bids, refresh retains pending quote; two lots sell, only winner pays once, creditor receives proceeds, result refresh does not repay; next normal turn resumes.",
+    "Highland 390px: human and poor AI pass, lot becomes unowned with no charge; flow and result survive refresh and continue.",
+    "Human bankruptcy: both AIs actually compete, results await acknowledgment, then surviving AIs reach season result.",
+    "Two-player bankruptcy still ends immediately with sole survivor, with no post-victory bid or charge."
+  ],
+  "errors": [],
+  "success": true
+}

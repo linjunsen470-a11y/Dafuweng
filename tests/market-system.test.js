@@ -65,6 +65,6 @@ describe('player asset market', () => {
     legacy.marketOffers = [{ id: 'OLD', sellerId: seller.id, kind: 'CARD', contentId: 'REMOTE_DICE', price: 500 }];
     const restored = new GameState({ seed: 1 });
     restored.restoreSnapshot(legacy);
-    expect(restored.createSnapshot()).toMatchObject({ version: 10, marketOffers: [{ id: 'OLD', createdRound: 1, expiresRound: 6 }], marketHistory: [] });
+    expect(restored.createSnapshot()).toMatchObject({ version: 11, marketOffers: [{ id: 'OLD', createdRound: 1, expiresRound: 6 }], marketHistory: [] });
   });
 });

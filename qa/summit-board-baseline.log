@@ -1,0 +1,1 @@
+{"success":true,"visit":{"success":true,"type":"COMPANY_VISIT","companyId":"SUMMIT_MATERIAL","fee":410,"chairmanId":null,"events":[{"type":"COMPANY_VISIT","success":true,"companyId":"SUMMIT_MATERIAL","fee":410,"chairmanId":null}],"before":{"cash":20000,"treasury":1200,"revenue":0},"after":{"cash":19590,"treasury":1610,"revenue":410}},"joined":true,"errors":[]}

@@ -1,0 +1,2282 @@
+{
+  "errors": [],
+  "limits": [
+    "Original four-player opening save, real remote card0→6 and buy at UI speed0.5.",
+    "Software WebGL desktop/360px viewport; sampled frames are not a full motion-quality or physical-device acceptance."
+  ],
+  "purchase": {
+    "result": {
+      "success": true,
+      "type": "PROPERTY_PURCHASED",
+      "tileId": 6,
+      "level": 0,
+      "cost": 1122,
+      "buildingType": "RESIDENTIAL",
+      "events": [
+        {
+          "type": "PROPERTY_PURCHASED",
+          "success": true,
+          "tileId": 6,
+          "level": 0,
+          "cost": 1122,
+          "buildingType": "RESIDENTIAL"
+        }
+      ]
+    },
+    "snapshot": {
+      "version": 11,
+      "contentVersion": "2026.8",
+      "savedAt": "2026-11-06T15:15:46.791Z",
+      "seed": 2947061402,
+      "rngState": 3397623690,
+      "phase": "LANDING_ACTION",
+      "round": 1,
+      "maxRounds": 40,
+      "gameMode": "STANDARD",
+      "mapId": "grand-bay",
+      "currentPlayerIndex": 0,
+      "players": [
+        {
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "deposit": 5000,
+          "teamId": 0,
+          "isLord": false,
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "id": 0,
+          "profileId": 0,
+          "name": "林小满",
+          "isAI": false,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ECONOMY",
+          "avatarImg": "/assets/char_lin_xiaoman.svg",
+          "avatarAtlas": "/assets/characters-v2-atlas.webp",
+          "avatarPosition": "0% 0%",
+          "avatar": "🎀",
+          "color": "#ff4757",
+          "colorHex": 16729943,
+          "skillName": "商业奇才",
+          "skillDesc": "买地/建房升级享受 15% 价格折扣，卡片商店购买打折。",
+          "cash": 18878,
+          "cardPoints": 120,
+          "cards": [
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "stocks": {},
+          "currentTile": 6,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "turtleTurns": 0,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false
+        },
+        {
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "deposit": 5000,
+          "teamId": 1,
+          "isLord": false,
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "id": 1,
+          "profileId": 1,
+          "name": "顾田野 AI",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "PROPERTY",
+          "avatarImg": "/assets/char_gu_tianye.svg",
+          "avatarAtlas": "/assets/characters-v2-atlas.webp",
+          "avatarPosition": "33.333% 0%",
+          "avatar": "🤠",
+          "color": "#ffa502",
+          "colorHex": 16753922,
+          "skillName": "土地公庇护",
+          "skillDesc": "所有房产过路费多收 20%，开局额外获得 $3,000 补贴金。",
+          "cash": 23000,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "turtleTurns": 0,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false
+        },
+        {
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "deposit": 5000,
+          "teamId": 2,
+          "isLord": false,
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "id": 2,
+          "profileId": 2,
+          "name": "洛晶晶 AI",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "CARD",
+          "avatarImg": "/assets/char_luo_jingjing.svg",
+          "avatarAtlas": "/assets/characters-v2-atlas.webp",
+          "avatarPosition": "66.667% 0%",
+          "avatar": "💎",
+          "color": "#a55eea",
+          "colorHex": 10837738,
+          "skillName": "股市高手",
+          "skillDesc": "股票交易收益额外加成 15%，踩中敌方地产有 25% 概率免单。",
+          "cash": 20000,
+          "cardPoints": 120,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND"
+          ],
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "turtleTurns": 0,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false
+        },
+        {
+          "hibernateTurns": 0,
+          "sleepwalkTurns": 0,
+          "isSleepwalkingThisTurn": false,
+          "penaltyTransferTargetId": null,
+          "deposit": 5000,
+          "teamId": 3,
+          "isLord": false,
+          "items": [
+            "REMOTE_DICE_ITEM",
+            "BARRIER",
+            "ROBOT_DOLL",
+            "MINE_ITEM"
+          ],
+          "selectedDiceCount": 1,
+          "engineeringTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "id": 3,
+          "profileId": 3,
+          "name": "巴洛克 AI",
+          "isAI": true,
+          "aiDifficulty": "NORMAL",
+          "aiStrategy": "ATTACK",
+          "avatarImg": "/assets/char_baroque.svg",
+          "avatarAtlas": "/assets/characters-v2-atlas.webp",
+          "avatarPosition": "100% 0%",
+          "avatar": "👳‍♂️",
+          "color": "#2ed573",
+          "colorHex": 3069299,
+          "skillName": "石油大亨",
+          "skillDesc": "开局额外获得 $3,000、80 点券和购地卡；大型策略卡点数减半，神仙附体持续回合数+1。",
+          "cash": 23000,
+          "cardPoints": 200,
+          "cards": [
+            "REMOTE_DICE",
+            "OBSTACLE",
+            "TURN_AROUND",
+            "LAND_BUY"
+          ],
+          "stocks": {},
+          "currentTile": 0,
+          "direction": 1,
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "turtleTurns": 0,
+          "godType": null,
+          "godTurns": 0,
+          "rentShieldTurns": 0,
+          "negativeImmuneTurns": 0,
+          "isBankrupt": false
+        }
+      ],
+      "properties": [
+        [
+          0,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          1,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          2,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          3,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          4,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          5,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          6,
+          {
+            "owner": 0,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          7,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          8,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          9,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          10,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          11,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          12,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          13,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          14,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          15,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null,
+            "hasMine": false
+          }
+        ],
+        [
+          16,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          17,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          18,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          19,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          20,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          21,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          22,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          23,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          24,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          25,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          26,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          27,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          28,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          29,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          30,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          31,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          32,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          33,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          34,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          35,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null,
+            "hasMine": false
+          }
+        ],
+        [
+          36,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          37,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          38,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          39,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          40,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          41,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          42,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          43,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          44,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          45,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          46,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          47,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          48,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          49,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          50,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          51,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          52,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          53,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          54,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          55,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null,
+            "hasMine": false
+          }
+        ],
+        [
+          56,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          57,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          58,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          59,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          60,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          61,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          62,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          63,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          64,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          65,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          66,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          67,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          68,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          69,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          70,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          71,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          72,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          73,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          74,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          75,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": null,
+            "hasMine": false
+          }
+        ],
+        [
+          76,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          77,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          78,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          79,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          80,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          81,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          82,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          83,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          84,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          85,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          86,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          87,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          88,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          89,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          90,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          91,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          92,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          93,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          94,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          95,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          96,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          97,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          98,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          99,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          100,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          101,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          102,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          103,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          104,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          105,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          106,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          107,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          108,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          109,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          110,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          111,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          112,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          113,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          114,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          115,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          116,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          117,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          118,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ],
+        [
+          119,
+          {
+            "owner": null,
+            "level": 0,
+            "hasObstacle": false,
+            "isMortgaged": false,
+            "mortgageValue": 0,
+            "buildingType": "RESIDENTIAL",
+            "hasMine": false
+          }
+        ]
+      ],
+      "stocks": [
+        {
+          "id": "TECH",
+          "name": "星河智造",
+          "code": "600001",
+          "price": 73,
+          "prevPrice": 79,
+          "change": -8,
+          "history": [
+            100,
+            98,
+            95,
+            90,
+            86,
+            84,
+            78,
+            82,
+            79,
+            73
+          ]
+        },
+        {
+          "id": "REALTY",
+          "name": "云庭置业",
+          "code": "600002",
+          "price": 308,
+          "prevPrice": 299,
+          "change": 3,
+          "history": [
+            250,
+            254,
+            255,
+            274,
+            284,
+            302,
+            295,
+            273,
+            299,
+            308
+          ]
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "青柠气泡",
+          "code": "600003",
+          "price": 59,
+          "prevPrice": 60,
+          "change": -2,
+          "history": [
+            50,
+            52,
+            56,
+            58,
+            56,
+            59,
+            62,
+            65,
+            60,
+            59
+          ]
+        },
+        {
+          "id": "ENERGY",
+          "name": "曙光能源",
+          "code": "600004",
+          "price": 197,
+          "prevPrice": 195,
+          "change": 1,
+          "history": [
+            180,
+            181,
+            182,
+            178,
+            194,
+            186,
+            188,
+            184,
+            195,
+            197
+          ]
+        },
+        {
+          "id": "MINING",
+          "name": "远山材料",
+          "code": "600005",
+          "price": 349,
+          "prevPrice": 345,
+          "change": 1,
+          "history": [
+            320,
+            299,
+            301,
+            290,
+            307,
+            335,
+            357,
+            327,
+            345,
+            349
+          ]
+        },
+        {
+          "id": "HARBOR",
+          "name": "蓝港保险",
+          "code": "600006",
+          "price": 168,
+          "prevPrice": 158,
+          "change": 6,
+          "history": [
+            140,
+            145,
+            151,
+            146,
+            148,
+            161,
+            156,
+            155,
+            158,
+            168
+          ]
+        }
+      ],
+      "newsEffect": null,
+      "newsHistory": [],
+      "logHistory": [
+        {
+          "msg": "🎮 《富翁帝国》原创对局开启！基础初始资金 $20,000，祝大家日进斗金！",
+          "type": "gold",
+          "time": "7:00:36 AM"
+        },
+        {
+          "msg": "🤠 顾田野 AI 触发【土地公庇护】技能：获得额外 $3,000 开局创业金补贴！",
+          "type": "accent",
+          "time": "7:00:36 AM"
+        },
+        {
+          "msg": "🛢️ 巴洛克 AI 获得能源资本：额外 $3,000、80 点券与购地卡。",
+          "type": "accent",
+          "time": "7:00:36 AM"
+        },
+        {
+          "msg": "🃏 林小满 使用了【遥控骰子】。",
+          "type": "accent",
+          "time": "3:15:31 PM"
+        },
+        {
+          "msg": "🎲 林小满 掷出了 6 点！",
+          "type": "gold",
+          "time": "3:15:39 PM"
+        },
+        {
+          "msg": "🏗️ 林小满 成功购买【蓝湾码头 3号】(花费 $1,122)！",
+          "type": "success",
+          "time": "3:15:46 PM"
+        }
+      ],
+      "winnerId": null,
+      "winReason": null,
+      "pendingMove": null,
+      "pendingDebt": null,
+      "phaseBeforePause": null,
+      "lottery": {
+        "pot": 2000,
+        "tickets": [],
+        "lastNumber": null
+      },
+      "boardGods": [
+        {
+          "id": "BOARD_GOD_0",
+          "type": "FORTUNE",
+          "tileId": 13,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_1",
+          "type": "GREAT_FORTUNE",
+          "tileId": 26,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_2",
+          "type": "LUCK",
+          "tileId": 40,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_3",
+          "type": "EARTH",
+          "tileId": 53,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_4",
+          "type": "MISFORTUNE",
+          "tileId": 66,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_5",
+          "type": "BAD",
+          "tileId": 80,
+          "direction": -1
+        },
+        {
+          "id": "BOARD_GOD_6",
+          "type": "ANGEL",
+          "tileId": 93,
+          "direction": 1
+        },
+        {
+          "id": "BOARD_GOD_7",
+          "type": "DEMON",
+          "tileId": 106,
+          "direction": -1
+        }
+      ],
+      "mechanismState": {
+        "activeRoute": 0,
+        "locked": false
+      },
+      "winningTeamId": null,
+      "roadEntities": [],
+      "companies": [
+        {
+          "id": "AURORA_RETAIL",
+          "name": "极光百货",
+          "stockId": "BEVERAGE",
+          "icon": "🏬",
+          "baseFee": 360,
+          "perk": "SHOP",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "HARBOR_INSURANCE",
+          "name": "蓝港保险",
+          "stockId": "HARBOR",
+          "icon": "🛟",
+          "baseFee": 300,
+          "perk": "INSURANCE",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SKY_TRANSIT",
+          "name": "天际交通",
+          "stockId": "ENERGY",
+          "icon": "🚝",
+          "baseFee": 420,
+          "perk": "TRANSIT",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "NOVA_BUILD",
+          "name": "新星营造",
+          "stockId": "REALTY",
+          "icon": "🏗️",
+          "baseFee": 440,
+          "perk": "BUILD",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "CLOUD_COMPUTE",
+          "name": "云端计算",
+          "stockId": "TECH",
+          "icon": "💻",
+          "baseFee": 390,
+          "perk": "TECH",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        },
+        {
+          "id": "SUMMIT_MATERIAL",
+          "name": "峰岳材料",
+          "stockId": "MINING",
+          "icon": "⛏️",
+          "baseFee": 410,
+          "perk": "MATERIAL",
+          "treasury": 1200,
+          "periodRevenue": 0,
+          "chairmanId": null,
+          "lastDividend": 0,
+          "policyId": null,
+          "policyStartedRound": null,
+          "policyHistory": []
+        }
+      ],
+      "auction": null,
+      "phaseBeforeAuction": null,
+      "bankruptcyAuctionQueue": [],
+      "marketOffers": [],
+      "marketHistory": [],
+      "researchTasks": [],
+      "economicCycle": {
+        "period": 1,
+        "roundsPerPeriod": 5,
+        "lastSettlementRound": 0,
+        "lastReport": null
+      },
+      "minigameState": null,
+      "turnCheckpoint": {
+        "playerId": 0,
+        "currentTile": 0,
+        "cash": 20000,
+        "deposit": 5000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "items": [
+          "REMOTE_DICE_ITEM",
+          "BARRIER",
+          "ROBOT_DOLL",
+          "MINE_ITEM"
+        ],
+        "stocks": {},
+        "statuses": {
+          "vehicle": "WALK",
+          "jailTurns": 0,
+          "hospitalTurns": 0,
+          "hotelTurns": 0,
+          "fuelBoostTurns": 0,
+          "godType": null,
+          "godTurns": 0
+        }
+      },
+      "activeQuests": [],
+      "questHistory": [],
+      "questSequence": 0,
+      "matchStatistics": {
+        "startedAtRound": 1,
+        "players": [
+          {
+            "playerId": 0,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 1122,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 1,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 1,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 1,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 2,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          },
+          {
+            "playerId": 3,
+            "turns": 0,
+            "cashIn": 0,
+            "cashOut": 0,
+            "rentIncome": 0,
+            "rentExpense": 0,
+            "propertiesBought": 0,
+            "propertiesUpgraded": 0,
+            "cardsUsed": 0,
+            "itemsUsed": 0,
+            "investmentTrades": 0,
+            "minigamesPlayed": 0,
+            "minigamesWon": 0,
+            "minigameEarnings": 0,
+            "questsCompleted": 0,
+            "bankruptRound": null
+          }
+        ],
+        "highlights": []
+      },
+      "matchConfig": {
+        "playerConfigs": [
+          {
+            "name": "林小满",
+            "profileIndex": 0,
+            "isAI": false,
+            "aiDifficulty": "NORMAL"
+          },
+          {
+            "name": "顾田野 AI",
+            "profileIndex": 1,
+            "isAI": true,
+            "aiDifficulty": "NORMAL"
+          },
+          {
+            "name": "洛晶晶 AI",
+            "profileIndex": 2,
+            "isAI": true,
+            "aiDifficulty": "NORMAL"
+          },
+          {
+            "name": "巴洛克 AI",
+            "profileIndex": 3,
+            "isAI": true,
+            "aiDifficulty": "NORMAL"
+          }
+        ],
+        "initialCash": 20000,
+        "options": {
+          "maxRounds": 40,
+          "mapId": "grand-bay",
+          "mode": "STANDARD",
+          "teams": false,
+          "initialDeposit": 5000
+        }
+      }
+    }
+  },
+  "frames": [
+    {
+      "tile": 1,
+      "y": 0.48000000000000004,
+      "x": -51.64314527946853,
+      "z": 28.13060932394505,
+      "heading": 1.5906036019862166,
+      "leg": 0.0007853978496568316,
+      "arm": -0.0006283182797254653
+    },
+    {
+      "tile": 1,
+      "y": 0.48,
+      "x": -49.018776699382144,
+      "z": 28.078620934261735,
+      "heading": 1.5906036019862166,
+      "leg": 0.3283438868911795,
+      "arm": -0.2626751095129436
+    },
+    {
+      "tile": 2,
+      "y": 0.48000000000000004,
+      "x": -45.04909090914509,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0.0007853978496568316,
+      "arm": -0.0006283182797254653
+    },
+    {
+      "tile": 3,
+      "y": 0.48000000000000004,
+      "x": -41.05,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0,
+      "arm": 0
+    },
+    {
+      "tile": 3,
+      "y": 0.48000000000000004,
+      "x": -39.82545454542745,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0.5161410230601251,
+      "arm": -0.4129128184481001
+    },
+    {
+      "tile": 3,
+      "y": 0.48000000000000004,
+      "x": -38.71909090903672,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": -0.27318421120291664,
+      "arm": 0.21854736896233332
+    },
+    {
+      "tile": 3,
+      "y": 0.48000000000000004,
+      "x": -37.97545454542745,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": -0.5462336689251173,
+      "arm": 0.43698693514009385
+    },
+    {
+      "tile": 4,
+      "y": 0.48000000000000004,
+      "x": -37.049090909145086,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0.0007853978496568316,
+      "arm": -0.0006283182797254653
+    },
+    {
+      "tile": 5,
+      "y": 0.48000000000000004,
+      "x": -33.05,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0,
+      "arm": 0
+    },
+    {
+      "tile": 5,
+      "y": 0.48000000000000004,
+      "x": -31.650909090990368,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0.4454205385733494,
+      "arm": -0.35633643085867955
+    },
+    {
+      "tile": 6,
+      "y": 0.48000000000000004,
+      "x": -29.05,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": 0,
+      "arm": 0
+    },
+    {
+      "tile": 6,
+      "y": 0.48000000000000004,
+      "x": -25.355454545400363,
+      "z": 28,
+      "heading": 1.5707963267948966,
+      "leg": -0.2538843277436246,
+      "arm": 0.20310746219489972
+    }
+  ],
+  "ground": 0.48000000000000004,
+  "matchesBaseline": true,
+  "rigs": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "success": true
+}

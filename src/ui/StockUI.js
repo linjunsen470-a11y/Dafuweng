@@ -59,6 +59,15 @@ export class StockUI {
     if (this.activeTab === 'COMPANIES') return this.renderCompanies();
     const curPlayer = this.gameState.getCurrentPlayer();
     const stocks = this.gameState.stockMarket.stocks;
+    const canBuy = this.gameState.phase === 'PRE_ROLL_ACTION' && !curPlayer.isBankrupt && !curPlayer.isAI;
+    const canSell = canBuy || (this.gameState.phase === 'DEBT_SETTLEMENT'
+      && this.gameState.pendingDebt?.debtorId === curPlayer.id && !curPlayer.isBankrupt && !curPlayer.isAI);
+    document.getElementById('btn-stock-buy').disabled = !canBuy;
+    document.getElementById('btn-stock-sell').disabled = !canSell;
+    document.getElementById('stock-trade-guidance').textContent = canBuy
+      ? '掷骰前可买卖 · 使用现金结算'
+      : canSell ? '偿债中可卖出股票回笼现金，不能买入。'
+        : '本次到访可查看行情；买卖请在你的掷骰前打开「股市大盘」。';
 
     // 1. 渲染股票列表
     this.stockListContainer.innerHTML = '';
@@ -109,7 +118,7 @@ export class StockUI {
   renderCompanies() {
     const player = this.gameState.getCurrentPlayer();
     const canAct = this.gameState.phase === 'PRE_ROLL_ACTION' && !player.isAI && !player.isBankrupt;
-    this.companyPanel.innerHTML = `<div class="company-board-intro"><div><strong>城市公司董事会</strong><span>最大股东自动担任董事长；政策使用公司金库，不消耗个人现金。</span></div>
+    this.companyPanel.innerHTML = `<div class="company-board-intro"><div><strong>城市公司董事会</strong><span>最大股东自动担任董事长；在自己的掷骰前选择政策，每公司每周期一次，使用公司金库，不消耗个人现金。</span></div>
       <span class="company-board-cycle">第 ${this.gameState.economicCycle.period} 经营周期</span></div>
       <div class="company-board-grid">${this.gameState.companyManager.companies.map(company => {
         const chairman = this.gameState.players[company.chairmanId];
@@ -120,14 +129,19 @@ export class StockUI {
         const isChairman = company.chairmanId === player.id;
         const canSetPolicy = canAct && isChairman && !policy;
         const last = company.policyHistory?.at(-1);
+        const guidance = policy ? '本周期政策已确定，结算后才能重新选择。'
+          : !isChairman ? `需成为${stock?.name || company.stockId}的最大股东，才能决定本公司政策。`
+          : !canAct ? '请在你的掷骰前打开「股市大盘 → 公司经营」决策。'
+          : '选择后锁定至本周期结算；费用从公司金库扣除。';
         return `<article class="company-board-card ${isChairman ? 'is-chairman' : ''}" data-company-id="${escapeHTML(company.id)}">
-          <div class="company-board-head"><span class="company-board-icon">${escapeHTML(company.icon)}</span><div><span class="company-stock-code">${escapeHTML(stock?.code || company.stockId)}</span><h3>${escapeHTML(company.name)}</h3></div>
+          <div class="company-board-head"><span class="company-board-icon">${escapeHTML(company.icon)}</span><div><span class="company-stock-code">${escapeHTML(stock ? `${stock.name} · ${stock.code}` : company.stockId)}</span><h3>${escapeHTML(company.name)}</h3></div>
             <span class="company-chairman-badge">${isChairman ? '你的公司' : escapeHTML(chairman ? `董事长 ${chairman.name}` : '暂无董事长')}</span></div>
           <div class="company-finance-grid"><div><span>公司金库</span><strong>$${company.treasury.toLocaleString()}</strong></div><div><span>周期营收</span><strong>$${company.periodRevenue.toLocaleString()}</strong></div>
             <div><span>上期分红</span><strong>$${company.lastDividend.toLocaleString()}</strong></div><div><span>你的持股</span><strong>${shares} 股</strong></div></div>
           <div class="company-perk"><span>${escapeHTML(perk?.icon || '🏢')}</span><div><strong>${escapeHTML(perk?.name || company.perk)}</strong><small>${escapeHTML(perk?.description || '')}</small></div></div>
-          ${policy ? `<div class="company-active-policy"><span>${policy.icon}</span><div><strong>执行中 · ${policy.name}</strong><small>${escapeHTML(policy.description)}</small></div></div>`
-            : `<div class="company-policy-options">${COMPANY_POLICIES.map(option => `<button class="btn-secondary btn-sm" data-company-policy="${option.id}" ${canSetPolicy && company.treasury >= option.cost ? '' : 'disabled'} title="${escapeHTML(option.description)}">${option.icon} ${option.name} · $${option.cost}</button>`).join('')}</div>`}
+          <p class="company-policy-guidance">${escapeHTML(guidance)}</p>
+          ${policy ? `<div class="company-active-policy" tabindex="-1"><span>${policy.icon}</span><div><strong>执行中 · ${policy.name}</strong><small>${escapeHTML(policy.description)}</small></div></div>`
+            : `<div class="company-policy-options">${COMPANY_POLICIES.map(option => `<button class="btn-secondary btn-sm" data-company-policy="${option.id}" ${canSetPolicy && company.treasury >= option.cost ? '' : 'disabled'} ><strong>${option.icon} ${option.name} · $${option.cost}</strong><small>${escapeHTML(option.description)}</small><span>${company.treasury >= option.cost ? `金库余 $${(company.treasury - option.cost).toLocaleString()}` : `金库还差 $${(option.cost - company.treasury).toLocaleString()}`}</span></button>`).join('')}</div>`}
           ${last ? `<div class="company-last-result">上次政策：${escapeHTML(COMPANY_POLICIES.find(entry => entry.id === last.policyId)?.name || last.policyId)} · 分红 $${Number(last.dividendPool || 0).toLocaleString()}</div>` : ''}
         </article>`;
       }).join('')}</div>`;
@@ -144,6 +158,18 @@ export class StockUI {
     else this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
     this.onUpdateHUD?.();
     this.renderCompanies();
+    if (result.success) {
+      const card = [...this.companyPanel.querySelectorAll('[data-company-id]')].find(card => card.dataset.companyId === companyId);
+      const active = card?.querySelector('.company-active-policy');
+      if (active) {
+        const feedback = document.createElement('small');
+        feedback.className = 'company-policy-receipt';
+        feedback.setAttribute('role', 'status');
+        feedback.textContent = `已支出公司金库 $${result.cost.toLocaleString()}，金库余 $${result.treasury.toLocaleString()}；个人现金不变。`;
+        active.querySelector('div').append(feedback);
+        active.focus({ preventScroll: true });
+      }
+    }
   }
 
   drawChart(stock) {
@@ -213,7 +239,7 @@ export class StockUI {
         this.onUpdateHUD();
       }
     } else {
-      this.gameState.addLog(`⚠️ ${res.msg}`, 'danger');
+      this.gameState.addLog(`⚠️ ${res.reason || res.msg}`, 'danger');
       if (this.onUpdateHUD) this.onUpdateHUD();
     }
   }
@@ -233,7 +259,7 @@ export class StockUI {
         this.onUpdateHUD();
       }
     } else {
-      this.gameState.addLog(`⚠️ ${res.msg}`, 'danger');
+      this.gameState.addLog(`⚠️ ${res.reason || res.msg}`, 'danger');
       if (this.onUpdateHUD) this.onUpdateHUD();
     }
   }

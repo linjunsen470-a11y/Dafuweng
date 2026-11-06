@@ -30,6 +30,16 @@ export class CardRules {
       .filter(p => !p.isBankrupt && p.id !== player.id)
       .map(p => ({ id: p.id, label: p.name, description: `现金 $${p.cash.toLocaleString()}` }));
 
+    if(card.id==='BORROW_PASS'){
+      if(player.isBankrupt||player.rentShieldActiveThisTurn||player.godType==='GREAT_FORTUNE'||player.hospitalTurns||player.jailTurns||player.hotelTurns||player.hibernateTurns||player.sleepwalkTurns||player.isSleepwalkingThisTurn)return [];
+      return [{id:player.id,label:player.name,description:'只为自己举旗 · 本回合免租'}];
+    }
+    if(card.id==='SWAP_STOPS'){
+      const free=p=>!p.isBankrupt&&!p.hospitalTurns&&!p.jailTurns&&!p.hotelTurns&&!p.hibernateTurns&&!p.sleepwalkTurns&&!p.isSleepwalkingThisTurn;
+      if(!free(player))return [];
+      const range=new Set(this.gameState.mapRuntime.getReachable(player.currentTile,6,[1,-1]).map(t=>t.id));
+      return this.gameState.players.filter(p=>p.id!==player.id&&free(p)&&p.currentTile!==player.currentTile&&range.has(p.currentTile)).map(p=>({id:p.id,label:p.name,description:`当前${p.currentTile}号 · 可交换站位`}));
+    }
     if (card.targetType === 'PLAYER') {
       if (card.id === 'TURN_AROUND') {
         return [player, ...this.gameState.players.filter(p => !p.isBankrupt && p.id !== player.id)]

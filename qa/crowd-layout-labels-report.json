@@ -1,0 +1,17 @@
+{
+  "transportOnly": false,
+  "finishCheck": false,
+  "labelsOnly": true,
+  "checks": [
+    {
+      "map": "coast",
+      "nearViewLabelsClear": true
+    },
+    {
+      "map": "highland",
+      "nearViewLabelsClear": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

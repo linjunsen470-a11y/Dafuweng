@@ -1,0 +1,141 @@
+{
+  "kind": "regional residences and ambient life",
+  "checks": [
+    "Previous-commit save resumes with unchanged cash/ownership, original vacant plot and explicit owner/L0 badge.",
+    "All 12 regional house tiers and commercial model render with owner/level badges; fixture leaves game state intact.",
+    "Two sea birds and two fountain ripples animate; reduced-motion preference immediately hides ambience.",
+    "390px keeps only the selected owner/level badge; restored real game completes the AI turn normally."
+  ],
+  "errors": [],
+  "propertyFixture": {
+    "frame": 9,
+    "unchanged": true,
+    "models": [
+      {
+        "tileId": 1,
+        "model": "res_harbor_1",
+        "level": 1,
+        "owner": 1
+      },
+      {
+        "tileId": 2,
+        "model": "res_harbor_2",
+        "level": 2,
+        "owner": 0
+      },
+      {
+        "tileId": 3,
+        "model": "res_harbor_3",
+        "level": 3,
+        "owner": 1
+      },
+      {
+        "tileId": 5,
+        "model": "res_harbor_4",
+        "level": 4,
+        "owner": 1
+      },
+      {
+        "tileId": 6,
+        "model": "res_harbor_1",
+        "level": 1,
+        "owner": 0
+      },
+      {
+        "tileId": 7,
+        "model": "res_harbor_2",
+        "level": 2,
+        "owner": 1
+      },
+      {
+        "tileId": 9,
+        "model": "res_market_1",
+        "level": 1,
+        "owner": 1
+      },
+      {
+        "tileId": 11,
+        "model": "res_market_2",
+        "level": 2,
+        "owner": 1
+      },
+      {
+        "tileId": 12,
+        "model": "market",
+        "level": 3,
+        "owner": 0
+      },
+      {
+        "tileId": 13,
+        "model": "res_market_3",
+        "level": 3,
+        "owner": 1
+      },
+      {
+        "tileId": 14,
+        "model": "res_market_4",
+        "level": 4,
+        "owner": 0
+      },
+      {
+        "tileId": 15,
+        "model": "res_market_1",
+        "level": 1,
+        "owner": 1
+      },
+      {
+        "tileId": 17,
+        "model": "res_garden_1",
+        "level": 1,
+        "owner": 1
+      },
+      {
+        "tileId": 19,
+        "model": "res_garden_2",
+        "level": 2,
+        "owner": 1
+      },
+      {
+        "tileId": 21,
+        "model": "res_garden_3",
+        "level": 3,
+        "owner": 1
+      },
+      {
+        "tileId": 23,
+        "model": "res_garden_4",
+        "level": 4,
+        "owner": 1
+      }
+    ],
+    "description": "Presentation-only regional tier fixture, not earned game progress."
+  },
+  "metrics": {
+    "calls": 173,
+    "triangles": 137841,
+    "geometries": 174
+  },
+  "change": {
+    "calls": 2,
+    "triangles": -85276
+  },
+  "ambient": {
+    "time": 0.6560999999996274,
+    "meshes": 4,
+    "visible": true,
+    "calls": 177,
+    "birdSamples": [
+      [
+        19.977863295659773,
+        4.546984576569328,
+        0.705549575657609
+      ],
+      [
+        19.915687731512136,
+        4.591338213358899,
+        1.375873350550324
+      ]
+    ]
+  },
+  "success": true
+}

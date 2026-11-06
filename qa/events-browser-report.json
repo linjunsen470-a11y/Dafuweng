@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-11-05T19:46:23.442Z",
+  "checks": [
+    "Three-region guide, route preview and three visible harbor choices; pending event survives refresh without RNG changes.",
+    "Harbor risk charged exactly once, net cash 800; settled reload does not repay or reroll.",
+    "Travel to lighthouse market and receive its guaranteed 20-point option through UI.",
+    "Garden choice works at 390 px: pay 20 points to extend the active commission from round 3 to 4, preserved on refresh."
+  ],
+  "errors": [],
+  "success": true,
+  "finishedAt": "2026-11-05T19:48:01.990Z"
+}

@@ -1,0 +1,24 @@
+{
+  "checks": [
+    {
+      "mapId": "shanhai-coast",
+      "kind": "UPGRADE",
+      "baselineCashAfterInvestment": 2200,
+      "updatedCash": 2800,
+      "visibleNextRent": 2760,
+      "normalHumanTurnContinues": true,
+      "receipt": "AI explanation visible, no investment deducted, old save resumes once, refresh stable"
+    },
+    {
+      "mapId": "shanhai-highland",
+      "kind": "PURCHASE",
+      "baselineCashAfterInvestment": 2500,
+      "updatedCash": 3500,
+      "visibleNextRent": 2520,
+      "normalHumanTurnContinues": true,
+      "receipt": "AI explanation visible, no investment deducted, old save resumes once, refresh stable"
+    }
+  ],
+  "errors": [],
+  "success": true
+}

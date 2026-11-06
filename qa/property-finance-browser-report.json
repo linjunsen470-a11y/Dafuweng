@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "map": "coast",
+      "kind": "four-seat finance and construction",
+      "principal": 600,
+      "redeemFee": 60,
+      "threat": {
+        "tileId": 5,
+        "name": "风帆公寓",
+        "rent": 2760
+      },
+      "neighborCount": 2,
+      "upgradeCost": 900,
+      "previewAndCancelReadOnly": true,
+      "keyboardReceiptAndReload": true,
+      "gardenMatchesEngine": true,
+      "fullRound": true
+    },
+    {
+      "map": "highland",
+      "kind": "four-seat finance and construction",
+      "principal": 500,
+      "redeemFee": 50,
+      "threat": {
+        "tileId": 5,
+        "name": "青瓦茶舍",
+        "rent": 2520
+      },
+      "neighborCount": 2,
+      "upgradeCost": 800,
+      "previewAndCancelReadOnly": true,
+      "keyboardReceiptAndReload": true,
+      "gardenMatchesEngine": true,
+      "fullRound": true
+    },
+    {
+      "kind": "early game",
+      "mortgageAvailableBeforeConstruction": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

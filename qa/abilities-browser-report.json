@@ -1,0 +1,76 @@
+{
+  "kind": "role abilities and original character performance",
+  "checks": [
+    "ayu: actual UI movement, ability use/payment/reward, dice still available, reload preserves cooldown and balances; original GLB clips render.",
+    "qinghe: actual UI movement, ability use/payment/reward, dice still available, reload preserves cooldown and balances; original GLB clips render.",
+    "390px layout shows ability cost, cooldown and result without horizontal overflow.",
+    "Actual arrival at island event plays notice, and the safe event choice plays celebration.",
+    "Previous-version save without abilities resumes with unchanged cash and fresh optional ability ledger."
+  ],
+  "errors": [],
+  "roles": {
+    "ayu": {
+      "before": {
+        "cash": 16000,
+        "points": 150,
+        "tile": 1,
+        "rng": 1582792594,
+        "round": 2
+      },
+      "after": {
+        "cash": 16900,
+        "points": 145,
+        "tile": 1,
+        "rng": 1582792594,
+        "round": 2,
+        "readyRound": 5,
+        "phase": "PRE_ROLL_ACTION"
+      },
+      "gait": {
+        "action": "walk",
+        "time": 0.16,
+        "timeScale": 2
+      },
+      "clips": [
+        "idle",
+        "walk",
+        "celebrate",
+        "disappointed",
+        "ability",
+        "notice"
+      ]
+    },
+    "qinghe": {
+      "before": {
+        "cash": 14800,
+        "points": 120,
+        "tile": 1,
+        "rng": 2127028528,
+        "round": 2
+      },
+      "after": {
+        "cash": 15100,
+        "points": 90,
+        "tile": 1,
+        "rng": 2127028528,
+        "round": 2,
+        "readyRound": 5,
+        "phase": "PRE_ROLL_ACTION"
+      },
+      "gait": {
+        "action": "walk",
+        "time": 0.16,
+        "timeScale": 2
+      },
+      "clips": [
+        "idle",
+        "walk",
+        "celebrate",
+        "disappointed",
+        "ability",
+        "notice"
+      ]
+    }
+  },
+  "success": true
+}

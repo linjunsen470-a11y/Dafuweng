@@ -1,0 +1,44 @@
+{
+  "originalAuthorship": "Original project repairer, helmet, tools, outfit and shared original articulated base. No external artwork.",
+  "characters": [
+    {
+      "file": "character-builder.glb",
+      "boundsYUp": {
+        "min": [
+          -0.392,
+          0.0,
+          -0.3
+        ],
+        "max": [
+          0.392,
+          1.7525,
+          0.34
+        ]
+      },
+      "height": 1.753,
+      "triangles": 17156,
+      "meshCount": 6,
+      "clips": {
+        "idle": 2.4,
+        "walk": 0.8,
+        "celebrate": 1.6,
+        "disappointed": 1.8,
+        "ability": 1.2,
+        "notice": 1.0
+      },
+      "forward": "+Z",
+      "up": "+Y",
+      "rightsStatement": "Original project asset; no separate third-party license granted",
+      "animation": "Articulated rigid meshes; named object-transform NLA clips",
+      "bytes": 751080,
+      "originalDrawCalls": 78,
+      "drawCallsPerNormalPass": 30,
+      "maxWorldVertexError": 2.60770320892334e-08,
+      "facialTargets": [
+        "happy",
+        "concern",
+        "surprise"
+      ]
+    }
+  ]
+}

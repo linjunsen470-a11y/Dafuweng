@@ -1,4 +1,4 @@
-function createImpactCard(impact) {
+export function createImpactCard(impact) {
   const item = document.createElement('div');
   item.className = `news-impact tone-${impact.tone || 'neutral'}`;
   const icon = document.createElement('span');

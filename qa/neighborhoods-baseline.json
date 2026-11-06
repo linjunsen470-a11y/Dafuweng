@@ -1,0 +1,13 @@
+{
+  "kind": "prior-build baseline",
+  "checks": [
+    "Original scene loaded, started and rendered with no asset or WebGL errors."
+  ],
+  "errors": [],
+  "metrics": {
+    "calls": 162,
+    "triangles": 143703,
+    "geometries": 163
+  },
+  "success": true
+}

@@ -1,0 +1,82 @@
+{
+  "errors": [],
+  "scope": "Prepared opponent tile1 LV2 and two cards; actual inventory, target cancel, demolition, turtle target clicks. No forced engine action.",
+  "cancel": {
+    "cards": [
+      "DEMOLISH",
+      "TURTLE"
+    ],
+    "level": 2
+  },
+  "toasts": [
+    {
+      "kind": "toast",
+      "icon": "💣",
+      "title": "拆房卡已生效",
+      "detail": "林小满 · 拆房卡 · 蓝湾码头 1号 已降至 LV 1",
+      "tone": "gold",
+      "fullDetail": true
+    },
+    {
+      "kind": "toast",
+      "icon": "🐢",
+      "title": "乌龟卡已生效",
+      "detail": "林小满 · 乌龟卡 · 顾田野 AI：剩余 3 回合，每次移动 1 步",
+      "tone": "gold",
+      "fullDetail": true
+    }
+  ],
+  "result": {
+    "players": [
+      {
+        "id": 0,
+        "cash": 20000,
+        "cards": [],
+        "turtleTurns": 0
+      },
+      {
+        "id": 1,
+        "cash": 23000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "turtleTurns": 3
+      },
+      {
+        "id": 2,
+        "cash": 20000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "turtleTurns": 0
+      },
+      {
+        "id": 3,
+        "cash": 23000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND",
+          "LAND_BUY"
+        ],
+        "turtleTurns": 0
+      }
+    ],
+    "property": {
+      "owner": 1,
+      "level": 1,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    },
+    "rollEnabled": true,
+    "phase": "PRE_ROLL_ACTION"
+  },
+  "success": true
+}

@@ -1,6 +1,12 @@
 import { cardManager } from '../game/CardManager.js';
 import { ITEMS } from '../game/ContentRegistry.js';
 import { CARD_CAPACITY, ITEM_CAPACITY } from '../game/InventoryManager.js';
+import {
+  CARD_CATEGORIES,
+  createCardPresentation,
+  createItemPresentation,
+  filterCardPresentations
+} from '../game/CardPresentation.js';
 
 export class ShopUI {
   constructor(gameState, audioManager, onUseCardCallback, onUpdateHUD, gameEngine = null) {
@@ -12,15 +18,24 @@ export class ShopUI {
 
     this.shopModal = document.getElementById('modal-shop');
     this.shopGrid = document.getElementById('shop-card-grid');
+    this.shopDetail = document.getElementById('shop-card-detail');
+    this.shopTabs = document.getElementById('shop-filter-tabs');
     this.shopUserPoints = document.getElementById('shop-user-points');
     this.shopTitle = document.getElementById('shop-title');
     this.shopSubtitle = document.getElementById('shop-subtitle');
     this.shopVisitBanner = document.getElementById('shop-visit-banner');
     this.shopOffer = null;
     this.shopCloseResolver = null;
+    this.shopFilter = 'ALL';
+    this.selectedShopKey = null;
 
     this.inventoryModal = document.getElementById('modal-inventory');
     this.inventoryGrid = document.getElementById('inventory-card-grid');
+    this.inventoryDetail = document.getElementById('inventory-card-detail');
+    this.inventoryTabs = document.getElementById('inventory-filter-tabs');
+    this.inventorySubtitle = document.getElementById('inventory-subtitle');
+    this.inventoryFilter = 'ALL';
+    this.selectedInventoryKey = null;
 
     this.bindEvents();
   }
@@ -32,10 +47,12 @@ export class ShopUI {
 
   showShop({ offer = null, awaitClose = false } = {}) {
     this.shopOffer = offer;
-    this.shopTitle.textContent = offer ? `🏬 ${offer.tileName}` : '🏬 道具卡片商店';
+    this.shopFilter = 'ALL';
+    this.selectedShopKey = null;
+    this.shopTitle.textContent = offer ? `🏬 ${offer.tileName}` : '🏬 策略卡片中心';
     this.shopSubtitle.textContent = offer
       ? `第 ${offer.round} 轮限定货架 · 到店专享 ${Math.round(offer.discountRate * 100)}% 折扣`
-      : '完整目录 · 掷骰前自由兑换';
+      : '30 张策略卡 · 稀有度、目标与战术情报一览';
     this.shopVisitBanner.classList.toggle('hidden', !offer);
     this.shopVisitBanner.innerHTML = offer ? `
       <strong>✨ 到店会员价已生效</strong>
@@ -57,6 +74,8 @@ export class ShopUI {
   }
 
   showInventory() {
+    this.inventoryFilter = 'ALL';
+    this.selectedInventoryKey = null;
     this.inventoryModal.classList.remove('hidden');
     this.renderInventory();
   }
@@ -65,149 +84,200 @@ export class ShopUI {
     this.inventoryModal.classList.add('hidden');
   }
 
-  renderShop() {
-    const curPlayer = this.gameState.getCurrentPlayer();
-    this.shopUserPoints.textContent = curPlayer.cardPoints;
-    this.shopGrid.innerHTML = '';
+  renderTabs(container, entries, activeFilter, onChange) {
+    const categoryIds = new Set(entries.map(entry => entry.presentation.category.id));
+    const tabs = [CARD_CATEGORIES.ALL, ...Object.values(CARD_CATEGORIES).filter(category => category.id !== 'ALL' && categoryIds.has(category.id))];
+    container.innerHTML = tabs.map(category => `
+      <button type="button" class="${activeFilter === category.id ? 'active' : ''}" data-card-filter="${category.id}">
+        <span>${category.icon}</span>${category.label}<b>${category.id === 'ALL' ? entries.length : entries.filter(entry => entry.presentation.category.id === category.id).length}</b>
+      </button>
+    `).join('');
+    container.querySelectorAll('[data-card-filter]').forEach(button => button.addEventListener('click', () => onChange(button.dataset.cardFilter)));
+  }
 
+  getShopEntries(player) {
     const cards = this.shopOffer
       ? this.shopOffer.cardIds.map(cardId => cardManager.getCardById(cardId)).filter(Boolean)
       : cardManager.getAllCards();
-    cards.forEach(card => {
-      const finalCost = this.gameEngine
-        ? this.gameEngine.getCardCost(curPlayer, card, this.shopOffer?.tileId)
-        : (curPlayer.skillName === '商业奇才' ? Math.round(card.cost * 0.85) : card.cost);
-
-      const item = document.createElement('div');
-      item.className = 'shop-card-item';
-
-      const iconContent = card.cardImg
-        ? `<img src="${card.cardImg}" class="card-thumb-img" alt="${card.name}">`
-        : `<div class="card-icon">${card.icon}</div>`;
-
-      item.innerHTML = `
-        ${iconContent}
-        <div class="card-title">${card.name}</div>
-        <div class="card-desc">${card.desc}</div>
-        <div class="card-cost">${finalCost} PTS ${card.cost !== finalCost ? `<del style="font-size:0.75rem;color:#888;">${card.cost}</del>` : ''}</div>
-        <button class="btn-primary btn-sm btn-buy-card">兑换卡片</button>
-      `;
-
-      item.querySelector('.btn-buy-card').addEventListener('click', () => {
-        const result = this.gameEngine
-          ? this.gameEngine.execute({ type: 'BUY_CARD', playerId: curPlayer.id, payload: { cardId: card.id, tileId: this.shopOffer?.tileId } })
-          : { success: curPlayer.cardPoints >= finalCost };
-        if (result.success) {
-          if (!this.gameEngine) {
-            curPlayer.cardPoints -= finalCost;
-            curPlayer.cards.push(card.id);
-          }
-          this.audioManager.playCardSpell();
-          this.renderShop();
-          if (this.onUpdateHUD) {
-            this.onUpdateHUD();
-          }
-        } else {
-          this.gameState.addLog(`⚠️ ${result.reason || '无法兑换该卡片'}`, 'danger');
-          if (this.onUpdateHUD) this.onUpdateHUD();
-        }
-      });
-
-      this.shopGrid.appendChild(item);
+    const cardEntries = cards.map(card => {
+      const cost = this.gameEngine
+        ? this.gameEngine.getCardCost(player, card, this.shopOffer?.tileId)
+        : (player.skillName === '商业奇才' ? Math.round(card.cost * 0.85) : card.cost);
+      return { key: `CARD:${card.id}`, kind: 'CARD', definition: card, presentation: createCardPresentation(card, { cost, points: player.cardPoints }) };
     });
-
     const tools = this.shopOffer
       ? this.shopOffer.itemIds.map(itemId => ITEMS.find(item => item.id === itemId)).filter(Boolean)
       : ITEMS.filter(item => item.cost !== null);
-    tools.forEach(tool => {
-      const finalCost = this.gameEngine ? this.gameEngine.getItemCost(curPlayer, tool, this.shopOffer?.tileId) : tool.cost;
-      const item = document.createElement('div');
-      item.className = 'shop-card-item shop-tool-item';
-      item.innerHTML = `
-        <div class="card-icon">${tool.icon}</div>
-        <div class="card-title">${tool.name}</div>
-        <div class="card-desc">${tool.description}</div>
-        <div class="card-cost">${finalCost} PTS · 道具 ${tool.cost !== finalCost ? `<del style="font-size:0.75rem;color:#888;">${tool.cost}</del>` : ''}</div>
-        <button class="btn-primary btn-sm btn-buy-tool">购买道具</button>
-      `;
-      item.querySelector('.btn-buy-tool').addEventListener('click', () => {
-        const result = this.gameEngine.execute({ type: 'BUY_ITEM', playerId: curPlayer.id, payload: { itemId: tool.id, tileId: this.shopOffer?.tileId } });
-        if (result.success) this.audioManager.playCardSpell();
-        else this.gameState.addLog(`⚠️ ${result.reason}`, 'danger');
-        this.renderShop();
-        this.onUpdateHUD?.();
-      });
-      this.shopGrid.appendChild(item);
+    return [...cardEntries, ...tools.map(tool => {
+      const cost = this.gameEngine ? this.gameEngine.getItemCost(player, tool, this.shopOffer?.tileId) : tool.cost;
+      return { key: `ITEM:${tool.id}`, kind: 'ITEM', definition: tool, presentation: createItemPresentation(tool, { cost, points: player.cardPoints }) };
+    })];
+  }
+
+  renderShop() {
+    const player = this.gameState.getCurrentPlayer();
+    this.shopUserPoints.textContent = player.cardPoints;
+    const entries = this.getShopEntries(player);
+    this.renderTabs(this.shopTabs, entries, this.shopFilter, filter => {
+      this.shopFilter = filter;
+      this.selectedShopKey = null;
+      this.renderShop();
     });
+    const visible = filterCardPresentations(entries.map(entry => ({ ...entry, category: entry.presentation.category })), this.shopFilter);
+    if (!visible.some(entry => entry.key === this.selectedShopKey)) this.selectedShopKey = visible[0]?.key || null;
+    this.shopGrid.innerHTML = '';
+    visible.forEach(entry => this.shopGrid.appendChild(this.createEntryCard(entry, {
+      selected: entry.key === this.selectedShopKey,
+      capacityText: entry.kind === 'CARD' ? `卡片 ${player.cards?.length || 0}/${CARD_CAPACITY}` : `道具 ${player.items?.length || 0}/${ITEM_CAPACITY}`,
+      primaryLabel: entry.kind === 'CARD' ? '兑换卡片' : '购买道具',
+      primaryDisabled: !entry.presentation.affordable,
+      onSelect: () => { this.selectedShopKey = entry.key; this.renderShop(); },
+      onPrimary: () => this.buyEntry(entry, player)
+    })));
+    this.renderDetail(this.shopDetail, visible.find(entry => entry.key === this.selectedShopKey), { mode: 'SHOP', player });
+  }
+
+  buyEntry(entry, player) {
+    const command = entry.kind === 'CARD'
+      ? { type: 'BUY_CARD', playerId: player.id, payload: { cardId: entry.definition.id, tileId: this.shopOffer?.tileId } }
+      : { type: 'BUY_ITEM', playerId: player.id, payload: { itemId: entry.definition.id, tileId: this.shopOffer?.tileId } };
+    const result = this.gameEngine
+      ? this.gameEngine.execute(command)
+      : { success: player.cardPoints >= entry.presentation.cost };
+    if (result.success) {
+      if (!this.gameEngine && entry.kind === 'CARD') {
+        player.cardPoints -= entry.presentation.cost;
+        player.cards.push(entry.definition.id);
+      }
+      this.audioManager.playCardSpell();
+      this.showAcquisition(entry);
+    } else {
+      this.gameState.addLog(`⚠️ ${result.reason || '无法兑换该内容'}`, 'danger');
+    }
+    this.renderShop();
+    this.onUpdateHUD?.();
+  }
+
+  showAcquisition(entry) {
+    if (entry.kind !== 'CARD') return;
+    const view = entry.presentation;
+    const flash = document.createElement('div');
+    flash.className = `card-acquisition rarity-${view.rarity.id.toLowerCase()} ${view.artClass}`;
+    flash.setAttribute('aria-live', 'polite');
+    flash.innerHTML = `
+      <div class="card-acquisition-rays"></div>
+      <div class="card-acquisition-art"><span>${view.icon}</span><i>${view.serial}</i></div>
+      <div class="card-acquisition-copy"><small>CARD ACQUIRED · ${view.rarityStars}</small><strong>${view.name}</strong><span>${view.category.label}策略已加入卡片栏</span></div>
+    `;
+    document.body.appendChild(flash);
+    requestAnimationFrame(() => flash.classList.add('is-visible'));
+    setTimeout(() => {
+      flash.classList.remove('is-visible');
+      setTimeout(() => flash.remove(), 240);
+    }, 1900);
+  }
+
+  getInventoryEntries(player) {
+    const group = (ids = []) => [...new Set(ids)].map(id => ({ id, count: ids.filter(value => value === id).length, index: ids.indexOf(id) }));
+    const cards = group(player.cards).map(({ id, count, index }) => {
+      const card = cardManager.getCardById(id);
+      if (!card) return null;
+      const action = this.gameEngine?.getCardAction(player, id);
+      return { key: `CARD:${id}`, kind: 'CARD', definition: card, index, presentation: createCardPresentation(card, { action, ownedCount: count }) };
+    }).filter(Boolean);
+    const tools = group(player.items).map(({ id, count, index }) => {
+      const tool = ITEMS.find(item => item.id === id);
+      if (!tool) return null;
+      const action = this.gameEngine?.getItemAction(player, id);
+      return { key: `ITEM:${id}`, kind: 'ITEM', definition: tool, index, presentation: createItemPresentation(tool, { action, ownedCount: count }) };
+    }).filter(Boolean);
+    return [...cards, ...tools];
   }
 
   renderInventory() {
-    const curPlayer = this.gameState.getCurrentPlayer();
+    const player = this.gameState.getCurrentPlayer();
+    const entries = this.getInventoryEntries(player);
+    this.inventorySubtitle.textContent = `策略卡 ${player.cards?.length || 0}/${CARD_CAPACITY} · 科技道具 ${player.items?.length || 0}/${ITEM_CAPACITY} · 掷骰前使用`;
+    this.renderTabs(this.inventoryTabs, entries, this.inventoryFilter, filter => {
+      this.inventoryFilter = filter;
+      this.selectedInventoryKey = null;
+      this.renderInventory();
+    });
+    const visible = filterCardPresentations(entries.map(entry => ({ ...entry, category: entry.presentation.category })), this.inventoryFilter);
+    if (!visible.some(entry => entry.key === this.selectedInventoryKey)) this.selectedInventoryKey = visible[0]?.key || null;
     this.inventoryGrid.innerHTML = '';
-
-    if ((!curPlayer.cards || curPlayer.cards.length === 0) && (!curPlayer.items || curPlayer.items.length === 0)) {
-      this.inventoryGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#aaa;padding:20px;">背包空空如也，快去卡片商店兑换吧！</div>';
+    if (!visible.length) {
+      this.inventoryGrid.innerHTML = '<div class="card-center-empty"><span>🃏</span><strong>背包空空如也</strong><p>前往卡片商店补充下一回合的战术选择。</p></div>';
+      this.renderDetail(this.inventoryDetail, null);
       return;
     }
-
-    curPlayer.cards.forEach((cardId, index) => {
-      const card = cardManager.getCardById(cardId);
-      if (!card) return;
-
-      const item = document.createElement('div');
-      item.className = 'shop-card-item';
-
-      const iconContent = card.cardImg
-        ? `<img src="${card.cardImg}" class="card-thumb-img" alt="${card.name}">`
-        : `<div class="card-icon">${card.icon}</div>`;
-
-      item.innerHTML = `
-        ${iconContent}
-        <div class="card-title">${card.name}</div>
-        <div class="card-desc">${card.desc}</div>
-        <div class="card-cost">卡片 ${curPlayer.cards.length}/${CARD_CAPACITY}</div>
-        <button class="btn-primary btn-sm btn-use-card-action">使用卡片</button>
-        <button class="btn-secondary btn-sm btn-sell-card-action">出售</button>
-      `;
-
-      item.querySelector('.btn-use-card-action').addEventListener('click', () => {
+    visible.forEach(entry => this.inventoryGrid.appendChild(this.createEntryCard(entry, {
+      selected: entry.key === this.selectedInventoryKey,
+      capacityText: entry.presentation.enabled ? (entry.presentation.targetCount ? `${entry.presentation.targetCount} 个合法目标` : '现在可使用') : entry.presentation.disabledReason,
+      primaryLabel: '使用',
+      primaryDisabled: !entry.presentation.enabled,
+      secondaryLabel: `出售 ${entry.kind === 'CARD' ? entry.presentation.sellPrice : entry.definition.sellPrice} PTS`,
+      onSelect: () => { this.selectedInventoryKey = entry.key; this.renderInventory(); },
+      onPrimary: () => {
         this.hideInventory();
-        if (this.onUseCardCallback) {
-          this.onUseCardCallback(cardId, index, 'CARD');
-        }
-      });
-      item.querySelector('.btn-sell-card-action').addEventListener('click', () => {
-        this.gameEngine.execute({ type: 'SELL_INVENTORY', playerId: curPlayer.id, payload: { kind: 'CARD', contentId: cardId } });
+        this.onUseCardCallback?.(entry.definition.id, entry.index, entry.kind);
+      },
+      onSecondary: () => {
+        this.gameEngine.execute({ type: 'SELL_INVENTORY', playerId: player.id, payload: { kind: entry.kind, contentId: entry.definition.id } });
         this.renderInventory();
         this.onUpdateHUD?.();
-      });
+      }
+    })));
+    this.renderDetail(this.inventoryDetail, visible.find(entry => entry.key === this.selectedInventoryKey), { mode: 'INVENTORY', player });
+  }
 
-      this.inventoryGrid.appendChild(item);
-    });
+  createEntryCard(entry, options) {
+    const view = entry.presentation;
+    const article = document.createElement('article');
+    article.className = `strategy-card rarity-${view.rarity.id.toLowerCase()} ${options.selected ? 'selected' : ''} ${!view.enabled ? 'is-disabled' : ''}`;
+    article.dataset.entryKey = entry.key;
+    const art = entry.kind === 'CARD'
+      ? `<div class="strategy-card-illustration ${view.artClass}" role="img" aria-label="${view.name}插画"><span>${view.icon}</span><i>${view.serial}</i></div>`
+      : `<div class="strategy-item-icon">${view.icon}</div>`;
+    article.innerHTML = `
+      <div class="strategy-card-art">${art}<span class="strategy-rarity">${view.rarityStars} ${view.rarity.label}</span>${view.ownedCount > 1 ? `<b class="strategy-count">×${view.ownedCount}</b>` : ''}</div>
+      <div class="strategy-card-copy">
+        <div class="strategy-card-kicker"><span>${view.category.icon} ${view.category.label}</span><span>${view.targetLabel}</span></div>
+        <h3>${view.name}</h3>
+        <p>${view.desc}</p>
+        <small class="${view.enabled ? 'ready' : 'blocked'}">${options.capacityText}</small>
+      </div>
+      <div class="strategy-card-actions">
+        ${view.cost !== null && view.cost !== undefined ? `<strong>${view.cost} <small>PTS</small>${view.cost !== view.cost ? '' : ''}</strong>` : '<strong>科技限定</strong>'}
+        <button type="button" class="btn-primary btn-sm strategy-primary" ${options.primaryDisabled ? 'disabled' : ''}>${options.primaryLabel}</button>
+        ${options.secondaryLabel ? `<button type="button" class="btn-secondary btn-sm strategy-secondary">${options.secondaryLabel}</button>` : ''}
+      </div>
+    `;
+    article.addEventListener('click', options.onSelect);
+    article.querySelector('.strategy-primary')?.addEventListener('click', event => { event.stopPropagation(); options.onPrimary(); });
+    article.querySelector('.strategy-secondary')?.addEventListener('click', event => { event.stopPropagation(); options.onSecondary(); });
+    return article;
+  }
 
-    curPlayer.items?.forEach((itemId, index) => {
-      const tool = ITEMS.find(item => item.id === itemId);
-      if (!tool) return;
-      const item = document.createElement('div');
-      item.className = 'shop-card-item shop-tool-item';
-      item.innerHTML = `
-        <div class="card-icon">${tool.icon}</div>
-        <div class="card-title">${tool.name}</div>
-        <div class="card-desc">${tool.description}</div>
-        <div class="card-cost">道具 ${curPlayer.items.length}/${ITEM_CAPACITY}</div>
-        <button class="btn-primary btn-sm btn-use-tool-action">使用道具</button>
-        <button class="btn-secondary btn-sm btn-sell-tool-action">出售 ${tool.sellPrice} PTS</button>
-      `;
-      item.querySelector('.btn-use-tool-action').onclick = () => {
-        this.hideInventory();
-        this.onUseCardCallback?.(itemId, index, 'ITEM');
-      };
-      item.querySelector('.btn-sell-tool-action').onclick = () => {
-        this.gameEngine.execute({ type: 'SELL_INVENTORY', playerId: curPlayer.id, payload: { kind: 'ITEM', contentId: itemId } });
-        this.renderInventory();
-        this.onUpdateHUD?.();
-      };
-      this.inventoryGrid.appendChild(item);
-    });
+  renderDetail(container, entry, { mode = 'SHOP' } = {}) {
+    if (!entry) {
+      container.innerHTML = '<div class="card-detail-empty"><span>✦</span><p>选择一张卡片查看战术情报</p></div>';
+      return;
+    }
+    const view = entry.presentation;
+    const art = entry.kind === 'CARD'
+      ? `<div class="card-detail-illustration ${view.artClass}" role="img" aria-label="${view.name}大图预览"><span>${view.icon}</span><i>${view.serial}</i></div>`
+      : `<div class="card-detail-item-icon">${view.icon}</div>`;
+    const status = mode === 'SHOP'
+      ? (view.affordable ? '点数充足，可以兑换' : `还差 ${Math.max(0, view.cost - Number(this.gameState.getCurrentPlayer().cardPoints || 0))} PTS`)
+      : (view.enabled ? (view.targetCount ? `当前检测到 ${view.targetCount} 个合法目标` : '当前回合可以立即使用') : view.disabledReason);
+    container.className = `card-detail-panel rarity-${view.rarity.id.toLowerCase()}`;
+    container.innerHTML = `
+      <div class="card-detail-art">${art}<span>${view.rarity.label} · ${view.category.label}</span></div>
+      <div class="card-detail-heading"><small>TACTICAL DOSSIER</small><h3>${view.name}</h3><p>${view.desc}</p></div>
+      <div class="card-detail-meta"><span><b>目标</b>${view.targetLabel}</span><span><b>时机</b>${view.timing}</span><span><b>类型</b>${view.category.icon} ${view.category.label}</span></div>
+      <div class="card-tactical-note"><b>战术参谋</b><p>${view.tacticalNote}</p></div>
+      <div class="card-detail-status ${mode === 'INVENTORY' && !view.enabled || mode === 'SHOP' && !view.affordable ? 'blocked' : 'ready'}"><i></i>${status}</div>
+    `;
   }
 }

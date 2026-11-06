@@ -1,0 +1,153 @@
+{
+  "errors": [],
+  "scope": "Prepared opening, real remote6 and purchase on mobile390x844 with OS reduced-motion preference. Checks actual cash figure and nonanimated visibility.",
+  "trace": [
+    {
+      "cue": {
+        "kind": "cash",
+        "playerId": 0,
+        "amount": -1122,
+        "label": "购入地产"
+      },
+      "samples": [
+        {
+          "t": 36791.59999999404,
+          "connected": true,
+          "text": "−$1,122购入地产",
+          "opacity": "1",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "none",
+          "duration": "0s",
+          "rect": {
+            "x": 74.671875,
+            "y": 60.59375,
+            "w": 73.84375,
+            "h": 47
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 37307,
+          "connected": true,
+          "text": "−$1,122购入地产",
+          "opacity": "1",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "none",
+          "duration": "0s",
+          "rect": {
+            "x": 74.671875,
+            "y": 60.59375,
+            "w": 73.84375,
+            "h": 47
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 38296.20000000298,
+          "connected": true,
+          "text": "−$1,122购入地产",
+          "opacity": "1",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "none",
+          "duration": "0s",
+          "rect": {
+            "x": 74.671875,
+            "y": 60.59375,
+            "w": 73.84375,
+            "h": 47
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 41414.90000000596,
+          "connected": false,
+          "text": "−$1,122购入地产",
+          "opacity": "",
+          "display": "",
+          "visibility": "",
+          "animation": "",
+          "duration": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0
+          },
+          "ancestors": []
+        }
+      ],
+      "done": true
+    }
+  ],
+  "settlement": {
+    "result": {
+      "success": true,
+      "type": "PROPERTY_PURCHASED",
+      "tileId": 6,
+      "level": 0,
+      "cost": 1122,
+      "buildingType": "RESIDENTIAL",
+      "events": [
+        {
+          "type": "PROPERTY_PURCHASED",
+          "success": true,
+          "tileId": 6,
+          "level": 0,
+          "cost": 1122,
+          "buildingType": "RESIDENTIAL"
+        }
+      ]
+    },
+    "before": [
+      20000,
+      23000,
+      20000,
+      23000
+    ],
+    "after": [
+      18878,
+      23000,
+      20000,
+      23000
+    ]
+  },
+  "reducedMotionStatic": true,
+  "success": true,
+  "capturedFrames": 16
+}

@@ -1,0 +1,4 @@
+{
+  "action": "Clicked the visible Cancel button in the original commercial property type dialog at tile75 after rejoining the main road; no game state edit",
+  "selector": ".target-cancel"
+}

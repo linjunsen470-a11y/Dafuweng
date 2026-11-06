@@ -1,0 +1,2742 @@
+{
+  "id": "grand-bay",
+  "name": "山海都市岛",
+  "spawnTile": 0,
+  "theme": "GRAND_BAY",
+  "musicId": "grand-bay",
+  "defaultDiceCount": 2,
+  "passBonus": 1200,
+  "roadWidth": 2.8,
+  "tileSize": 2.25,
+  "bounds": {
+    "minX": -72,
+    "maxX": 72,
+    "minZ": -54,
+    "maxZ": 54
+  },
+  "camera": {
+    "center": {
+      "x": 0,
+      "z": -4
+    },
+    "overviewDistance": 148,
+    "followHeight": 16,
+    "followDistance": 20
+  },
+  "districts": [
+    {
+      "id": "HARBOR",
+      "name": "碧蓝海港",
+      "color": "#27b6c7"
+    },
+    {
+      "id": "OLD_TOWN",
+      "name": "锦绣老城",
+      "color": "#e6964d"
+    },
+    {
+      "id": "CBD",
+      "name": "星河都市",
+      "color": "#6979e7"
+    },
+    {
+      "id": "HILLS",
+      "name": "云顶田园",
+      "color": "#6ba956"
+    }
+  ],
+  "tiles": [
+    {
+      "id": 0,
+      "type": "START",
+      "name": "山海启航站",
+      "icon": "🚩",
+      "desc": "经过或停留领取 $1,200",
+      "position": {
+        "x": -50,
+        "z": 28
+      },
+      "next": [
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "type": "PROPERTY",
+      "name": "蓝湾码头 1号",
+      "group": "BAY_1",
+      "price": 1000,
+      "buildCost": 550,
+      "tolls": [
+        150,
+        450,
+        1000,
+        2200,
+        4800
+      ],
+      "position": {
+        "x": -46,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": -46,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CHANCE",
+      "name": "命运路牌",
+      "icon": "❓",
+      "desc": "触发一件随机事件",
+      "position": {
+        "x": -42,
+        "z": 28
+      },
+      "next": [
+        3
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PROPERTY",
+      "name": "蓝湾码头 2号",
+      "group": "BAY_1",
+      "price": 1160,
+      "buildCost": 650,
+      "tolls": [
+        170,
+        520,
+        1160,
+        2550,
+        5570
+      ],
+      "position": {
+        "x": -38,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": -38,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        4
+      ]
+    },
+    {
+      "id": 4,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -34,
+        "z": 28
+      },
+      "next": [
+        5
+      ]
+    },
+    {
+      "id": 5,
+      "type": "COUPON",
+      "name": "点券补给站",
+      "icon": "🎟️",
+      "couponAmount": 30,
+      "desc": "获得 30 点卡片点券",
+      "position": {
+        "x": -30,
+        "z": 28
+      },
+      "next": [
+        6
+      ]
+    },
+    {
+      "id": 6,
+      "type": "PROPERTY",
+      "name": "蓝湾码头 3号",
+      "group": "BAY_1",
+      "price": 1320,
+      "buildCost": 750,
+      "tolls": [
+        200,
+        590,
+        1320,
+        2900,
+        6340
+      ],
+      "position": {
+        "x": -26,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": -26,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        7
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CARD_SHOP",
+      "name": "山海卡片屋",
+      "icon": "🃏",
+      "desc": "获得卡片点券补给",
+      "position": {
+        "x": -22,
+        "z": 28
+      },
+      "next": [
+        8
+      ]
+    },
+    {
+      "id": 8,
+      "type": "PROPERTY",
+      "name": "蓝湾码头 4号",
+      "group": "BAY_1",
+      "price": 1480,
+      "buildCost": 850,
+      "tolls": [
+        220,
+        670,
+        1480,
+        3260,
+        7100
+      ],
+      "position": {
+        "x": -18,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": -18,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        9
+      ]
+    },
+    {
+      "id": 9,
+      "type": "LOTTERY",
+      "name": "山海乐透站",
+      "icon": "🎰",
+      "desc": "购买号码并参与每轮乐透开奖",
+      "position": {
+        "x": -14,
+        "z": 28
+      },
+      "next": [
+        10
+      ]
+    },
+    {
+      "id": 10,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -10,
+        "z": 28
+      },
+      "next": [
+        11
+      ]
+    },
+    {
+      "id": 11,
+      "type": "PROPERTY",
+      "name": "珊瑚海岸 1号",
+      "group": "BAY_2",
+      "price": 1260,
+      "buildCost": 700,
+      "tolls": [
+        190,
+        570,
+        1260,
+        2770,
+        6050
+      ],
+      "position": {
+        "x": -6,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": -6,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        12
+      ]
+    },
+    {
+      "id": 12,
+      "type": "BANK",
+      "name": "山海银行",
+      "icon": "🏦",
+      "desc": "结算银行分红奖励",
+      "position": {
+        "x": -2,
+        "z": 28
+      },
+      "next": [
+        13,
+        84
+      ]
+    },
+    {
+      "id": 13,
+      "type": "PROPERTY",
+      "name": "珊瑚海岸 2号",
+      "group": "BAY_2",
+      "price": 1420,
+      "buildCost": 800,
+      "tolls": [
+        210,
+        640,
+        1420,
+        3120,
+        6820
+      ],
+      "position": {
+        "x": 2,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": 2,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        14
+      ]
+    },
+    {
+      "id": 14,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 6,
+        "z": 28
+      },
+      "next": [
+        15
+      ]
+    },
+    {
+      "id": 15,
+      "type": "BIG_PROPERTY",
+      "name": "海湾度假村",
+      "icon": "🏨",
+      "desc": "可经营连锁商业的大型地产",
+      "price": 5200,
+      "buildCost": 3400,
+      "tolls": [
+        1140,
+        3640,
+        8320,
+        18720,
+        40560
+      ],
+      "position": {
+        "x": 10,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": 10,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        16
+      ],
+      "large": true,
+      "buildingType": "CHAIN_STORE"
+    },
+    {
+      "id": 16,
+      "type": "PROPERTY",
+      "name": "珊瑚海岸 3号",
+      "group": "BAY_2",
+      "price": 1580,
+      "buildCost": 900,
+      "tolls": [
+        240,
+        710,
+        1580,
+        3480,
+        7580
+      ],
+      "position": {
+        "x": 14,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": 14,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        17
+      ]
+    },
+    {
+      "id": 17,
+      "type": "TREASURE",
+      "name": "山海宝箱",
+      "icon": "🎁",
+      "desc": "随机获得现金、点券或卡片",
+      "position": {
+        "x": 18,
+        "z": 28
+      },
+      "next": [
+        18
+      ]
+    },
+    {
+      "id": 18,
+      "type": "PROPERTY",
+      "name": "珊瑚海岸 4号",
+      "group": "BAY_2",
+      "price": 1740,
+      "buildCost": 950,
+      "tolls": [
+        260,
+        780,
+        1740,
+        3830,
+        8350
+      ],
+      "position": {
+        "x": 22,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": 22,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        19
+      ]
+    },
+    {
+      "id": 19,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 26,
+        "z": 28
+      },
+      "next": [
+        20
+      ]
+    },
+    {
+      "id": 20,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 30,
+        "z": 28
+      },
+      "next": [
+        21
+      ]
+    },
+    {
+      "id": 21,
+      "type": "PROPERTY",
+      "name": "灯塔新港 1号",
+      "group": "BAY_3",
+      "price": 1520,
+      "buildCost": 850,
+      "tolls": [
+        230,
+        680,
+        1520,
+        3340,
+        7300
+      ],
+      "position": {
+        "x": 34,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": 34,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        22
+      ]
+    },
+    {
+      "id": 22,
+      "type": "CHANCE",
+      "name": "命运路牌",
+      "icon": "❓",
+      "desc": "触发一件随机事件",
+      "position": {
+        "x": 38,
+        "z": 28
+      },
+      "next": [
+        23
+      ]
+    },
+    {
+      "id": 23,
+      "type": "PROPERTY",
+      "name": "灯塔新港 2号",
+      "group": "BAY_3",
+      "price": 1680,
+      "buildCost": 950,
+      "tolls": [
+        250,
+        760,
+        1680,
+        3700,
+        8060
+      ],
+      "position": {
+        "x": 42,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": 42,
+          "z": 32.6
+        },
+        "rotation": 1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        24
+      ]
+    },
+    {
+      "id": 24,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 46,
+        "z": 28
+      },
+      "next": [
+        25
+      ]
+    },
+    {
+      "id": 25,
+      "type": "HOSPITAL",
+      "name": "阳光医院",
+      "icon": "🏥",
+      "desc": "休养生息 1 回合",
+      "position": {
+        "x": 50,
+        "z": 28
+      },
+      "next": [
+        26
+      ]
+    },
+    {
+      "id": 26,
+      "type": "PROPERTY",
+      "name": "灯塔新港 3号",
+      "group": "BAY_3",
+      "price": 1840,
+      "buildCost": 1050,
+      "tolls": [
+        280,
+        830,
+        1840,
+        4050,
+        8830
+      ],
+      "position": {
+        "x": 54,
+        "z": 24
+      },
+      "lot": {
+        "position": {
+          "x": 58.11436507859961,
+          "z": 26.057182539299806
+        },
+        "rotation": 2.677945044588987,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        27
+      ]
+    },
+    {
+      "id": 27,
+      "type": "COUPON",
+      "name": "点券补给站",
+      "icon": "🎟️",
+      "couponAmount": 30,
+      "desc": "获得 30 点卡片点券",
+      "position": {
+        "x": 54,
+        "z": 20
+      },
+      "next": [
+        28
+      ]
+    },
+    {
+      "id": 28,
+      "type": "PROPERTY",
+      "name": "灯塔新港 4号",
+      "group": "BAY_3",
+      "price": 2000,
+      "buildCost": 1100,
+      "tolls": [
+        300,
+        900,
+        2000,
+        4400,
+        9600
+      ],
+      "position": {
+        "x": 54,
+        "z": 16
+      },
+      "lot": {
+        "position": {
+          "x": 58.6,
+          "z": 16
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        29
+      ]
+    },
+    {
+      "id": 29,
+      "type": "MAGIC_HOUSE",
+      "name": "奇迹魔法屋",
+      "icon": "🔮",
+      "desc": "选择一项改变全局局势的魔法",
+      "position": {
+        "x": 54,
+        "z": 12
+      },
+      "next": [
+        30
+      ]
+    },
+    {
+      "id": 30,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 54,
+        "z": 8
+      },
+      "next": [
+        31
+      ]
+    },
+    {
+      "id": 31,
+      "type": "PROPERTY",
+      "name": "榕树老街 1号",
+      "group": "OLD_1",
+      "price": 1850,
+      "buildCost": 1050,
+      "tolls": [
+        280,
+        830,
+        1850,
+        4070,
+        8880
+      ],
+      "position": {
+        "x": 54,
+        "z": 4
+      },
+      "lot": {
+        "position": {
+          "x": 58.6,
+          "z": 4
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        32
+      ]
+    },
+    {
+      "id": 32,
+      "type": "STOCK",
+      "name": "海湾交易所",
+      "icon": "📈",
+      "desc": "打开股票交易大厅",
+      "position": {
+        "x": 54,
+        "z": 0
+      },
+      "next": [
+        33
+      ]
+    },
+    {
+      "id": 33,
+      "type": "PROPERTY",
+      "name": "榕树老街 2号",
+      "group": "OLD_1",
+      "price": 2010,
+      "buildCost": 1150,
+      "tolls": [
+        300,
+        900,
+        2010,
+        4420,
+        9650
+      ],
+      "position": {
+        "x": 54,
+        "z": -4
+      },
+      "lot": {
+        "position": {
+          "x": 58.6,
+          "z": -4
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        34
+      ]
+    },
+    {
+      "id": 34,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 54,
+        "z": -8
+      },
+      "next": [
+        35
+      ]
+    },
+    {
+      "id": 35,
+      "type": "BIG_PROPERTY",
+      "name": "锦绣购物中心",
+      "icon": "🏨",
+      "desc": "可经营连锁商业的大型地产",
+      "price": 6100,
+      "buildCost": 3950,
+      "tolls": [
+        1340,
+        4270,
+        9760,
+        21960,
+        47580
+      ],
+      "position": {
+        "x": 54,
+        "z": -12
+      },
+      "lot": {
+        "position": {
+          "x": 58.6,
+          "z": -12
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        36
+      ],
+      "large": true,
+      "buildingType": "CHAIN_STORE"
+    },
+    {
+      "id": 36,
+      "type": "PROPERTY",
+      "name": "榕树老街 3号",
+      "group": "OLD_1",
+      "price": 2170,
+      "buildCost": 1200,
+      "tolls": [
+        330,
+        980,
+        2170,
+        4770,
+        10420
+      ],
+      "position": {
+        "x": 54,
+        "z": -16
+      },
+      "lot": {
+        "position": {
+          "x": 58.6,
+          "z": -16
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        37,
+        96
+      ]
+    },
+    {
+      "id": 37,
+      "type": "CHANCE",
+      "name": "命运路牌",
+      "icon": "❓",
+      "desc": "触发一件随机事件",
+      "position": {
+        "x": 54,
+        "z": -20
+      },
+      "next": [
+        38
+      ]
+    },
+    {
+      "id": 38,
+      "type": "PROPERTY",
+      "name": "榕树老街 4号",
+      "group": "OLD_1",
+      "price": 2330,
+      "buildCost": 1300,
+      "tolls": [
+        350,
+        1050,
+        2330,
+        5130,
+        11180
+      ],
+      "position": {
+        "x": 54,
+        "z": -24
+      },
+      "lot": {
+        "position": {
+          "x": 58.6,
+          "z": -24
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        39
+      ]
+    },
+    {
+      "id": 39,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 54,
+        "z": -28
+      },
+      "next": [
+        40
+      ]
+    },
+    {
+      "id": 40,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 54,
+        "z": -32
+      },
+      "next": [
+        41
+      ]
+    },
+    {
+      "id": 41,
+      "type": "PROPERTY",
+      "name": "钟楼坊 1号",
+      "group": "OLD_2",
+      "price": 2110,
+      "buildCost": 1200,
+      "tolls": [
+        320,
+        950,
+        2110,
+        4640,
+        10130
+      ],
+      "position": {
+        "x": 54,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": 57.25269119345812,
+          "z": -39.25269119345812
+        },
+        "rotation": -2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        42
+      ]
+    },
+    {
+      "id": 42,
+      "type": "PRISON",
+      "name": "海岛警署",
+      "icon": "🚔",
+      "desc": "探监或暂停 2 回合行动",
+      "position": {
+        "x": 50,
+        "z": -36
+      },
+      "next": [
+        43
+      ]
+    },
+    {
+      "id": 43,
+      "type": "PROPERTY",
+      "name": "钟楼坊 2号",
+      "group": "OLD_2",
+      "price": 2270,
+      "buildCost": 1250,
+      "tolls": [
+        340,
+        1020,
+        2270,
+        4990,
+        10900
+      ],
+      "position": {
+        "x": 46,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": 46,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        44
+      ]
+    },
+    {
+      "id": 44,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 42,
+        "z": -36
+      },
+      "next": [
+        45
+      ]
+    },
+    {
+      "id": 45,
+      "type": "TREASURE",
+      "name": "山海宝箱",
+      "icon": "🎁",
+      "desc": "随机获得现金、点券或卡片",
+      "position": {
+        "x": 38,
+        "z": -36
+      },
+      "next": [
+        46
+      ]
+    },
+    {
+      "id": 46,
+      "type": "PROPERTY",
+      "name": "钟楼坊 3号",
+      "group": "OLD_2",
+      "price": 2430,
+      "buildCost": 1350,
+      "tolls": [
+        360,
+        1090,
+        2430,
+        5350,
+        11660
+      ],
+      "position": {
+        "x": 34,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": 34,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        47
+      ]
+    },
+    {
+      "id": 47,
+      "type": "CARD_SHOP",
+      "name": "山海卡片屋",
+      "icon": "🃏",
+      "desc": "获得卡片点券补给",
+      "position": {
+        "x": 30,
+        "z": -36
+      },
+      "next": [
+        48
+      ]
+    },
+    {
+      "id": 48,
+      "type": "PROPERTY",
+      "name": "钟楼坊 4号",
+      "group": "OLD_2",
+      "price": 2590,
+      "buildCost": 1450,
+      "tolls": [
+        390,
+        1170,
+        2590,
+        5700,
+        12430
+      ],
+      "position": {
+        "x": 26,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": 26,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        49
+      ]
+    },
+    {
+      "id": 49,
+      "type": "LOTTERY",
+      "name": "山海乐透站",
+      "icon": "🎰",
+      "desc": "购买号码并参与每轮乐透开奖",
+      "position": {
+        "x": 22,
+        "z": -36
+      },
+      "next": [
+        50
+      ]
+    },
+    {
+      "id": 50,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 18,
+        "z": -36
+      },
+      "next": [
+        51
+      ]
+    },
+    {
+      "id": 51,
+      "type": "PROPERTY",
+      "name": "锦绣里 1号",
+      "group": "OLD_3",
+      "price": 2370,
+      "buildCost": 1350,
+      "tolls": [
+        360,
+        1070,
+        2370,
+        5210,
+        11380
+      ],
+      "position": {
+        "x": 14,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": 14,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        52
+      ]
+    },
+    {
+      "id": 52,
+      "type": "COUPON",
+      "name": "点券补给站",
+      "icon": "🎟️",
+      "couponAmount": 30,
+      "desc": "获得 30 点卡片点券",
+      "position": {
+        "x": 10,
+        "z": -36
+      },
+      "next": [
+        53
+      ]
+    },
+    {
+      "id": 53,
+      "type": "PROPERTY",
+      "name": "锦绣里 2号",
+      "group": "OLD_3",
+      "price": 2530,
+      "buildCost": 1400,
+      "tolls": [
+        380,
+        1140,
+        2530,
+        5570,
+        12140
+      ],
+      "position": {
+        "x": 6,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": 6,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        54
+      ]
+    },
+    {
+      "id": 54,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 2,
+        "z": -36
+      },
+      "next": [
+        55
+      ]
+    },
+    {
+      "id": 55,
+      "type": "BIG_PROPERTY",
+      "name": "星河连锁总部",
+      "icon": "🏨",
+      "desc": "可经营连锁商业的大型地产",
+      "price": 7000,
+      "buildCost": 4550,
+      "tolls": [
+        1540,
+        4900,
+        11200,
+        25200,
+        54600
+      ],
+      "position": {
+        "x": -2,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": -2,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        56
+      ],
+      "large": true,
+      "buildingType": "CHAIN_STORE"
+    },
+    {
+      "id": 56,
+      "type": "PROPERTY",
+      "name": "锦绣里 3号",
+      "group": "OLD_3",
+      "price": 2690,
+      "buildCost": 1500,
+      "tolls": [
+        400,
+        1210,
+        2690,
+        5920,
+        12910
+      ],
+      "position": {
+        "x": -6,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": -6,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        57
+      ]
+    },
+    {
+      "id": 57,
+      "type": "BANK",
+      "name": "山海银行",
+      "icon": "🏦",
+      "desc": "结算银行分红奖励",
+      "position": {
+        "x": -10,
+        "z": -36
+      },
+      "next": [
+        58
+      ]
+    },
+    {
+      "id": 58,
+      "type": "PROPERTY",
+      "name": "锦绣里 4号",
+      "group": "OLD_3",
+      "price": 2850,
+      "buildCost": 1600,
+      "tolls": [
+        430,
+        1280,
+        2850,
+        6270,
+        13680
+      ],
+      "position": {
+        "x": -14,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": -14,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        59
+      ]
+    },
+    {
+      "id": 59,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -18,
+        "z": -36
+      },
+      "next": [
+        60
+      ]
+    },
+    {
+      "id": 60,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -22,
+        "z": -36
+      },
+      "next": [
+        61,
+        108
+      ]
+    },
+    {
+      "id": 61,
+      "type": "PROPERTY",
+      "name": "星河商务区 1号",
+      "group": "CBD_1",
+      "price": 2700,
+      "buildCost": 1500,
+      "tolls": [
+        410,
+        1220,
+        2700,
+        5940,
+        12960
+      ],
+      "position": {
+        "x": -26,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": -26,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        62
+      ]
+    },
+    {
+      "id": 62,
+      "type": "MONSTER",
+      "name": "怪兽出没",
+      "icon": "👾",
+      "desc": "怪兽会夷平一栋最高级的对手建筑",
+      "position": {
+        "x": -30,
+        "z": -36
+      },
+      "next": [
+        63
+      ]
+    },
+    {
+      "id": 63,
+      "type": "PROPERTY",
+      "name": "星河商务区 2号",
+      "group": "CBD_1",
+      "price": 2860,
+      "buildCost": 1600,
+      "tolls": [
+        430,
+        1290,
+        2860,
+        6290,
+        13730
+      ],
+      "position": {
+        "x": -34,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": -34,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        64
+      ]
+    },
+    {
+      "id": 64,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -38,
+        "z": -36
+      },
+      "next": [
+        65
+      ]
+    },
+    {
+      "id": 65,
+      "type": "CHANCE",
+      "name": "命运路牌",
+      "icon": "❓",
+      "desc": "触发一件随机事件",
+      "position": {
+        "x": -42,
+        "z": -36
+      },
+      "next": [
+        66
+      ]
+    },
+    {
+      "id": 66,
+      "type": "PROPERTY",
+      "name": "星河商务区 3号",
+      "group": "CBD_1",
+      "price": 3020,
+      "buildCost": 1700,
+      "tolls": [
+        450,
+        1360,
+        3020,
+        6640,
+        14500
+      ],
+      "position": {
+        "x": -46,
+        "z": -36
+      },
+      "lot": {
+        "position": {
+          "x": -46,
+          "z": -40.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        67
+      ]
+    },
+    {
+      "id": 67,
+      "type": "TREASURE",
+      "name": "山海宝箱",
+      "icon": "🎁",
+      "desc": "随机获得现金、点券或卡片",
+      "position": {
+        "x": -50,
+        "z": -36
+      },
+      "next": [
+        68
+      ]
+    },
+    {
+      "id": 68,
+      "type": "PROPERTY",
+      "name": "星河商务区 4号",
+      "group": "CBD_1",
+      "price": 3180,
+      "buildCost": 1800,
+      "tolls": [
+        480,
+        1430,
+        3180,
+        7000,
+        15260
+      ],
+      "position": {
+        "x": -54,
+        "z": -32
+      },
+      "lot": {
+        "position": {
+          "x": -58.11436507859961,
+          "z": -34.05718253929981
+        },
+        "rotation": -0.4636476090008061,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        69
+      ]
+    },
+    {
+      "id": 69,
+      "type": "MAGIC_HOUSE",
+      "name": "奇迹魔法屋",
+      "icon": "🔮",
+      "desc": "选择一项改变全局局势的魔法",
+      "position": {
+        "x": -54,
+        "z": -28
+      },
+      "next": [
+        70
+      ]
+    },
+    {
+      "id": 70,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -54,
+        "z": -24
+      },
+      "next": [
+        71
+      ]
+    },
+    {
+      "id": 71,
+      "type": "PROPERTY",
+      "name": "云端金融街 1号",
+      "group": "CBD_2",
+      "price": 2960,
+      "buildCost": 1650,
+      "tolls": [
+        440,
+        1330,
+        2960,
+        6510,
+        14210
+      ],
+      "position": {
+        "x": -54,
+        "z": -20
+      },
+      "lot": {
+        "position": {
+          "x": -58.6,
+          "z": -20
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        72
+      ]
+    },
+    {
+      "id": 72,
+      "type": "HOSPITAL",
+      "name": "阳光医院",
+      "icon": "🏥",
+      "desc": "休养生息 1 回合",
+      "position": {
+        "x": -54,
+        "z": -16
+      },
+      "next": [
+        73
+      ]
+    },
+    {
+      "id": 73,
+      "type": "PROPERTY",
+      "name": "云端金融街 2号",
+      "group": "CBD_2",
+      "price": 3120,
+      "buildCost": 1750,
+      "tolls": [
+        470,
+        1400,
+        3120,
+        6860,
+        14980
+      ],
+      "position": {
+        "x": -54,
+        "z": -12
+      },
+      "lot": {
+        "position": {
+          "x": -58.6,
+          "z": -12
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        74
+      ]
+    },
+    {
+      "id": 74,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -54,
+        "z": -8
+      },
+      "next": [
+        75
+      ]
+    },
+    {
+      "id": 75,
+      "type": "BIG_PROPERTY",
+      "name": "云顶主题乐园",
+      "icon": "🏨",
+      "desc": "可经营连锁商业的大型地产",
+      "price": 7900,
+      "buildCost": 5150,
+      "tolls": [
+        1740,
+        5530,
+        12640,
+        28440,
+        61620
+      ],
+      "position": {
+        "x": -54,
+        "z": -4
+      },
+      "lot": {
+        "position": {
+          "x": -58.6,
+          "z": -4
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        76
+      ],
+      "large": true,
+      "buildingType": "CHAIN_STORE"
+    },
+    {
+      "id": 76,
+      "type": "PROPERTY",
+      "name": "云端金融街 3号",
+      "group": "CBD_2",
+      "price": 3280,
+      "buildCost": 1850,
+      "tolls": [
+        490,
+        1480,
+        3280,
+        7220,
+        15740
+      ],
+      "position": {
+        "x": -54,
+        "z": 0
+      },
+      "lot": {
+        "position": {
+          "x": -58.6,
+          "z": 0
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        77
+      ]
+    },
+    {
+      "id": 77,
+      "type": "COUPON",
+      "name": "点券补给站",
+      "icon": "🎟️",
+      "couponAmount": 30,
+      "desc": "获得 30 点卡片点券",
+      "position": {
+        "x": -54,
+        "z": 4
+      },
+      "next": [
+        78
+      ]
+    },
+    {
+      "id": 78,
+      "type": "PROPERTY",
+      "name": "云端金融街 4号",
+      "group": "CBD_2",
+      "price": 3440,
+      "buildCost": 1950,
+      "tolls": [
+        520,
+        1550,
+        3440,
+        7570,
+        16510
+      ],
+      "position": {
+        "x": -54,
+        "z": 8
+      },
+      "lot": {
+        "position": {
+          "x": -58.6,
+          "z": 8
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        79
+      ]
+    },
+    {
+      "id": 79,
+      "type": "MECHANISM",
+      "name": "潮汐机关塔",
+      "icon": "⚙️",
+      "desc": "切换本轮岛屿岔路通行方向",
+      "position": {
+        "x": -54,
+        "z": 12
+      },
+      "next": [
+        80
+      ]
+    },
+    {
+      "id": 80,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -54,
+        "z": 16
+      },
+      "next": [
+        81
+      ]
+    },
+    {
+      "id": 81,
+      "type": "PROPERTY",
+      "name": "未来港 1号",
+      "group": "CBD_3",
+      "price": 3220,
+      "buildCost": 1800,
+      "tolls": [
+        480,
+        1450,
+        3220,
+        7080,
+        15460
+      ],
+      "position": {
+        "x": -54,
+        "z": 20
+      },
+      "lot": {
+        "position": {
+          "x": -58.6,
+          "z": 20
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        82
+      ]
+    },
+    {
+      "id": 82,
+      "type": "STOCK",
+      "name": "海湾交易所",
+      "icon": "📈",
+      "desc": "打开股票交易大厅",
+      "position": {
+        "x": -54,
+        "z": 24
+      },
+      "next": [
+        83
+      ]
+    },
+    {
+      "id": 83,
+      "type": "PROPERTY",
+      "name": "未来港 2号",
+      "group": "CBD_3",
+      "price": 3380,
+      "buildCost": 1900,
+      "tolls": [
+        510,
+        1520,
+        3380,
+        7440,
+        16220
+      ],
+      "position": {
+        "x": -54,
+        "z": 28
+      },
+      "lot": {
+        "position": {
+          "x": -57.25269119345812,
+          "z": 31.25269119345812
+        },
+        "rotation": 0.7853981633974483,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        0
+      ]
+    },
+    {
+      "id": 84,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 2,
+        "z": 24
+      },
+      "next": [
+        85
+      ]
+    },
+    {
+      "id": 85,
+      "type": "GOD_FORTUNE",
+      "name": "福星驿站",
+      "icon": "🌟",
+      "spirit": "LUCK",
+      "cardReward": 1,
+      "desc": "福星赠送卡片并带来置业好运",
+      "position": {
+        "x": 6,
+        "z": 20
+      },
+      "next": [
+        86
+      ]
+    },
+    {
+      "id": 86,
+      "type": "PROPERTY",
+      "name": "未来港 3号",
+      "group": "CBD_3",
+      "price": 3540,
+      "buildCost": 2000,
+      "tolls": [
+        530,
+        1590,
+        3540,
+        7790,
+        16990
+      ],
+      "position": {
+        "x": 10,
+        "z": 16
+      },
+      "lot": {
+        "position": {
+          "x": 6.7473088065418825,
+          "z": 12.747308806541882
+        },
+        "rotation": 2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        87
+      ]
+    },
+    {
+      "id": 87,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 14,
+        "z": 12
+      },
+      "next": [
+        88
+      ]
+    },
+    {
+      "id": 88,
+      "type": "PROPERTY",
+      "name": "未来港 4号",
+      "group": "CBD_3",
+      "price": 3700,
+      "buildCost": 2050,
+      "tolls": [
+        560,
+        1670,
+        3700,
+        8140,
+        17760
+      ],
+      "position": {
+        "x": 18,
+        "z": 8
+      },
+      "lot": {
+        "position": {
+          "x": 15.942817460700194,
+          "z": 3.8856349214003876
+        },
+        "rotation": 2.0344439357957027,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        89
+      ]
+    },
+    {
+      "id": 89,
+      "type": "COMPANY",
+      "name": "云端计算",
+      "icon": "💻",
+      "companyId": "CLOUD_COMPUTE",
+      "desc": "数字服务收入进入公司账本",
+      "position": {
+        "x": 22,
+        "z": 8
+      },
+      "next": [
+        90
+      ]
+    },
+    {
+      "id": 90,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 26,
+        "z": 8
+      },
+      "next": [
+        91
+      ]
+    },
+    {
+      "id": 91,
+      "type": "PROPERTY",
+      "name": "稻香田园 1号",
+      "group": "HILL_1",
+      "price": 3550,
+      "buildCost": 2000,
+      "tolls": [
+        530,
+        1600,
+        3550,
+        7810,
+        17040
+      ],
+      "position": {
+        "x": 30,
+        "z": 8
+      },
+      "lot": {
+        "position": {
+          "x": 27.942817460700194,
+          "z": 12.114365078599612
+        },
+        "rotation": 1.1071487177940904,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        92
+      ]
+    },
+    {
+      "id": 92,
+      "type": "CHANCE",
+      "name": "命运路牌",
+      "icon": "❓",
+      "desc": "触发一件随机事件",
+      "position": {
+        "x": 34,
+        "z": 12
+      },
+      "next": [
+        93
+      ]
+    },
+    {
+      "id": 93,
+      "type": "PROPERTY",
+      "name": "稻香田园 2号",
+      "group": "HILL_1",
+      "price": 3710,
+      "buildCost": 2100,
+      "tolls": [
+        560,
+        1670,
+        3710,
+        8160,
+        17810
+      ],
+      "position": {
+        "x": 38,
+        "z": 16
+      },
+      "lot": {
+        "position": {
+          "x": 34.74730880654188,
+          "z": 19.25269119345812
+        },
+        "rotation": 0.7853981633974483,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        94
+      ]
+    },
+    {
+      "id": 94,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 42,
+        "z": 20
+      },
+      "next": [
+        95
+      ]
+    },
+    {
+      "id": 95,
+      "type": "PRISON",
+      "name": "海岛警署",
+      "icon": "🚔",
+      "desc": "探监或暂停 2 回合行动",
+      "position": {
+        "x": 46,
+        "z": 24
+      },
+      "next": [
+        24
+      ]
+    },
+    {
+      "id": 96,
+      "type": "PROPERTY",
+      "name": "稻香田园 3号",
+      "group": "HILL_1",
+      "price": 3870,
+      "buildCost": 2150,
+      "tolls": [
+        580,
+        1740,
+        3870,
+        8510,
+        18580
+      ],
+      "position": {
+        "x": 50,
+        "z": -16
+      },
+      "lot": {
+        "position": {
+          "x": 50,
+          "z": -11.4
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        97
+      ]
+    },
+    {
+      "id": 97,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 46,
+        "z": -16
+      },
+      "next": [
+        98
+      ]
+    },
+    {
+      "id": 98,
+      "type": "PROPERTY",
+      "name": "稻香田园 4号",
+      "group": "HILL_1",
+      "price": 4030,
+      "buildCost": 2250,
+      "tolls": [
+        600,
+        1810,
+        4030,
+        8870,
+        19340
+      ],
+      "position": {
+        "x": 42,
+        "z": -16
+      },
+      "lot": {
+        "position": {
+          "x": 42,
+          "z": -11.4
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        99
+      ]
+    },
+    {
+      "id": 99,
+      "type": "COMPANY",
+      "name": "峰岳材料",
+      "icon": "⛏️",
+      "companyId": "SUMMIT_MATERIAL",
+      "desc": "材料业务收入进入公司账本",
+      "position": {
+        "x": 38,
+        "z": -16
+      },
+      "next": [
+        100
+      ]
+    },
+    {
+      "id": 100,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 34,
+        "z": -16
+      },
+      "next": [
+        101
+      ]
+    },
+    {
+      "id": 101,
+      "type": "PROPERTY",
+      "name": "茶山小镇 1号",
+      "group": "HILL_2",
+      "price": 3810,
+      "buildCost": 2150,
+      "tolls": [
+        570,
+        1710,
+        3810,
+        8380,
+        18290
+      ],
+      "position": {
+        "x": 30,
+        "z": -16
+      },
+      "lot": {
+        "position": {
+          "x": 30,
+          "z": -20.6
+        },
+        "rotation": -1.5707963267948966,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        102
+      ]
+    },
+    {
+      "id": 102,
+      "type": "CARD_SHOP",
+      "name": "山海卡片屋",
+      "icon": "🃏",
+      "desc": "获得卡片点券补给",
+      "position": {
+        "x": 26,
+        "z": -16
+      },
+      "next": [
+        103
+      ]
+    },
+    {
+      "id": 103,
+      "type": "PROPERTY",
+      "name": "茶山小镇 2号",
+      "group": "HILL_2",
+      "price": 3970,
+      "buildCost": 2200,
+      "tolls": [
+        600,
+        1790,
+        3970,
+        8730,
+        19060
+      ],
+      "position": {
+        "x": 22,
+        "z": -20
+      },
+      "lot": {
+        "position": {
+          "x": 26.11436507859961,
+          "z": -22.057182539299806
+        },
+        "rotation": -2.677945044588987,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        104
+      ]
+    },
+    {
+      "id": 104,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 22,
+        "z": -24
+      },
+      "next": [
+        105
+      ]
+    },
+    {
+      "id": 105,
+      "type": "TREASURE",
+      "name": "山海宝箱",
+      "icon": "🎁",
+      "desc": "随机获得现金、点券或卡片",
+      "position": {
+        "x": 22,
+        "z": -28
+      },
+      "next": [
+        106
+      ]
+    },
+    {
+      "id": 106,
+      "type": "PROPERTY",
+      "name": "茶山小镇 3号",
+      "group": "HILL_2",
+      "price": 4130,
+      "buildCost": 2300,
+      "tolls": [
+        620,
+        1860,
+        4130,
+        9090,
+        19820
+      ],
+      "position": {
+        "x": 22,
+        "z": -32
+      },
+      "lot": {
+        "position": {
+          "x": 18.74730880654188,
+          "z": -35.25269119345812
+        },
+        "rotation": 2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        107
+      ]
+    },
+    {
+      "id": 107,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": 26,
+        "z": -32
+      },
+      "next": [
+        48
+      ]
+    },
+    {
+      "id": 108,
+      "type": "PROPERTY",
+      "name": "茶山小镇 4号",
+      "group": "HILL_2",
+      "price": 4290,
+      "buildCost": 2400,
+      "tolls": [
+        640,
+        1930,
+        4290,
+        9440,
+        20590
+      ],
+      "position": {
+        "x": -22,
+        "z": -32
+      },
+      "lot": {
+        "position": {
+          "x": -17.4,
+          "z": -32
+        },
+        "rotation": 0,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        109
+      ]
+    },
+    {
+      "id": 109,
+      "type": "MINIGAME",
+      "name": "云端游乐场",
+      "icon": "🎮",
+      "minigameId": "SKY_COINS",
+      "desc": "完成小游戏赢取点券",
+      "position": {
+        "x": -22,
+        "z": -28
+      },
+      "next": [
+        110
+      ]
+    },
+    {
+      "id": 110,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -26,
+        "z": -24
+      },
+      "next": [
+        111
+      ]
+    },
+    {
+      "id": 111,
+      "type": "PROPERTY",
+      "name": "云顶度假区 1号",
+      "group": "HILL_3",
+      "price": 4070,
+      "buildCost": 2300,
+      "tolls": [
+        610,
+        1830,
+        4070,
+        8950,
+        19540
+      ],
+      "position": {
+        "x": -30,
+        "z": -20
+      },
+      "lot": {
+        "position": {
+          "x": -33.25269119345812,
+          "z": -23.25269119345812
+        },
+        "rotation": -0.7853981633974483,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        112
+      ]
+    },
+    {
+      "id": 112,
+      "type": "BANK",
+      "name": "山海银行",
+      "icon": "🏦",
+      "desc": "结算银行分红奖励",
+      "position": {
+        "x": -34,
+        "z": -16
+      },
+      "next": [
+        113
+      ]
+    },
+    {
+      "id": 113,
+      "type": "PROPERTY",
+      "name": "云顶度假区 2号",
+      "group": "HILL_3",
+      "price": 4230,
+      "buildCost": 2350,
+      "tolls": [
+        630,
+        1900,
+        4230,
+        9310,
+        20300
+      ],
+      "position": {
+        "x": -38,
+        "z": -12
+      },
+      "lot": {
+        "position": {
+          "x": -41.25269119345812,
+          "z": -15.252691193458118
+        },
+        "rotation": -0.7853981633974483,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        114
+      ]
+    },
+    {
+      "id": 114,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -42,
+        "z": -8
+      },
+      "next": [
+        115
+      ]
+    },
+    {
+      "id": 115,
+      "type": "GOD_MISFORTUNE",
+      "name": "穷神巷口",
+      "icon": "👻",
+      "desc": "穷神可能在这里附身",
+      "position": {
+        "x": -46,
+        "z": -8
+      },
+      "next": [
+        116
+      ]
+    },
+    {
+      "id": 116,
+      "type": "PROPERTY",
+      "name": "云顶度假区 3号",
+      "group": "HILL_3",
+      "price": 4390,
+      "buildCost": 2450,
+      "tolls": [
+        660,
+        1980,
+        4390,
+        9660,
+        21070
+      ],
+      "position": {
+        "x": -50,
+        "z": -8
+      },
+      "lot": {
+        "position": {
+          "x": -53.25269119345812,
+          "z": -4.7473088065418825
+        },
+        "rotation": -2.356194490192345,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        117
+      ]
+    },
+    {
+      "id": 117,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -50,
+        "z": -12
+      },
+      "next": [
+        118
+      ]
+    },
+    {
+      "id": 118,
+      "type": "PROPERTY",
+      "name": "云顶度假区 4号",
+      "group": "HILL_3",
+      "price": 4550,
+      "buildCost": 2550,
+      "tolls": [
+        680,
+        2050,
+        4550,
+        10010,
+        21840
+      ],
+      "position": {
+        "x": -50,
+        "z": -16
+      },
+      "lot": {
+        "position": {
+          "x": -54.6,
+          "z": -16
+        },
+        "rotation": 3.141592653589793,
+        "size": {
+          "x": 3.5,
+          "z": 3.5
+        }
+      },
+      "next": [
+        119
+      ]
+    },
+    {
+      "id": 119,
+      "type": "ROAD",
+      "name": "山海道路",
+      "icon": "•",
+      "desc": "继续前进",
+      "position": {
+        "x": -50,
+        "z": -20
+      },
+      "next": [
+        72
+      ]
+    }
+  ]
+}

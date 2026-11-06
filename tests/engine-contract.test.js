@@ -43,6 +43,19 @@ describe('GameEngine command contract', () => {
     }));
   });
 
+  it('hands remote-dice cards into the authoritative rolling and movement phases', () => {
+    const { state, engine } = createGame();
+    const player = state.players[0];
+    const used = engine.execute({
+      type: 'USE_CARD', playerId: player.id,
+      payload: { cardId: 'REMOTE_DICE', value: 6 }
+    });
+    expect(used).toMatchObject({ success: true, followUp: { mode: 'ROLL', steps: 6 } });
+    expect(state.phase).toBe('ROLLING');
+    expect(engine.execute({ type: 'BEGIN_MOVE', playerId: player.id, payload: { steps: 6, source: 'DICE' } }))
+      .toMatchObject({ success: true, type: 'MOVE_STARTED', steps: 6 });
+  });
+
   it('rejects pre-roll actions from a player who does not own the current turn', () => {
     const { state, engine } = createGame();
     const inactive = state.players[1];
@@ -149,10 +162,10 @@ describe('GameEngine command contract', () => {
     expect(bought).toMatchObject({ success: true, cost: 30 });
   });
 
-  it('creates V10 snapshots while restoring legacy V1 snapshots', () => {
+  it('creates V11 snapshots while restoring legacy V1 snapshots', () => {
     const { state } = createGame();
     const snapshot = state.createSnapshot();
-    expect(snapshot.version).toBe(10);
+    expect(snapshot.version).toBe(11);
     const legacy = { ...snapshot, version: 1 };
     delete legacy.winnerId;
     delete legacy.winReason;

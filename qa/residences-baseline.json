@@ -1,0 +1,16 @@
+{
+  "kind": "f20a444 baseline",
+  "checks": [],
+  "errors": [],
+  "propertyFixture": {
+    "frame": 17,
+    "unchanged": true,
+    "description": "Presentation-only regional tier fixture, not earned game progress."
+  },
+  "metrics": {
+    "calls": 171,
+    "triangles": 223117,
+    "geometries": 173
+  },
+  "success": true
+}

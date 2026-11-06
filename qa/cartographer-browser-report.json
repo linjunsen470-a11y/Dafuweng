@@ -1,0 +1,20 @@
+{
+  "kind": "third original character: selection, ability, motion, two saves and AI",
+  "checks": [
+    {
+      "map": "coast",
+      "checks": "Three original choices and live pawn preview; new game with Xingluo, normal move/purchase/AI turn; exact ability payment and one real card; correct portrait/feedback; reload retains character/card/cooldown; card moves to chosen event and second map leaves first save intact."
+    },
+    {
+      "map": "highland",
+      "checks": "Three original choices and live pawn preview; new game with Xingluo, normal move/purchase/AI turn; exact ability payment and one real card; correct portrait/feedback; reload retains character/card/cooldown; card moves to chosen event and second map leaves first save intact."
+    },
+    {
+      "ai": true,
+      "round": 2,
+      "checks": "Normal simulated AI-turn save resumes in the real page; Xingluo pays for chart ability, completes turn with own model and appears in recap."
+    }
+  ],
+  "errors": [],
+  "success": true
+}

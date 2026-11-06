@@ -1,0 +1,40 @@
+{
+  "checks": [
+    {
+      "mapId": "shanhai-coast",
+      "kind": "new short game",
+      "fourSeats": true,
+      "purchaseAndFullRound": true,
+      "reloadUsesSavedLimit": true,
+      "otherMapDefault16": true
+    },
+    {
+      "mapId": "shanhai-coast",
+      "kind": "last-round fixture",
+      "allAIsComplete": true,
+      "reportLimit12": true,
+      "replayKeepsLengthAndCast": true
+    },
+    {
+      "mapId": "shanhai-highland",
+      "kind": "new short game",
+      "fourSeats": true,
+      "purchaseAndFullRound": true,
+      "reloadUsesSavedLimit": true,
+      "otherMapDefault16": true
+    },
+    {
+      "mapId": "shanhai-highland",
+      "kind": "last-round fixture",
+      "allAIsComplete": true,
+      "reportLimit12": true,
+      "replayKeepsLengthAndCast": true
+    },
+    {
+      "kind": "legacy custom result",
+      "replayLimit": 3
+    }
+  ],
+  "errors": [],
+  "success": true
+}

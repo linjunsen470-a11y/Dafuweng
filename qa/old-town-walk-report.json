@@ -1,0 +1,443 @@
+{
+  "steps": [
+    {
+      "tile": 23,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 23,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 23,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 24,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 25,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 26,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 27,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 28,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": ".magic-house-cancel"
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 1,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 2,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 2,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "ROLLING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "MOVING",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 1,
+      "phase": "LANDING_ACTION",
+      "who": 3,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 2,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": true
+    },
+    {
+      "tile": 29,
+      "round": 2,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 29,
+      "round": 2,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 31,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 32,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 33,
+      "round": 2,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 34,
+      "round": 2,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 34,
+      "round": 3,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    },
+    {
+      "tile": 34,
+      "round": 3,
+      "phase": "ROLLING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 35,
+      "round": 3,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 36,
+      "round": 3,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 36,
+      "round": 3,
+      "phase": "ROUTE_CHOICE",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "tile": 37,
+      "round": 3,
+      "phase": "MOVING",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "[data-route=\"37\"]"
+    },
+    {
+      "tile": 38,
+      "round": 3,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false
+    },
+    {
+      "tile": 38,
+      "round": 3,
+      "phase": "LANDING_ACTION",
+      "who": 0,
+      "busy": true,
+      "banner": false,
+      "action": "#btn-land-buy"
+    },
+    {
+      "tile": 38,
+      "round": 4,
+      "phase": "PRE_ROLL_ACTION",
+      "who": 0,
+      "busy": false,
+      "banner": false
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Continuous UI play from a prepared four-player save at harbor tile 23; normal random dice and AI, not a whole game from the title screen."
+  ],
+  "reachedOldTown": 38,
+  "reportingError": "TypeError: Cannot read properties of undefined (reading 'slice')\n    at evaluate (evaluate at file:///workspace/dafuweng-cloud/test-old-town-walk.js:8:41, <anonymous>:0:153)\n    at #evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:388:19)\n    at async ExecutionContext.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/ExecutionContext.js:274:16)\n    at async IsolatedWorld.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/cdp/IsolatedWorld.js:102:16)\n    at async CdpFrame.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:359:20)\n    at async CdpPage.evaluate (file:///workspace/dafuweng-cloud/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:826:20)\n    at async file:///workspace/dafuweng-cloud/test-old-town-walk.js:8:33",
+  "reportRecovery": "Final log collector used logs instead of logHistory; recovered final metadata from the exact saved snapshot written before collection.",
+  "final": {
+    "round": 4,
+    "players": [
+      {
+        "id": 0,
+        "tile": 38,
+        "cash": 59519
+      },
+      {
+        "id": 1,
+        "tile": 24,
+        "cash": 54930
+      },
+      {
+        "id": 2,
+        "tile": 24,
+        "cash": 51930
+      },
+      {
+        "id": 3,
+        "tile": 28,
+        "cash": 52930
+      }
+    ],
+    "logs": [
+      {
+        "msg": "🎲 玩家4 掷出了 5 点！",
+        "type": "gold",
+        "time": "6:22:27 AM"
+      },
+      {
+        "msg": "🏗️ 玩家4 成功购买【灯塔新港 4号】(花费 $2,000)！",
+        "type": "success",
+        "time": "6:22:29 AM"
+      },
+      {
+        "msg": "📈 第 2 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "6:22:31 AM"
+      },
+      {
+        "msg": "💰 玩家1 获得精灵收益 $500。",
+        "type": "gold",
+        "time": "6:22:31 AM"
+      },
+      {
+        "msg": "🎲 玩家1 掷出了 5 点！",
+        "type": "gold",
+        "time": "6:22:38 AM"
+      },
+      {
+        "msg": "🏥 玩家2 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:22:40 AM"
+      },
+      {
+        "msg": "🏥 玩家3 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:22:40 AM"
+      },
+      {
+        "msg": "🏥 玩家4 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:22:40 AM"
+      },
+      {
+        "msg": "📈 第 3 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "6:22:40 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【普惠储蓄奖励】 - 所有存款账户获得 2% 奖励。",
+        "type": "gold",
+        "time": "6:22:40 AM"
+      },
+      {
+        "msg": "💰 玩家1 获得精灵收益 $500。",
+        "type": "gold",
+        "time": "6:22:40 AM"
+      },
+      {
+        "msg": "🎲 玩家1 掷出了 4 点！",
+        "type": "gold",
+        "time": "6:22:50 AM"
+      },
+      {
+        "msg": "🏗️ 玩家1 成功购买【榕树老街 4号】(花费 $1,981)！",
+        "type": "success",
+        "time": "6:22:53 AM"
+      },
+      {
+        "msg": "🏥 玩家2 在医院疗养，剩余 1 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:22:53 AM"
+      },
+      {
+        "msg": "🏥 玩家3 在医院疗养，剩余 1 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:22:53 AM"
+      },
+      {
+        "msg": "🏥 玩家4 在医院疗养，剩余 1 回合，本回合跳过。",
+        "type": "danger",
+        "time": "6:22:53 AM"
+      },
+      {
+        "msg": "📈 第 4 轮开始！【当前物价指数: 1.0x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "6:22:53 AM"
+      },
+      {
+        "msg": "💰 玩家1 获得精灵收益 $500。",
+        "type": "gold",
+        "time": "6:22:53 AM"
+      }
+    ]
+  },
+  "success": true,
+  "rollClicks": 4,
+  "effectiveRolls": [
+    "🎲 玩家1 掷出了 6 点！",
+    "🎲 玩家1 掷出了 5 点！",
+    "🎲 玩家1 掷出了 4 点！"
+  ]
+}

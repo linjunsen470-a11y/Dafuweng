@@ -1,0 +1,10 @@
+{
+  "kind": "two-map tactical inventory and actual targeted card play",
+  "checks": [
+    "Buys a clearing tool for 30 points, places the initially owned fence at station 23, renders its marker, and retains the fence plus the used-card lock after refresh.",
+    "On subsequent actual turns clears the fence without charging points twice, then reverses the opponent without teleporting; AI continues legal turns.",
+    "The same backpack works on the coast, self-turning changes the route direction, and the mountain save remains untouched."
+  ],
+  "errors": [],
+  "success": true
+}

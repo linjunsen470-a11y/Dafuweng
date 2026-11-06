@@ -1,0 +1,27 @@
+7:36:21 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+{
+  "checks": [
+    {
+      "viewport": "1440px",
+      "newsBottom": 321.390625,
+      "nextTop": 333.390625,
+      "impactsInside": true,
+      "horizontalOverflow": false,
+      "bodyScrollable": true,
+      "gridRows": "186.391px 86px 307px 306px",
+      "closeAndReopen": true
+    },
+    {
+      "viewport": "390px",
+      "newsBottom": 298.390625,
+      "nextTop": 310.390625,
+      "impactsInside": true,
+      "horizontalOverflow": false,
+      "bodyScrollable": true,
+      "gridRows": "186.391px 151px 824px 786px",
+      "closeAndReopen": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

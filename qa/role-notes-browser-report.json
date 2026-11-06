@@ -1,0 +1,9 @@
+{
+  "kind": "role comparison and repeatable mountain route note",
+  "checks": [
+    "Mobile role comparisons select all three using keyboard, update cost and opponent explanation. Real fence changes the note answer; wrong/correct/reverse choices leave cash, cards, RNG, direction and all save data intact. Reload keeps the real game and resets only the unsaved exercise; a normal turn and AI turn still finish.",
+    "Coast keeps its own content; comparison chooses Qinghe and starts the old default pairing, with the mountain-only note hidden."
+  ],
+  "errors": [],
+  "success": true
+}

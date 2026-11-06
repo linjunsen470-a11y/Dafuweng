@@ -1,0 +1,29 @@
+{
+  "library_file_id": "libfile_dc5f0e664d908191a53b528d43074700",
+  "archive_bytes": 98387101,
+  "archive_sha256": "c39d50b93d749a1a20990a546bad0dede16b42cef16b4c9ac0f5bd8854190144",
+  "checkpoint": "a7bf87077dcd86f12e0a87bad1e48b84aaf5058c",
+  "worktree": "/workspace/dafuweng-cloud",
+  "branch": "cloud/dafuweng-playability",
+  "bundle_history_complete": true,
+  "files": [
+    {
+      "file": "dafuweng-cloud-source-checkpoint.zip",
+      "bytes": 37791347,
+      "sha256": "f8a0cb5a9291d49704b0cc6ca930c9937c831a20f5fcd3772ecc759c1fb38c2e",
+      "verified": true
+    },
+    {
+      "file": "dafuweng-cloud-checkpoint.bundle",
+      "bytes": 37504606,
+      "sha256": "0d3cf8702f81bde5666868107f6a54c4e1198f3127815d78579b47eaed1354eb",
+      "verified": true
+    },
+    {
+      "file": "dafuweng-working-copy.zip",
+      "bytes": 23072358,
+      "sha256": "cf1ed5f23ab965df7bee3395ce56580285714febd6f151d3da7d58583a472f69",
+      "verified": true
+    }
+  ]
+}

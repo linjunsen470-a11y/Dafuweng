@@ -42,13 +42,13 @@ async function runTest() {
 
   const browser = await puppeteer.launch({
     executablePath,
-    headless: 'new',
+    headless: 'new', timeout: 120000,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
-      '--disable-web-security',
       '--use-gl=angle',
       '--use-angle=swiftshader',
+      '--enable-unsafe-swiftshader',
       '--ignore-gpu-blocklist'
     ]
   });
@@ -81,7 +81,7 @@ async function runTest() {
 
   try {
     console.log('\n--- Step 1: Navigating to http://localhost:5173/ ---');
-    await page.goto('http://localhost:5173/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.goto('http://localhost:5173/', { waitUntil: 'networkidle0', timeout: 120000 });
     await page.evaluate(() => {
       localStorage.setItem('fortune-empire:tutorial-seen', '1');
       document.querySelector('.rules-help-modal')?.remove();
@@ -109,27 +109,36 @@ async function runTest() {
     });
     const startBtn = await page.$('#start-game-btn');
     if (!startBtn) throw new Error('Start game button not found!');
-    const hudReady = page.waitForSelector('#hud-layer:not(.hidden)', { timeout: 15000 });
-    const turnBannerReady = page.waitForFunction(() => {
-      const element = document.querySelector('.presentation-turn-banner.is-visible');
-      return element && Number(getComputedStyle(element).opacity) >= 0.9;
-    }, { timeout: 15000 });
-    await startBtn.click();
-    await Promise.all([hudReady, turnBannerReady]);
-    const turnPresentation = await page.$eval('.presentation-turn-banner.is-visible', element => {
-      const style = getComputedStyle(element);
-      const layerStyle = getComputedStyle(document.getElementById('presentation-layer'));
-      const rect = element.getBoundingClientRect();
-      return {
-        text: element.textContent.replace(/\s+/g, ' ').trim(),
-        opacity: Number(style.opacity),
-        visibility: style.visibility,
-        display: style.display,
-        width: rect.width,
-        height: rect.height,
-        layerZIndex: Number(layerStyle.zIndex)
+    // Capture the transient banner in its painted frame, rather than querying
+    // it in a later CDP round trip after the three-second reading interval.
+    await page.evaluate(() => {
+      window.__turnPresentation = null;
+      const started = performance.now();
+      const inspect = () => {
+        const element = document.querySelector('.presentation-turn-banner.is-visible');
+        if (element) {
+          const style = getComputedStyle(element);
+          if (Number(style.opacity) >= 0.9) {
+            const rect = element.getBoundingClientRect();
+            window.__turnPresentation = {
+              text: element.textContent.replace(/\s+/g, ' ').trim(),
+              opacity: Number(style.opacity), visibility: style.visibility,
+              display: style.display, width: rect.width, height: rect.height,
+              layerZIndex: Number(getComputedStyle(document.getElementById('presentation-layer')).zIndex)
+            };
+            return;
+          }
+        }
+        if (performance.now() - started < 120000) requestAnimationFrame(inspect);
       };
+      requestAnimationFrame(inspect);
     });
+    await Promise.all([
+      page.waitForSelector('#hud-layer:not(.hidden)', { timeout: 120000 }),
+      page.waitForFunction(() => window.__turnPresentation !== null, { timeout: 120000 }),
+      startBtn.click()
+    ]);
+    const turnPresentation = await page.evaluate(() => window.__turnPresentation);
     if (!turnPresentation.text.includes('ROUND 1') || !turnPresentation.text.includes('的回合')
       || turnPresentation.opacity < 0.9 || turnPresentation.visibility !== 'visible'
       || turnPresentation.display === 'none' || turnPresentation.width < 200 || turnPresentation.layerZIndex < 100) {
@@ -385,7 +394,7 @@ async function runTest() {
     await page.screenshot({ path: artifact('test_step_auction_bidding.png') });
     await page.click('.auction-bid-button.is-primary');
     await page.waitForFunction(() => window.__e2eAuctionBid === 2700);
-    await page.evaluate(() => {
+    await page.evaluate(async () => {
       const completed = {
         ...window.__e2eAuction,
         highestBid: 3100,
@@ -393,11 +402,13 @@ async function runTest() {
         status: 'RESOLVED',
         bidHistory: [...window.__e2eAuction.bidHistory, { playerId: 1, amount: 3100, action: 'BID', round: 2 }, { playerId: 2, amount: 0, action: 'PASS', round: 2 }]
       };
-      window.__e2eAuctionUI.showResult(completed, window.__e2eAuctionTile, window.__e2eAuctionPlayers, 1, { level: 2, buildingType: 'MALL' });
+      const finished=window.__e2eAuctionUI.showResult(completed, window.__e2eAuctionTile, window.__e2eAuctionPlayers, 1, { level: 2, buildingType: 'MALL' });
+      // Verify this short-lived fixture and its confirmation in one browser task.
+      const result=document.querySelector('.auction-overlay.is-visible[data-auction-mode="RESULT"] .auction-result.is-sold');
+      if(!result?.textContent.includes('$3,100'))throw new Error('Sold result amount missing');
+      document.querySelector('.auction-controls .btn-primary').click();
+      await finished;
     });
-    await page.waitForSelector('.auction-overlay.is-visible[data-auction-mode="RESULT"] .auction-result.is-sold');
-    await page.screenshot({ path: artifact('test_step_auction_result.png') });
-    await page.click('.auction-controls .btn-primary');
     await page.waitForSelector('.auction-overlay', { hidden: true });
     console.log('✅ Auction property card, bidders, bid history, custom controls, and sold result rendered.');
 
@@ -437,16 +448,16 @@ async function runTest() {
     await page.screenshot({ path: artifact('test_step_debt_settlement.png') });
     await page.click('.debt-action[data-action="LIQUIDATE_DEPOSIT"]');
     await page.waitForFunction(() => window.__e2eDebtAction?.type === 'LIQUIDATE_DEPOSIT');
-    await page.evaluate(() => {
-      window.__e2eDebtUI.showOutcome({
+    await page.evaluate(async () => {
+      const finished=window.__e2eDebtUI.showOutcome({
         result: { type: 'DEBT_PAID', amount: 5200 },
         player: { ...window.__e2eDebtPlayer, cash: 600 },
         debt: window.__e2eDebt
       });
+      const result=document.querySelector('.debt-outcome-overlay.is-visible .debt-outcome');
+      if(!result?.textContent.includes('$5,200')||!result.textContent.includes('$600'))throw new Error('Debt outcome amounts missing');
+      result.querySelector('button').click();await finished;
     });
-    await page.waitForSelector('.debt-outcome-overlay.is-visible .debt-outcome');
-    await page.screenshot({ path: artifact('test_step_debt_outcome.png') });
-    await page.click('.debt-outcome button');
     await page.waitForSelector('.debt-outcome-overlay', { hidden: true });
     await page.evaluate(() => {
       window.__e2eDebtAction = null;
@@ -506,7 +517,7 @@ async function runTest() {
         import('/src/game/GameState.js'), import('/src/game/GameEngine.js'), import('/src/ui/ShopUI.js')
       ]);
       const state = new GameState({ seed: 7319 });
-      state.setupGame([{ profileIndex: 0, name: '到店验收玩家', isAI: false }, { profileIndex: 1, name: '对手', isAI: true }], 20000, { mapId: 'city-loop' });
+      state.setupGame([{ profileIndex: 8, name: '到店验收玩家', isAI: false }, { profileIndex: 1, name: '对手', isAI: true }], 20000, { mapId: 'city-loop' });
       const engine = new GameEngine(state);
       const player = state.players[0];
       player.currentTile = 2;
@@ -522,14 +533,18 @@ async function runTest() {
     const visitShopTelemetry = await page.evaluate(() => ({
       title: document.getElementById('shop-title')?.textContent,
       subtitle: document.getElementById('shop-subtitle')?.textContent,
-      items: document.querySelectorAll('#shop-card-grid .shop-card-item').length,
-      discounted: document.querySelectorAll('#shop-card-grid .card-cost del').length
+      items: document.querySelectorAll('#shop-card-grid .strategy-card').length,
+      discounted: [...document.querySelectorAll('#shop-card-grid .strategy-card')].filter(element=>{
+        const entry=window.__e2eShopFixture.getShopEntries(window.__e2eShopState.players[0]).find(item=>item.key===element.dataset.entryKey);
+        const shown=Number(element.querySelector('.strategy-card-actions > strong').firstChild.textContent.trim());
+        return shown===Math.max(1,Math.round(entry.definition.cost*.85));
+      }).length
     }));
     if (!visitShopTelemetry.title.includes('卡片') || !visitShopTelemetry.subtitle.includes('15%')
       || visitShopTelemetry.items !== 12 || visitShopTelemetry.discounted !== 12) {
       throw new Error(`Rotating shop presentation mismatch: ${JSON.stringify(visitShopTelemetry)}`);
     }
-    await page.click('#shop-card-grid .btn-buy-card');
+    await page.click('#shop-card-grid [data-entry-key^="CARD:"] .strategy-primary');
     await page.waitForFunction(() => window.__e2eShopState.players[0].cards.length > window.__e2eShopInitialCards);
     await page.screenshot({ path: artifact('test_step_rotating_shop.png') });
     await page.click('#shop-modal-close');
@@ -540,7 +555,7 @@ async function runTest() {
     await page.click('#btn-card-shop');
     await page.waitForSelector('#modal-shop:not(.hidden)', { timeout: 3000 });
     console.log('✅ Card Shop modal opened.');
-    const shopCards = await page.$$('.shop-card-item');
+    const shopCards = await page.$$('#shop-card-grid .strategy-card');
     console.log(`Found ${shopCards.length} items in Card Shop.`);
     await page.click('#shop-modal-close');
     await page.waitForSelector('#modal-shop.hidden', { timeout: 5000 });
@@ -602,7 +617,7 @@ async function runTest() {
     await page.waitForSelector('#modal-market.hidden', { timeout: 3000 });
     console.log('✅ Market hall listed an asset and rendered valuation, expiry, and seller controls.');
 
-    console.log('\n--- Step 6d: Testing Pause, Speed, and V10 Save Slot ---');
+    console.log('\n--- Step 6d: Testing Pause, Speed, and V11 Save Slot ---');
     await page.click('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');
@@ -621,22 +636,29 @@ async function runTest() {
     }, gameId);
 
     await launchMinigame('HARBOR_SORT');
+    await page.click('.minigame-start');
     await page.waitForSelector('.minigame-modal[data-game-id="HARBOR_SORT"] .harbor-cargo');
     await page.click('.harbor-bins [data-bin="COLD"]');
     await page.waitForFunction(() => document.querySelector('.minigame-score span')?.textContent === '10');
     await page.screenshot({ path: artifact('test_step_minigame_harbor.png') });
     await page.click('.minigame-skip');
+    await page.waitForSelector('.minigame-claim');
+    await page.click('.minigame-claim');
     await page.waitForSelector('.minigame-modal', { hidden: true });
 
     await launchMinigame('SKY_COINS');
+    await page.click('.minigame-start');
     await page.waitForSelector('.minigame-modal[data-game-id="SKY_COINS"] .sky-object[data-kind="COIN"]');
     await page.click('.sky-object[data-kind="COIN"]');
     await page.waitForFunction(() => Number(document.querySelector('.minigame-score span')?.textContent) >= 10);
     await page.screenshot({ path: artifact('test_step_minigame_sky.png') });
     await page.click('.minigame-skip');
+    await page.waitForSelector('.minigame-claim');
+    await page.click('.minigame-claim');
     await page.waitForSelector('.minigame-modal', { hidden: true });
 
     await launchMinigame('ROUTE_MEMORY');
+    await page.click('.minigame-start');
     await page.waitForSelector('.minigame-modal[data-game-id="ROUTE_MEMORY"] .route-beacons');
     await page.waitForFunction(() => {
       const feedback = document.querySelector('.minigame-feedback')?.textContent || '';
@@ -648,29 +670,40 @@ async function runTest() {
     await page.waitForFunction(() => document.querySelector('.minigame-score span')?.textContent === '20');
     await page.screenshot({ path: artifact('test_step_minigame_route.png') });
     await page.click('.minigame-skip');
+    await page.waitForSelector('.minigame-claim');
+    await page.click('.minigame-claim');
     await page.waitForSelector('.minigame-modal', { hidden: true });
     console.log('✅ Harbor sorting, sky collection, and route memory minigames passed.');
 
     console.log('\n--- Step 7: Testing Dice Roll (Click & Space bar) and Movement & AI Turns ---');
     console.log('Clicking "掷骰子" button for Player 1 turn...');
-    await page.click('#btn-roll');
-    await page.waitForSelector('.presentation-dice-result.is-visible', { timeout: 6000 });
-    await page.waitForFunction(() => {
-      const element = document.querySelector('.presentation-dice-result.is-visible');
-      return element && Number(getComputedStyle(element).opacity) >= 0.9;
-    }, { timeout: 3000 });
-    const dicePresentation = await page.$eval('.presentation-dice-result.is-visible', element => {
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
-      return {
-        dice: element.querySelectorAll('.presentation-die').length,
-        text: element.textContent.replace(/\s+/g, ' ').trim(),
-        opacity: Number(style.opacity),
-        visibility: style.visibility,
-        width: rect.width,
-        height: rect.height
+    await page.evaluate(() => {
+      window.__dicePresentation = null;
+      const started = performance.now();
+      const inspect = () => {
+        const element = document.querySelector('.presentation-dice-result.is-visible');
+        if (element) {
+          const style = getComputedStyle(element);
+          if (Number(style.opacity) >= 0.9) {
+            const rect = element.getBoundingClientRect();
+            window.__dicePresentation = {
+              dice: element.querySelectorAll('.presentation-die').length,
+              text: element.textContent.replace(/\s+/g, ' ').trim(),
+              opacity: Number(style.opacity), visibility: style.visibility,
+              width: rect.width, height: rect.height
+            };
+            return;
+          }
+        }
+        if (performance.now() - started < 30000) requestAnimationFrame(inspect);
       };
+      requestAnimationFrame(inspect);
     });
+    await Promise.all([
+      page.waitForFunction(() => window.__dicePresentation !== null, { timeout: 30000 }),
+      page.click('#btn-roll')
+    ]);
+    const dicePresentation = await page.evaluate(() => window.__dicePresentation);
     if (dicePresentation.dice < 1 || !dicePresentation.text.includes('前进') || !dicePresentation.text.includes('步')
       || dicePresentation.opacity < 0.9 || dicePresentation.visibility !== 'visible' || dicePresentation.width < 200) {
       throw new Error(`Dice presentation content mismatch: ${JSON.stringify(dicePresentation)}`);
@@ -774,6 +807,7 @@ async function runTest() {
 
     console.log(`Page Uncaught Errors (${pageErrors.length}):`);
     pageErrors.forEach((e, i) => console.log(`  ${i+1}. ${e}`));
+    if(networkErrors.length||errors.length||pageErrors.length)process.exitCode=1;
     console.log(`Screenshots: ${artifactDirectory}`);
     console.log('==================================================\n');
   }

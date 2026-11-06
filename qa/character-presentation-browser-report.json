@@ -1,0 +1,342 @@
+{
+  "checks": [
+    {
+      "map": "coast",
+      "viewport": "1280x844",
+      "reducedMotion": false,
+      "looks": [
+        {
+          "id": "ayu",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 16348,
+            "geometries": 246
+          },
+          "title": "阿屿 · 海岛快递员"
+        },
+        {
+          "id": "qinghe",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18652,
+            "geometries": 254
+          },
+          "title": "青禾 · 植物学家"
+        },
+        {
+          "id": "xingluo",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18336,
+            "geometries": 262
+          },
+          "title": "星罗 · 地图测绘师"
+        },
+        {
+          "id": "taoning",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 33,
+            "triangles": 17332,
+            "geometries": 270
+          },
+          "title": "陶宁 · 街区修缮师"
+        }
+      ],
+      "moves": [
+        {
+          "id": 0,
+          "tile": 1,
+          "continuing": true,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 0,
+          "tile": 2,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 0,
+          "tile": 3,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 0,
+          "tile": 4,
+          "continuing": false,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        },
+        {
+          "id": 1,
+          "tile": 1,
+          "continuing": true,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 1,
+          "tile": 2,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 1,
+          "tile": 3,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 1,
+          "tile": 4,
+          "continuing": false,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        },
+        {
+          "id": 2,
+          "tile": 1,
+          "continuing": false,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        },
+        {
+          "id": 3,
+          "tile": 1,
+          "continuing": true,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 3,
+          "tile": 2,
+          "continuing": false,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        }
+      ],
+      "realEvent": "work",
+      "allFourSeatsRound2": true,
+      "saveRestore": true,
+      "previewDoesNotMutateGame": true
+    },
+    {
+      "map": "highland",
+      "viewport": "390x844",
+      "reducedMotion": true,
+      "looks": [
+        {
+          "id": "ayu",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 16348,
+            "geometries": 215
+          },
+          "title": "阿屿 · 海岛快递员"
+        },
+        {
+          "id": "qinghe",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18652,
+            "geometries": 223
+          },
+          "title": "青禾 · 植物学家"
+        },
+        {
+          "id": "xingluo",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 31,
+            "triangles": 18336,
+            "geometries": 231
+          },
+          "title": "星罗 · 地图测绘师"
+        },
+        {
+          "id": "taoning",
+          "visible": [
+            "selected"
+          ],
+          "zoom": 6,
+          "canvases": 1,
+          "metrics": {
+            "calls": 33,
+            "triangles": 17332,
+            "geometries": 239
+          },
+          "title": "陶宁 · 街区修缮师"
+        }
+      ],
+      "moves": [
+        {
+          "id": 0,
+          "tile": 1,
+          "continuing": true,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 0,
+          "tile": 2,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 0,
+          "tile": 3,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 0,
+          "tile": 4,
+          "continuing": false,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        },
+        {
+          "id": 1,
+          "tile": 1,
+          "continuing": true,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 1,
+          "tile": 2,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 1,
+          "tile": 3,
+          "continuing": true,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 1,
+          "tile": 4,
+          "continuing": false,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        },
+        {
+          "id": 2,
+          "tile": 1,
+          "continuing": false,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        },
+        {
+          "id": 3,
+          "tile": 1,
+          "continuing": true,
+          "beforeAction": "idle",
+          "beforeEpoch": 0,
+          "afterAction": "walk",
+          "afterEpoch": 1
+        },
+        {
+          "id": 3,
+          "tile": 2,
+          "continuing": false,
+          "beforeAction": "walk",
+          "beforeEpoch": 1,
+          "afterAction": "idle",
+          "afterEpoch": 2
+        }
+      ],
+      "realEvent": "sort",
+      "allFourSeatsRound2": true,
+      "saveRestore": true,
+      "previewDoesNotMutateGame": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

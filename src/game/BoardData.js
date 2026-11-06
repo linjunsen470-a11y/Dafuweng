@@ -239,5 +239,45 @@ export const PLAYER_PROFILES = [
     colorHex: 0xbadc58,
     skillName: '商业神童',
     skillDesc: '建筑升级花费降低 25%，开局赠送 80 点卡片积分。'
+  },
+  {
+    id: 12,
+    name: '丹尼',
+    avatarImg: '/assets/char_danny.svg',
+    avatar: '🎧',
+    color: '#00d2d3',
+    colorHex: 0x00d2d3,
+    skillName: '自然之福',
+    skillDesc: '幸运街头艺人：踩中命运卡与随机事件时必定触发正面奖励。'
+  },
+  {
+    id: 13,
+    name: '莎拉',
+    avatarImg: '/assets/char_sarah.svg',
+    avatar: '🧬',
+    color: '#54a0ff',
+    colorHex: 0x54a0ff,
+    skillName: '股市高手',
+    skillDesc: '量化研究员：股票交易收益额外加成 15%，踩中敌方地产有 25% 概率免单。'
+  },
+  {
+    id: 14,
+    name: '宫本凌',
+    avatarImg: '/assets/char_miyamoto.svg',
+    avatar: '🌸',
+    color: '#ff6b81',
+    colorHex: 0xff6b81,
+    skillName: '疾风忍术',
+    skillDesc: '城市剑士：有 30% 概率无视前方路障，卡片屋积分获取翻倍。'
+  },
+  {
+    id: 15,
+    name: '金宝宝',
+    avatarImg: '/assets/char_baby_jin.svg',
+    avatar: '🪙',
+    color: '#feca57',
+    colorHex: 0xfeca57,
+    skillName: '商业神童',
+    skillDesc: '藏金小天才：建筑升级花费降低 25%，开局赠送 80 点卡片积分。'
   }
 ];

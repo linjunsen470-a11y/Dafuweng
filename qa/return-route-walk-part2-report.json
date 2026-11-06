@@ -1,0 +1,4426 @@
+{
+  "actions": [
+    {
+      "round": 27,
+      "tile": 76,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 27,
+      "tile": 79,
+      "action": ".mechanism-close"
+    },
+    {
+      "round": 28,
+      "tile": 79,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 30,
+      "tile": 79,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 31,
+      "tile": 79,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 32,
+      "tile": 80,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 32,
+      "tile": 80,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 33,
+      "tile": 1,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 35,
+      "tile": 1,
+      "action": ".news-dismiss",
+      "staleControl": "Node is detached from document"
+    },
+    {
+      "round": 35,
+      "tile": 1,
+      "action": ".economic-report-close"
+    },
+    {
+      "round": 37,
+      "tile": 1,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 38,
+      "tile": 1,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 39,
+      "tile": 6,
+      "action": ".news-dismiss"
+    },
+    {
+      "round": 39,
+      "tile": 6,
+      "action": "#btn-roll"
+    },
+    {
+      "round": 39,
+      "tile": 11,
+      "action": "#btn-land-upgrade"
+    },
+    {
+      "round": 40,
+      "tile": 11,
+      "action": ".economic-report-close"
+    }
+  ],
+  "errors": [],
+  "checkpoints": [
+    {
+      "region": "north-main",
+      "round": 27,
+      "tile": 76
+    },
+    {
+      "region": "west-return",
+      "round": 31,
+      "tile": 79
+    },
+    {
+      "region": "harbor-return",
+      "round": 38,
+      "tile": 1
+    }
+  ],
+  "limits": [
+    "Started through the real setup UI with default four-player standard game; only the built-in 2x speed chosen. No forced dice, teleport, money, god or route-state edits.",
+    "Automated clicks on visible UI with conservative purchasing; browser software WebGL, no subjective audio acceptance."
+  ],
+  "resumed": "Exact pre-roll checkpoint at round 27 tile 76; no game state edits.",
+  "noticeOverlap": {
+    "round": 35,
+    "tile": 1
+  },
+  "stopped": "game-over",
+  "commands": [
+    {
+      "round": 27,
+      "player": 0,
+      "command": "ROLL_DICE",
+      "tile": 76,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 35641.20000000298
+    },
+    {
+      "round": 27,
+      "player": 0,
+      "command": "BEGIN_MOVE",
+      "tile": 76,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 37799.5
+    },
+    {
+      "round": 27,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 77,
+      "result": "ROAD_ENTITY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "ROAD_ENTITY_CHANGED"
+      ],
+      "at": 37801
+    },
+    {
+      "round": 27,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 78,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 38442
+    },
+    {
+      "round": 27,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 79,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MINE_EXPLODED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 39634.20000000298
+    },
+    {
+      "round": 27,
+      "player": 0,
+      "command": "RESOLVE_LANDING",
+      "tile": 79,
+      "result": "MECHANISM_OFFER",
+      "success": true,
+      "events": [
+        "MECHANISM_OFFER"
+      ],
+      "at": 41177
+    },
+    {
+      "round": 27,
+      "player": 0,
+      "command": "END_TURN",
+      "tile": 79,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_DEPARTED"
+      ],
+      "at": 42306.70000000298
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 58,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 42732.5
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "BUY_ITEM",
+      "tile": 58,
+      "result": "INVENTORY_CHANGED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 42733.5
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "BUY_CARD",
+      "tile": 58,
+      "result": "CARD_BOUGHT",
+      "success": true,
+      "events": [
+        "CARD_BOUGHT"
+      ],
+      "at": 42734.10000000149
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "USE_CARD",
+      "tile": 58,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED"
+      ],
+      "at": 42762.5
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 58,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 3,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 45892.10000000149
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 59,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 45892.39999999851
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 60,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 46365.29999999702
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 60,
+      "result": "ROUTE_CHOICE_REQUIRED",
+      "success": true,
+      "events": [
+        "ROUTE_CHOICE_REQUIRED"
+      ],
+      "at": 46658.60000000149
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 108,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 46660.20000000298
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "PURCHASE_PROPERTY",
+      "tile": 108,
+      "result": "PROPERTY_PURCHASED",
+      "success": true,
+      "events": [
+        "PROPERTY_PURCHASED"
+      ],
+      "at": 47776.39999999851
+    },
+    {
+      "round": 27,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 108,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT"
+      ],
+      "at": 48191.5
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 40,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 48676.39999999851
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 40,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 3,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 48693.5
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 40,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 3,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 51893.89999999851
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 41,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 51895.39999999851
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 42,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 52284.79999999702
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 43,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 52842.5
+    },
+    {
+      "round": 27,
+      "player": 3,
+      "command": "UPGRADE_PROPERTY",
+      "tile": 43,
+      "result": "PROPERTY_UPGRADED",
+      "success": true,
+      "events": [
+        "PROPERTY_UPGRADED"
+      ],
+      "at": 53981.70000000298
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 43,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "QUEST_FAILED",
+        "ROAD_ENTITY_CHANGED",
+        "NEWS_FLASH"
+      ],
+      "at": 54417.5
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 108,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 55946.70000000298
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "BUY_ITEM",
+      "tile": 108,
+      "result": "INVENTORY_CHANGED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 55947.10000000149
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "BUY_CARD",
+      "tile": 108,
+      "result": "CARD_BOUGHT",
+      "success": true,
+      "events": [
+        "CARD_BOUGHT"
+      ],
+      "at": 55947.29999999702
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "USE_CARD",
+      "tile": 108,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED"
+      ],
+      "at": 55959.10000000149
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 108,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 55970.79999999702
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "CHOOSE_BUILDING_TYPE",
+      "tile": 108,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PROPERTY_CHANGED"
+      ],
+      "at": 55979.29999999702
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "SET_COMPANY_POLICY",
+      "tile": 108,
+      "result": "COMPANY_POLICY_SET",
+      "success": true,
+      "events": [
+        "COMPANY_POLICY_SET"
+      ],
+      "at": 55980.10000000149
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 108,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 7,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 55980.39999999851
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 108,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 7,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 60150.5
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 109,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 60151
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 110,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 60417
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 111,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 60775.39999999851
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 112,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 61162.60000000149
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 113,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 61418.29999999702
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 114,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 61735
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 115,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 62032.79999999702
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "RESOLVE_LANDING",
+      "tile": 115,
+      "result": "STATUS_APPLIED",
+      "success": true,
+      "events": [
+        "STATUS_APPLIED"
+      ],
+      "at": 63137.79999999702
+    },
+    {
+      "round": 28,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 115,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT",
+        "GOD_DEPARTED"
+      ],
+      "at": 63547.39999999851
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 43,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 64021.29999999702
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 43,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 64022.70000000298
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 43,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 66476.60000000149
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 44,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 66476.79999999702
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 45,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 66797.79999999702
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 46,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 67280.39999999851
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 47,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 67607.89999999851
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "RESOLVE_LANDING",
+      "tile": 47,
+      "result": "CARD_SHOP_OFFER",
+      "success": true,
+      "events": [
+        "CARD_SHOP_OFFER"
+      ],
+      "at": 68702.89999999851
+    },
+    {
+      "round": 28,
+      "player": 3,
+      "command": "BUY_CARD",
+      "tile": 47,
+      "result": "CARD_BOUGHT",
+      "success": true,
+      "events": [
+        "CARD_BOUGHT"
+      ],
+      "at": 68703.79999999702
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 47,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED",
+        "GOD_TURN_EFFECT"
+      ],
+      "at": 69119
+    },
+    {
+      "round": 29,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 115,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 69539.89999999851
+    },
+    {
+      "round": 29,
+      "player": 1,
+      "command": "USE_CARD",
+      "tile": 115,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED"
+      ],
+      "at": 69548.60000000149
+    },
+    {
+      "round": 29,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 115,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 71294
+    },
+    {
+      "round": 29,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 116,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 71294.20000000298
+    },
+    {
+      "round": 29,
+      "player": 1,
+      "command": "PURCHASE_PROPERTY",
+      "tile": 116,
+      "result": "PROPERTY_PURCHASED",
+      "success": true,
+      "events": [
+        "PROPERTY_PURCHASED"
+      ],
+      "at": 72841.39999999851
+    },
+    {
+      "round": 29,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 116,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 73250.10000000149
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 47,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 74635
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "USE_CARD",
+      "tile": 47,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED"
+      ],
+      "at": 74641
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 47,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 74650.70000000298
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 47,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 74651.39999999851
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 47,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 76798.29999999702
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 48,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 76798.5
+    },
+    {
+      "round": 29,
+      "player": 3,
+      "command": "SETTLE_RENT",
+      "tile": 48,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 77787.70000000298
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 48,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "ECONOMIC_CYCLE_ENDED",
+        "GOD_TURN_EFFECT"
+      ],
+      "at": 78305.5
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 116,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 79841.89999999851
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "SELL_STOCK",
+      "tile": 116,
+      "result": "STOCK_SOLD",
+      "success": true,
+      "events": [
+        "STOCK_SOLD",
+        "CHAIRMAN_CHANGED"
+      ],
+      "at": 79843.5
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "CHOOSE_BUILDING_TYPE",
+      "tile": 116,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PROPERTY_CHANGED"
+      ],
+      "at": 79849.5
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 116,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 79849.60000000149
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 116,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 83391.39999999851
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 117,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 83391.70000000298
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 118,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 83741.20000000298
+    },
+    {
+      "round": 30,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 118,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 85227.10000000149
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 48,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 85746.89999999851
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 48,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 85748.39999999851
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 48,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 88343.60000000149
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 49,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 88346.5
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "RESOLVE_LANDING",
+      "tile": 49,
+      "result": "LOTTERY_OFFER",
+      "success": true,
+      "events": [
+        "LOTTERY_OFFER"
+      ],
+      "at": 89513.89999999851
+    },
+    {
+      "round": 30,
+      "player": 3,
+      "command": "BUY_LOTTERY",
+      "tile": 49,
+      "result": "LOTTERY_BOUGHT",
+      "success": true,
+      "events": [
+        "LOTTERY_BOUGHT"
+      ],
+      "at": 89516.20000000298
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 49,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 89928.5
+    },
+    {
+      "round": 31,
+      "player": 0,
+      "command": "ROLL_DICE",
+      "tile": 79,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 92856.29999999702
+    },
+    {
+      "round": 31,
+      "player": 0,
+      "command": "BEGIN_MOVE",
+      "tile": 79,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 1,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 94842.5
+    },
+    {
+      "round": 31,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 80,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 94842.89999999851
+    },
+    {
+      "round": 31,
+      "player": 0,
+      "command": "RESOLVE_LANDING",
+      "tile": 80,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 95941.20000000298
+    },
+    {
+      "round": 31,
+      "player": 0,
+      "command": "END_TURN",
+      "tile": 80,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT",
+        "GOD_DEPARTED"
+      ],
+      "at": 96362.29999999702
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 118,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 96792.60000000149
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "CHOOSE_BUILDING_TYPE",
+      "tile": 118,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PROPERTY_CHANGED"
+      ],
+      "at": 96801
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 118,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 7,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 96801.29999999702
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 118,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 7,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 99305.89999999851
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 119,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MINE_EXPLODED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 99308.70000000298
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "RESOLVE_LANDING",
+      "tile": 119,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 100856.5
+    },
+    {
+      "round": 31,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 119,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT"
+      ],
+      "at": 101264.29999999702
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 49,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 102062.29999999702
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 49,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 102063.20000000298
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 49,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 103970.5
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 50,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 103970.5
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 51,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 104125.29999999702
+    },
+    {
+      "round": 31,
+      "player": 3,
+      "command": "SETTLE_RENT",
+      "tile": 51,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 105159.10000000149
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 51,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED",
+        "NEWS_FLASH"
+      ],
+      "at": 105584.60000000149
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "ROLL_DICE",
+      "tile": 80,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 109398.39999999851
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "BEGIN_MOVE",
+      "tile": 80,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 111415.10000000149
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 81,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 111415.10000000149
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 82,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 111611.29999999702
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 83,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 111840
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 0,
+      "result": "START_BONUS_GRANTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "START_BONUS_GRANTED"
+      ],
+      "at": 112033.70000000298
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 1,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 112321.20000000298
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "SETTLE_RENT",
+      "tile": 1,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 113362
+    },
+    {
+      "round": 32,
+      "player": 0,
+      "command": "END_TURN",
+      "tile": 1,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 113766.79999999702
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 2,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 114790.70000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "BUY_ITEM",
+      "tile": 2,
+      "result": "INVENTORY_CHANGED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 114794.70000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "USE_ITEM",
+      "tile": 2,
+      "result": "ROAD_ENTITY_CHANGED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 114797
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "SELL_STOCK",
+      "tile": 2,
+      "result": "STOCK_SOLD",
+      "success": true,
+      "events": [
+        "STOCK_SOLD",
+        "CHAIRMAN_CHANGED"
+      ],
+      "at": 114894.60000000149
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 2,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 114895.20000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "SET_COMPANY_POLICY",
+      "tile": 2,
+      "result": "COMPANY_POLICY_SET",
+      "success": true,
+      "events": [
+        "COMPANY_POLICY_SET"
+      ],
+      "at": 114896.70000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ROLL_DICE",
+      "tile": 2,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 114896.79999999702
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "BEGIN_MOVE",
+      "tile": 2,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 117272.10000000149
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 1,
+      "result": "GOD_TRANSFERRED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "GOD_TRANSFERRED"
+      ],
+      "at": 117274.70000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 0,
+      "result": "START_BONUS_GRANTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "START_BONUS_GRANTED"
+      ],
+      "at": 117624.70000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 83,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 117915.5
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 82,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 118124.20000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 81,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 118357.79999999702
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 80,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 118559.20000000298
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "RESOLVE_LANDING",
+      "tile": 80,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 119548.10000000149
+    },
+    {
+      "round": 32,
+      "player": 2,
+      "command": "END_TURN",
+      "tile": 80,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT"
+      ],
+      "at": 119986.70000000298
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 51,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 120456.29999999702
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "BUY_CARD",
+      "tile": 51,
+      "result": "CARD_BOUGHT",
+      "success": true,
+      "events": [
+        "CARD_BOUGHT"
+      ],
+      "at": 120456.5
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "USE_CARD",
+      "tile": 51,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED",
+        "PROPERTY_CHANGED",
+        "PROPERTY_CHANGED",
+        "PROPERTY_CHANGED",
+        "PROPERTY_CHANGED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 120472.70000000298
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "SELL_STOCK",
+      "tile": 51,
+      "result": "STOCK_SOLD",
+      "success": true,
+      "events": [
+        "STOCK_SOLD"
+      ],
+      "at": 120485.10000000149
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 51,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 120486.20000000298
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 51,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 123089.20000000298
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 52,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 123089.60000000149
+    },
+    {
+      "round": 32,
+      "player": 3,
+      "command": "RESOLVE_LANDING",
+      "tile": 52,
+      "result": "COUPON_COLLECTED",
+      "success": true,
+      "events": [
+        "COUPON_COLLECTED"
+      ],
+      "at": 124004.5
+    },
+    {
+      "round": 33,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 52,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED",
+        "NEWS_FLASH"
+      ],
+      "at": 124419.89999999851
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 80,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 124828.39999999851
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "USE_CARD",
+      "tile": 80,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED"
+      ],
+      "at": 124839.20000000298
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "BEGIN_MOVE",
+      "tile": 80,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 127508.79999999702
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 79,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 127509
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 78,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 127639.39999999851
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 77,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 127885.5
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 76,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MINE_EXPLODED",
+        "ROAD_ENTITY_CHANGED",
+        "PROPERTY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 128141.10000000149
+    },
+    {
+      "round": 33,
+      "player": 2,
+      "command": "UPGRADE_PROPERTY",
+      "tile": 76,
+      "result": "PROPERTY_UPGRADED",
+      "success": true,
+      "events": [
+        "PROPERTY_UPGRADED"
+      ],
+      "at": 129161.60000000149
+    },
+    {
+      "round": 35,
+      "player": 2,
+      "command": "END_TURN",
+      "tile": 76,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT",
+        "GOD_TURN_EFFECT",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "ECONOMIC_CYCLE_ENDED",
+        "NEWS_FLASH"
+      ],
+      "at": 129690
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 119,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 130768.20000000298
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "BUY_CARD",
+      "tile": 119,
+      "result": "CARD_BOUGHT",
+      "success": true,
+      "events": [
+        "CARD_BOUGHT"
+      ],
+      "at": 130768.5
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "USE_CARD",
+      "tile": 119,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED"
+      ],
+      "at": 130772.89999999851
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 119,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 136269.29999999702
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 72,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 136269.3999999985
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 73,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 137214.70000000298
+    },
+    {
+      "round": 35,
+      "player": 1,
+      "command": "PURCHASE_PROPERTY",
+      "tile": 73,
+      "result": "PROPERTY_PURCHASED",
+      "success": true,
+      "events": [
+        "PROPERTY_PURCHASED"
+      ],
+      "at": 138309.6000000015
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 73,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "GOD_TURN_EFFECT",
+        "GOD_DEPARTED"
+      ],
+      "at": 138720.3999999985
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 73,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 139725
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 73,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 139725.5
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 73,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 139726.79999999702
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 73,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 141764.8999999985
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 74,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 141765.3999999985
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 75,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 142137.70000000298
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 76,
+      "result": "GOD_TRANSFERRED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "GOD_TRANSFERRED"
+      ],
+      "at": 142363.79999999702
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 77,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 142619.3999999985
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 78,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 142858.6000000015
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "SETTLE_RENT",
+      "tile": 78,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 143893.1000000015
+    },
+    {
+      "round": 36,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 78,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 144298
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 52,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 145123.79999999702
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 52,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 145124.79999999702
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 52,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 145125.70000000298
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 52,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 147802.8999999985
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 53,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 147803.1000000015
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 54,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 148062.6000000015
+    },
+    {
+      "round": 36,
+      "player": 3,
+      "command": "RESOLVE_LANDING",
+      "tile": 54,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 149125.8999999985
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 54,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED",
+        "NEWS_FLASH",
+        "GOD_TURN_EFFECT"
+      ],
+      "at": 149579.6000000015
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 78,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 150062.8999999985
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 78,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 3,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 150070.6000000015
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 78,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 3,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 152652.20000000298
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 79,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 152652.29999999702
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 80,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 152963.70000000298
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 81,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 153252
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "SETTLE_RENT",
+      "tile": 81,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 154300.6000000015
+    },
+    {
+      "round": 37,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 81,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 154709
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 76,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 155179.70000000298
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "BUY_ITEM",
+      "tile": 76,
+      "result": "INVENTORY_CHANGED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 155180.29999999702
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "USE_ITEM",
+      "tile": 76,
+      "result": "ITEM_USED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 155180.5
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "SELL_STOCK",
+      "tile": 76,
+      "result": "STOCK_SOLD",
+      "success": true,
+      "events": [
+        "STOCK_SOLD",
+        "CHAIRMAN_CHANGED"
+      ],
+      "at": 155221.79999999702
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ROLL_DICE",
+      "tile": 76,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 155222.3999999985
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "BEGIN_MOVE",
+      "tile": 76,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 157251.6000000015
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 75,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 157251.70000000298
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 74,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 157512.70000000298
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 73,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 157679.79999999702
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 72,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 157829.8999999985
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 72,
+      "result": "ROUTE_CHOICE_REQUIRED",
+      "success": true,
+      "events": [
+        "ROUTE_CHOICE_REQUIRED"
+      ],
+      "at": 158019.70000000298
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 119,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 158021.1000000015
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 118,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 158225.70000000298
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "PURCHASE_PROPERTY",
+      "tile": 118,
+      "result": "PROPERTY_PURCHASED",
+      "success": true,
+      "events": [
+        "PROPERTY_PURCHASED"
+      ],
+      "at": 159226.70000000298
+    },
+    {
+      "round": 37,
+      "player": 2,
+      "command": "END_TURN",
+      "tile": 118,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 159640.5
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 54,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 160702.20000000298
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 54,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 160703.1000000015
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 54,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 162547.8999999985
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 55,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 162548.20000000298
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 56,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 162933.29999999702
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 57,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 163171.1000000015
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 58,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED",
+        "PROPERTY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 163442.5
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "SETTLE_RENT",
+      "tile": 58,
+      "result": "DEBT_REQUIRED",
+      "success": true,
+      "events": [
+        "DEBT_REQUIRED"
+      ],
+      "at": 164404.20000000298
+    },
+    {
+      "round": 37,
+      "player": 3,
+      "command": "AUTO_SETTLE_DEBT",
+      "tile": 58,
+      "result": "DEBT_PAID",
+      "success": true,
+      "events": [
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "ASSET_LIQUIDATED",
+        "DEBT_PAID"
+      ],
+      "at": 164425.8999999985
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 58,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED"
+      ],
+      "at": 164835
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "ROLL_DICE",
+      "tile": 1,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 169070.3999999985
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "BEGIN_MOVE",
+      "tile": 1,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 170913.20000000298
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 2,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 170913.3999999985
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 3,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 171162.20000000298
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 4,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 171389.79999999702
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 5,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 171587.5
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 6,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 171801.5
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "SETTLE_RENT",
+      "tile": 6,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 172805.79999999702
+    },
+    {
+      "round": 38,
+      "player": 0,
+      "command": "END_TURN",
+      "tile": 6,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 173209.79999999702
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 81,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 173622.3999999985
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "BUY_STOCK",
+      "tile": 81,
+      "result": "STOCK_BOUGHT",
+      "success": true,
+      "events": [
+        "STOCK_BOUGHT",
+        "CHAIRMAN_CHANGED"
+      ],
+      "at": 173623.29999999702
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "SET_COMPANY_POLICY",
+      "tile": 81,
+      "result": "COMPANY_POLICY_SET",
+      "success": true,
+      "events": [
+        "COMPANY_POLICY_SET"
+      ],
+      "at": 173624.5
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 81,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 173624.70000000298
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 81,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 175675.3999999985
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 82,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 175695
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 83,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 176104.5
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "SETTLE_RENT",
+      "tile": 83,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 177126.20000000298
+    },
+    {
+      "round": 38,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 83,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 177530.29999999702
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 118,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 177947.70000000298
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 118,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 177948.3999999985
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ROLL_DICE",
+      "tile": 118,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 9,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 177948.8999999985
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "BEGIN_MOVE",
+      "tile": 118,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 9,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 179893.5
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 117,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 179893.5
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 116,
+      "result": "ROAD_ENTITY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "ROAD_ENTITY_CHANGED"
+      ],
+      "at": 180298.20000000298
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 115,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 180463.1000000015
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 114,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 180723
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 113,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 180919.8999999985
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 112,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 181064.1000000015
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 111,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 181254.29999999702
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 110,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 181445.1000000015
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 109,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 181704.6000000015
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "RESOLVE_LANDING",
+      "tile": 109,
+      "result": "MINIGAME_OFFER",
+      "success": true,
+      "events": [
+        "MINIGAME_OFFER"
+      ],
+      "at": 182654.3999999985
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "SUBMIT_MINIGAME_RESULT",
+      "tile": 109,
+      "result": "MINIGAME_COMPLETED",
+      "success": true,
+      "events": [
+        "MINIGAME_COMPLETED"
+      ],
+      "at": 182659.3999999985
+    },
+    {
+      "round": 38,
+      "player": 2,
+      "command": "END_TURN",
+      "tile": 109,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 183068.70000000298
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 58,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 183556.6000000015
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "CREATE_MARKET_OFFER",
+      "tile": 58,
+      "result": "MARKET_OFFER_CREATED",
+      "success": true,
+      "events": [
+        "MARKET_OFFER_CREATED"
+      ],
+      "at": 183557.5
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "MORTGAGE_PROPERTY",
+      "tile": 58,
+      "result": "PROPERTY_MORTGAGED",
+      "success": true,
+      "events": [
+        "PROPERTY_MORTGAGED"
+      ],
+      "at": 183561
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 58,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 183561.3999999985
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 58,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 2,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 186249.70000000298
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 59,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 186249.79999999702
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 60,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 186588.8999999985
+    },
+    {
+      "round": 38,
+      "player": 3,
+      "command": "RESOLVE_LANDING",
+      "tile": 60,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 187540.20000000298
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 60,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED",
+        "NEWS_FLASH"
+      ],
+      "at": 187955.6000000015
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "ROLL_DICE",
+      "tile": 6,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 192702.20000000298
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "BEGIN_MOVE",
+      "tile": 6,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 5,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 194644.79999999702
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 7,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 194644.8999999985
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 8,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 194848.3999999985
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 9,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 195158.79999999702
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 10,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 195365.5
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "ADVANCE_MOVE",
+      "tile": 11,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 195613.79999999702
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "UPGRADE_PROPERTY",
+      "tile": 11,
+      "result": "PROPERTY_UPGRADED",
+      "success": true,
+      "events": [
+        "PROPERTY_UPGRADED"
+      ],
+      "at": 197023.29999999702
+    },
+    {
+      "round": 39,
+      "player": 0,
+      "command": "END_TURN",
+      "tile": 11,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 197429.6000000015
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 83,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 197922.20000000298
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "BUY_STOCK",
+      "tile": 83,
+      "result": "STOCK_BOUGHT",
+      "success": true,
+      "events": [
+        "STOCK_BOUGHT",
+        "CHAIRMAN_CHANGED"
+      ],
+      "at": 197922.8999999985
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "SET_COMPANY_POLICY",
+      "tile": 83,
+      "result": "COMPANY_POLICY_SET",
+      "success": true,
+      "events": [
+        "COMPANY_POLICY_SET"
+      ],
+      "at": 197927.79999999702
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "ROLL_DICE",
+      "tile": 83,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 197928
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "BEGIN_MOVE",
+      "tile": 83,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 200584.5
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "ADVANCE_MOVE",
+      "tile": 0,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "START_BONUS_GRANTED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 200587.70000000298
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "RESOLVE_LANDING",
+      "tile": 0,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 201597.5
+    },
+    {
+      "round": 39,
+      "player": 1,
+      "command": "END_TURN",
+      "tile": 0,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 202001.70000000298
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 109,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 202410.3999999985
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "BUY_ITEM",
+      "tile": 109,
+      "result": "INVENTORY_CHANGED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED"
+      ],
+      "at": 202412.1000000015
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "USE_ITEM",
+      "tile": 109,
+      "result": "BLAST_RESOLVED",
+      "success": true,
+      "events": [
+        "INVENTORY_CHANGED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 202414.1000000015
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "BUY_CARD",
+      "tile": 109,
+      "result": "CARD_BOUGHT",
+      "success": true,
+      "events": [
+        "CARD_BOUGHT"
+      ],
+      "at": 202517.5
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "USE_CARD",
+      "tile": 109,
+      "result": "CARD_USED",
+      "success": true,
+      "events": [
+        "CARD_USED",
+        "STATUS_CHANGED"
+      ],
+      "at": 202530
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ROLL_DICE",
+      "tile": 109,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 11,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 202542
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "BEGIN_MOVE",
+      "tile": 109,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 11,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 204957.79999999702
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 108,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 204963.79999999702
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 60,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 205509.79999999702
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 59,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 205660.1000000015
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 58,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 205976.8999999985
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 57,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 206216.3999999985
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 56,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 206409.5
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 55,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 206640.5
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 54,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 206926.5
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 53,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 207161.79999999702
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 52,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 207382.5
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 51,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 207626
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "SETTLE_RENT",
+      "tile": 51,
+      "result": "RENT_PAID",
+      "success": true,
+      "events": [
+        "RENT_PAID"
+      ],
+      "at": 208717.1000000015
+    },
+    {
+      "round": 39,
+      "player": 2,
+      "command": "END_TURN",
+      "tile": 51,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 209122.29999999702
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 60,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 210122
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 60,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 210123
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 60,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 6,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 212023.29999999702
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 60,
+      "result": "ROUTE_CHOICE_REQUIRED",
+      "success": true,
+      "events": [
+        "ROUTE_CHOICE_REQUIRED"
+      ],
+      "at": 212023.3999999985
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 61,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 212025.70000000298
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 62,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 212404.70000000298
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 63,
+      "result": "BOARD_GOD_COLLECTED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED"
+      ],
+      "at": 212606.70000000298
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 64,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 213105
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 65,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 213503.20000000298
+    },
+    {
+      "round": 39,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 66,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "BOARD_GOD_COLLECTED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 213812.3999999985
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 66,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED",
+        "ROAD_ENTITY_CHANGED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "COMPANY_SETTLED",
+        "ECONOMIC_CYCLE_ENDED"
+      ],
+      "at": 215362.3999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 51,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 215866.79999999702
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ROLL_DICE",
+      "tile": 51,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 7,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 215867.6000000015
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "BEGIN_MOVE",
+      "tile": 51,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 7,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 219093.3999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 50,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 219093.6000000015
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 49,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 219315.8999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 48,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 219917.8999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 48,
+      "result": "ROUTE_CHOICE_REQUIRED",
+      "success": true,
+      "events": [
+        "ROUTE_CHOICE_REQUIRED"
+      ],
+      "at": 220281.29999999702
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 47,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 220282.3999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 46,
+      "result": "PROPERTY_CHANGED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "PROPERTY_CHANGED"
+      ],
+      "at": 220645.3999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 45,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 221023.3999999985
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "ADVANCE_MOVE",
+      "tile": 44,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "ROAD_ENTITY_CHANGED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 221343
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "RESOLVE_LANDING",
+      "tile": 44,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 222377.79999999702
+    },
+    {
+      "round": 40,
+      "player": 2,
+      "command": "END_TURN",
+      "tile": 44,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 222803.8999999985
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "SELECT_DICE_COUNT",
+      "tile": 66,
+      "result": "DICE_COUNT_SELECTED",
+      "success": true,
+      "events": [
+        "DICE_COUNT_SELECTED"
+      ],
+      "at": 223277.6000000015
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "ROLL_DICE",
+      "tile": 66,
+      "result": "DICE_ROLLED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "DICE_ROLLED"
+      ],
+      "at": 223278.20000000298
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "BEGIN_MOVE",
+      "tile": 66,
+      "result": "MOVE_STARTED",
+      "success": true,
+      "roll": 4,
+      "events": [
+        "MOVE_STARTED"
+      ],
+      "at": 225843.3999999985
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 67,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 225843.5
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 68,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 226199.1000000015
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 69,
+      "result": "PLAYER_STEPPED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED"
+      ],
+      "at": 226472.5
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "ADVANCE_MOVE",
+      "tile": 70,
+      "result": "MOVEMENT_FINISHED",
+      "success": true,
+      "events": [
+        "PLAYER_STEPPED",
+        "MOVEMENT_FINISHED"
+      ],
+      "at": 226750
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "RESOLVE_LANDING",
+      "tile": 70,
+      "result": "NO_ACTION",
+      "success": true,
+      "events": [
+        "NO_ACTION"
+      ],
+      "at": 227761.20000000298
+    },
+    {
+      "round": 40,
+      "player": 3,
+      "command": "END_TURN",
+      "tile": 70,
+      "result": "TURN_CHANGED",
+      "success": true,
+      "events": [
+        "TURN_CHANGED"
+      ],
+      "at": 228167.6000000015
+    }
+  ],
+  "final": {
+    "round": 40,
+    "players": [
+      {
+        "id": 0,
+        "tile": 11,
+        "cash": 8175,
+        "deposit": 8876,
+        "bankrupt": false
+      },
+      {
+        "id": 1,
+        "tile": 0,
+        "cash": 24173,
+        "deposit": 8397,
+        "bankrupt": false
+      },
+      {
+        "id": 2,
+        "tile": 44,
+        "cash": 2479,
+        "deposit": 7535,
+        "bankrupt": false
+      },
+      {
+        "id": 3,
+        "tile": 70,
+        "cash": 2099,
+        "deposit": 0,
+        "bankrupt": false
+      }
+    ],
+    "logs": [
+      {
+        "msg": "📣 洛晶晶 AI 挂牌出售「导航骰子」，报价 $360。",
+        "type": "accent",
+        "time": "7:26:30 AM"
+      },
+      {
+        "msg": "🎲 洛晶晶 AI 掷出了 9 点（4 + 5）！",
+        "type": "gold",
+        "time": "7:26:32 AM"
+      },
+      {
+        "msg": "🎮 洛晶晶 AI 在【云端金币】获得 56 分与 112 点券。",
+        "type": "gold",
+        "time": "7:26:35 AM"
+      },
+      {
+        "msg": "📣 巴洛克 AI 挂牌出售「导航骰子」，报价 $360。",
+        "type": "accent",
+        "time": "7:26:36 AM"
+      },
+      {
+        "msg": "🏦 巴洛克 AI 抵押【云端金融街 4号】，获得 $1,720。",
+        "type": "accent",
+        "time": "7:26:36 AM"
+      },
+      {
+        "msg": "🎲 巴洛克 AI 掷出了 2 点！",
+        "type": "gold",
+        "time": "7:26:39 AM"
+      },
+      {
+        "msg": "📈 第 39 轮开始！【当前物价指数: 2.4x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "7:26:40 AM"
+      },
+      {
+        "msg": "⚡ 新闻大事件：【暴风雨突袭市中心】 - 全市所有玩家停留地段需支付 $300 房屋维修费！",
+        "type": "gold",
+        "time": "7:26:40 AM"
+      },
+      {
+        "msg": "🎲 林小满 掷出了 5 点！",
+        "type": "gold",
+        "time": "7:26:47 AM"
+      },
+      {
+        "msg": "🧧 林小满 遇到巡游精灵【金运精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "7:26:48 AM"
+      },
+      {
+        "msg": "✨ 林小满 将【珊瑚海岸 1号】升级至 LV 1(花费 $595)！",
+        "type": "gold",
+        "time": "7:26:49 AM"
+      },
+      {
+        "msg": "🏢 顾田野 AI 在【天际交通】董事会通过了新的经营政策。",
+        "type": "gold",
+        "time": "7:26:50 AM"
+      },
+      {
+        "msg": "🚝 顾田野 AI 调用天际交通董事长专线，额外前进 1 步。",
+        "type": "gold",
+        "time": "7:26:50 AM"
+      },
+      {
+        "msg": "🎲 顾田野 AI 掷出了 6 点！",
+        "type": "gold",
+        "time": "7:26:53 AM"
+      },
+      {
+        "msg": "🧰 洛晶晶 AI 购买了【导航骰子】。",
+        "type": "accent",
+        "time": "7:26:55 AM"
+      },
+      {
+        "msg": "🛒 洛晶晶 AI 消费 70 积分兑换了【请神符】！",
+        "type": "accent",
+        "time": "7:26:55 AM"
+      },
+      {
+        "msg": "🧧 虔诚祈祷！洛晶晶 AI 成功召唤【繁荣精灵】附体 4 回合！",
+        "type": "gold",
+        "time": "7:26:55 AM"
+      },
+      {
+        "msg": "🃏 洛晶晶 AI 使用了【请神符】。",
+        "type": "accent",
+        "time": "7:26:55 AM"
+      },
+      {
+        "msg": "🎲 洛晶晶 AI 掷出了 11 点（6 + 5）！",
+        "type": "gold",
+        "time": "7:26:57 AM"
+      },
+      {
+        "msg": "👼 天使降临！茶山小镇 4号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:26:57 AM"
+      },
+      {
+        "msg": "👼 天使降临！锦绣里 4号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:26:58 AM"
+      },
+      {
+        "msg": "👼 天使降临！锦绣里 3号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:26:59 AM"
+      },
+      {
+        "msg": "👼 洛晶晶 AI 遇到巡游精灵【繁荣精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "7:26:59 AM"
+      },
+      {
+        "msg": "👼 天使降临！星河连锁总部 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:26:59 AM"
+      },
+      {
+        "msg": "👼 天使降临！锦绣里 2号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:26:59 AM"
+      },
+      {
+        "msg": "👼 天使降临！锦绣里 1号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:27:00 AM"
+      },
+      {
+        "msg": "💸 洛晶晶 AI 向 顾田野 AI 支付【锦绣里 1号】过路费 $6,826！",
+        "type": "danger",
+        "time": "7:27:01 AM"
+      },
+      {
+        "msg": "🎲 巴洛克 AI 掷出了 6 点！",
+        "type": "gold",
+        "time": "7:27:04 AM"
+      },
+      {
+        "msg": "👼 天使降临！星河商务区 1号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:27:04 AM"
+      },
+      {
+        "msg": "🌟 巴洛克 AI 遇到巡游精灵【筑梦精灵】，附身 6 回合！",
+        "type": "gold",
+        "time": "7:27:05 AM"
+      },
+      {
+        "msg": "😈 巴洛克 AI 遇到巡游精灵【荒芜精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "7:27:06 AM"
+      },
+      {
+        "msg": "🤖 巴洛克 AI 放弃购买【星河商务区 3号】。",
+        "type": "normal",
+        "time": "7:27:07 AM"
+      },
+      {
+        "msg": "🎰 乐透开奖 10 号无人命中，奖池累积至 $2,400。",
+        "type": "accent",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏦 林小满 获得五轮定期利息 $423。",
+        "type": "gold",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏦 顾田野 AI 获得五轮定期利息 $400。",
+        "type": "gold",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏦 洛晶晶 AI 获得五轮定期利息 $359。",
+        "type": "gold",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏢 【极光百货】周期结算：分红 $43，完成 EXPANSION 政策。",
+        "type": "gold",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏢 【蓝港保险】周期结算：分红 $0。",
+        "type": "accent",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏢 【天际交通】周期结算：分红 $227，完成 EXPANSION 政策。",
+        "type": "gold",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏢 【新星营造】周期结算：分红 $0。",
+        "type": "accent",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏢 【云端计算】周期结算：分红 $0。",
+        "type": "accent",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏢 【峰岳材料】周期结算：分红 $0。",
+        "type": "accent",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "📈 第 40 轮开始！【当前物价指数: 2.4x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏥 林小满 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🏥 顾田野 AI 在医院疗养，剩余 2 回合，本回合跳过。",
+        "type": "danger",
+        "time": "7:27:08 AM"
+      },
+      {
+        "msg": "🎲 洛晶晶 AI 掷出了 7 点（6 + 1）！",
+        "type": "gold",
+        "time": "7:27:11 AM"
+      },
+      {
+        "msg": "👼 天使降临！钟楼坊 4号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:27:12 AM"
+      },
+      {
+        "msg": "👼 天使降临！钟楼坊 3号 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "7:27:13 AM"
+      },
+      {
+        "msg": "🎲 巴洛克 AI 掷出了 4 点！",
+        "type": "gold",
+        "time": "7:27:18 AM"
+      },
+      {
+        "msg": "👑 顾田野 AI 以总资产 $142,318 获得胜利！",
+        "type": "gold",
+        "time": "7:27:20 AM"
+      }
+    ]
+  },
+  "elapsedSeconds": 229,
+  "success": true
+}

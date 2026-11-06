@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "map": "coast",
+      "mode": "human",
+      "cost": 50,
+      "selfOnly": true,
+      "cancelNoMutation": true,
+      "refreshNoReplay": true,
+      "fenceStillStops": true,
+      "rentWaived": true,
+      "nextTurnExpires": true
+    },
+    {
+      "map": "coast",
+      "mode": "fourth AI",
+      "pointsAfter": 45,
+      "cost": 50,
+      "tile": 2,
+      "visibleRecap": true
+    },
+    {
+      "map": "highland",
+      "mode": "human",
+      "cost": 50,
+      "selfOnly": true,
+      "cancelNoMutation": true,
+      "refreshNoReplay": true,
+      "fenceStillStops": true,
+      "rentWaived": true,
+      "nextTurnExpires": true
+    },
+    {
+      "map": "highland",
+      "mode": "fourth AI",
+      "pointsAfter": 45,
+      "cost": 50,
+      "tile": 2,
+      "visibleRecap": true
+    }
+  ],
+  "errors": [],
+  "success": true
+}

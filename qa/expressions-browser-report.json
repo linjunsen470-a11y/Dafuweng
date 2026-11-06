@@ -1,0 +1,25 @@
+{
+  "kind": "three original characters, real event expression feedback and morph recovery",
+  "checks": [
+    {
+      "character": "ayu",
+      "map": "coast",
+      "result": "happy",
+      "checks": "Normal remote-dice arrival displays surprise in actual model morph weights and matching portrait; resolved real event displays happy/concern; pawn returns to neutral while readable feedback stays; no state change during face expiry, AI finishes normally, reload keeps game and resets only presentation."
+    },
+    {
+      "character": "qinghe",
+      "map": "coast",
+      "result": "concern",
+      "checks": "Normal remote-dice arrival displays surprise in actual model morph weights and matching portrait; resolved real event displays happy/concern; pawn returns to neutral while readable feedback stays; no state change during face expiry, AI finishes normally, reload keeps game and resets only presentation."
+    },
+    {
+      "character": "xingluo",
+      "map": "highland",
+      "result": "happy",
+      "checks": "Normal remote-dice arrival displays surprise in actual model morph weights and matching portrait; resolved real event displays happy/concern; pawn returns to neutral while readable feedback stays; no state change during face expiry, AI finishes normally, reload keeps game and resets only presentation."
+    }
+  ],
+  "errors": [],
+  "success": true
+}

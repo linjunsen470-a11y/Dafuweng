@@ -1,0 +1,245 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "id": 106,
+      "mobile": false,
+      "before": {
+        "cash": 20000,
+        "property": {
+          "owner": 0,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      },
+      "after": {
+        "cash": 18045,
+        "property": {
+          "owner": 0,
+          "level": 1,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        },
+        "model": "res_market_1",
+        "trace": [
+          {
+            "command": "USE_CARD",
+            "player": 0,
+            "success": true,
+            "type": "CARD_USED",
+            "playerId": 0,
+            "cardId": "REMOTE_DICE",
+            "followUp": {
+              "type": "MOVE_REQUESTED",
+              "mode": "ROLL",
+              "steps": 1
+            },
+            "events": [
+              {
+                "type": "CARD_USED",
+                "playerId": 0,
+                "cardId": "REMOTE_DICE",
+                "targetId": null
+              }
+            ]
+          },
+          {
+            "command": "BEGIN_MOVE",
+            "player": 0,
+            "success": true,
+            "type": "MOVE_STARTED",
+            "playerId": 0,
+            "steps": 1,
+            "source": "DICE",
+            "events": [
+              {
+                "type": "MOVE_STARTED",
+                "success": true,
+                "playerId": 0,
+                "steps": 1,
+                "source": "DICE"
+              }
+            ]
+          },
+          {
+            "command": "ADVANCE_MOVE",
+            "player": 0,
+            "success": true,
+            "type": "MOVEMENT_FINISHED",
+            "tileId": 106,
+            "remainingSteps": 0,
+            "events": [
+              {
+                "type": "PLAYER_STEPPED",
+                "playerId": 0,
+                "tileId": 106,
+                "remainingSteps": 0
+              },
+              {
+                "type": "BOARD_GOD_COLLECTED",
+                "playerId": 0,
+                "godType": "DEMON",
+                "godName": "荒芜精灵",
+                "icon": "😈",
+                "tone": "danger",
+                "duration": 5,
+                "previousGodType": null,
+                "tileId": 106
+              },
+              {
+                "type": "PROPERTY_CHANGED",
+                "tileId": 106,
+                "ownerId": 0,
+                "level": 0
+              },
+              {
+                "type": "MOVEMENT_FINISHED",
+                "playerId": 0,
+                "tileId": 106
+              }
+            ]
+          },
+          {
+            "command": "UPGRADE_PROPERTY",
+            "player": 0,
+            "success": true,
+            "type": "PROPERTY_UPGRADED",
+            "tileId": 106,
+            "level": 1,
+            "cost": 1955,
+            "events": [
+              {
+                "type": "PROPERTY_UPGRADED",
+                "success": true,
+                "tileId": 106,
+                "level": 1,
+                "cost": 1955
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 118,
+      "mobile": true,
+      "before": {
+        "cash": 20000,
+        "property": {
+          "owner": 0,
+          "level": 1,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      },
+      "after": {
+        "cash": 17832,
+        "property": {
+          "owner": 0,
+          "level": 2,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        },
+        "model": "res_civic_2",
+        "trace": [
+          {
+            "command": "USE_CARD",
+            "player": 0,
+            "success": true,
+            "type": "CARD_USED",
+            "playerId": 0,
+            "cardId": "REMOTE_DICE",
+            "followUp": {
+              "type": "MOVE_REQUESTED",
+              "mode": "ROLL",
+              "steps": 1
+            },
+            "events": [
+              {
+                "type": "CARD_USED",
+                "playerId": 0,
+                "cardId": "REMOTE_DICE",
+                "targetId": null
+              }
+            ]
+          },
+          {
+            "command": "BEGIN_MOVE",
+            "player": 0,
+            "success": true,
+            "type": "MOVE_STARTED",
+            "playerId": 0,
+            "steps": 1,
+            "source": "DICE",
+            "events": [
+              {
+                "type": "MOVE_STARTED",
+                "success": true,
+                "playerId": 0,
+                "steps": 1,
+                "source": "DICE"
+              }
+            ]
+          },
+          {
+            "command": "ADVANCE_MOVE",
+            "player": 0,
+            "success": true,
+            "type": "MOVEMENT_FINISHED",
+            "tileId": 118,
+            "remainingSteps": 0,
+            "events": [
+              {
+                "type": "PLAYER_STEPPED",
+                "playerId": 0,
+                "tileId": 118,
+                "remainingSteps": 0
+              },
+              {
+                "type": "MOVEMENT_FINISHED",
+                "playerId": 0,
+                "tileId": 118
+              }
+            ]
+          },
+          {
+            "command": "UPGRADE_PROPERTY",
+            "player": 0,
+            "success": true,
+            "type": "PROPERTY_UPGRADED",
+            "tileId": 118,
+            "level": 2,
+            "cost": 2168,
+            "events": [
+              {
+                "type": "PROPERTY_UPGRADED",
+                "success": true,
+                "tileId": 118,
+                "level": 2,
+                "cost": 2168
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Prepared player105/117 and owned level1 target106/118, real original remote card1 then UI upgrade; original DEMON at106 lowers it to0 on arrival.",
+    "360px is viewport simulation, not physical phone."
+  ],
+  "success": true
+}

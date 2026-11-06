@@ -1,0 +1,111 @@
+{
+  "kind": "mountain scenery and actual cargo-event short playthrough",
+  "checks": [
+    "Actual four-turn remote-dice journey reaches station 22; AI finishes three legal turns and the mountain cargo event survives reload.",
+    "At 390px the guaranteed valley detour is selectable, grants exactly net ¥350, leaves the character on station 22 and clears the pending choice.",
+    "Three original mountain props render with the existing scenery batcher; desktop and mobile screenshots inspected."
+  ],
+  "errors": [],
+  "afterCargo": {
+    "round": 8,
+    "phase": "PRE_ROLL_ACTION",
+    "player": "阿屿",
+    "recentLog": [
+      {
+        "msg": "🏥 阿屿 在医院疗养，剩余 1 回合，本回合跳过。",
+        "type": "danger",
+        "time": "10:32:21 PM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：在任一地块成功买地或升级一次。 第 8 轮结束前有效。",
+        "type": "info",
+        "time": "10:32:21 PM"
+      },
+      {
+        "msg": "🛒 青禾 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "10:32:21 PM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "10:32:21 PM"
+      },
+      {
+        "msg": "🏗️ 青禾 成功购买【古道民居】(花费 $0)！",
+        "type": "success",
+        "time": "10:32:21 PM"
+      },
+      {
+        "msg": "✉️ 青禾 完成【街区焕新】，获得 ¥700 和 35 点券（含专长奖励）。",
+        "type": "gold",
+        "time": "10:32:21 PM"
+      },
+      {
+        "msg": "📈 第 7 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "💰 阿屿 获得精灵收益 $500。",
+        "type": "gold",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "🏥 阿屿 在医院疗养，剩余 0 回合，本回合跳过。",
+        "type": "danger",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "✉️ 青禾 接下【街区焕新】：在任一地块成功买地或升级一次。 第 9 轮结束前有效。",
+        "type": "info",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "🛒 青禾 消费 45 积分兑换了【遥控骰子】！",
+        "type": "accent",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "🃏 青禾 使用了【遥控骰子】。",
+        "type": "accent",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "👼 青禾 遇到巡游精灵【繁荣精灵】，附身 5 回合！",
+        "type": "gold",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "👼 天使降临！陶工小院 房屋免费加盖 1 层！",
+        "type": "gold",
+        "time": "10:32:22 PM"
+      },
+      {
+        "msg": "🏗️ 青禾 成功购买【陶工小院】(花费 $1,600)！",
+        "type": "success",
+        "time": "10:32:23 PM"
+      },
+      {
+        "msg": "✉️ 青禾 完成【街区焕新】，获得 ¥700 和 35 点券（含专长奖励）。",
+        "type": "gold",
+        "time": "10:32:23 PM"
+      },
+      {
+        "msg": "📈 第 8 轮开始！【当前物价指数: 1.2x】股市大盘已刷新！",
+        "type": "accent",
+        "time": "10:32:23 PM"
+      },
+      {
+        "msg": "💰 阿屿 获得精灵收益 $500。",
+        "type": "gold",
+        "time": "10:32:23 PM"
+      }
+    ]
+  },
+  "render": {
+    "calls": 148,
+    "triangles": 93838
+  },
+  "success": true
+}

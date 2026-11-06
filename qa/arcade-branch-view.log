@@ -1,0 +1,43 @@
+{
+  "checks": [
+    "Desktop/rotated: three homes and bank load without state changes; actual111→112, waited for transfer completion, cash−1000 and deposit+1000",
+    "360px: actual108→109, timed challenge, focused/tapped claim, real point reward with unchanged cash"
+  ],
+  "errors": [],
+  "limits": [
+    "Prepared three residential levels and starting positions for targeted real UI interactions.",
+    "360×640 Chromium software WebGL; not physical phone or performance acceptance."
+  ],
+  "bank": {
+    "before": {
+      "cash": 20000,
+      "deposit": 5000
+    },
+    "after": {
+      "cash": 19000,
+      "deposit": 6000,
+      "tile": 112
+    }
+  },
+  "mobileClaimLayout": {
+    "top": 430.125,
+    "bottom": 473.125,
+    "width": 236.390625,
+    "height": 43,
+    "viewport": 360,
+    "viewportHeight": 640,
+    "focused": true
+  },
+  "mobileReward": {
+    "before": {
+      "cash": 20000,
+      "points": 120,
+      "score": 10
+    },
+    "after": {
+      "cash": 20000,
+      "points": 140
+    }
+  },
+  "success": true
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "two normal simulated last-round saves, real browser endings and replay",
+  "checks": [
+    {
+      "map": "coast",
+      "finalWinner": 1,
+      "checks": "Final real dice, event/landing and AI turn reach results; correct map/winner, component sum, story and log caveat; reload/reopen unchanged; role-selection entry preserves completed save; keyboard same-cast replay resets only this map to round 1."
+    },
+    {
+      "map": "highland",
+      "finalWinner": 1,
+      "checks": "Final real dice, event/landing and AI turn reach results; correct map/winner, component sum, story and log caveat; reload/reopen unchanged; role-selection entry preserves completed save; keyboard same-cast replay resets only this map to round 1."
+    }
+  ],
+  "errors": [],
+  "success": true
+}
