@@ -49,6 +49,7 @@ export class AudioManager {
   constructor() {
     this.ctx = null;
     this.muted = false;
+    try { this.muted = globalThis.localStorage?.getItem('fortune-empire:audio-muted') === '1'; } catch {}
     this.sfxVolume = 0.8;
     this.musicVolume = 0.22;
     this.sfxGain = null;
@@ -81,8 +82,8 @@ export class AudioManager {
       this.masterCompressor.ratio.value = 4;
       this.masterCompressor.attack.value = 0.006;
       this.masterCompressor.release.value = 0.24;
-      this.sfxGain.gain.value = this.sfxVolume;
-      this.musicGain.gain.value = this.musicVolume;
+      this.sfxGain.gain.value = this.muted ? 0 : this.sfxVolume;
+      this.musicGain.gain.value = this.muted ? 0 : this.musicVolume;
       this.musicGain.connect(this.musicFilter);
       this.musicFilter.connect(this.masterCompressor);
       this.sfxGain.connect(this.masterCompressor);
@@ -94,6 +95,7 @@ export class AudioManager {
 
   toggleMute() {
     this.muted = !this.muted;
+    try { globalThis.localStorage?.setItem('fortune-empire:audio-muted', this.muted ? '1' : '0'); } catch {}
     if (this.sfxGain) this.sfxGain.gain.setTargetAtTime(this.muted ? 0 : this.sfxVolume, this.ctx.currentTime, 0.02);
     if (this.musicGain) this.musicGain.gain.setTargetAtTime(this.muted ? 0 : this.musicVolume, this.ctx.currentTime, 0.04);
     return this.muted;

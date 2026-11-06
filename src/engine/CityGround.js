@@ -20,9 +20,9 @@ export function createCityGround(map) {
   polygon([[-50,-32],[-34,-34],[-20,-26],[-18,-9],[-23,7],[-35,14],[-49,8]],'#9db28f');
   polygon([[-45,-27],[-33,-29],[-24,-22],[-23,-10],[-28,4],[-38,7],[-45,1]],'#90a889');
   polygon([[-39,-23],[-31,-23],[-27,-14],[-30,-3],[-37,1],[-42,-7]],'#839e83');
-  // An orchard basin frames the existing supply street between two real roads.
-  polygon([[29,-31],[43,-32],[48,-28],[48,-23],[43,-21],[31,-22],[27,-26]],'#a1b28a','#b9c59d');
-  for(let z=-29;z<=-24;z+=1.8){ctx.strokeStyle='#aebb96';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(30,z);ctx.quadraticCurveTo(38,z-1.3,46,z+.2);ctx.stroke();}
+  // A shared market court ties the north street's low backdrop to its two sidewalks.
+  polygon([[27,-31],[50,-31],[50,-24],[28,-24]],'#c2b99e','#cdbf9f');
+  for(const x of [30,39]){ctx.fillStyle='#9caa83';ctx.fillRect(x,-24.6,6,.7);}
   // Civic paving gives the existing central towers a shared urban base.
   const plaza=[[-3,-22],[19,-22],[23,-18],[23,3],[18,8],[0,8],[-4,2]];
   polygon(plaza,'#b6bcaf','#d0d0bb');

@@ -1,0 +1,66 @@
+{
+  "errors": [],
+  "scope": "Actual load-save gesture, mute click, reload/load, unmute click. Analysed Web Audio signal only; no subjective listening.",
+  "beforeGesture": {
+    "muted": false,
+    "context": null,
+    "theme": null,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔊",
+    "label": "切换音效",
+    "pressed": null
+  },
+  "playing": {
+    "muted": false,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0.20000000298023224,
+    "sfxGain": 0.800000011920929,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0.036781951785087585,
+    "icon": "🔊",
+    "label": "切换音效",
+    "pressed": null
+  },
+  "muted": {
+    "muted": true,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0,
+    "sfxGain": 0,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔇",
+    "label": "切换音效",
+    "pressed": null
+  },
+  "reloadBeforeGesture": {
+    "muted": false,
+    "context": null,
+    "theme": null,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔊",
+    "label": "切换音效",
+    "pressed": null
+  },
+  "reloaded": {
+    "muted": false,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0.20000000298023224,
+    "sfxGain": 0.800000011920929,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0.042453739792108536,
+    "icon": "🔊",
+    "label": "切换音效",
+    "pressed": null
+  },
+  "success": true
+}

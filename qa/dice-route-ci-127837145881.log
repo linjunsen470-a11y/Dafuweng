@@ -1,0 +1,53 @@
+2026-11-06T10:16:44.6142601Z ⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+2026-11-06T10:16:44.6149050Z  FAIL  tests/card-presentation.test.js > card presentation catalogue > classifies every strategy card with valid decision metadata
+2026-11-06T10:16:44.6154435Z AssertionError: expected [ { id: 'REMOTE_DICE', …(6) }, …(31) ] to have a length of 31 but got 32
+2026-11-06T10:16:44.6199523Z  FAIL  tests/card-presentation.test.js > card presentation catalogue > filters a mixed catalogue by strategic category
+2026-11-06T10:16:44.6201333Z AssertionError: expected [ { id: 'REMOTE_DICE', …(22) }, …(31) ] to have a length of 31 but got 32
+2026-11-06T10:16:44.6212836Z  FAIL  tests/card-rules.test.js > CardRules > ships thirty-one data-driven strategy card definitions
+2026-11-06T10:16:44.6214479Z AssertionError: expected [ { id: 'REMOTE_DICE', …(6) }, …(31) ] to have a length of 31 but got 32
+2026-11-06T10:16:44.6225302Z  FAIL  tests/p0-features.test.js > P0 Features Validation > has 30 card definitions and 16 player profiles
+2026-11-06T10:16:44.6226985Z AssertionError: expected [ { id: 'REMOTE_DICE', …(6) }, …(31) ] to have a length of 30 but got 32
+2026-11-06T10:16:44.6239508Z  FAIL  tests/presentation-ui.test.js > presentation event descriptions > describes a property purchase as both spending and a success toast
+2026-11-06T10:16:44.6240699Z AssertionError: expected [ { kind: 'cash', …(3) }, …(1) ] to deeply equal [ { kind: 'cash', …(3) }, …(1) ]
+2026-11-06T10:16:44.6278126Z  FAIL  tests/presentation-ui.test.js > presentation event descriptions > presents differentiated commercial facility service feedback
+2026-11-06T10:16:44.6280570Z AssertionError: expected [ { kind: 'toast', icon: '⛽', …(4) } ] to deeply equal [ { kind: 'toast', icon: '⛽', …(3) } ]
+2026-11-06T10:16:44.6296611Z  FAIL  tests/shanhai-residences.test.js > regional residences and lightweight ambience > refreshes owner and level badges without accumulating labels, including after a property changes hands
+2026-11-06T10:16:44.6299297Z AssertionError: expected '业主 阿屿 · L1' to be '阿屿 · L1' // Object.is equality
+2026-11-06T10:16:44.6331228Z  FAIL  tests/shanhai-transport.test.js > paid coastal transport > skiff boundary draw 76 persists the chosen landing and charges only once
+2026-11-06T10:16:44.6333391Z AssertionError: expected { tileId: 4, eventId: 'base' } to deeply equal { tileId: 4 }
+2026-11-06T10:16:44.6367916Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > can play when reading the localStorage property throws SecurityError
+2026-11-06T10:16:44.6371355Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > selects an original character and starts a real engine session
+2026-11-06T10:16:44.6374820Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > consumes a real remote card, buys through UI and rejects duplicate click handlers
+2026-11-06T10:16:44.6378454Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > ends a human turn, animates real AI movement via mocked scene, then rolls normally
+2026-11-06T10:16:44.6382508Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > manually saves and restores exact state after a simulated module/page reload
+2026-11-06T10:16:44.6385974Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > shows route destinations and exchanges points through the real supply button
+2026-11-06T10:16:44.6389828Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > disables forbidden property decisions during bad luck and keeps the turn playable
+2026-11-06T10:16:44.6393442Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > opens and closes guidance and remote modals repeatedly without spending cards
+2026-11-06T10:16:44.6397130Z  FAIL  tests/shanhai-ui.test.js > Shanhai UI integration: DOM simulation with real rules, mocked scene/audio > saves on return to the welcome menu and continues the same pending decision
+2026-11-06T10:16:44.6702480Z  Test Files  7 failed | 105 passed (112)
+2026-11-06T10:16:44.6704047Z       Tests  17 failed | 606 passed (623)
+2026-11-06T10:16:44.6740626Z ##[error]AssertionError: expected [ { id: 'REMOTE_DICE', …(6) }, …(31) ] to have a length of 31 but got 32
+ ❯ tests/card-presentation.test.js:17:19
+2026-11-06T10:16:44.6754548Z ##[error]AssertionError: expected [ { id: 'REMOTE_DICE', …(22) }, …(31) ] to have a length of 31 but got 32
+ ❯ tests/card-presentation.test.js:66:51
+2026-11-06T10:16:44.6759445Z ##[error]AssertionError: expected [ { id: 'REMOTE_DICE', …(6) }, …(31) ] to have a length of 31 but got 32
+ ❯ tests/card-rules.test.js:19:19
+2026-11-06T10:16:44.6764103Z ##[error]AssertionError: expected [ { id: 'REMOTE_DICE', …(6) }, …(31) ] to have a length of 30 but got 32
+ ❯ tests/p0-features.test.js:11:19
+2026-11-06T10:16:44.6771142Z ##[error]AssertionError: expected [ { kind: 'cash', …(3) }, …(1) ] to deeply equal [ { kind: 'cash', …(3) }, …(1) ]
+ ❯ tests/presentation-ui.test.js:40:18
+2026-11-06T10:16:44.6778582Z ##[error]AssertionError: expected [ { kind: 'toast', icon: '⛽', …(4) } ] to deeply equal [ { kind: 'toast', icon: '⛽', …(3) } ]
+ ❯ tests/presentation-ui.test.js:88:18
+2026-11-06T10:16:44.6783919Z ##[error]AssertionError: expected '业主 阿屿 · L1' to be '阿屿 · L1' // Object.is equality
+ ❯ tests/shanhai-residences.test.js:44:61
+2026-11-06T10:16:44.6788965Z ##[error]AssertionError: expected { tileId: 4, eventId: 'base' } to deeply equal { tileId: 4 }
+ ❯ tests/shanhai-transport.test.js:43:46
+2026-11-06T10:16:44.6804171Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6823868Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6843800Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6864576Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6884828Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6931481Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6957054Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.6970884Z ##[error]TypeError: scene?.setGardenInfluence is not a function
+2026-11-06T10:16:44.7005387Z ##[error]TypeError: scene?.setGardenInfluence is not a function

@@ -1,0 +1,2 @@
+2:13:07 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+{"success":true,"trace":[{"event":"showDice","t":1517.5,"args":{"dice":[5],"steps":5,"speed":2}},{"t":1992.4000000059605,"phase":"ROLLING","processing":true,"tile":0,"opacity":1,"visible":true,"pointer":"none"},{"t":2485.7000000029802,"phase":"ROLLING","processing":true,"tile":0,"opacity":1,"visible":true,"pointer":"none"},{"t":2999.2000000029802,"phase":"ROLLING","processing":true,"tile":0,"opacity":1,"visible":true,"pointer":"none"},{"event":"showDiceDone","t":3136.5}]}

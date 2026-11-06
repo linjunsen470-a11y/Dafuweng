@@ -1435,7 +1435,10 @@ export class GameEngine {
     if (!result.success) return result;
     this.state.inventoryManager.removeItem(player, itemId);
     this.state.assetRevision++;
-    return { ...result, events: [{ type: 'INVENTORY_CHANGED', playerId: player.id, itemId }, ...(result.events || [])] };
+    const placementEvents = result.entity?.type === 'BARRIER'
+      ? [{ type: 'ROAD_ENTITY_CHANGED', entity: result.entity }]
+      : [];
+    return { ...result, events: [{ type: 'INVENTORY_CHANGED', playerId: player.id, itemId }, ...placementEvents, ...(result.events || [])] };
   }
 
   blastArea(player, centerTileId, radius, destructive) {

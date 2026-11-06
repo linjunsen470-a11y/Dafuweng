@@ -1,3 +1,4 @@
+import { projectedBox, overlapsBoard } from './CloudVisibility.js';
 import { isOldTownView, oldTownOffset } from './OldTownStreet.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -124,6 +125,7 @@ export class Scene3D {
         puff.scale.set(scale, scale * 0.6, scale);
         cloud.add(puff);
       }
+      cloud.userData.cloudBounds = new THREE.Box3().setFromObject(cloud);
       const angle = (i / 12) * Math.PI * 2;
       const radius = 35 + Math.random() * 15;
       cloud.position.set(Math.cos(angle) * radius, 18 + Math.random() * 8, Math.sin(angle) * radius);
@@ -226,6 +228,18 @@ export class Scene3D {
     });
   }
 
+  updateCloudVisibility() {
+    if (!this.clouds) return;
+    const weatherVisible = this.weather !== 'CLEAR' || this.timeOfDay !== 'DAY';
+    this.camera.updateMatrixWorld();
+    this.clouds.updateMatrixWorld(true);
+    const board = weatherVisible && this.cloudBoardBounds ? projectedBox(this.cloudBoardBounds,this.camera) : null;
+    for (const cloud of this.clouds.children) {
+      const coversBoard = board && overlapsBoard(projectedBox(cloud.userData.cloudBounds,this.camera,cloud.matrixWorld),board);
+      cloud.visible = weatherVisible && !coversBoard;
+    }
+  }
+
   updateWeather() {
     this.weatherElapsed += 0.016;
     if (this.precipitation) {
@@ -257,6 +271,15 @@ export class Scene3D {
 
   configureForMap(mapDefinition) {
     this.activeMapId = mapDefinition?.id;
+    this.cloudBoardBounds = null;
+    if (mapDefinition?.theme === 'GRAND_BAY') {
+      this.cloudBoardBounds = new THREE.Box3();
+      for (const tile of mapDefinition.tiles) for (const p of [tile.position,tile.lot?.position].filter(Boolean)) {
+        this.cloudBoardBounds.expandByPoint(new THREE.Vector3(p.x,0,p.z));
+        this.cloudBoardBounds.expandByPoint(new THREE.Vector3(p.x,10,p.z));
+      }
+      this.cloudBoardBounds.expandByVector(new THREE.Vector3(4,0,4));
+    }
     const config = mapDefinition?.camera || {};
     const center = config.center || { x: 0, z: 0 };
     this.mapCamera = {
@@ -510,6 +533,7 @@ export class Scene3D {
         this.camera.position.add(shakeOffset);
       }
     }
+    this.updateCloudVisibility();
     this.renderer.render(this.scene, this.camera);
     if (shakeOffset) this.camera.position.sub(shakeOffset);
   }

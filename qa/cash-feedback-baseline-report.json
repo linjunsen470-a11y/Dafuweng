@@ -1,0 +1,317 @@
+{
+  "errors": [],
+  "scope": "Prepared human vs AI rent on tile1. Checks rendered feedback frames, not a full match or animation-quality acceptance.",
+  "trace": [
+    {
+      "cue": {
+        "kind": "cash",
+        "playerId": 0,
+        "amount": -180,
+        "label": "支付过路费"
+      },
+      "samples": [
+        {
+          "t": 54031.60000000894,
+          "connected": true,
+          "text": "−$180支付过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 124.296875,
+            "y": 163.6856231689453,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 54088.20000000298,
+          "connected": true,
+          "text": "−$180支付过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 124.296875,
+            "y": 163.6856231689453,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 54450.79999999702,
+          "connected": true,
+          "text": "−$180支付过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 124.296875,
+            "y": 163.6856231689453,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 54890.70000000298,
+          "connected": true,
+          "text": "−$180支付过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 124.296875,
+            "y": 163.6856231689453,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 55663.5,
+          "connected": false,
+          "text": "−$180支付过路费",
+          "opacity": "",
+          "display": "",
+          "visibility": "",
+          "animation": "",
+          "duration": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0
+          },
+          "ancestors": []
+        }
+      ],
+      "done": true
+    },
+    {
+      "cue": {
+        "kind": "cash",
+        "playerId": 1,
+        "amount": 180,
+        "label": "收到过路费"
+      },
+      "samples": [
+        {
+          "t": 54033,
+          "connected": true,
+          "text": "+$180收到过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 119.296875,
+            "y": 309.6856384277344,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 54088.20000000298,
+          "connected": true,
+          "text": "+$180收到过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 119.296875,
+            "y": 309.6856384277344,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 54450.90000000596,
+          "connected": true,
+          "text": "+$180收到过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 119.296875,
+            "y": 309.6856384277344,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 54890.79999999702,
+          "connected": true,
+          "text": "+$180收到过路费",
+          "opacity": "0",
+          "display": "grid",
+          "visibility": "visible",
+          "animation": "cashBurst",
+          "duration": "1.5s",
+          "rect": {
+            "x": 119.296875,
+            "y": 309.6856384277344,
+            "w": 53.71875,
+            "h": 38.160003662109375
+          },
+          "ancestors": [
+            {
+              "id": "presentation-cash-host",
+              "display": "block",
+              "opacity": "1"
+            },
+            {
+              "id": "presentation-layer",
+              "display": "block",
+              "opacity": "1"
+            }
+          ]
+        },
+        {
+          "t": 55663.60000000894,
+          "connected": false,
+          "text": "+$180收到过路费",
+          "opacity": "",
+          "display": "",
+          "visibility": "",
+          "animation": "",
+          "duration": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0
+          },
+          "ancestors": []
+        }
+      ],
+      "done": true
+    }
+  ],
+  "settlement": {
+    "result": {
+      "success": true,
+      "type": "RENT_PAID",
+      "amount": 180,
+      "amountDue": 180,
+      "ownerId": 1,
+      "events": [
+        {
+          "type": "RENT_PAID",
+          "success": true,
+          "amount": 180,
+          "amountDue": 180,
+          "ownerId": 1
+        }
+      ]
+    },
+    "before": [
+      20000,
+      23000,
+      20000,
+      23000
+    ],
+    "after": [
+      19820,
+      23180,
+      20000,
+      23000
+    ]
+  },
+  "success": true
+}

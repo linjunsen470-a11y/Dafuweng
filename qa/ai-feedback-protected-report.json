@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "base": "43fbc48b258c9cd2ae07f48424f639a0de1af223",
+  "trackedSourceFiles": 130,
+  "changed": [
+    "src/css/style.css",
+    "src/ui/PresentationUI.js"
+  ],
+  "unchanged": "All other tracked src files byte-identical, including rules, AI, map topology and save handling"
+}

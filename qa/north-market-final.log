@@ -1,0 +1,4 @@
+2:40:51 PM [vite] (client) [optimizer] bundling dependencies...
+2:40:52 PM [vite] (client) dependency optimized: three/examples/jsm/utils/BufferGeometryUtils.js
+2:40:52 PM [vite] (client) optimized dependencies changed. reloading
+{"success":true,"errors":[]}

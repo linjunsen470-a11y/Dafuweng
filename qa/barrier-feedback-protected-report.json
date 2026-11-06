@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "base": "aeb2ea0b530edb065cd72b81ba9631cb40906214",
+  "changed": [
+    "src/game/GameEngine.js",
+    "src/main.js",
+    "src/ui/PresentationUI.js"
+  ],
+  "note": "GameEngine adds placement presentation event only; main retains entity barrier mesh; PresentationUI describes placement. All other tracked src files unchanged."
+}

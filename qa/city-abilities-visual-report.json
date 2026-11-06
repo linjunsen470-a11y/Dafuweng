@@ -1,0 +1,118 @@
+{
+  "errors": [],
+  "scope": "Prepared human vs AI rent on tile1. Checks rendered feedback frames, not a full match or animation-quality acceptance.",
+  "frames": [
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [
+        "💸过路费结算林小满 向 顾田野 AI 支付 $180 · 土地公庇护 · 地主租金 +20%，已计入本次结算"
+      ],
+      "reaction": [
+        "支付 $180 过路费 · 元气创业家“没关系，小满马上追回来！”林小满"
+      ],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [
+        "💸过路费结算林小满 向 顾田野 AI 支付 $180 · 土地公庇护 · 地主租金 +20%，已计入本次结算"
+      ],
+      "reaction": [
+        "支付 $180 过路费 · 元气创业家“没关系，小满马上追回来！”林小满"
+      ],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [
+        "🃏策略卡发动OBSTACLE",
+        "💸过路费结算林小满 向 顾田野 AI 支付 $180 · 土地公庇护 · 地主租金 +20%，已计入本次结算"
+      ],
+      "reaction": [
+        "支付 $180 过路费 · 元气创业家“没关系，小满马上追回来！”林小满"
+      ],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    },
+    {
+      "cash": [],
+      "toast": [],
+      "reaction": [],
+      "blocked": false
+    }
+  ],
+  "settlement": {
+    "result": {
+      "success": true,
+      "type": "RENT_PAID",
+      "amount": 180,
+      "amountDue": 180,
+      "ownerId": 1,
+      "events": [
+        {
+          "type": "RENT_PAID",
+          "success": true,
+          "amount": 180,
+          "amountDue": 180,
+          "ownerId": 1
+        }
+      ]
+    },
+    "before": [
+      20000,
+      23000,
+      20000,
+      23000
+    ],
+    "after": [
+      19820,
+      23180,
+      20000,
+      23000
+    ]
+  },
+  "visibleFeedback": false,
+  "success": true,
+  "toastVisible": true,
+  "rentReactionVisible": true,
+  "cashPairVisible": false,
+  "limits": [
+    "Cash pair was not observed in captured software-WebGL frames; not accepted as visible.",
+    "success records completed capture and no runtime error; it does not mean cash animation passed."
+  ]
+}

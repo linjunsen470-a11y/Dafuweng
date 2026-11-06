@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "base": "e5e546dab1b6c3173e651c4c8954a865ee05094e",
+  "changed": [
+    "src/ui/PresentationUI.js",
+    "src/ui/UIRenderer.js"
+  ],
+  "note": "All other tracked src files unchanged, including engine, rules, AI, maps and saves"
+}

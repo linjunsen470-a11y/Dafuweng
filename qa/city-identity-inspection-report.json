@@ -1,0 +1,73 @@
+{
+  "errors": [],
+  "limits": [
+    "Original four-player opening save; two real rotate-right clicks, four occupants at start; no dice or purchase in this inspection.",
+    "Software WebGL desktop/360px viewport; sampled frames are not a full motion-quality or physical-device acceptance."
+  ],
+  "labels": [
+    {
+      "depthTest": false,
+      "depthWrite": false,
+      "scale": [
+        0.7200000000000024,
+        0.7200000000000024,
+        0.7200000000000024
+      ],
+      "tile": 0
+    },
+    {
+      "depthTest": false,
+      "depthWrite": false,
+      "scale": [
+        0.7200000000000024,
+        0.7200000000000024,
+        0.7200000000000024
+      ],
+      "tile": 0
+    },
+    {
+      "depthTest": false,
+      "depthWrite": false,
+      "scale": [
+        0.7200000000000024,
+        0.7200000000000024,
+        0.7200000000000024
+      ],
+      "tile": 0
+    },
+    {
+      "depthTest": false,
+      "depthWrite": false,
+      "scale": [
+        0.7200000000000024,
+        0.7200000000000024,
+        0.7200000000000024
+      ],
+      "tile": 0
+    }
+  ],
+  "identities": [
+    {
+      "number": "1",
+      "src": "/assets/city-portraits/0.png",
+      "loaded": 192
+    },
+    {
+      "number": "2",
+      "src": "/assets/city-portraits/1.png",
+      "loaded": 192
+    },
+    {
+      "number": "3",
+      "src": "/assets/city-portraits/2.png",
+      "loaded": 192
+    },
+    {
+      "number": "4",
+      "src": "/assets/city-portraits/3.png",
+      "loaded": 192
+    }
+  ],
+  "overflow": false,
+  "success": true
+}

@@ -1,0 +1,3742 @@
+{
+  "errors": [],
+  "scope": "Prepared human plus three AI: human remote6 purchase, then unmodified AI decisions until human turn returns; not a natural full match.",
+  "events": [
+    {
+      "command": {
+        "type": "USE_CARD",
+        "playerId": 0,
+        "payload": {
+          "cardId": "REMOTE_DICE",
+          "targetId": null,
+          "value": 6
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "CARD_USED",
+        "playerId": 0,
+        "cardId": "REMOTE_DICE",
+        "followUp": {
+          "type": "MOVE_REQUESTED",
+          "mode": "ROLL",
+          "steps": 6
+        },
+        "events": [
+          {
+            "type": "CARD_USED",
+            "playerId": 0,
+            "cardId": "REMOTE_DICE",
+            "targetId": null
+          }
+        ]
+      },
+      "positions": [
+        0,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BEGIN_MOVE",
+        "playerId": 0,
+        "payload": {
+          "steps": 6,
+          "source": "DICE"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "MOVE_STARTED",
+        "playerId": 0,
+        "steps": 6,
+        "source": "DICE",
+        "events": [
+          {
+            "type": "MOVE_STARTED",
+            "success": true,
+            "playerId": 0,
+            "steps": 6,
+            "source": "DICE"
+          }
+        ]
+      },
+      "positions": [
+        0,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "PLAYER_STEPPED",
+        "tileId": 1,
+        "remainingSteps": 5,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 0,
+            "tileId": 1,
+            "remainingSteps": 5
+          }
+        ]
+      },
+      "positions": [
+        1,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "PLAYER_STEPPED",
+        "tileId": 2,
+        "remainingSteps": 4,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 0,
+            "tileId": 2,
+            "remainingSteps": 4
+          }
+        ]
+      },
+      "positions": [
+        2,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "PLAYER_STEPPED",
+        "tileId": 3,
+        "remainingSteps": 3,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 0,
+            "tileId": 3,
+            "remainingSteps": 3
+          }
+        ]
+      },
+      "positions": [
+        3,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "PLAYER_STEPPED",
+        "tileId": 4,
+        "remainingSteps": 2,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 0,
+            "tileId": 4,
+            "remainingSteps": 2
+          }
+        ]
+      },
+      "positions": [
+        4,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "PLAYER_STEPPED",
+        "tileId": 5,
+        "remainingSteps": 1,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 0,
+            "tileId": 5,
+            "remainingSteps": 1
+          }
+        ]
+      },
+      "positions": [
+        5,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "MOVEMENT_FINISHED",
+        "tileId": 6,
+        "remainingSteps": 0,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 0,
+            "tileId": 6,
+            "remainingSteps": 0
+          },
+          {
+            "type": "MOVEMENT_FINISHED",
+            "playerId": 0,
+            "tileId": 6
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        20000,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "PURCHASE_PROPERTY",
+        "playerId": 0,
+        "payload": {
+          "tileId": 6,
+          "buildingType": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "PROPERTY_PURCHASED",
+        "tileId": 6,
+        "level": 0,
+        "cost": 1122,
+        "buildingType": "RESIDENTIAL",
+        "events": [
+          {
+            "type": "PROPERTY_PURCHASED",
+            "success": true,
+            "tileId": 6,
+            "level": 0,
+            "cost": 1122,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "END_TURN",
+        "playerId": 0
+      },
+      "result": {
+        "success": true,
+        "type": "TURN_CHANGED",
+        "transition": {
+          "gameOver": false,
+          "currentPlayer": {
+            "hibernateTurns": 0,
+            "sleepwalkTurns": 0,
+            "isSleepwalkingThisTurn": false,
+            "penaltyTransferTargetId": null,
+            "deposit": 5000,
+            "teamId": 1,
+            "isLord": false,
+            "items": [
+              "REMOTE_DICE_ITEM",
+              "BARRIER",
+              "ROBOT_DOLL",
+              "MINE_ITEM"
+            ],
+            "selectedDiceCount": 1,
+            "engineeringTurns": 0,
+            "hotelTurns": 0,
+            "fuelBoostTurns": 0,
+            "id": 1,
+            "profileId": 1,
+            "name": "顾田野 AI",
+            "isAI": true,
+            "aiDifficulty": "NORMAL",
+            "aiStrategy": "PROPERTY",
+            "avatarImg": "/assets/char_gu_tianye.svg",
+            "avatarAtlas": "/assets/characters-v2-atlas.webp",
+            "avatarPosition": "33.333% 0%",
+            "avatar": "🤠",
+            "color": "#ffa502",
+            "colorHex": 16753922,
+            "skillName": "土地公庇护",
+            "skillDesc": "所有房产过路费多收 20%，开局额外获得 $3,000 补贴金。",
+            "cash": 23000,
+            "cardPoints": 120,
+            "cards": [
+              "REMOTE_DICE",
+              "OBSTACLE",
+              "TURN_AROUND"
+            ],
+            "stocks": {},
+            "currentTile": 0,
+            "direction": 1,
+            "vehicle": "WALK",
+            "jailTurns": 0,
+            "hospitalTurns": 0,
+            "turtleTurns": 0,
+            "godType": null,
+            "godTurns": 0,
+            "rentShieldTurns": 0,
+            "negativeImmuneTurns": 0,
+            "isBankrupt": false,
+            "moveLimitThisTurn": null,
+            "rentShieldActiveThisTurn": false,
+            "negativeImmuneActiveThisTurn": false
+          }
+        },
+        "events": [
+          {
+            "type": "TURN_CHANGED",
+            "transition": {
+              "gameOver": false,
+              "currentPlayer": {
+                "hibernateTurns": 0,
+                "sleepwalkTurns": 0,
+                "isSleepwalkingThisTurn": false,
+                "penaltyTransferTargetId": null,
+                "deposit": 5000,
+                "teamId": 1,
+                "isLord": false,
+                "items": [
+                  "REMOTE_DICE_ITEM",
+                  "BARRIER",
+                  "ROBOT_DOLL",
+                  "MINE_ITEM"
+                ],
+                "selectedDiceCount": 1,
+                "engineeringTurns": 0,
+                "hotelTurns": 0,
+                "fuelBoostTurns": 0,
+                "id": 1,
+                "profileId": 1,
+                "name": "顾田野 AI",
+                "isAI": true,
+                "aiDifficulty": "NORMAL",
+                "aiStrategy": "PROPERTY",
+                "avatarImg": "/assets/char_gu_tianye.svg",
+                "avatarAtlas": "/assets/characters-v2-atlas.webp",
+                "avatarPosition": "33.333% 0%",
+                "avatar": "🤠",
+                "color": "#ffa502",
+                "colorHex": 16753922,
+                "skillName": "土地公庇护",
+                "skillDesc": "所有房产过路费多收 20%，开局额外获得 $3,000 补贴金。",
+                "cash": 23000,
+                "cardPoints": 120,
+                "cards": [
+                  "REMOTE_DICE",
+                  "OBSTACLE",
+                  "TURN_AROUND"
+                ],
+                "stocks": {},
+                "currentTile": 0,
+                "direction": 1,
+                "vehicle": "WALK",
+                "jailTurns": 0,
+                "hospitalTurns": 0,
+                "turtleTurns": 0,
+                "godType": null,
+                "godTurns": 0,
+                "rentShieldTurns": 0,
+                "negativeImmuneTurns": 0,
+                "isBankrupt": false,
+                "moveLimitThisTurn": null,
+                "rentShieldActiveThisTurn": false,
+                "negativeImmuneActiveThisTurn": false
+              }
+            }
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "SELECT_DICE_COUNT",
+        "playerId": 1,
+        "payload": {
+          "count": 1
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "DICE_COUNT_SELECTED",
+        "count": 1,
+        "vehicleLimit": 1,
+        "events": [
+          {
+            "type": "DICE_COUNT_SELECTED",
+            "success": true,
+            "count": 1,
+            "vehicleLimit": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_ITEM",
+        "playerId": 1,
+        "payload": {
+          "itemId": "MOTOR"
+        }
+      },
+      "result": {
+        "success": true,
+        "itemId": "MOTOR",
+        "type": "INVENTORY_CHANGED",
+        "cost": 80,
+        "shopTileId": null,
+        "events": [
+          {
+            "type": "INVENTORY_CHANGED",
+            "success": true,
+            "itemId": "MOTOR",
+            "cost": 80,
+            "shopTileId": null
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "USE_ITEM",
+        "playerId": 1,
+        "payload": {
+          "itemId": "MOTOR",
+          "targetId": null,
+          "value": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "ITEM_USED",
+        "itemId": "MOTOR",
+        "events": [
+          {
+            "type": "INVENTORY_CHANGED",
+            "playerId": 1,
+            "itemId": "MOTOR"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_CARD",
+        "playerId": 1,
+        "payload": {
+          "cardId": "OBSTACLE"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "CARD_BOUGHT",
+        "playerId": 1,
+        "cardId": "OBSTACLE",
+        "cost": 40,
+        "shopTileId": null,
+        "events": [
+          {
+            "type": "CARD_BOUGHT",
+            "success": true,
+            "playerId": 1,
+            "cardId": "OBSTACLE",
+            "cost": 40,
+            "shopTileId": null
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "USE_CARD",
+        "playerId": 1,
+        "payload": {
+          "cardId": "OBSTACLE",
+          "targetId": 1,
+          "value": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "CARD_USED",
+        "playerId": 1,
+        "cardId": "OBSTACLE",
+        "followUp": null,
+        "events": [
+          {
+            "type": "CARD_USED",
+            "playerId": 1,
+            "cardId": "OBSTACLE",
+            "targetId": 1
+          },
+          {
+            "type": "OBSTACLE_CHANGED",
+            "tileId": 1,
+            "active": true
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        23000,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_STOCK",
+        "playerId": 1,
+        "payload": {
+          "stockId": "HARBOR",
+          "shares": 30
+        }
+      },
+      "result": {
+        "success": true,
+        "cost": 5040,
+        "msg": "成功买入 蓝港保险 30 股！",
+        "type": "STOCK_BOUGHT",
+        "playerId": 1,
+        "stockId": "HARBOR",
+        "shares": 30,
+        "events": [
+          {
+            "type": "STOCK_BOUGHT",
+            "playerId": 1,
+            "stockId": "HARBOR",
+            "shares": 30,
+            "cost": 5040
+          },
+          {
+            "type": "CHAIRMAN_CHANGED",
+            "companyId": "HARBOR_INSURANCE",
+            "previousId": null,
+            "chairmanId": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17960,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "CHOOSE_BUILDING_TYPE",
+        "playerId": 1,
+        "payload": {
+          "tileId": 1,
+          "buildingType": "CHAIN_STORE"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "PROPERTY_CHANGED",
+        "tileId": 1,
+        "buildingType": "CHAIN_STORE",
+        "cost": 138,
+        "events": [
+          {
+            "type": "PROPERTY_CHANGED",
+            "success": true,
+            "tileId": 1,
+            "buildingType": "CHAIN_STORE",
+            "cost": 138
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17822,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "SET_COMPANY_POLICY",
+        "playerId": 1,
+        "payload": {
+          "companyId": "HARBOR_INSURANCE",
+          "policyId": "EXPANSION"
+        }
+      },
+      "result": {
+        "success": true,
+        "companyId": "HARBOR_INSURANCE",
+        "policyId": "EXPANSION",
+        "cost": 600,
+        "treasury": 600,
+        "type": "COMPANY_POLICY_SET",
+        "playerId": 1,
+        "events": [
+          {
+            "type": "COMPANY_POLICY_SET",
+            "success": true,
+            "companyId": "HARBOR_INSURANCE",
+            "policyId": "EXPANSION",
+            "cost": 600,
+            "treasury": 600,
+            "playerId": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17822,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ROLL_DICE",
+        "playerId": 1
+      },
+      "result": {
+        "success": true,
+        "type": "DICE_ROLLED",
+        "playerId": 1,
+        "dice": [
+          5,
+          5
+        ],
+        "steps": 10,
+        "bonusSteps": 0,
+        "events": [
+          {
+            "type": "DICE_ROLLED",
+            "success": true,
+            "playerId": 1,
+            "dice": [
+              5,
+              5
+            ],
+            "steps": 10,
+            "bonusSteps": 0
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17822,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BEGIN_MOVE",
+        "playerId": 1,
+        "payload": {
+          "steps": 10,
+          "source": "DICE"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "MOVE_STARTED",
+        "playerId": 1,
+        "steps": 10,
+        "source": "DICE",
+        "events": [
+          {
+            "type": "MOVE_STARTED",
+            "success": true,
+            "playerId": 1,
+            "steps": 10,
+            "source": "DICE"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        0,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17822,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 1
+      },
+      "result": {
+        "success": true,
+        "type": "MOVEMENT_FINISHED",
+        "tileId": 1,
+        "remainingSteps": 0,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 1,
+            "tileId": 1,
+            "remainingSteps": 9
+          },
+          {
+            "type": "OBSTACLE_CONSUMED",
+            "playerId": 1,
+            "tileId": 1
+          },
+          {
+            "type": "MOVEMENT_FINISHED",
+            "playerId": 1,
+            "tileId": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17822,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "UPGRADE_PROPERTY",
+        "playerId": 1,
+        "payload": {
+          "tileId": 1
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "PROPERTY_UPGRADED",
+        "tileId": 1,
+        "level": 1,
+        "cost": 550,
+        "events": [
+          {
+            "type": "PROPERTY_UPGRADED",
+            "success": true,
+            "tileId": 1,
+            "level": 1,
+            "cost": 550
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "END_TURN",
+        "playerId": 1
+      },
+      "result": {
+        "success": true,
+        "type": "TURN_CHANGED",
+        "transition": {
+          "gameOver": false,
+          "currentPlayer": {
+            "hibernateTurns": 0,
+            "sleepwalkTurns": 0,
+            "isSleepwalkingThisTurn": false,
+            "penaltyTransferTargetId": null,
+            "deposit": 5000,
+            "teamId": 2,
+            "isLord": false,
+            "items": [
+              "REMOTE_DICE_ITEM",
+              "BARRIER",
+              "ROBOT_DOLL",
+              "MINE_ITEM"
+            ],
+            "selectedDiceCount": 1,
+            "engineeringTurns": 0,
+            "hotelTurns": 0,
+            "fuelBoostTurns": 0,
+            "id": 2,
+            "profileId": 2,
+            "name": "洛晶晶 AI",
+            "isAI": true,
+            "aiDifficulty": "NORMAL",
+            "aiStrategy": "CARD",
+            "avatarImg": "/assets/char_luo_jingjing.svg",
+            "avatarAtlas": "/assets/characters-v2-atlas.webp",
+            "avatarPosition": "66.667% 0%",
+            "avatar": "💎",
+            "color": "#a55eea",
+            "colorHex": 10837738,
+            "skillName": "股市高手",
+            "skillDesc": "股票交易收益额外加成 15%，踩中敌方地产有 25% 概率免单。",
+            "cash": 20000,
+            "cardPoints": 120,
+            "cards": [
+              "REMOTE_DICE",
+              "OBSTACLE",
+              "TURN_AROUND"
+            ],
+            "stocks": {},
+            "currentTile": 24,
+            "direction": 1,
+            "vehicle": "WALK",
+            "jailTurns": 0,
+            "hospitalTurns": 0,
+            "turtleTurns": 0,
+            "godType": null,
+            "godTurns": 0,
+            "rentShieldTurns": 0,
+            "negativeImmuneTurns": 0,
+            "isBankrupt": false,
+            "moveLimitThisTurn": null,
+            "rentShieldActiveThisTurn": false,
+            "negativeImmuneActiveThisTurn": false
+          }
+        },
+        "events": [
+          {
+            "type": "TURN_CHANGED",
+            "transition": {
+              "gameOver": false,
+              "currentPlayer": {
+                "hibernateTurns": 0,
+                "sleepwalkTurns": 0,
+                "isSleepwalkingThisTurn": false,
+                "penaltyTransferTargetId": null,
+                "deposit": 5000,
+                "teamId": 2,
+                "isLord": false,
+                "items": [
+                  "REMOTE_DICE_ITEM",
+                  "BARRIER",
+                  "ROBOT_DOLL",
+                  "MINE_ITEM"
+                ],
+                "selectedDiceCount": 1,
+                "engineeringTurns": 0,
+                "hotelTurns": 0,
+                "fuelBoostTurns": 0,
+                "id": 2,
+                "profileId": 2,
+                "name": "洛晶晶 AI",
+                "isAI": true,
+                "aiDifficulty": "NORMAL",
+                "aiStrategy": "CARD",
+                "avatarImg": "/assets/char_luo_jingjing.svg",
+                "avatarAtlas": "/assets/characters-v2-atlas.webp",
+                "avatarPosition": "66.667% 0%",
+                "avatar": "💎",
+                "color": "#a55eea",
+                "colorHex": 10837738,
+                "skillName": "股市高手",
+                "skillDesc": "股票交易收益额外加成 15%，踩中敌方地产有 25% 概率免单。",
+                "cash": 20000,
+                "cardPoints": 120,
+                "cards": [
+                  "REMOTE_DICE",
+                  "OBSTACLE",
+                  "TURN_AROUND"
+                ],
+                "stocks": {},
+                "currentTile": 24,
+                "direction": 1,
+                "vehicle": "WALK",
+                "jailTurns": 0,
+                "hospitalTurns": 0,
+                "turtleTurns": 0,
+                "godType": null,
+                "godTurns": 0,
+                "rentShieldTurns": 0,
+                "negativeImmuneTurns": 0,
+                "isBankrupt": false,
+                "moveLimitThisTurn": null,
+                "rentShieldActiveThisTurn": false,
+                "negativeImmuneActiveThisTurn": false
+              }
+            }
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "SELECT_DICE_COUNT",
+        "playerId": 2,
+        "payload": {
+          "count": 1
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "DICE_COUNT_SELECTED",
+        "count": 1,
+        "vehicleLimit": 1,
+        "events": [
+          {
+            "type": "DICE_COUNT_SELECTED",
+            "success": true,
+            "count": 1,
+            "vehicleLimit": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_ITEM",
+        "playerId": 2,
+        "payload": {
+          "itemId": "MOTOR"
+        }
+      },
+      "result": {
+        "success": true,
+        "itemId": "MOTOR",
+        "type": "INVENTORY_CHANGED",
+        "cost": 80,
+        "shopTileId": null,
+        "events": [
+          {
+            "type": "INVENTORY_CHANGED",
+            "success": true,
+            "itemId": "MOTOR",
+            "cost": 80,
+            "shopTileId": null
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "USE_ITEM",
+        "playerId": 2,
+        "payload": {
+          "itemId": "MOTOR",
+          "targetId": null,
+          "value": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "ITEM_USED",
+        "itemId": "MOTOR",
+        "events": [
+          {
+            "type": "INVENTORY_CHANGED",
+            "playerId": 2,
+            "itemId": "MOTOR"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "USE_CARD",
+        "playerId": 2,
+        "payload": {
+          "cardId": "OBSTACLE",
+          "targetId": 25,
+          "value": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "CARD_USED",
+        "playerId": 2,
+        "cardId": "OBSTACLE",
+        "followUp": null,
+        "events": [
+          {
+            "type": "CARD_USED",
+            "playerId": 2,
+            "cardId": "OBSTACLE",
+            "targetId": 25
+          },
+          {
+            "type": "OBSTACLE_CHANGED",
+            "tileId": 25,
+            "active": true
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        20000,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_STOCK",
+        "playerId": 2,
+        "payload": {
+          "stockId": "HARBOR",
+          "shares": 30
+        }
+      },
+      "result": {
+        "success": true,
+        "cost": 5040,
+        "msg": "成功买入 蓝港保险 30 股！",
+        "type": "STOCK_BOUGHT",
+        "playerId": 2,
+        "stockId": "HARBOR",
+        "shares": 30,
+        "events": [
+          {
+            "type": "STOCK_BOUGHT",
+            "playerId": 2,
+            "stockId": "HARBOR",
+            "shares": 30,
+            "cost": 5040
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ROLL_DICE",
+        "playerId": 2
+      },
+      "result": {
+        "success": true,
+        "type": "DICE_ROLLED",
+        "playerId": 2,
+        "dice": [
+          6,
+          6
+        ],
+        "steps": 12,
+        "bonusSteps": 0,
+        "events": [
+          {
+            "type": "DICE_ROLLED",
+            "success": true,
+            "playerId": 2,
+            "dice": [
+              6,
+              6
+            ],
+            "steps": 12,
+            "bonusSteps": 0
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BEGIN_MOVE",
+        "playerId": 2,
+        "payload": {
+          "steps": 12,
+          "source": "DICE"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "MOVE_STARTED",
+        "playerId": 2,
+        "steps": 12,
+        "source": "DICE",
+        "events": [
+          {
+            "type": "MOVE_STARTED",
+            "success": true,
+            "playerId": 2,
+            "steps": 12,
+            "source": "DICE"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        24,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 2
+      },
+      "result": {
+        "success": true,
+        "type": "MOVEMENT_FINISHED",
+        "tileId": 25,
+        "remainingSteps": 0,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 2,
+            "tileId": 25,
+            "remainingSteps": 11
+          },
+          {
+            "type": "OBSTACLE_CONSUMED",
+            "playerId": 2,
+            "tileId": 25
+          },
+          {
+            "type": "MOVEMENT_FINISHED",
+            "playerId": 2,
+            "tileId": 25
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "RESOLVE_LANDING",
+        "playerId": 2,
+        "payload": {
+          "tileId": 25
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "HOSPITALIZED",
+        "playerId": 2,
+        "duration": 1,
+        "events": [
+          {
+            "type": "HOSPITALIZED",
+            "success": true,
+            "playerId": 2,
+            "duration": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "END_TURN",
+        "playerId": 2
+      },
+      "result": {
+        "success": true,
+        "type": "TURN_CHANGED",
+        "transition": {
+          "gameOver": false,
+          "currentPlayer": {
+            "hibernateTurns": 0,
+            "sleepwalkTurns": 0,
+            "isSleepwalkingThisTurn": false,
+            "penaltyTransferTargetId": null,
+            "deposit": 5000,
+            "teamId": 3,
+            "isLord": false,
+            "items": [
+              "REMOTE_DICE_ITEM",
+              "BARRIER",
+              "ROBOT_DOLL",
+              "MINE_ITEM"
+            ],
+            "selectedDiceCount": 1,
+            "engineeringTurns": 0,
+            "hotelTurns": 0,
+            "fuelBoostTurns": 0,
+            "id": 3,
+            "profileId": 3,
+            "name": "巴洛克 AI",
+            "isAI": true,
+            "aiDifficulty": "NORMAL",
+            "aiStrategy": "ATTACK",
+            "avatarImg": "/assets/char_baroque.svg",
+            "avatarAtlas": "/assets/characters-v2-atlas.webp",
+            "avatarPosition": "100% 0%",
+            "avatar": "👳‍♂️",
+            "color": "#2ed573",
+            "colorHex": 3069299,
+            "skillName": "石油大亨",
+            "skillDesc": "开局额外获得 $3,000、80 点券和购地卡；大型策略卡点数减半，神仙附体持续回合数+1。",
+            "cash": 23000,
+            "cardPoints": 200,
+            "cards": [
+              "REMOTE_DICE",
+              "OBSTACLE",
+              "TURN_AROUND",
+              "LAND_BUY"
+            ],
+            "stocks": {},
+            "currentTile": 40,
+            "direction": 1,
+            "vehicle": "WALK",
+            "jailTurns": 0,
+            "hospitalTurns": 0,
+            "turtleTurns": 0,
+            "godType": null,
+            "godTurns": 0,
+            "rentShieldTurns": 0,
+            "negativeImmuneTurns": 0,
+            "isBankrupt": false,
+            "moveLimitThisTurn": null,
+            "rentShieldActiveThisTurn": false,
+            "negativeImmuneActiveThisTurn": false
+          }
+        },
+        "events": [
+          {
+            "type": "TURN_CHANGED",
+            "transition": {
+              "gameOver": false,
+              "currentPlayer": {
+                "hibernateTurns": 0,
+                "sleepwalkTurns": 0,
+                "isSleepwalkingThisTurn": false,
+                "penaltyTransferTargetId": null,
+                "deposit": 5000,
+                "teamId": 3,
+                "isLord": false,
+                "items": [
+                  "REMOTE_DICE_ITEM",
+                  "BARRIER",
+                  "ROBOT_DOLL",
+                  "MINE_ITEM"
+                ],
+                "selectedDiceCount": 1,
+                "engineeringTurns": 0,
+                "hotelTurns": 0,
+                "fuelBoostTurns": 0,
+                "id": 3,
+                "profileId": 3,
+                "name": "巴洛克 AI",
+                "isAI": true,
+                "aiDifficulty": "NORMAL",
+                "aiStrategy": "ATTACK",
+                "avatarImg": "/assets/char_baroque.svg",
+                "avatarAtlas": "/assets/characters-v2-atlas.webp",
+                "avatarPosition": "100% 0%",
+                "avatar": "👳‍♂️",
+                "color": "#2ed573",
+                "colorHex": 3069299,
+                "skillName": "石油大亨",
+                "skillDesc": "开局额外获得 $3,000、80 点券和购地卡；大型策略卡点数减半，神仙附体持续回合数+1。",
+                "cash": 23000,
+                "cardPoints": 200,
+                "cards": [
+                  "REMOTE_DICE",
+                  "OBSTACLE",
+                  "TURN_AROUND",
+                  "LAND_BUY"
+                ],
+                "stocks": {},
+                "currentTile": 40,
+                "direction": 1,
+                "vehicle": "WALK",
+                "jailTurns": 0,
+                "hospitalTurns": 0,
+                "turtleTurns": 0,
+                "godType": null,
+                "godTurns": 0,
+                "rentShieldTurns": 0,
+                "negativeImmuneTurns": 0,
+                "isBankrupt": false,
+                "moveLimitThisTurn": null,
+                "rentShieldActiveThisTurn": false,
+                "negativeImmuneActiveThisTurn": false
+              }
+            }
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "SELECT_DICE_COUNT",
+        "playerId": 3,
+        "payload": {
+          "count": 1
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "DICE_COUNT_SELECTED",
+        "count": 1,
+        "vehicleLimit": 1,
+        "events": [
+          {
+            "type": "DICE_COUNT_SELECTED",
+            "success": true,
+            "count": 1,
+            "vehicleLimit": 1
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_ITEM",
+        "playerId": 3,
+        "payload": {
+          "itemId": "MISSILE_ITEM"
+        }
+      },
+      "result": {
+        "success": true,
+        "itemId": "MISSILE_ITEM",
+        "type": "INVENTORY_CHANGED",
+        "cost": 100,
+        "shopTileId": null,
+        "events": [
+          {
+            "type": "INVENTORY_CHANGED",
+            "success": true,
+            "itemId": "MISSILE_ITEM",
+            "cost": 100,
+            "shopTileId": null
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "USE_ITEM",
+        "playerId": 3,
+        "payload": {
+          "itemId": "MISSILE_ITEM",
+          "targetId": 1,
+          "value": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "BLAST_RESOLVED",
+        "centerTileId": 1,
+        "radius": 1,
+        "destructive": false,
+        "events": [
+          {
+            "type": "INVENTORY_CHANGED",
+            "playerId": 3,
+            "itemId": "MISSILE_ITEM"
+          },
+          {
+            "type": "PROPERTY_CHANGED",
+            "tileId": 1,
+            "level": 0
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_CARD",
+        "playerId": 3,
+        "payload": {
+          "cardId": "NUKES"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "CARD_BOUGHT",
+        "playerId": 3,
+        "cardId": "NUKES",
+        "cost": 60,
+        "shopTileId": null,
+        "events": [
+          {
+            "type": "CARD_BOUGHT",
+            "success": true,
+            "playerId": 3,
+            "cardId": "NUKES",
+            "cost": 60,
+            "shopTileId": null
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "USE_CARD",
+        "playerId": 3,
+        "payload": {
+          "cardId": "NUKES",
+          "targetId": 0,
+          "value": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "CARD_USED",
+        "playerId": 3,
+        "cardId": "NUKES",
+        "followUp": null,
+        "events": [
+          {
+            "type": "CARD_USED",
+            "playerId": 3,
+            "cardId": "NUKES",
+            "targetId": 0
+          },
+          {
+            "type": "PROPERTY_CHANGED",
+            "tileId": 0,
+            "ownerId": null,
+            "level": 0
+          },
+          {
+            "type": "PROPERTY_CHANGED",
+            "tileId": 1,
+            "ownerId": 1,
+            "level": 0
+          },
+          {
+            "type": "PROPERTY_CHANGED",
+            "tileId": 83,
+            "ownerId": null,
+            "level": 0
+          },
+          {
+            "type": "PROPERTY_CHANGED",
+            "tileId": 2,
+            "ownerId": 1,
+            "level": 0
+          },
+          {
+            "type": "PROPERTY_CHANGED",
+            "tileId": 82,
+            "ownerId": null,
+            "level": 0
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        23000
+      ]
+    },
+    {
+      "command": {
+        "type": "BUY_STOCK",
+        "playerId": 3,
+        "payload": {
+          "stockId": "HARBOR",
+          "shares": 30
+        }
+      },
+      "result": {
+        "success": true,
+        "cost": 5040,
+        "msg": "成功买入 蓝港保险 30 股！",
+        "type": "STOCK_BOUGHT",
+        "playerId": 3,
+        "stockId": "HARBOR",
+        "shares": 30,
+        "events": [
+          {
+            "type": "STOCK_BOUGHT",
+            "playerId": 3,
+            "stockId": "HARBOR",
+            "shares": 30,
+            "cost": 5040
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        17960
+      ]
+    },
+    {
+      "command": {
+        "type": "ROLL_DICE",
+        "playerId": 3
+      },
+      "result": {
+        "success": true,
+        "type": "DICE_ROLLED",
+        "playerId": 3,
+        "dice": [
+          1
+        ],
+        "steps": 1,
+        "bonusSteps": 0,
+        "events": [
+          {
+            "type": "DICE_ROLLED",
+            "success": true,
+            "playerId": 3,
+            "dice": [
+              1
+            ],
+            "steps": 1,
+            "bonusSteps": 0
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        17960
+      ]
+    },
+    {
+      "command": {
+        "type": "BEGIN_MOVE",
+        "playerId": 3,
+        "payload": {
+          "steps": 1,
+          "source": "DICE"
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "MOVE_STARTED",
+        "playerId": 3,
+        "steps": 1,
+        "source": "DICE",
+        "events": [
+          {
+            "type": "MOVE_STARTED",
+            "success": true,
+            "playerId": 3,
+            "steps": 1,
+            "source": "DICE"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        40
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        17960
+      ]
+    },
+    {
+      "command": {
+        "type": "ADVANCE_MOVE",
+        "playerId": 3
+      },
+      "result": {
+        "success": true,
+        "type": "MOVEMENT_FINISHED",
+        "tileId": 41,
+        "remainingSteps": 0,
+        "events": [
+          {
+            "type": "PLAYER_STEPPED",
+            "playerId": 3,
+            "tileId": 41,
+            "remainingSteps": 0
+          },
+          {
+            "type": "MOVEMENT_FINISHED",
+            "playerId": 3,
+            "tileId": 41
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        41
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        17960
+      ]
+    },
+    {
+      "command": {
+        "type": "PURCHASE_PROPERTY",
+        "playerId": 3,
+        "payload": {
+          "tileId": 41,
+          "buildingType": null
+        }
+      },
+      "result": {
+        "success": true,
+        "type": "PROPERTY_PURCHASED",
+        "tileId": 41,
+        "level": 0,
+        "cost": 2110,
+        "buildingType": "RESIDENTIAL",
+        "events": [
+          {
+            "type": "PROPERTY_PURCHASED",
+            "success": true,
+            "tileId": 41,
+            "level": 0,
+            "cost": 2110,
+            "buildingType": "RESIDENTIAL"
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        41
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        15850
+      ]
+    },
+    {
+      "command": {
+        "type": "END_TURN",
+        "playerId": 3
+      },
+      "result": {
+        "success": true,
+        "type": "TURN_CHANGED",
+        "transition": {
+          "gameOver": false,
+          "currentPlayer": {
+            "hibernateTurns": 0,
+            "sleepwalkTurns": 0,
+            "isSleepwalkingThisTurn": false,
+            "penaltyTransferTargetId": null,
+            "deposit": 5000,
+            "teamId": 0,
+            "isLord": false,
+            "items": [
+              "REMOTE_DICE_ITEM",
+              "BARRIER",
+              "ROBOT_DOLL",
+              "MINE_ITEM"
+            ],
+            "selectedDiceCount": 1,
+            "engineeringTurns": 0,
+            "hotelTurns": 0,
+            "fuelBoostTurns": 0,
+            "id": 0,
+            "profileId": 0,
+            "name": "林小满",
+            "isAI": false,
+            "aiDifficulty": "NORMAL",
+            "aiStrategy": "ECONOMY",
+            "avatarImg": "/assets/char_lin_xiaoman.svg",
+            "avatarAtlas": "/assets/characters-v2-atlas.webp",
+            "avatarPosition": "0% 0%",
+            "avatar": "🎀",
+            "color": "#ff4757",
+            "colorHex": 16729943,
+            "skillName": "商业奇才",
+            "skillDesc": "买地/建房升级享受 15% 价格折扣，卡片商店购买打折。",
+            "cash": 18878,
+            "cardPoints": 120,
+            "cards": [
+              "OBSTACLE",
+              "TURN_AROUND"
+            ],
+            "stocks": {},
+            "currentTile": 6,
+            "direction": 1,
+            "vehicle": "WALK",
+            "jailTurns": 0,
+            "hospitalTurns": 0,
+            "turtleTurns": 0,
+            "godType": null,
+            "godTurns": 0,
+            "rentShieldTurns": 0,
+            "negativeImmuneTurns": 0,
+            "isBankrupt": false,
+            "moveLimitThisTurn": null,
+            "rentShieldActiveThisTurn": false,
+            "negativeImmuneActiveThisTurn": false
+          }
+        },
+        "events": [
+          {
+            "type": "TURN_CHANGED",
+            "transition": {
+              "gameOver": false,
+              "currentPlayer": {
+                "hibernateTurns": 0,
+                "sleepwalkTurns": 0,
+                "isSleepwalkingThisTurn": false,
+                "penaltyTransferTargetId": null,
+                "deposit": 5000,
+                "teamId": 0,
+                "isLord": false,
+                "items": [
+                  "REMOTE_DICE_ITEM",
+                  "BARRIER",
+                  "ROBOT_DOLL",
+                  "MINE_ITEM"
+                ],
+                "selectedDiceCount": 1,
+                "engineeringTurns": 0,
+                "hotelTurns": 0,
+                "fuelBoostTurns": 0,
+                "id": 0,
+                "profileId": 0,
+                "name": "林小满",
+                "isAI": false,
+                "aiDifficulty": "NORMAL",
+                "aiStrategy": "ECONOMY",
+                "avatarImg": "/assets/char_lin_xiaoman.svg",
+                "avatarAtlas": "/assets/characters-v2-atlas.webp",
+                "avatarPosition": "0% 0%",
+                "avatar": "🎀",
+                "color": "#ff4757",
+                "colorHex": 16729943,
+                "skillName": "商业奇才",
+                "skillDesc": "买地/建房升级享受 15% 价格折扣，卡片商店购买打折。",
+                "cash": 18878,
+                "cardPoints": 120,
+                "cards": [
+                  "OBSTACLE",
+                  "TURN_AROUND"
+                ],
+                "stocks": {},
+                "currentTile": 6,
+                "direction": 1,
+                "vehicle": "WALK",
+                "jailTurns": 0,
+                "hospitalTurns": 0,
+                "turtleTurns": 0,
+                "godType": null,
+                "godTurns": 0,
+                "rentShieldTurns": 0,
+                "negativeImmuneTurns": 0,
+                "isBankrupt": false,
+                "moveLimitThisTurn": null,
+                "rentShieldActiveThisTurn": false,
+                "negativeImmuneActiveThisTurn": false
+              }
+            }
+          },
+          {
+            "type": "ROAD_ENTITY_CHANGED",
+            "tileId": 28,
+            "entity": {
+              "id": "ROAD_2_9325",
+              "type": "COUPON_CHEST",
+              "tileId": 28,
+              "ownerId": null,
+              "expiresRound": 10
+            }
+          },
+          {
+            "type": "NEWS_FLASH",
+            "news": {
+              "id": "NEWS_1",
+              "title": "房地产市场火爆",
+              "desc": "全城所有商业与住宅地产过路费临时翻倍！",
+              "category": "地产",
+              "icon": "🏙️",
+              "tone": "property",
+              "round": 2,
+              "impacts": [
+                {
+                  "icon": "⏳",
+                  "label": "限时市场效果",
+                  "detail": "持续 1 轮",
+                  "tone": "warning"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "positions": [
+        6,
+        1,
+        25,
+        41
+      ],
+      "cash": [
+        18878,
+        17272,
+        14960,
+        15850
+      ]
+    }
+  ],
+  "toasts": [
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🃏",
+        "title": "策略卡发动",
+        "detail": "REMOTE_DICE",
+        "tone": "gold",
+        "fullDetail": false
+      },
+      "text": "🃏策略卡发动REMOTE_DICE",
+      "currentPlayer": "林小满"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🏡",
+        "title": "成功购入地产",
+        "detail": "林小满 · 蓝湾码头 3号 · $1,122 · 商业奇才 · 购地85折，已计入报价",
+        "tone": "success",
+        "fullDetail": true
+      },
+      "text": "🏡成功购入地产林小满 · 蓝湾码头 3号 · $1,122 · 商业奇才 · 购地85折，已计入报价",
+      "currentPlayer": "林小满"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🃏",
+        "title": "策略卡发动",
+        "detail": "OBSTACLE",
+        "tone": "gold",
+        "fullDetail": false
+      },
+      "text": "🃏策略卡发动OBSTACLE",
+      "currentPlayer": "顾田野 AI"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🏗️",
+        "title": "建筑升级至 LV 1",
+        "detail": "顾田野 AI · 蓝湾码头 1号 · 投资 $550",
+        "tone": "gold",
+        "fullDetail": true
+      },
+      "text": "🏗️建筑升级至 LV 1顾田野 AI · 蓝湾码头 1号 · 投资 $550",
+      "currentPlayer": "顾田野 AI"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🃏",
+        "title": "策略卡发动",
+        "detail": "OBSTACLE",
+        "tone": "gold",
+        "fullDetail": false
+      },
+      "text": "🃏策略卡发动OBSTACLE",
+      "currentPlayer": "洛晶晶 AI"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🏥",
+        "title": "住院疗养",
+        "detail": "洛晶晶 AI 暂停 1 次行动，之后从当前格继续",
+        "tone": "danger",
+        "fullDetail": true
+      },
+      "text": "🏥住院疗养洛晶晶 AI 暂停 1 次行动，之后从当前格继续",
+      "currentPlayer": "洛晶晶 AI"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🃏",
+        "title": "策略卡发动",
+        "detail": "NUKES",
+        "tone": "gold",
+        "fullDetail": false
+      },
+      "text": "🃏策略卡发动NUKES",
+      "currentPlayer": "巴洛克 AI"
+    },
+    {
+      "cue": {
+        "kind": "toast",
+        "icon": "🏡",
+        "title": "成功购入地产",
+        "detail": "巴洛克 AI · 钟楼坊 1号 · $2,110",
+        "tone": "success",
+        "fullDetail": false
+      },
+      "text": "🏡成功购入地产巴洛克 AI · 钟楼坊 1号 · $2,110",
+      "currentPlayer": "巴洛克 AI"
+    }
+  ],
+  "upgrade": {
+    "text": "🏗️建筑升级至 LV 1顾田野 AI · 蓝湾码头 1号 · 投资 $550",
+    "opacity": "0",
+    "whiteSpace": "normal",
+    "clientWidth": 256,
+    "scrollWidth": 256,
+    "reactionVisible": false,
+    "rect": {
+      "x": 146,
+      "y": 597.9199829101562,
+      "w": 245.760009765625,
+      "h": 17.280029296875
+    }
+  },
+  "final": {
+    "players": [
+      {
+        "id": 0,
+        "cash": 18878,
+        "currentTile": 6
+      },
+      {
+        "id": 1,
+        "cash": 17272,
+        "currentTile": 1
+      },
+      {
+        "id": 2,
+        "cash": 14960,
+        "currentTile": 25
+      },
+      {
+        "id": 3,
+        "cash": 15850,
+        "currentTile": 41
+      }
+    ],
+    "properties": [
+      [
+        0,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        1,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "CHAIN_STORE",
+          "hasMine": false
+        }
+      ],
+      [
+        2,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        3,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        4,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        5,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        6,
+        {
+          "owner": 0,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        7,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        8,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        9,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        10,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        11,
+        {
+          "owner": 1,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        12,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        13,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        14,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        15,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": null,
+          "hasMine": false
+        }
+      ],
+      [
+        16,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        17,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        18,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        19,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        20,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        21,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        22,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        23,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        24,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        25,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        26,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        27,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        28,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        29,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        30,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        31,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        32,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        33,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        34,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        35,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": null,
+          "hasMine": false
+        }
+      ],
+      [
+        36,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        37,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        38,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        39,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        40,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        41,
+        {
+          "owner": 3,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        42,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        43,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        44,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        45,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        46,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        47,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        48,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        49,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        50,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        51,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        52,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        53,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        54,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        55,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": null,
+          "hasMine": false
+        }
+      ],
+      [
+        56,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        57,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        58,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        59,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        60,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        61,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        62,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        63,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        64,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        65,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        66,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        67,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        68,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        69,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        70,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        71,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        72,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        73,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        74,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        75,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": null,
+          "hasMine": false
+        }
+      ],
+      [
+        76,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        77,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        78,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        79,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        80,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        81,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        82,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        83,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        84,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        85,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        86,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        87,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        88,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        89,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        90,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        91,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        92,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        93,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        94,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        95,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        96,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        97,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        98,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        99,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        100,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        101,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        102,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        103,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        104,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        105,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        106,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        107,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        108,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        109,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        110,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        111,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        112,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        113,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        114,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        115,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        116,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        117,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        118,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ],
+      [
+        119,
+        {
+          "owner": null,
+          "level": 0,
+          "hasObstacle": false,
+          "isMortgaged": false,
+          "mortgageValue": 0,
+          "buildingType": "RESIDENTIAL",
+          "hasMine": false
+        }
+      ]
+    ]
+  },
+  "success": true
+}

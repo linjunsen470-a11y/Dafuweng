@@ -1,0 +1,80 @@
+{
+  "errors": [],
+  "scope": "Actual load-save gesture, mute click, reload/load, unmute click. Analysed Web Audio signal only; no subjective listening.",
+  "beforeGesture": {
+    "muted": false,
+    "context": null,
+    "theme": null,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔊",
+    "label": "音乐与音效已开启，点击静音",
+    "pressed": "false"
+  },
+  "playing": {
+    "muted": false,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0.20000000298023224,
+    "sfxGain": 0.800000011920929,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0.042453739792108536,
+    "icon": "🔊",
+    "label": "音乐与音效已开启，点击静音",
+    "pressed": "false"
+  },
+  "muted": {
+    "muted": true,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0,
+    "sfxGain": 0,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔇",
+    "label": "音乐与音效已静音，点击开启",
+    "pressed": "true"
+  },
+  "reloadBeforeGesture": {
+    "muted": true,
+    "context": null,
+    "theme": null,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔇",
+    "label": "音乐与音效已静音，点击开启",
+    "pressed": "true"
+  },
+  "reloaded": {
+    "muted": true,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0,
+    "sfxGain": 0,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔇",
+    "label": "音乐与音效已静音，点击开启",
+    "pressed": "true"
+  },
+  "unmuted": {
+    "muted": false,
+    "context": "running",
+    "theme": "grand-bay",
+    "musicGain": 0.20000000298023224,
+    "sfxGain": 0.800000011920929,
+    "musicVolume": 0.2,
+    "sfxVolume": 0.8,
+    "peak": 0,
+    "icon": "🔊",
+    "label": "音乐与音效已开启，点击静音",
+    "pressed": "false"
+  },
+  "success": false,
+  "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(report.unmuted.peak>1e-6)\n\n    at file:///workspace/dafuweng-cloud/test-audio-preference.js:18:387"
+}

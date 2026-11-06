@@ -1,3 +1,5 @@
+import { rentAbility, costAbilityNote } from './CharacterAbilityFeedback.js';
+import { cityPortrait } from './CityPortrait.js';
 import { NewsUI } from './NewsUI.js';
 import { describeCharacterReactions } from '../game/CharacterReactions.js';
 import { getGodRule } from '../game/GodRules.js';
@@ -34,17 +36,17 @@ export function describePresentationEvent(event, state) {
       break;
     case 'PROPERTY_PURCHASED':
       cash(current?.id, -event.cost, '购入地产');
-      toast('🏡', '成功购入地产', `${current?.name || '玩家'} · ${tile?.name || '新地产'} · ${money(event.cost)}`, 'success');
+      toast('🏡', '成功购入地产', [`${current?.name || '玩家'} · ${tile?.name || '新地产'} · ${money(event.cost)}`, costAbilityNote(current, 'BUY', event.cost)].filter(Boolean).join(' · '), 'success', Boolean(costAbilityNote(current, 'BUY', event.cost)));
       break;
     case 'PROPERTY_UPGRADED':
       cash(current?.id, -event.cost, '建筑升级');
-      toast('🏗️', `建筑升级至 LV ${event.level}`, `${tile?.name || '地产'} · 投资 ${money(event.cost)}`, 'gold');
+      toast('🏗️', `建筑升级至 LV ${event.level}`, `${current?.name || '玩家'} · ${tile?.name || '地产'} · 投资 ${money(event.cost)}`, 'gold', true);
       break;
     case 'RENT_PAID': {
       const owner = playerFor(state, event.ownerId);
       cash(current?.id, -event.amount, '支付过路费');
       cash(owner?.id, event.amount, '收到过路费');
-      toast('💸', '过路费结算', `${current?.name || '玩家'} 向 ${owner?.name || '地主'} 支付 ${money(event.amount)}`, 'danger');
+      toast('💸', '过路费结算', [`${current?.name || '玩家'} 向 ${owner?.name || '地主'} 支付 ${money(event.amount)}`, rentAbility(owner).label ? `${rentAbility(owner).label}，已计入本次结算` : ''].filter(Boolean).join(' · '), 'danger', Boolean(rentAbility(owner).label));
       break;
     }
     case 'RENT_WAIVED':
@@ -115,10 +117,16 @@ export function describePresentationEvent(event, state) {
       toast('🌫️', '精灵离场', `${event.name || getGodRule(event.godType)?.name || event.godType} 的效果结束`, 'accent');
       break;
     case 'JAILED':
-      toast('🚔', '被送入监狱', `${current?.name || '玩家'} 暂停 ${event.duration} 回合`, 'danger');
+      toast('🚔', '被送入监狱', `${current?.name || '玩家'} 暂停 ${current?.jailTurns ?? event.duration ?? 2} 次行动，之后从当前格继续`, 'danger', true);
       break;
     case 'HOSPITALIZED':
       toast('🏥', '住院疗养', `${current?.name || '玩家'} 暂停 ${current?.hospitalTurns ?? event.duration ?? 1} 次行动，之后从当前格继续`, 'danger', true);
+      break;
+    case 'ROAD_ENTITY_CHANGED':
+      if (event.entity?.type === 'BARRIER' && !event.removed) {
+        const road = state.getTile?.(event.entity.tileId);
+        toast('🚧', '路障已设置', `${road?.name || `${event.entity.tileId}号格`} · 首位进入者会被截停，自己也会触发；触发后移除`, 'gold', true);
+      }
       break;
     case 'MINE_EXPLODED':
       toast(event.type === 'MINE_EXPLODED' ? '💣' : '🏥', event.type === 'MINE_EXPLODED' ? '地雷爆炸' : '住院疗养', `${current?.name || '玩家'} 暂时无法行动`, 'danger');
@@ -155,9 +163,34 @@ export function describePresentationEvent(event, state) {
     case 'MINIGAME_COMPLETED':
       toast(event.rankIcon || '🎮', `${event.rankLabel || '小游戏完成'}`, `${event.rank || '挑战'}级 · ${event.score} 分 · 奖励 ${event.reward || 0} 点券`, 'success');
       break;
-    case 'CARD_USED':
-      toast('🃏', '策略卡发动', state.getCardById?.(event.cardId)?.name || event.cardId, 'gold');
+    case 'CARD_USED': {
+      const card = state.getCardById?.(event.cardId) || cardManager.getCardById(event.cardId);
+      const name = card?.name || event.cardId;
+      let detail = `${current?.name || '玩家'} · ${name}`;
+      let hasResult = false;
+      if (event.cardId === 'DEMOLISH') {
+        const property = state.propertyManager?.getProperty(event.targetId);
+        const targetTile = state.getTile?.(event.targetId);
+        if (property && targetTile) {
+          detail += ` · ${targetTile.name} 已降至 LV ${property.level}`;
+          hasResult = true;
+        }
+      } else if (event.cardId === 'TURN_AROUND') {
+        const target = state.players?.find(player => player.id === event.targetId);
+        if (target) {
+          detail += ` · ${target.name} 改为${target.direction === -1 ? '逆向' : '正向'}行走，下次移动沿新方向前进`;
+          hasResult = true;
+        }
+      } else if (event.cardId === 'TURTLE') {
+        const target = state.players?.find(player => player.id === event.targetId);
+        if (target) {
+          detail += ` · ${target.name}：剩余 ${target.turtleTurns} 回合，每次移动 1 步`;
+          hasResult = true;
+        }
+      }
+      toast(card?.icon || '🃏', hasResult ? `${name}已生效` : '策略卡发动', detail, 'gold', hasResult);
       break;
+    }
     case 'QUEST_STARTED':
       toast(event.icon || '📜', `接受委托 · ${event.title}`, `${event.issuer || '城市公会'} · ${event.description || `${event.progress}/${event.target}`}`, 'gold');
       break;
@@ -252,12 +285,17 @@ export class PresentationUI {
       || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   }
 
-  portrait(player, className) {
+  portrait(player, className, mapId) {
     const portrait = document.createElement('span');
     portrait.className = className;
     portrait.setAttribute('role', 'img');
     portrait.setAttribute('aria-label', player?.name || '玩家');
-    if (player?.avatarAtlas) {
+    const cityImage = cityPortrait(player, mapId);
+    if (cityImage) {
+      portrait.style.backgroundImage = `url('${cityImage}')`;
+      portrait.style.backgroundPosition = 'center';
+      portrait.style.backgroundSize = 'cover';
+    } else if (player?.avatarAtlas) {
       portrait.style.backgroundImage = `url('${player.avatarAtlas}')`;
       portrait.style.backgroundPosition = player.avatarPosition || '0% 0%';
     } else if (player?.avatarImg) {
@@ -277,7 +315,7 @@ export class PresentationUI {
     const banner = document.createElement('div');
     banner.className = 'presentation-turn-banner';
     banner.style.setProperty('--player-color', player.color || '#67e8f9');
-    banner.appendChild(this.portrait(player, 'presentation-turn-portrait'));
+    banner.appendChild(this.portrait(player, 'presentation-turn-portrait', state?.mapId));
     const copy = document.createElement('div');
     const eyebrow = document.createElement('span');
     eyebrow.className = 'presentation-eyebrow';
@@ -483,7 +521,7 @@ export class PresentationUI {
     const card = document.createElement('article');
     card.className = `character-reaction emotion-${cue.emotion || 'win'}`;
     card.style.setProperty('--player-color', player.color || '#67e8f9');
-    card.appendChild(this.portrait(player, 'character-reaction-portrait'));
+    card.appendChild(this.portrait(player, 'character-reaction-portrait', state?.mapId));
     const copy = document.createElement('div');
     const meta = document.createElement('span');
     meta.className = 'character-reaction-meta';

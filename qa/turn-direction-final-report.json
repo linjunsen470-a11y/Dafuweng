@@ -1,0 +1,53 @@
+{
+  "errors": [],
+  "scope": "Prepared human at tile6 with turn-around and remote die; real cancel, self target, remote1 reverse movement and next AI roll.",
+  "hud": "\n          ● 👤 你的回合 · 逆向：请点击【掷骰子】或按 [空格键]！\n        ",
+  "toasts": [
+    {
+      "kind": "toast",
+      "icon": "🔄",
+      "title": "转向卡已生效",
+      "detail": "林小满 · 转向卡 · 林小满 改为逆向行走，下次移动沿新方向前进",
+      "tone": "gold",
+      "fullDetail": true
+    },
+    {
+      "kind": "toast",
+      "icon": "🎯",
+      "title": "策略卡发动",
+      "detail": "林小满 · 遥控骰子",
+      "tone": "gold",
+      "fullDetail": false
+    },
+    {
+      "kind": "toast",
+      "icon": "🎟️",
+      "title": "获得卡片点数",
+      "detail": "+30 PTS",
+      "tone": "accent",
+      "fullDetail": false
+    },
+    {
+      "kind": "toast",
+      "icon": "🚧",
+      "title": "策略卡发动",
+      "detail": "顾田野 AI · 路障卡",
+      "tone": "gold",
+      "fullDetail": false
+    }
+  ],
+  "result": {
+    "next": {
+      "type": "DICE_ROLLED",
+      "playerId": 1
+    },
+    "landing": {
+      "tile": 5,
+      "direction": -1
+    },
+    "cash": 20000,
+    "cards": [],
+    "points": 150
+  },
+  "success": true
+}

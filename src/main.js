@@ -1,3 +1,4 @@
+import { cityPortrait } from './ui/CityPortrait.js';
 import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
 import { Scene3D } from './engine/Scene3D.js';
@@ -22,6 +23,7 @@ import { chooseAIShopPurchase } from './game/ShopRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
 import { DialogUI } from './ui/DialogUI.js';
+import { MapInspector } from './ui/MapInspector.js';
 import { MinimapUI } from './ui/MinimapUI.js';
 import { PresentationUI } from './ui/PresentationUI.js';
 import { AuctionUI } from './ui/AuctionUI.js';
@@ -79,6 +81,7 @@ class GameController {
     this.modeUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
+    this.mapInspector = new MapInspector(this.scene3D, this.boardBuilder, this.gameState, this.gameEngine);
     this.presentationUI = new PresentationUI(this.audioManager);
     this.auctionUI = new AuctionUI(this.audioManager);
     this.debtUI = new DebtUI(this.audioManager);
@@ -235,7 +238,7 @@ class GameController {
     this.gameState.propertyManager.properties.forEach((property, tileId) => {
       const owner = property.owner === null ? null : this.gameState.players[property.owner];
       this.boardBuilder.updateBuildingMesh(tileId, property.level, owner?.colorHex, property.buildingType);
-      this.boardBuilder.setObstacleMesh(tileId, property.hasObstacle);
+      this.boardBuilder.setObstacleMesh(tileId, Boolean(property.hasObstacle || this.gameState.roadEntities.some(entity => entity.tileId === tileId && entity.type === 'BARRIER')));
     });
     this.syncedAssetRevision = this.gameState.assetRevision;
   }
@@ -285,11 +288,12 @@ class GameController {
         const portrait = configItem?.querySelector('.setup-character-portrait');
         const skill = configItem?.querySelector('.setup-character-skill');
         if (!profile || !portrait || !skill) return;
-        portrait.style.backgroundImage = profile.avatarAtlas
+        const modelPortrait = cityPortrait({ profileId: profile.id }, document.getElementById('map-select')?.value);
+        portrait.style.backgroundImage = modelPortrait ? `url('${modelPortrait}')` : profile.avatarAtlas
           ? `url('${profile.avatarAtlas}')`
           : profile.avatarImg ? `url('${profile.avatarImg}')` : 'none';
-        portrait.style.backgroundPosition = profile.avatarPosition || 'center';
-        portrait.style.backgroundSize = profile.avatarAtlas ? '400% 300%' : 'cover';
+        portrait.style.backgroundPosition = modelPortrait ? 'center' : profile.avatarPosition || 'center';
+        portrait.style.backgroundSize = modelPortrait ? 'cover' : profile.avatarAtlas ? '400% 300%' : 'cover';
         portrait.style.setProperty('--profile-color', profile.color);
         portrait.textContent = profile.avatarAtlas || profile.avatarImg ? '' : profile.avatar;
         portrait.setAttribute('aria-label', `${profile.name}角色肖像`);
@@ -346,7 +350,7 @@ class GameController {
       if (index) index.textContent = `${String(mapIds.indexOf(mapId) + 1).padStart(2, '0')} / ${String(mapIds.length).padStart(2, '0')}`;
       if (stats) stats.innerHTML = presentation.stats.map(([value, label]) => `<span><b>${value}</b> ${label}</span>`).join('');
     };
-    if (mapSelect) mapSelect.onchange = updateMapShowcase;
+    if (mapSelect) mapSelect.onchange = () => { updateMapShowcase(); updateSetupPortraits(); };
     updateMapShowcase();
 
     const autoSave = this.gameEngine.saves.loadAuto();
@@ -455,9 +459,18 @@ class GameController {
       this.uiRenderer.renderHUD();
     };
 
-    document.getElementById('btn-toggle-audio').onclick = () => {
+    const audioButton = document.getElementById('btn-toggle-audio');
+    const renderAudioToggle = () => {
+      const muted = this.audioManager.muted;
+      audioButton.textContent = muted ? '🔇' : '🔊';
+      audioButton.title = muted ? '音乐与音效已静音，点击开启' : '音乐与音效已开启，点击静音';
+      audioButton.setAttribute('aria-label', audioButton.title);
+      audioButton.setAttribute('aria-pressed', String(muted));
+    };
+    renderAudioToggle();
+    audioButton.onclick = () => {
       const muted = this.audioManager.toggleMute();
-      document.getElementById('btn-toggle-audio').textContent = muted ? '🔇' : '🔊';
+      renderAudioToggle();
       if (!muted) this.audioManager.playConfirm();
     };
 
@@ -749,7 +762,7 @@ class GameController {
     const mouse = new THREE.Vector2();
 
     window.addEventListener('pointerdown', (e) => {
-      if (e.target !== this.scene3D.renderer.domElement) return;
+      if (e.target !== this.scene3D.renderer.domElement || this.mapInspector.isOpen) return;
       if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
       const curPlayer = this.gameState.getCurrentPlayer();
       if (curPlayer.isAI) return;

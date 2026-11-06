@@ -97,7 +97,7 @@ export class HarborStreets {
       court.position.set(48.6,.16,0); court.receiveShadow=true; group.add(court);
       // Continue the east arcade around the existing corner into OLD_2/OLD_3.
       // This pavement stays outside the road and does not add graph connections.
-      for (const [x,z,w,d] of [[56.25,-33.625,.8,9.25],[23.125,-38.25,66.25,.8],[30,-41.5,3.6,3]]) {
+      for (const [x,z,w,d] of [[56.25,-33.625,.8,9.25],[23.125,-38.25,66.25,1.1],[30,-41.5,3.6,3]]) {
         const walk = new THREE.Mesh(new THREE.BoxGeometry(w,.08,d),brick);
         walk.position.set(x,.17,z); walk.receiveShadow=true; group.add(walk);
       }

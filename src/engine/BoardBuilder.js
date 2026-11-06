@@ -1,3 +1,8 @@
+import { createHarborWorkingYard } from './HarborWorkingYard.js';
+import { createBankCivicCourt } from './BankCivicCourt.js';
+import { createNorthMarketStreet } from './NorthMarketStreet.js';
+import { createCivicStation } from './CivicStation.js';
+import { createMagicFrontage } from './MagicFrontage.js';
 import { createIslandCoast, COAST_WATER_Y } from './IslandCoast.js';
 import { CITY_BLOCK_SITES, createCityBlock } from './CityBlocks.js';
 import { createCityGround } from './CityGround.js';
@@ -462,7 +467,7 @@ export class BoardBuilder {
       return;
     }
 
-    group.add(createIslandCoast());
+    group.add(createIslandCoast(), createNorthMarketStreet(mapDefinition), createBankCivicCourt(mapDefinition), createHarborWorkingYard(mapDefinition));
     const districtGround = createCityGround(mapDefinition);
     if (districtGround) group.add(districtGround);
 
@@ -815,8 +820,8 @@ export class BoardBuilder {
       const anchor = service || (isPropertyTile(tile) && tile.lot?.position
         ? tile.lot.position
         : this.getRoadsideAnchor(tile, position));
-      group.position.set(anchor.x, service || group.userData.originalHospital ? .22 : position.y + 0.35, anchor.z);
-      group.rotation.y = service ? facilityFacing(tile, service) : tile.lot?.rotation || 0;
+      group.position.set(anchor.x, service || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
+      group.rotation.y = service ? facilityFacing(tile, service) : group.userData.originalStation ? Math.PI : tile.lot?.rotation || 0;
       group.userData.baseY = group.position.y;
       group.userData.phase = tile.id * 0.71;
       group.userData.tileType = tile.type;
@@ -848,6 +853,8 @@ export class BoardBuilder {
     ctx.font = '25px sans-serif'; ctx.fillText(spec.detail, 160, 96);
     const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
     const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthWrite: false, toneMapped: false }));
+    // Draw after the transparent sea, while retaining depth tests against opaque buildings.
+    sign.renderOrder = 5;
     sign.position.set(0, spec.height + .85, 0); sign.scale.set(4.8, 1.68, 1);
     group.add(sign);
     return group;
@@ -918,8 +925,11 @@ export class BoardBuilder {
     };
     const [roofColor, wallColor] = palette[tile.type] || ['#7bed9f', '#ffffff'];
     const clinic = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 72;
-    const group = clinic ? createHospitalClinic() : new THREE.Group();
-    if (!clinic) {
+    const magic = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 29 && tile.type === TileType.MAGIC_HOUSE;
+    const station = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 42 && tile.type === TileType.PRISON;
+    const streetSign = magic || station;
+    const group = station ? createCivicStation() : clinic ? createHospitalClinic() : magic ? createMagicFrontage() : new THREE.Group();
+    if (!clinic && !magic && !station) {
       const plinth = new THREE.Mesh(
         new THREE.CylinderGeometry(1.82, 1.92, .24, 16),
         new THREE.MeshStandardMaterial({ color: '#0b2234', roughness: .34, metalness: .4, emissive: roofColor, emissiveIntensity: .3 })
@@ -949,17 +959,23 @@ export class BoardBuilder {
       });
     }
     const canvas = document.createElement('canvas');
-    canvas.width = 192;
-    canvas.height = 128;
+    canvas.width = streetSign ? 320 : 192;
+    canvas.height = streetSign ? 112 : 128;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#15223b';
+    ctx.fillStyle = streetSign ? '#fff2d5' : '#15223b';
     ctx.beginPath();
-    ctx.roundRect(4, 4, 184, 120, 18);
+    ctx.roundRect(4, 4, canvas.width - 8, canvas.height - 8, 18);
     ctx.fill();
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = streetSign ? '#263f40' : '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    if (clinic) {
+    if (station) {
+      ctx.font = 'bold 32px sans-serif'; ctx.fillText('42 · 海岛警署', 160, 42);
+      ctx.font = '22px sans-serif'; ctx.fillText('通常停2次 · 原格继续', 160, 82);
+    } else if (magic) {
+      ctx.font = 'bold 32px sans-serif'; ctx.fillText('29 · 奇迹魔法屋', 160, 42);
+      ctx.font = '22px sans-serif'; ctx.fillText('到访选目标 · 选效果', 160, 82);
+    } else if (clinic) {
       ctx.font = 'bold 24px sans-serif'; ctx.fillText(`72 · ${tile.name}`, 96, 40);
       ctx.font = '21px sans-serif'; ctx.fillText('停留后休养1次', 96, 78);
       ctx.font = '18px sans-serif'; ctx.fillText('恢复后从原格继续', 96, 105);
@@ -969,9 +985,9 @@ export class BoardBuilder {
     }
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
-    const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true }));
-    sign.position.set(0, 3.15, 0);
-    sign.scale.set(3, 2, 1);
+    const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, ...(streetSign ? {depthWrite:false,toneMapped:false} : {}) }));
+    sign.position.set(0, station ? 3.35 : magic ? 4.05 : 3.15, 0);
+    sign.scale.set(streetSign ? 3.4 : 3, streetSign ? 1.2 : 2, 1);
     group.add(sign);
     group.userData.isFacilityLandmark = true;
     return group;

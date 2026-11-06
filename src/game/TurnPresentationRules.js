@@ -60,7 +60,7 @@ export function getArrivalBrief(state, player, tileId, landing = null) {
     MECHANISM: ['⚙️', '交通控制塔', '重构全岛岔路通行方案', 'special'], MINIGAME: ['🎮', '街机挑战场', '技巧挑战即将开始', 'opportunity'],
     STOCK: ['📈', '证券交易所', '查看行情并调整投资组合', 'special'], CHANCE: ['🎴', '命运事件', '未知事件即将揭晓', 'opportunity'],
     TREASURE: ['🎁', '发现城市宝藏', '随机奖励即将开启', 'opportunity'], MONSTER: ['👾', '怪兽出没区域', '危险事件正在逼近', 'danger'],
-    PRISON: ['🚔', '抵达监狱', '可能暂停后续行动', 'danger'], HOSPITAL: ['🏥', '抵达医院', '通常暂停1次行动，之后从当前格继续；角色与卡片可能改变结果', 'danger'],
+    PRISON: ['🚔', '抵达监狱', '通常暂停2次行动，之后从当前格继续；角色与卡片可能改变结果', 'danger'], HOSPITAL: ['🏥', '抵达医院', '通常暂停1次行动，之后从当前格继续；角色与卡片可能改变结果', 'danger'],
     COUPON: ['🎟️', '点券补给站', '卡片点券即将到账', 'opportunity'], COMPANY: ['🏢', '企业总部', '落地支付服务费，董事长免服务费；分红在周期结算', 'special']
   }[tile?.type];
   return special ? { ...base, icon: special[0], title: special[1], detail: special[2], tone: special[3], badge: tile.type } : base;

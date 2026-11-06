@@ -1,3 +1,4 @@
+import { rentAbility, costAbilityNote } from './CharacterAbilityFeedback.js';
 import { MAX_PROPERTY_LEVEL } from '../game/GameRules.js';
 import { COLOR_GROUPS, isPropertyTile } from '../game/BoardData.js';
 import { BUILDINGS } from '../game/ContentRegistry.js';
@@ -22,9 +23,12 @@ export function createLandDecisionModel({ tileData, currentLevel = 0, player, st
     ? [...(state?.propertyManager?.properties?.values?.() || [])].filter(item => item.owner === player?.id && item.buildingType === 'CHAIN_STORE').length + (action === 'BUY' ? 1 : 0)
     : 0;
   const chainMultiplier = resolvedBuildingType === 'CHAIN_STORE' ? 1 + Math.max(0, chainCount - 1) * 0.25 : 1;
-  const projectedRent = level => Math.floor((tileData.tolls?.[level] || 0) * rentMultiplier * economyMultiplier * monopolyMultiplier * chainMultiplier);
+  const rentOwner = action === 'UPGRADE' ? state?.players?.find(p => p.id === property?.owner) || player : player;
+  const ability = rentAbility(rentOwner);
+  const withOwnerAbility = amount => Math.round(amount * ability.multiplier);
+  const projectedRent = level => withOwnerAbility(Math.floor((tileData.tolls?.[level] || 0) * rentMultiplier * economyMultiplier * monopolyMultiplier * chainMultiplier));
   const currentToll = property?.owner !== null && property?.owner !== undefined
-    ? state.propertyManager.calculateToll(tileData.id, state.newsEffect, state.priceIndex)
+    ? Math.round(state.propertyManager.calculateToll(tileData.id, state.newsEffect, state.priceIndex) * rentAbility(state.players?.find(p => p.id === property.owner) || player).multiplier)
     : projectedRent(currentLevel);
   const nextToll = projectedRent(targetLevel);
   const cash = Math.max(0, Number(player?.cash) || 0);
@@ -52,6 +56,7 @@ export function createLandDecisionModel({ tileData, currentLevel = 0, player, st
     buildingType: resolvedBuildingType,
     buildingName: building?.name || (resolvedBuildingType === 'CHAIN_STORE' ? '连锁店' : '精品住宅'),
     buildingIcon: building?.icon || (resolvedBuildingType === 'CHAIN_STORE' ? '🏪' : '🏡'),
+    abilityNote: [costAbilityNote(player, action, quote), ability.label ? `${ability.label}，已计入预估；访客减免另结算` : ''].filter(Boolean).join('。'),
     buildingDescription: building?.description || (resolvedBuildingType === 'CHAIN_STORE' ? '同类门店越多，连锁租金加成越高。' : '逐级建设可显著提高到访租金。'),
     rentGrowth: rentGrowth.map((value, level) => ({ level, value, share: Math.max(4, value / maxRent * 100) }))
   };
@@ -99,7 +104,7 @@ export class DialogUI {
     nextTollEl.textContent = money(model.nextToll);
     document.getElementById('land-district-chip').textContent = `${model.districtName} ${model.districtOwned}/${model.districtTotal}`;
     document.getElementById('land-district-chip').style.setProperty('--district-color', model.districtColor);
-    document.getElementById('land-building-description').textContent = model.buildingDescription;
+    document.getElementById('land-building-description').textContent = [model.buildingDescription, model.abilityNote].filter(Boolean).join(' ');
     document.getElementById('land-yield-rate').textContent = `${model.yieldRate.toFixed(1)}%`;
     document.getElementById('land-payback').textContent = model.paybackPasses ? `约 ${model.paybackPasses} 次收费回本` : '功能型设施';
     document.getElementById('land-cash-before').textContent = money(model.cash);

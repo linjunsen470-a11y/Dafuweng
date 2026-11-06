@@ -1,0 +1,82 @@
+{
+  "errors": [],
+  "scope": "Prepared opponent tile1 LV2 and two cards; actual inventory, target cancel, demolition, turtle target clicks. No forced engine action.",
+  "cancel": {
+    "cards": [
+      "DEMOLISH",
+      "TURTLE"
+    ],
+    "level": 2
+  },
+  "toasts": [
+    {
+      "kind": "toast",
+      "icon": "🃏",
+      "title": "策略卡发动",
+      "detail": "DEMOLISH",
+      "tone": "gold",
+      "fullDetail": false
+    },
+    {
+      "kind": "toast",
+      "icon": "🃏",
+      "title": "策略卡发动",
+      "detail": "TURTLE",
+      "tone": "gold",
+      "fullDetail": false
+    }
+  ],
+  "result": {
+    "players": [
+      {
+        "id": 0,
+        "cash": 20000,
+        "cards": [],
+        "turtleTurns": 0
+      },
+      {
+        "id": 1,
+        "cash": 23000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "turtleTurns": 3
+      },
+      {
+        "id": 2,
+        "cash": 20000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND"
+        ],
+        "turtleTurns": 0
+      },
+      {
+        "id": 3,
+        "cash": 23000,
+        "cards": [
+          "REMOTE_DICE",
+          "OBSTACLE",
+          "TURN_AROUND",
+          "LAND_BUY"
+        ],
+        "turtleTurns": 0
+      }
+    ],
+    "property": {
+      "owner": 1,
+      "level": 1,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    },
+    "rollEnabled": true,
+    "phase": "PRE_ROLL_ACTION"
+  },
+  "success": true
+}

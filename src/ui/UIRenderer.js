@@ -1,3 +1,4 @@
+import { cityPortrait } from './CityPortrait.js';
 import { getGodRule } from '../game/GodRules.js';
 
 export class UIRenderer {
@@ -49,13 +50,13 @@ export class UIRenderer {
     if (curPlayer) {
       if (curPlayer.isAI) {
         this.turnIndicator.innerHTML = `
-          <span style="color:${curPlayer.color}">●</span> 🤖 <strong>${curPlayer.name}</strong> 正在思考与行动中...
+          <span style="color:${curPlayer.color}">●</span> 🤖 <strong>${curPlayer.name}${curPlayer.direction === -1 ? ' · 逆向' : ''}</strong> 正在思考与行动中...
         `;
         this.btnRoll.style.opacity = '0.5';
         this.btnRoll.style.pointerEvents = 'none';
       } else {
         this.turnIndicator.innerHTML = `
-          <span style="color:${curPlayer.color}">●</span> 👤 <strong>你的回合</strong>：请点击【掷骰子】或按 [空格键]！
+          <span style="color:${curPlayer.color}">●</span> 👤 <strong>你的回合${curPlayer.direction === -1 ? ' · 逆向' : ''}</strong>：请点击【掷骰子】或按 [空格键]！
         `;
         const canRoll = this.gameState.phase === 'PRE_ROLL_ACTION';
         this.btnRoll.style.opacity = canRoll ? '1' : '0.5';
@@ -152,7 +153,10 @@ export class UIRenderer {
         buffHtml += `<span class="buff-tag" style="background:#00b894;color:#fff;">🍀 免疫(${player.negativeImmuneTurns}T)</span>`;
       }
 
-      const avatarMarkup = player.avatarAtlas
+      const portrait = cityPortrait(player, this.gameState.mapId);
+      const avatarMarkup = portrait
+        ? `<img src="${portrait}" class="player-avatar-img" alt="${player.name}">`
+        : player.avatarAtlas
         ? `<span class="player-avatar-atlas" role="img" aria-label="${player.name}" style="background-image:url('${player.avatarAtlas}');background-position:${player.avatarPosition}"></span>`
         : player.avatarImg
         ? `<img src="${player.avatarImg}" class="player-avatar-img" alt="${player.name}">`
@@ -161,9 +165,9 @@ export class UIRenderer {
       card.innerHTML = `
         <div class="card-top">
           <div class="player-name-group">
-            ${avatarMarkup}
+            ${this.gameState.mapId === 'grand-bay' ? `<span class="city-player-identity" style="--identity-color:${player.color}">${avatarMarkup}<span class="city-player-number" aria-label="棋盘编号 ${player.id + 1}">${player.id + 1}</span></span>` : avatarMarkup}
             <div>
-              <div class="player-name" style="color:${player.color}">${player.name}</div>
+              <div class="player-name" style="color:${player.profileId === 10 ? '#c6d0d8' : player.color}">${player.name}</div>
               <div class="player-skill-badge" title="${player.skillDesc || ''}">⚡ ${player.skillName || '技能特长'}</div>
             </div>
           </div>

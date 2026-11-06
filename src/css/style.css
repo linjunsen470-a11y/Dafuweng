@@ -2967,6 +2967,8 @@ input:focus-visible,
 }
 
 .presentation-dice-result.is-visible {
+  /* Critical roll numbers must be readable on the first painted frame, even on slow GPUs. */
+  transition-property: transform;
   opacity: 1;
   transform: translate(-50%, 0) scale(1);
 }
@@ -3053,6 +3055,9 @@ input:focus-visible,
 .presentation-toast > div > span { overflow: hidden; color: #9fb9c7; font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
 
 .presentation-cash-burst {
+  /* Amounts stay readable even if a slow compositor misses animation frames. */
+  opacity: 1;
+  transform: translate(-50%, 0);
   position: absolute;
   display: grid;
   justify-items: center;
@@ -3104,10 +3109,8 @@ input:focus-visible,
 .character-reaction.emotion-loss,.character-reaction.emotion-crisis,.character-reaction.emotion-bankrupt { background: linear-gradient(108deg, rgba(28,10,20,.98), rgba(39,20,34,.96)); }
 
 @keyframes cashBurst {
-  0% { opacity: 0; transform: translate(-50%, 4px) scale(.72); }
-  18% { opacity: 1; transform: translate(-50%, -7px) scale(1.08); }
-  72% { opacity: 1; transform: translate(-50%, -43px) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -72px) scale(.94); }
+  from { transform: translate(-50%, 0); }
+  to { transform: translate(-50%, -24px); }
 }
 
 @media (max-width: 760px) {
@@ -4000,3 +4003,51 @@ input:focus-visible,
   .left-panel { width: 244px; max-height: calc(100dvh - 224px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 0 8px 4px 0; }
   .left-panel:focus-visible { outline: 2px solid #ffd166; outline-offset: 3px; }
 }
+
+/* Same model portrait and board number, without enlarging the board pawn. */
+.city-player-identity { position: relative; display: inline-flex; flex-shrink: 0; }
+.city-player-number { position: absolute; right: -3px; bottom: -2px; min-width: 15px; height: 15px; padding: 0 2px; box-sizing: border-box; display: grid; place-items: center; background: #102536; border: 1px solid var(--identity-color); border-radius: 4px; color: #fff; font: 700 10px/1 sans-serif; }
+@media (max-width: 820px) and (max-height: 500px) {
+  .city-player-identity { width: 15px; height: 15px; }
+  .city-player-number { right: 0; bottom: 0; }
+}
+
+.reduce-motion .presentation-cash-burst { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .presentation-cash-burst { animation: none !important; }
+}
+@media (max-width: 760px) {
+  /* Keep the temporary receipt within its compact player card. */
+  .presentation-cash-burst { margin-top: -24px; }
+  .presentation-cash-burst strong { font-size: 1rem; padding: 3px 6px; }
+}
+
+/* On narrow screens, settlement facts take priority over decorative dialogue. */
+@media (max-width: 820px) {
+  .presentation-layer:has(.presentation-toast.has-full-detail.is-visible) .character-reaction { visibility: hidden; }
+}
+
+/* Optional board inspection; leaves the action dock available. */
+.map-inspector { position:fixed; z-index:9300; left:50%; transform:translateX(-50%); bottom:calc(var(--action-dock-clearance,240px) + 12px); width:min(410px,calc(100vw - 24px)); max-height:35dvh; overflow:auto; padding:12px; border:1px solid var(--inspection-owner,#67e8f9); border-radius:14px; background:rgba(8,27,43,.97); color:#e9f5ff; box-shadow:0 8px 24px #0005; pointer-events:auto; box-sizing:border-box; }
+.map-inspector header { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.map-inspector label { display:grid; gap:4px; margin-top:8px; color:#bed1dc; font-size:12px; }
+.map-inspector select { width:100%; min-width:0; min-height:36px; background:#18354a; color:#fff; border:1px solid #607889; border-radius:6px; }
+.map-inspector h3 { font-size:15px; margin:10px 0 6px; color:#ffe399; }
+.map-inspector p { margin:5px 0; line-height:1.45; font-size:12px; }
+.map-inspector button { min-height:36px; padding:6px 10px; border:1px solid #608497; border-radius:7px; color:#e6f7ff; background:#204155; cursor:pointer; }
+.map-inspector nav { display:flex; flex-wrap:wrap; gap:5px; }
+.map-inspector .inspection-path-note { color:#a4c7d6; margin-top:10px; }
+@media(max-width:820px) { .map-inspector { max-height:30dvh; padding:10px; } .map-inspector button,.map-inspector select { min-height:40px; } }
+.map-inspector { left:auto; right:16px; transform:none; width:330px; }
+.map-inspector header { position:sticky; top:-12px; background:#0b2234; z-index:1; padding:3px 0; }
+@media(max-width:820px) { .map-inspector { left:12px; right:12px; width:auto; max-height:22dvh; } }
+
+@media(max-width:820px) {
+  .map-inspector label { font-size:0; margin-top:4px; gap:0; }
+  .map-inspector select { font-size:12px; }
+  .map-inspector h3 { display:none; }
+  .map-inspector p { margin:4px 0; }
+  .map-inspector header { font-size:13px; }
+}
+
+.map-inspector.hidden { display:none; }
