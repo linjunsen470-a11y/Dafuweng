@@ -146,6 +146,8 @@
       </div>
     </header>
 
+    <details class="hud-reference-rail" open>
+      <summary>地图与委托 <span>点击收起</span></summary>
     <section id="minimap-panel" class="minimap-panel" aria-label="地图导航">
       <div class="minimap-header">
         <span>山海导航图</span>
@@ -161,6 +163,8 @@
       </div>
       <div id="quest-list" class="quest-list" aria-live="polite"></div>
     </section>
+
+    </details>
 
     <!-- 左侧：玩家信息面板 -->
     <aside class="left-panel">
@@ -208,13 +212,11 @@
     </div>
 
     <!-- 底部：日志历史 -->
-    <div class="log-panel" id="log-panel">
-      <div class="log-header">
-        <span>📜 对局日志</span>
-        <button id="btn-clear-log" class="text-btn">清空</button>
-      </div>
+    <details class="log-panel" id="log-panel">
+      <summary class="log-header">📜 对局日志 <span class="log-expand-hint">展开</span></summary>
+      <button id="btn-clear-log" class="text-btn">清空日志</button>
       <div class="log-messages" id="log-messages" aria-live="polite"></div>
-    </div>
+    </details>
   </div>
 
   <!-- 关键动作演出层：回合、骰子、资金与事件反馈 -->
