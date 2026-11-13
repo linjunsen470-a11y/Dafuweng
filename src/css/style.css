@@ -3023,3 +3023,156 @@ input:focus-visible,
 .mode-standing-list { display: grid; gap: 7px; }.mode-standing-row { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid rgba(142,196,214,.12); border-radius: 12px; background: rgba(4,22,38,.48); }.mode-standing-row.leader { border-color: rgba(251,191,36,.3); }.mode-standing-row > b { color: #789bad; text-align: center; }.mode-standing-row > div { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; }.mode-standing-row small { color: #789bad; font-size: 10px; text-align: right; }.mode-standing-row .mode-asset-progress { grid-column: 1 / -1; height: 4px; }.mode-standing-row > span { color: #fbbf24; font-weight: 800; }
 .mode-cycle-note { padding: 10px 12px; border-radius: 11px; background: rgba(251,191,36,.06); color: #d5b96b; font-size: 11px; text-align: center; }
 @media (max-width: 620px) { .mode-rule-grid { grid-template-columns: 1fr; }.mode-round-card { grid-template-columns: 1fr auto; }.mode-round-progress { grid-row: 2; grid-column: 1 / -1; }.mode-standing-row > div { grid-template-columns: 1fr; }.mode-standing-row small { text-align: left; } }
+
+/* HUD layout: reserve real space instead of stacking independent fixed panels. */
+.hud-layer {
+  --hud-gap: 12px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 220px;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--hud-gap);
+  align-items: start;
+}
+.hud-layer > .top-bar { grid-column: 1 / -1; min-width: 0; }
+.hud-layer > .left-panel {
+  position: static;
+  grid-column: 1;
+  grid-row: 2;
+  width: auto;
+  min-height: 0;
+  max-height: 100%;
+  padding-right: 7px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.hud-reference-rail {
+  grid-column: 3;
+  grid-row: 2;
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-radius: 16px;
+  background: rgba(5, 17, 33, .86);
+}
+.hud-reference-rail > summary,
+.log-panel > summary {
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #c6dce6;
+  font-size: .75rem;
+  font-weight: 700;
+  user-select: none;
+}
+.hud-reference-rail > summary > span,
+.log-expand-hint { float: right; color: #849eac; font-size: .65rem; font-weight: 400; }
+.hud-reference-rail:not([open]) > summary > span { font-size: 0; }
+.hud-reference-rail:not([open]) > summary > span::after { content: '展开'; font-size: .65rem; }
+.hud-reference-rail .minimap-panel,
+.hud-reference-rail .quest-panel {
+  position: static;
+  display: block;
+  width: 100%;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+}
+.hud-reference-rail #minimap-canvas { width: 100%; height: auto; aspect-ratio: 26 / 17; }
+.hud-reference-rail .minimap-panel.minimized { width: 100%; }
+.hud-reference-rail .quest-panel { border-top: 1px solid rgba(148,198,214,.16); }
+.hud-layer > .control-panel {
+  position: static;
+  grid-column: 2 / -1;
+  grid-row: 3;
+  justify-self: end;
+  width: min(640px, 100%);
+  min-width: 0;
+  transform: none;
+}
+/* Five controls need five columns. The old four-column grid wrapped the shop. */
+.control-panel .action-buttons { grid-template-columns: 60px 1.4fr repeat(3, 1fr); }
+.control-panel .dice-count-control { grid-column: auto; flex-direction: column; justify-content: center; gap: 3px; padding: 4px; min-width: 0; font-size: .65rem; }
+.control-panel .dice-count-control select { width: 100%; min-height: 30px; }
+.control-panel .btn-action { padding: 8px 5px; min-height: 54px; flex-direction: column; gap: 4px; }
+.control-panel .btn-roll { flex-direction: row; gap: 8px; }
+.hud-layer > .log-panel {
+  position: static;
+  grid-column: 1;
+  grid-row: 3;
+  align-self: end;
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 160px;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.log-panel > summary { display: list-item; margin: 0; }
+.log-panel[open] .log-expand-hint { display: none; }
+.log-panel #btn-clear-log { margin: 4px 10px; }
+.log-panel .log-messages { max-height: 100px; padding: 0 10px 10px; }
+.player-card:not(.active-turn) { box-shadow: none; background: rgba(7,23,40,.85); }
+.player-card.active-turn { transform: none; border-width: 2px; }
+.hud-layer :is(button, select, summary):focus-visible { outline: 3px solid #67e8f9; outline-offset: 3px; }
+/* Non-interactive effects must never cover an interactive dialog. */
+.presentation-layer { z-index: 30; }
+.character-reaction { bottom: 174px; min-height: 76px; width: min(460px, calc(100vw - 36px)); grid-template-columns: 58px 1fr; gap: 10px; padding: 10px 15px; }
+.character-reaction-portrait { width: 56px; height: 56px; border-radius: 15px; }
+.character-reaction strong { font-size: .9rem; }
+.presentation-toast-stack { bottom: 174px; right: 18px; width: min(280px, calc(100vw - 36px)); }
+
+@media (max-width: 1180px) {
+  .hud-layer { grid-template-columns: 196px minmax(0,1fr) 200px; }
+  .top-bar { grid-template-columns: auto minmax(0,1fr); }
+  .top-actions { min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
+  .tool-cluster { flex-shrink: 0; }
+}
+@media (max-width: 900px) {
+  .hud-layer { grid-template-columns: 172px minmax(0,1fr) 180px; --hud-gap: 8px; }
+  .world-status { min-width: 150px; }
+  .brand-seal { display: none; }
+  .world-status-copy strong { font-size: .75rem; }
+  .top-actions .icon-btn { width: 36px; height: 36px; }
+  .control-panel .btn-action .action-text { font-size: .68rem; }
+  .player-details, .player-skill-badge { display: none; }
+}
+@media (max-width: 620px) {
+  .hud-layer { padding: 8px; grid-template-columns: minmax(0,1fr) 152px; grid-template-rows: auto auto minmax(0,1fr) auto; gap: 7px; }
+  .hud-layer > .top-bar { gap: 6px; }
+  .world-status { min-width: 118px; height: 48px; gap: 3px; padding: 5px; }
+  .world-status-copy { max-width: 72px; }
+  .world-status-copy strong { font-size: .65rem; }
+  .round-badge { padding: 4px; gap: 2px; }
+  .round-badge .label { font-size: .6rem; }
+  .hud-layer > .left-panel { grid-column: 1 / -1; grid-row: 2; padding: 0 0 3px; max-height: 112px; }
+  .players-container { display: flex; gap: 6px; }
+  .player-card { flex: 0 0 148px; padding: 6px 8px; }
+  .player-avatar-atlas, .player-avatar-img { width: 28px; height: 28px; flex-basis: 28px; }
+  .player-name { font-size: .72rem; }
+  .cash-display { font-size: .85rem; margin: 3px 0; }
+  .buff-icons { display: none; }
+  .hud-reference-rail { grid-column: 2; grid-row: 3; }
+  .hud-reference-rail > summary { padding: 8px; font-size: .68rem; }
+  .hud-reference-rail > summary > span { display: none; }
+  .hud-layer > .control-panel { grid-column: 1 / -1; grid-row: 4; width: 100%; padding: 7px; }
+  .control-panel .action-buttons { grid-template-columns: 48px 1.2fr repeat(3,1fr); gap: 4px; }
+  .control-panel .btn-action { min-height: 48px; }
+  .control-panel .btn-roll { flex-direction: column; gap: 4px; }
+  .dock-heading { display: none; }
+  .current-turn-banner { padding: 6px 8px; margin-bottom: 6px; font-size: .7rem; }
+  .hud-layer > .log-panel { grid-column: 1; grid-row: 3; align-self: end; max-height: 120px; }
+  .log-panel .log-messages { max-height: 65px; }
+  .character-reaction { bottom: 130px; }
+  .presentation-toast-stack { bottom: 130px; }
+  .presentation-turn-banner { min-width: 0; width: calc(100vw - 32px); top: 32%; padding-right: 20px; }
+}
+@media (max-height: 560px) and (min-width: 621px) {
+  .hud-layer { --hud-gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+  .control-panel .dock-heading { display: none; }
+  .control-panel .btn-action { min-height: 42px; }
+  .control-panel .current-turn-banner { padding: 5px 8px; margin-bottom: 5px; }
+  .character-reaction { bottom: 122px; }
+}
