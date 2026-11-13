@@ -20,6 +20,7 @@ import { getModeProfile } from './game/ModeRules.js';
 import { chooseAIShopPurchase } from './game/ShopRules.js';
 
 import { UIRenderer } from './ui/UIRenderer.js';
+import { ModalCoordinator } from './ui/ModalCoordinator.js';
 import { DialogUI } from './ui/DialogUI.js';
 import { MinimapUI } from './ui/MinimapUI.js';
 import { PresentationUI } from './ui/PresentationUI.js';
@@ -28,6 +29,7 @@ import { DebtUI } from './ui/DebtUI.js';
 
 class GameController {
   constructor() {
+    this.modalCoordinator = new ModalCoordinator();
     this.audioManager = audioManager;
     this.gameState = new GameState();
     this.gameEngine = new GameEngine(this.gameState);
@@ -598,9 +600,10 @@ class GameController {
 
   bindKeyboardAndCanvasClick() {
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' || e.code === 'Enter') {
+      if (this.modalCoordinator.active) return;
+      if (e.code === 'Space') {
         const activeEl = document.activeElement;
-        if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
+        if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.tagName === 'BUTTON' || activeEl.isContentEditable)) {
           return;
         }
         e.preventDefault();
@@ -612,6 +615,7 @@ class GameController {
     const mouse = new THREE.Vector2();
 
     window.addEventListener('pointerdown', (e) => {
+      if (this.modalCoordinator.active || e.target !== this.scene3D.renderer.domElement) return;
       if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
       const curPlayer = this.gameState.getCurrentPlayer();
       if (curPlayer.isAI) return;
@@ -628,6 +632,7 @@ class GameController {
   }
 
   triggerHumanRoll() {
+    if (this.modalCoordinator.active) return;
     if (this.isProcessingAction) return;
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
 
