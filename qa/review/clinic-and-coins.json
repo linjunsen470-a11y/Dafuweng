@@ -1,0 +1,20 @@
+{
+  "mobile": {
+    "reward": 20
+  },
+  "desktop": {
+    "phases": [
+      "approach",
+      "board",
+      "drive",
+      "arrive"
+    ],
+    "hospital": 3,
+    "tile": 1,
+    "nearest": {
+      "id": 72,
+      "distance": 2.3999999999999986
+    },
+    "returned": true
+  }
+}

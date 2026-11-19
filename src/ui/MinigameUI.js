@@ -278,13 +278,21 @@ export class MinigameUI {
       object.style.top = `${top}%`;
       object.textContent = definition.icon;
       object.setAttribute('aria-label', definition.kind === 'BOMB' ? '炸弹，不要点击' : `${definition.kind === 'STAR' ? '星星' : '金币'}，点击收集`);
-      object.onclick = () => {
+      const collect = () => {
+        if (!object.isConnected) return;
         session.updateScore(scoreSkyObject(session.getScore(), definition.points), definition.points > 0 ? 'HIT' : 'MISS');
         feedback.textContent = definition.points > 0 ? `✨ +${definition.points}` : `💥 ${definition.points}`;
         feedback.className = `minigame-feedback ${definition.points > 0 ? 'is-correct' : 'is-wrong'}`;
         this.audioManager?.playClick();
         object.remove();
       };
+      object.onpointerdown = event => {
+        if (event.pointerType === 'touch' && event.isPrimary) {
+          event.preventDefault();
+          collect();
+        }
+      };
+      object.onclick = collect;
       session.stage.appendChild(object);
       session.later(() => object.remove(), 1800);
       session.progress.textContent = `空中目标 ${spawnIndex}`;

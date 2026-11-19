@@ -4168,3 +4168,34 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
 .has-result .minigame-result-track {background:#e6d4a9;}
 .has-result .minigame-result-track i {background:#53a188;}
 .has-result .minigame-claim {width:100%;min-width:0;min-height:44px;background:#ffd169;color:#4c321b;border:2px solid #ae773e;}
+
+/* The coin challenge shares the printed paper, mint and amber of the prize ticket. */
+[data-game-id="SKY_COINS"]:not(.has-result) .minigame-box {
+  width:min(560px,calc(100vw - 18px)); padding:clamp(10px,2vw,18px);
+  background:#fff4d7; border:3px solid #bd8245; border-radius:22px;
+  color:#54351e; box-shadow:0 6px 0 #885a37,0 15px 48px #39251655;
+}
+[data-game-id="SKY_COINS"] :is(.minigame-kicker,.minigame-briefing small,.minigame-start kbd) {display:none;}
+[data-game-id="SKY_COINS"] :is(.minigame-header h2,.minigame-briefing h3,.minigame-score,.minigame-session-stats b,.minigame-briefing-stats b) {color:#55341e;}
+[data-game-id="SKY_COINS"] :is(.minigame-instructions,.minigame-progress,.minigame-session-stats > span,.minigame-briefing p) {color:#674b32;}
+[data-game-id="SKY_COINS"] .minigame-header {border-color:#d6b781;}
+[data-game-id="SKY_COINS"] :is(.minigame-timer,.minigame-live-rank) {color:#24594a;background:#d5efd9;border-color:#94bba0;}
+[data-game-id="SKY_COINS"] .minigame-timer.is-urgent {color:#8d2f23;background:#ffdfb2;}
+[data-game-id="SKY_COINS"] .minigame-stage:not(.minigame-result-stage) {border:2px solid #bd9b64;box-shadow:none;}
+[data-game-id="SKY_COINS"] :is(.minigame-briefing,.minigame-countdown) {background:radial-gradient(ellipse at 26% 20%,#ffefb9,#ffe2a4 64%,#f9cc7b);}
+[data-game-id="SKY_COINS"] :is(.minigame-countdown small,.minigame-countdown strong) {color:#79451e;text-shadow:0 2px #fff3d0;}
+[data-game-id="SKY_COINS"] :is(.minigame-briefing-icon,.minigame-briefing-stats span) {color:#724a29;background:#fff7db;border-color:#dfb674;box-shadow:none;}
+[data-game-id="SKY_COINS"] .minigame-start {color:#4e2a13;background:#ffd373;border:2px solid #ad763e;min-height:44px;}
+[data-game-id="SKY_COINS"] .minigame-skip {background:#fff9e3;color:#624427;border-color:#c69558;min-height:44px;}
+.sky-coins-stage {isolation:isolate;background:radial-gradient(circle at 80% 23%,#ffedab 0 6%,#ffeab766 6.3% 9%,transparent 9.3%),linear-gradient(#7acdc8,#fff0bc 77%,#d8df97);}
+.sky-coins-stage::after {background:#80b387;box-shadow:0 -12px #aecb8a;}
+.sky-coins-stage .minigame-feedback {pointer-events:none;min-width:0;width:max-content;max-width:94%;color:#66442c;background:#fff8dfed;border:1px solid #d4a973;}
+.sky-coins-stage .minigame-feedback.is-correct {color:#276543;}
+.sky-coins-stage .minigame-feedback.is-wrong {color:#9e3b31;}
+.sky-object {touch-action:manipulation;}
+.sky-object.kind-coin {font-size:0;background:radial-gradient(circle at 40% 35%,#ffe99b 0 38%,#ffc351 39% 56%,#ae6c26 57% 61%,#ffda74 62%);border:2px solid #a96e29;box-shadow:0 3px 0 #aa6d2a;}
+.sky-object.kind-coin::after {content:'';width:14px;height:14px;background:#c38639;border:2px solid #fff0ad;transform:rotate(45deg);border-radius:3px;}
+@media (pointer:coarse) {
+  .sky-object {animation:coinTouchPulse 1.8s ease forwards;}
+  @keyframes coinTouchPulse {0%,100% {opacity:.65;} 12%,84% {opacity:1;}}
+}

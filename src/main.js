@@ -1,4 +1,4 @@
-import {showClinicPickup} from './engine/ClinicPickup.js';
+import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
 import { bindBoardHover } from './ui/BoardHover.js';
 import { cardManager } from './game/CardManager.js';
 import { BoardTargetPicker } from './ui/BoardTargetPicker.js';
@@ -176,8 +176,21 @@ class GameController {
     this.pawnManager.reactToEvent(event);
     if(event.type==='CLINIC_PICKUP' && !this.skipAIAnimations) {
       this.audioManager.playBoardCue('clinic');
-      if(!this.presentationUI.isReducedMotion())
-        showClinicPickup(this.scene3D.scene,this.pawnManager.pawns[event.playerId],this.boardBuilder.tilePositions[event.tileId]);
+      if (!this.presentationUI.isReducedMotion()) {
+        const path = clinicRoute(this.gameState,event.tileId);
+        const points = path.map(id=>this.boardBuilder.tilePositions[id]);
+        const entrance = this.boardBuilder.specialTileMeshes.get(path.at(-1));
+        if (entrance && points.length) {
+          const curb = points.at(-1).clone().lerp(entrance.position,.48);
+          curb.y = points.at(-1).y;
+          points.push(curb);
+        }
+        const pawn = this.pawnManager.pawns[event.playerId];
+        const pickup = Promise.resolve(this.pendingPickup).then(()=>
+          showClinicPickup(this.scene3D,pawn,points,()=>this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile,true)));
+        this.pendingPickup = pickup;
+        pickup.finally(()=>{ if (this.pendingPickup===pickup) this.pendingPickup=null; });
+      }
     }
     if (event.type === 'POSITIONS_SWAPPED') {
       this.pawnManager.syncFromGameState(this.gameState);
@@ -703,7 +716,7 @@ class GameController {
 
   canOpenPlayerAction() {
     const player = this.gameState.getCurrentPlayer();
-    return !this.isProcessingAction
+    return !this.isProcessingAction && !this.pendingPickup
       && this.gameState.phase === GamePhase.PRE_ROLL_ACTION
       && player
       && !player.isAI
@@ -808,7 +821,7 @@ class GameController {
   }
 
   triggerHumanRoll() {
-    if (this.modalCoordinator.active || this.boardPicker.cancel || this.isProcessingAction) return;
+    if (this.pendingPickup || this.modalCoordinator.active || this.boardPicker.cancel || this.isProcessingAction) return;
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
 
     const curPlayer = this.gameState.getCurrentPlayer();
@@ -1015,6 +1028,10 @@ class GameController {
       if (result.events.some(event => event.type === 'START_BONUS_GRANTED')) this.audioManager.playCoinSound();
     }
 
+    if (this.pendingPickup) {
+      await this.pendingPickup;
+      if (this.gameState.getCurrentPlayer() !== curPlayer) return;
+    }
     this.presentationUI.endMove();
     this.scene3D.stopFollowing();
     if (!this.skipAIAnimations) this.pawnManager.celebrateLanding(curPlayer.id, completedSteps >= 8 ? 1.35 : 1);
@@ -1429,7 +1446,12 @@ class GameController {
     await activate(cardId === 'REMOTE_DICE' ? targetOverride : null);
   }
 
-  finishTurn() {
+  async finishTurn() {
+    if (this.pendingPickup) {
+      const player = this.gameState.getCurrentPlayer();
+      await this.pendingPickup;
+      if (this.gameState.getCurrentPlayer() !== player) return;
+    }
     this.uiRenderer.renderHUD();
 
     if (this.gameState.checkWinCondition()) {
