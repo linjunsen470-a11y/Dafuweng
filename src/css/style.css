@@ -4133,3 +4133,14 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
 .presentation-dice-result .presentation-die { width: 26px; height: 26px; font-size: 21px; }
 .presentation-dice-result .presentation-dice-total { margin: 0; color: #61462d; }
 .presentation-dice-result .presentation-dice-total strong { color: #8e461a; font-size: 19px; }
+
+.stock-shortcuts {display:flex;flex-wrap:wrap;gap:6px}
+.stock-shortcuts button {padding:6px 10px;border:1px solid #b99752;border-radius:8px;color:#553b22;background:#ffebbb;cursor:pointer}
+.stock-shortcuts button:disabled {opacity:.45}
+#stock-price-impact:not(:empty) {display:block;padding:7px 10px;border-radius:8px;background:#fff2cc;color:#71451d;font-weight:700}
+.route-target-bar select {max-width:min(58vw,360px)}
+
+.ticker-content > span { display:inline-block; white-space:nowrap; }
+.stock-chart-box { position:relative; }
+#stock-chart-mode { position:absolute; top:3px; right:3px; padding:3px 8px; color:#422919; background:#fff1c6; border-radius:8px; }
+#stock-chart-mode[aria-pressed="true"] { background:#ffbc57; }

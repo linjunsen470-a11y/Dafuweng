@@ -35,10 +35,39 @@ export class StockUI {
       this.activeTab = button.dataset.stockTab;
       this.render();
     });
+    for(const button of this.modal.querySelectorAll('[data-stock-order]')) button.onclick=()=>{
+      const count=this.orderSize(button);
+      if(count<1)return;
+      this.tradeAmountInput.value=String(count);
+      if(button.dataset.stockOrder==='buy')this.handleBuy();else this.handleSell();
+    };
+    const chartMode = document.getElementById('stock-chart-mode');
+    chartMode.addEventListener('click', () => {
+      this.showCandles = !this.showCandles;
+      chartMode.setAttribute('aria-pressed', String(this.showCandles));
+      this.render();
+    });
     this.companyPanel.addEventListener('click', event => this.handleCompanyAction(event));
   }
 
+  orderSize(button) {
+    const player=this.gameState.getCurrentPlayer();
+    const stock=this.gameState.stockMarket.stocks.find(s=>s.id===this.selectedStockId);
+    if(!stock)return 0;
+    const limit=button.dataset.stockOrder==='buy'?Math.floor(player.cash/stock.price):player.stocks[stock.id]?.shares || 0;
+    return Math.floor(limit*Number(button.dataset.fraction));
+  }
+
+  showPriceMove(card) {
+    const stock=this.gameState.stockMarket.stocks.find(s=>s.id===this.selectedStockId);
+    const shares=this.gameState.getCurrentPlayer().stocks[stock.id]?.shares || 0;
+    const delta=(stock.price-stock.prevPrice)*shares;
+    const impact=document.getElementById('stock-price-impact');
+    impact.textContent=`${card==='RED_BULL'?'红卡涨停':'黑卡跌停'} · $${stock.prevPrice} → $${stock.price} · 施卡时持仓市值变化 ${delta>=0?'+':''}${delta.toLocaleString()}`;
+  }
+
   show(onClose = null, tab = 'MARKET') {
+    document.getElementById('stock-price-impact').textContent='';
     this.onClose = onClose;
     this.activeTab = tab;
     this.modal.classList.remove('hidden');
@@ -69,6 +98,8 @@ export class StockUI {
       : canSell ? '偿债中可卖出股票回笼现金，不能买入。'
         : '本次到访可查看行情；买卖请在你的掷骰前打开「股市大盘」。';
 
+    for(const button of this.modal.querySelectorAll('[data-stock-order]'))
+      button.disabled=!(button.dataset.stockOrder==='buy'?canBuy:canSell) || this.orderSize(button)<1;
     // 1. 渲染股票列表
     this.stockListContainer.innerHTML = '';
     stocks.forEach(s => {
@@ -91,6 +122,7 @@ export class StockUI {
       `;
 
       item.addEventListener('click', () => {
+        document.getElementById('stock-price-impact').textContent='';
         this.selectedStockId = s.id;
         this.render();
       });
@@ -195,6 +227,22 @@ export class StockUI {
       ctx.stroke();
     }
 
+    if (this.showCandles) {
+      const width = w / Math.ceil(history.length / 4);
+      const y = price => h * (max - price) / (max - min);
+      for (let i = 0; i < history.length; i += 4) {
+        const ticks = history.slice(i, i + 4);
+        const open = ticks[0], close = ticks[ticks.length - 1];
+        const x = (i / 4 + 0.5) * width;
+        ctx.fillStyle = ctx.strokeStyle = close >= open ? '#ff4757' : '#2ed573';
+        ctx.beginPath();
+        ctx.moveTo(x, y(Math.max(...ticks)));
+        ctx.lineTo(x, y(Math.min(...ticks)));
+        ctx.stroke();
+        ctx.fillRect(x - width / 4, y(Math.max(open, close)), width / 2, Math.max(2, Math.abs(y(open) - y(close))));
+      }
+      return;
+    }
     // 绘制趋势折线
     const isUp = history[history.length - 1] >= history[0];
     const lineColor = isUp ? '#ff4757' : '#2ed573';

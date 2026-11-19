@@ -155,6 +155,7 @@ export class GameEngine {
     if (rejected) return { ...rejected, events: [] };
 
     const cashBefore = player.cash;
+    const hospitalBefore=this.state.players.map(p=>p.hospitalTurns || 0);
     let result;
     switch (command.type) {
       case 'PURCHASE_PROPERTY':
@@ -291,7 +292,9 @@ export class GameEngine {
 
     const events = result.events || (result.type ? [{ type: result.type, ...result }] : []);
     const questEvents = events.flatMap(event => advanceQuestsForEvent(this.state, event, player.id));
-    const allEvents = [...events, ...questEvents];
+    const pickups=this.state.players.filter(p=>p.hospitalTurns>hospitalBefore[p.id])
+      .map(p=>({type:'CLINIC_PICKUP',playerId:p.id,tileId:p.currentTile}));
+    const allEvents = [...events, ...questEvents,...pickups];
     recordMatchCommand(this.state.matchStatistics, { playerId: player.id, commandType: command.type, result, cashBefore, cashAfter: player.cash, round: this.state.round });
     recordMatchEvents(this.state.matchStatistics, allEvents, this.state.round);
     this.emitAll(allEvents);

@@ -38,9 +38,18 @@ export class UIRenderer {
     if (this.mapNameLabel) this.mapNameLabel.textContent = this.gameState.mapDefinition?.name || '财富地图';
     if (this.newsTickerText) {
       const latestNews = this.gameState.newsHistory?.[0];
-      this.newsTickerText.textContent = latestNews
+      const headline = latestNews
         ? `第 ${latestNews.round} 轮 · 【${latestNews.category}】${latestNews.title} — ${latestNews.desc}`
         : '新闻中心在线：城市经济、地产与股市动态将在这里实时播报';
+      if (this.newsTickerText.textContent !== headline) {
+        const copy = document.createElement('span');
+        copy.textContent = headline;
+        this.newsTickerText.replaceChildren(copy);
+        const overflow = copy.offsetWidth - this.newsTickerText.clientWidth;
+        if (overflow > 0 && latestNews && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          copy.animate([{transform:'translateX(0)', offset:0.15}, {transform:'translateX(-' + overflow + 'px)', offset:0.9}], {duration:2200 + overflow * 45, fill:'forwards'});
+        }
+      }
     }
 
     this.renderPlayersList();

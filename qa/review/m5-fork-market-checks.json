@@ -1,0 +1,27 @@
+{
+  "desktop": {
+    "card": "RED_BULL",
+    "before": 116,
+    "after": 128,
+    "bought": 322,
+    "afterSale": 0,
+    "branch": 84,
+    "errors": [],
+    "pickup": [
+      {
+        "type": "CLINIC_PICKUP",
+        "playerId": 1,
+        "tileId": 4
+      }
+    ]
+  },
+  "mobile": {
+    "card": "BEAR_CARD",
+    "before": 116,
+    "after": 104,
+    "bought": 394,
+    "afterSale": 0,
+    "branch": 84,
+    "errors": []
+  }
+}

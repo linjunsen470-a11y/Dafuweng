@@ -334,6 +334,7 @@
         <div class="stock-detail-panel">
           <h3 id="stock-selected-name">选择股票查看走势</h3>
           <div class="stock-chart-box">
+            <button type="button" id="stock-chart-mode" aria-pressed="false">四笔 K 线</button>
             <canvas id="stock-chart" width="400" height="180"></canvas>
           </div>
           <div class="stock-trade-controls" id="stock-trade-controls">
@@ -342,6 +343,11 @@
               <span>持有数量: <strong id="stock-holding-count">0</strong> 股</span>
               <span>买入均价: <strong id="stock-holding-avg">$0</strong></span>
             </div>
+            <div class="stock-shortcuts" aria-label="快捷交易">
+              <button data-stock-order="buy" data-fraction="0.5">半仓买</button><button data-stock-order="buy" data-fraction="1">全仓买</button>
+              <button data-stock-order="sell" data-fraction="0.5">卖一半</button><button data-stock-order="sell" data-fraction="1">全卖</button>
+            </div>
+            <output id="stock-price-impact" aria-live="polite"></output>
             <div class="trade-inputs">
               <input type="number" id="stock-trade-amount" name="trade-amount" aria-label="交易股数" value="10" min="1" step="10">
               <button id="btn-stock-buy" class="btn-primary btn-sm">买入</button>

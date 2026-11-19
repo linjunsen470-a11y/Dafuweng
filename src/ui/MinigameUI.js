@@ -92,6 +92,7 @@ export class MinigameUI {
           misses++;
           combo = 0;
         }
+        if(outcome==='HIT' || outcome==='MISS')this.audioManager?.playBoardCue?.(outcome.toLowerCase(),combo);
         scoreValue.textContent = String(score);
         comboLabel.textContent = `×${combo}`;
         accuracyLabel.textContent = hits + misses ? `${Math.round(hits / (hits + misses) * 100)}%` : '—';

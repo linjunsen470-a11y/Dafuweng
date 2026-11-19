@@ -6,24 +6,38 @@ export class BoardTargetPicker {
     Object.assign(this, {scene, board, pawns});
   }
 
-  choose(options, playerTargets = false) {
+  choose(options, playerTargets = false, origin = null) {
     this.cancel?.();
     const group = new THREE.Group();
     const geometry = new THREE.RingGeometry(playerTargets ? 0.55 : 1.12, playerTargets ? 0.78 : 1.43, 36);
     const material = new THREE.MeshBasicMaterial({color:0xffe036, side:THREE.DoubleSide, depthTest:false});
     const hits = new Map();
+    let arrow;
+    if(origin) {
+      const shape=new THREE.Shape();
+      shape.moveTo(0,1.42);shape.lineTo(.84,.16);shape.lineTo(.31,.16);shape.lineTo(.31,-1);
+      shape.lineTo(-.31,-1);shape.lineTo(-.31,.16);shape.lineTo(-.84,.16);shape.closePath();
+      arrow=new THREE.ExtrudeGeometry(shape,{depth:.12,bevelEnabled:false});
+      arrow.rotateX(-Math.PI/2);
+    }
     const bar = document.createElement('div');
     bar.className = 'board-target-bar';
     bar.innerHTML = '<label>点选发光目标 <select aria-label="合法目标"><option value="">选择目标…</option></select></label><button type="button">取消</button>';
+    if(origin) {
+      bar.classList.add('route-target-bar');
+      bar.querySelector('label').firstChild.textContent='选择前进方向 ';
+      bar.querySelector('button').hidden=true;
+    }
     const select = bar.querySelector('select');
     for (const option of options) {
       const pawn = playerTargets && this.pawns.pawns[option.id]?.mesh;
       const position = pawn ? pawn.position : this.board.tilePositions[option.id];
       if (!position) continue;
-      const marker = new THREE.Mesh(geometry, material);
+      const marker = new THREE.Mesh(arrow || geometry, material);
       marker.position.copy(position);
       marker.position.y += 0.24;
-      marker.rotation.x = -Math.PI / 2;
+      if(origin) marker.rotation.y=Math.atan2(origin.x-position.x,origin.z-position.z);
+      else marker.rotation.x = -Math.PI / 2;
       marker.renderOrder = 26;
       group.add(marker);
       hits.set(marker, option.id);
@@ -35,7 +49,7 @@ export class BoardTargetPicker {
     document.body.append(bar);
     const hud = document.getElementById('hud-layer');
     hud.inert = true;
-    select.focus();
+    select.focus({preventScroll:true});
     const canvas = this.scene.renderer.domElement;
     const events = new AbortController();
     const listen = (node, type, fn) => node.addEventListener(type, fn, {signal:events.signal});
@@ -44,6 +58,7 @@ export class BoardTargetPicker {
         events.abort();
         group.removeFromParent();
         geometry.dispose();
+        arrow?.dispose();
         material.dispose();
         bar.remove();
         hud.inert = false;
@@ -53,7 +68,7 @@ export class BoardTargetPicker {
       };
       this.cancel = () => finish(null);
       listen(bar.querySelector('button'), 'click', this.cancel);
-      listen(document, 'keydown', event => {if (event.key === 'Escape') this.cancel();});
+      listen(document, 'keydown', event => {if (!origin && event.key === 'Escape') this.cancel();});
       listen(select, 'change', () => {if (select.value !== '') finish(Number(select.value));});
       let down;
       listen(canvas, 'pointerdown', e => {down = e.button === 0 ? [e.clientX,e.clientY] : null;});

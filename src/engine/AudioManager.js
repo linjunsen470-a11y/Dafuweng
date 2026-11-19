@@ -28,10 +28,10 @@ export const THEME_LIBRARY = Object.freeze({
     melody: [76, 79, 83, 79, 78, 76, 71, null, 69, 71, 74, 76, 74, 71, 69, 66]
   },
   'grand-bay': {
-    title: '山海港湾', bpm: 96, lead: 'triangle', pad: 'sine',
+    title: '山海港湾', bpm: 110, lead: 'triangle', pad: 'sine',
     chords: [[57, 61, 64], [54, 57, 61], [62, 66, 69], [64, 68, 71]],
     bass: [33, 30, 38, 40],
-    melody: [69, null, 73, 76, 73, 71, 69, 64, 66, 69, 71, 73, 76, 73, 71, 68]
+    melody: [69, 73, null, 76, 78, 76, 73, 71, 66, null, 71, 73, 76, 80, 76, 68]
   },
   'fortune-crossroads': {
     title: '福星岔路', bpm: 118, lead: 'square', pad: 'triangle',
@@ -325,6 +325,21 @@ export class AudioManager {
     };
     if (['danger', 'bankrupt', 'victory', 'card', 'build'].includes(name)) this.duckMusic(name === 'victory' ? 1.4 : 0.72, name === 'danger' || name === 'bankrupt' ? 0.3 : 0.46);
     return (effects[name] || effects.click)();
+  }
+
+  playBoardCue(kind,combo=0) {
+    if(this.muted || !this.init())return false;
+    const now=this.ctx.currentTime;
+    if(kind==='clinic') {
+      [660,880,660,880].forEach((hz,i)=>this.scheduleTone(hz,now+i*.13,.11,{type:'triangle',volume:.045,release:.045}));
+    } else if(kind==='hit' || kind==='miss') {
+      const base=kind==='hit'?480+Math.min(combo,8)*32:220;
+      this.scheduleTone(base,now,.06,{type:'triangle',volume:.07});
+      this.scheduleTone(base*(kind==='hit'?1.5:.77),now+.055,.08,{type:'sine',volume:.06});
+    } else {
+      this.scheduleTone(kind==='motor'?94:155,now,.055,{type:kind==='motor'?'triangle':'sine',volume:.04,release:.03});
+    }
+    return true;
   }
 
   playClick() {

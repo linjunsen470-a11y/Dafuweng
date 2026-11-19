@@ -1,3 +1,4 @@
+import {showClinicPickup} from './engine/ClinicPickup.js';
 import { bindBoardHover } from './ui/BoardHover.js';
 import { cardManager } from './game/CardManager.js';
 import { BoardTargetPicker } from './ui/BoardTargetPicker.js';
@@ -41,7 +42,7 @@ import { ResearchLabUI } from './ui/ResearchLabUI.js';
 import { chooseAIResearchProject } from './game/ResearchRules.js';
 import { MechanismUI } from './ui/MechanismUI.js';
 import { chooseAIMechanismRoute } from './game/MechanismRules.js';
-import { RouteChoiceUI } from './ui/RouteChoiceUI.js';
+import { getRouteChoicePlans } from './game/RouteDecisionRules.js';
 
 const SETUP_MAP_PRESENTATION = {
   'grand-bay': {
@@ -98,7 +99,6 @@ class GameController {
     this.bankUI = new BankUI(this.audioManager);
     this.researchLabUI = new ResearchLabUI(this.audioManager);
     this.mechanismUI = new MechanismUI(this.audioManager);
-    this.routeChoiceUI = new RouteChoiceUI(this.audioManager);
 
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
@@ -174,6 +174,11 @@ class GameController {
 
   applyDomainEvent(event) {
     this.pawnManager.reactToEvent(event);
+    if(event.type==='CLINIC_PICKUP' && !this.skipAIAnimations) {
+      this.audioManager.playBoardCue('clinic');
+      if(!this.presentationUI.isReducedMotion())
+        showClinicPickup(this.scene3D.scene,this.pawnManager.pawns[event.playerId],this.boardBuilder.tilePositions[event.tileId]);
+    }
     if (event.type === 'POSITIONS_SWAPPED') {
       this.pawnManager.syncFromGameState(this.gameState);
     } else if (event.type === 'OBSTACLE_CHANGED') {
@@ -986,12 +991,9 @@ class GameController {
           ? this.gameState.rng.pick(result.options)
           : curPlayer.isAI
             ? AIPlayer.chooseRoute(curPlayer, result.options, this.gameState, result.remainingSteps)
-          : await this.routeChoiceUI.choose({
-              player: curPlayer,
-              state: this.gameState,
-              options: result.options,
-              remainingSteps: result.remainingSteps
-            });
+          : await this.boardPicker.choose(getRouteChoicePlans(this.gameState,curPlayer,result.options,result.remainingSteps)
+              .map(plan=>({id:plan.optionId,label:`${this.gameState.getTile(plan.optionId).name} → ${plan.destinationName} · ${plan.label}`})),
+              false,this.boardBuilder.tilePositions[curPlayer.currentTile]);
         result = this.gameEngine.execute({
           type: 'ADVANCE_MOVE',
           playerId: curPlayer.id,
@@ -1003,6 +1005,7 @@ class GameController {
       if (!result.success) break;
       await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
       completedSteps++;
+      if(!this.skipAIAnimations) this.audioManager.playBoardCue(curPlayer.vehicle==='WALK'?'step':'motor');
       if (!this.skipAIAnimations) this.presentationUI.showMoveProgress({
         player: curPlayer,
         current: completedSteps,
@@ -1396,6 +1399,12 @@ class GameController {
       }
       this.audioManager.playCardSpell();
       this.uiRenderer.renderHUD();
+      if (!curPlayer.isAI && ['RED_BULL','BEAR_CARD'].includes(cardId)) {
+        const market=await this.getStockUI();
+        market.selectedStockId=String(targetId);
+        market.show();
+        market.showPriceMove(cardId);
+      }
       if (result.followUp?.mode === 'ROLL') {
         await this.doRollDice(result.followUp.steps);
       } else if (result.followUp?.mode === 'TELEPORT') {
