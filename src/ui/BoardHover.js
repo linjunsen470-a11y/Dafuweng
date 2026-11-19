@@ -21,7 +21,7 @@ export function bindBoardHover(scene, board, pawns, state, engine, isBrowsing) {
     if(pointer && Math.hypot(e.clientX-pointer[0],e.clientY-pointer[1])<6) pending = [e.clientX,e.clientY];
     pointer = null;
   });
-  canvas.addEventListener('pointerleave', () => {pending = null;hide();});
+  canvas.addEventListener('pointerleave', e => {if(e.pointerType === 'mouse'){pending = null;hide();}});
   canvas.addEventListener('pointercancel', () => {pointer = pending = null;hide();});
   scene.addUpdatable({update() {
     if (!pending && !selected) return;

@@ -34,6 +34,11 @@ export class Scene3D {
 
     // 视角轨道控制器
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.addEventListener('start', () => {
+      this.followedObject = null;
+      this.targetCameraPos = null;
+      this.targetLookAt = null;
+    });
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
     this.controls.maxPolarAngle = Math.PI / 2.1; // 防止掉入地板下方
@@ -48,6 +53,7 @@ export class Scene3D {
     };
 
     // 灯光搭建
+    this.setupSky();
     this.setupLighting();
 
     // 粒子与云朵系统
@@ -71,6 +77,22 @@ export class Scene3D {
 
     // 启动动画循环
     this.animate();
+  }
+
+  setupSky() {
+    const sky = new THREE.Mesh(new THREE.SphereGeometry(490,32,16), new THREE.ShaderMaterial({
+      side:THREE.BackSide, depthWrite:false,
+      uniforms:{zenith:{value:this.scene.background}, horizon:{value:this.scene.fog.color}},
+      vertexShader:`varying float altitude;
+        void main(){ altitude=position.y/490.0; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+      fragmentShader:`uniform vec3 zenith; uniform vec3 horizon; varying float altitude;
+        void main(){
+          gl_FragColor=vec4(mix(horizon*1.12,zenith*.82,smoothstep(-.1,.75,altitude)),1.);
+          #include <colorspace_fragment>
+        }`
+    }));
+    sky.renderOrder=-10;
+    this.scene.add(sky);
   }
 
   setupLighting() {

@@ -1,3 +1,4 @@
+import {boardClearance} from './board-clearance.mjs';
 import assert from 'node:assert/strict';
 import puppeteer from 'puppeteer-core';
 import {createServer} from 'vite';
@@ -5,7 +6,7 @@ import {GameState} from '../../src/game/GameState.js';
 import {mkdir,writeFile} from 'node:fs/promises';
 
 const label = process.argv[2] || 'after';
-const server = await createServer({plugins:[{name:'capture-controller',transform(code,id){
+const server = await createServer({cacheDir:'node_modules/.vite-board-view',plugins:[{name:'capture-controller',transform(code,id){
   if(id.endsWith('/src/main.js'))return code.replace('new GameController();','window.boardQA = new GameController();');
 }}],server:{host:'127.0.0.1',port:5192,strictPort:true}});
 await server.listen();
@@ -50,8 +51,29 @@ try {
         }
         return sum/(innerWidth*innerHeight);
       });
-      results[size]={hudFraction:area};
-      if(size==='desktop') assert.ok(area<=.22,`HUD area ${area}`);
+      const centralClearFraction = await page.evaluate(boardClearance);
+      results[size]={hudFraction:area,centralClearFraction};
+      if(size==='mobile'){
+        await press('#btn-mobile-tools');
+        await press('#btn-map-overview');
+        await press('#btn-mobile-tools');
+        await press('#btn-follow-view');
+      }
+      // Return to the same street framing before checking near-field map interaction.
+      await page.evaluate(()=>boardQA.scene3D.showStreetView(boardQA.boardBuilder.tilePositions[0]));
+      const tile = await page.evaluate(()=>{
+        boardQA.scene3D.camera.updateMatrixWorld();
+        const p=boardQA.boardBuilder.tilePositions[1].clone().project(boardQA.scene3D.camera);
+        return {x:(1+p.x)*innerWidth/2,y:(1-p.y)*innerHeight/2};
+      });
+      if(size==='mobile') await page.touchscreen.tap(tile.x,tile.y);
+      else await page.mouse.move(tile.x,tile.y);
+      await page.waitForSelector('.board-tip:not([hidden])',{visible:true});
+      results[size].inspected=await page.$eval('.board-tip',el=>el.textContent);
+      if(size==='desktop'){
+        assert.ok(area<=.22,`HUD area ${area}`);
+        assert.ok(centralClearFraction>=.65,`Center clearance ${centralClearFraction}`);
+      }
       await press('#btn-use-card');
       await press('[data-entry-key="ITEM:BARRIER"] .strategy-primary');
       await page.waitForSelector('.board-target-bar');

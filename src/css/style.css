@@ -4108,3 +4108,16 @@ body:has(.board-target-bar) .control-panel {visibility:hidden;}
 .character-reaction-meta {display:none;}
 .presentation-layer:has(.presentation-toast.is-visible) .character-reaction {visibility:hidden;}
 .presentation-toast-stack {width:min(250px,70vw);}
+/* A foreground shop or quote sheet owns the screen until it closes. */
+body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-explosion-flash,.board-tip) {visibility:hidden;}
+@media(min-width:1100px) {
+  .hud-layer .left-panel,.hud-layer .log-panel {width:133px;}
+  .hud-layer .minimap-panel,.hud-layer .quest-panel {width:132px;}
+  .hud-layer .quest-panel {top:214px;}
+  .hud-layer .control-panel {bottom:9px;display:flex;flex-direction:row;align-items:center;width:auto;gap:5px;}
+  .hud-layer .current-turn-banner {display:block;max-width:146px;max-height:44px;margin:0;font-size:11px;line-height:15px;overflow:auto;}
+  .hud-layer .player-card .player-tag {display:none;}
+  .hud-layer .player-name {white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px;}
+  .hud-layer .action-buttons {width:365px;}
+  .hud-layer .action-buttons .btn-action {padding:3px;line-height:1.1;}
+}
