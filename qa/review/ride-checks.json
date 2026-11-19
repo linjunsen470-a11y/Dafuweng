@@ -1,0 +1,32 @@
+{
+  "mobile": {
+    "clear": 0.7582938388625592,
+    "vehicle": "MOTOR",
+    "target": {
+      "x": 319.88608073609504,
+      "y": 387.67322622970636,
+      "element": "CANVAS"
+    },
+    "hover": "3 · 蓝湾码头 2号 · 无主地产 · 当前默认购价 $1,160",
+    "clip": "Ride",
+    "wheels": 2,
+    "count": 2,
+    "rolled": true,
+    "errors": []
+  },
+  "desktop": {
+    "clear": 0.6696503062307099,
+    "vehicle": "CAR",
+    "target": {
+      "x": 898.2126903946838,
+      "y": 440.4793013417482,
+      "element": "CANVAS"
+    },
+    "hover": "3 · 蓝湾码头 2号 · 无主地产 · 当前默认购价 $1,160",
+    "clip": "Ride",
+    "wheels": 4,
+    "count": 3,
+    "rolled": true,
+    "errors": []
+  }
+}

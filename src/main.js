@@ -172,6 +172,7 @@ class GameController {
   }
 
   applyDomainEvent(event) {
+    this.pawnManager.reactToEvent(event);
     if (event.type === 'POSITIONS_SWAPPED') {
       this.pawnManager.syncFromGameState(this.gameState);
     } else if (event.type === 'OBSTACLE_CHANGED') {
@@ -229,6 +230,7 @@ class GameController {
   }
 
   syncBoardAssets(force = false) {
+    this.pawnManager.syncVehicles(this.gameState.players);
     const activeRoadTiles = new Set(this.gameState.roadEntities.filter(entity => !entity.data?.attachedPlayerId).map(entity => entity.tileId));
     const renderedRoadTiles = new Set([
       ...this.boardBuilder.roadEntityMeshes.keys(),

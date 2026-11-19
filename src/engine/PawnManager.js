@@ -1,3 +1,5 @@
+import {attachBaseballPawn,animateSkin,detachSkin,reactSkin} from './SkinnedPawn.js';
+import {syncBoardRide,poseBoardRide} from './BoardRides.js';
 import { createCityCharacter, poseCityCharacter, disposeCityCharacter } from './CityCharacters.js';
 import { harborPawnSlot } from './HarborPawnLayout.js';
 import * as THREE from 'three';
@@ -21,13 +23,13 @@ export class PawnManager {
 
       // 创建精致 Q 版 3D 角色模型
       const harbor = this.boardBuilder.activeMapDefinition?.id === 'grand-bay';
-      const characterMesh = (harbor ? createCityCharacter(profile) : null) || this.createDetailedCharacter(profile.id, profile);
+      const characterMesh = createCityCharacter(profile) || this.createDetailedCharacter(profile.id, profile);
       if (harbor) characterMesh.scale.setScalar(1.15);
       group.userData.originalHarborPawn = harbor;
       group.add(characterMesh);
 
       let standee = null;
-      if (!harbor && (profile.avatarAtlas || profile.avatarImg)) {
+      if (!characterMesh.cityRig && !harbor && (profile.avatarAtlas || profile.avatarImg)) {
         standee = this.createCharacterStandee(profile, () => {
           characterMesh.visible = false;
         });
@@ -59,7 +61,7 @@ export class PawnManager {
 
       this.scene3D.scene.add(group);
 
-      this.pawns.push({
+      const pawn = {
         id: index,
         mesh: group,
         characterMesh: characterMesh,
@@ -69,7 +71,9 @@ export class PawnManager {
         ring,
         currentTile: 0,
         targetPos: group.position.clone()
-      });
+      };
+      this.pawns.push(pawn);
+      if (profile.id === 7) void attachBaseballPawn(pawn);
     });
 
     // Register once: restores replace pawns, not the animation callback.
@@ -82,6 +86,15 @@ export class PawnManager {
         const time = performance.now() * 0.003;
         const reduced = document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         this.pawns.forEach((pawn, idx) => {
+          animateSkin(pawn,reduced);
+          if (pawn.ride) {
+            const facing = pawn.mesh.userData.isMoving ? pawn.characterMesh.rotation.y : this.harborFacing || 0;
+            poseBoardRide(pawn,facing,pawn.characterMesh.scale.x);
+            const distance = pawn.lastRidePosition?.distanceTo(pawn.mesh.position) || 0;
+            for(const wheel of pawn.wheels) wheel.rotation.x += distance / .32;
+            (pawn.lastRidePosition ??= pawn.mesh.position.clone()).copy(pawn.mesh.position);
+            return;
+          }
           if (pawn.characterMesh?.cityRig) {
             if (!pawn.mesh.userData.isMoving) {
               poseCityCharacter(pawn.characterMesh,0,true);
@@ -108,8 +121,20 @@ export class PawnManager {
     });
   }
 
+  reactToEvent(event) {
+    const clip = {PROPERTY_PURCHASED:'Cheer',PROPERTY_UPGRADED:'Cheer',RENT_PAID:'Sad',CARD_USED:'Cast',
+      MINE_EXPLODED:'Shock_Hit',HOSPITALIZED:'Shock_Hit',PLAYER_BANKRUPT:'Sad'}[event.type];
+    if (clip) reactSkin(this.pawns[event.playerId],clip);
+    if (event.type==='RENT_PAID') reactSkin(this.pawns[event.ownerId],'Cheer');
+  }
+
+  syncVehicles(players) {
+    for (const pawn of this.pawns) syncBoardRide(pawn,players[pawn.id]?.vehicle);
+  }
+
   clearPawns() {
     this.pawns.forEach(pawn => {
+      detachSkin(pawn);
       if (pawn.characterMesh?.cityRig) disposeCityCharacter(pawn.characterMesh);
       this.scene3D.scene.remove(pawn.mesh);
     });
