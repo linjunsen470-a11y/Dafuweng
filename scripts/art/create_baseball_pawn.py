@@ -13,6 +13,14 @@ catalog = {
     'lan': ('courier','coral',(.035,.16,.43)),
     'miya': ('botanist','teal',(.03,.47,.31)),
     'hawk': ('builder','workBlue',(.52,.065,.035)),
+    'audela': ('botanist','teal',(.43,.07,.55)),
+    'tangguo': ('courier','coral',(.95,.22,.27)),
+    'kurosawa': ('builder','workBlue',(.10,.15,.21)),
+    'milo': ('courier','coral',(.42,.66,.07)),
+    'danny': ('builder','workBlue',(.02,.48,.48)),
+    'sarah': ('cartographer','violet',(.08,.36,.68)),
+    'miyamoto': ('botanist','teal',(.78,.12,.24)),
+    'babyjin': ('courier','coral',(.92,.49,.045)),
     'afei': ('courier','coral',None),
 }
 hero=sys.argv[sys.argv.index('--')+1] if '--' in sys.argv else 'afei'
@@ -112,6 +120,67 @@ else:
         oval('Face wrap',(0,-.202,1.205),(.285,.108,.099),cloth)
         oval('Headband',(0,-.04,1.45),(.33,.245,.055),cloth)
         for i in range(2):oval('Trailing scarf',(.19+i*.07,.19,1.30-i*.10),(.058,.07,.21),cloth,tilt=-.40)
+    elif hero=='audela':
+        cut('Diadem band',(0,0,1.53),.30,.31,.08,silk)
+        for i in range(7):
+            t=2*pi*i/7
+            cut('Diadem point',(.26*cos(t),.22*sin(t),1.62),.075,.008,.21,silk,vertices=4)
+        cut('Mantle',(0,.06,.82),.34,.22,.40,cloth,'body')
+        oval('Ruby clasp',(0,-.20,.97),(.06,.035,.07),thread,'body')
+    elif hero=='tangguo':
+        for side in [-1,1]:
+            for i in range(3):
+                oval('Candy braid',(side*(.27+i*.045),.04,1.43-i*.089),(.11-i*.015,.09,.094),hair)
+            oval('Bonbon ribbon',(side*.27,-.07,1.47),(.085,.045,.055),cloth)
+        cut('Lollipop stick',(.35,-.13,.73),.016,.016,.35,leather,'arm_R')
+        for i in range(6):
+            t=i*pi/3
+            oval('Candy swirl',(.35+.055*cos(t),-.13,.93+.055*sin(t)),(.073,.04,.055),cloth if i%2 else leather,'arm_R',t)
+    elif hero=='kurosawa':
+        oval('Topknot',(0,.13,1.65),(.13,.14,.15),hair)
+        oval('Knot cord',(0,.12,1.56),(.10,.10,.04),thread)
+        for side in [-1,1]:
+            for i in range(3):
+                oval('Lacquer shoulder scales',(side*(.25+.018*i),0,.97-.055*i),(.13,.15,.05),navy if i%2==0 else cloth,'body')
+        oval('Cross collar',(.035,-.17,.88),(.043,.025,.19),leather,'body',-.49)
+    elif hero=='milo':
+        oval('Newsboy crown',(0,.02,1.53),(.37,.27,.16),cloth,tilt=-.16)
+        oval('Flat visor',(-.07,-.18,1.47),(.30,.20,.042),navy,tilt=-.13)
+        for side in [-1,1]:oval('Bow tie',(side*.063,-.20,.98),(.083,.035,.056),thread,'body',side*.27)
+        cut('Ledger',(.34,-.11,.60),.145,.145,.10,ash,'arm_R',4).rotation_euler.x=1.4
+    elif hero=='danny':
+        for i in range(11):
+            t=i*pi/10
+            oval('Padded headband',(.32*cos(t),.02,1.36+.29*sin(t)),(.065,.071,.066),navy)
+        for side in [-1,1]:
+            oval('Monitor cup',(side*.315,0,1.34),(.085,.135,.15),cloth)
+            oval('Brass driver',(side*.375,0,1.34),(.03,.081,.092),silk)
+        oval('Microphone',(.34,-.14,.74),(.07,.065,.09),navy,'arm_R')
+        cut('Mic grip',(.34,-.14,.62),.027,.037,.18,silk,'arm_R')
+    elif hero=='sarah':
+        oval('High ponytail',(.13,.19,1.47),(.13,.15,.29),hair,tilt=-.5)
+        for side in [-1,1]:
+            oval('Lab visor',(side*.125,-.249,1.34),(.14,.035,.085),navy)
+            oval('Reflective lens',(side*.125,-.277,1.35),(.113,.018,.060),cloth)
+            oval('Lab lapel',(side*.11,-.16,.87),(.065,.025,.19),leather,'body',side*.28)
+        oval('Visor bridge',(0,-.26,1.34),(.045,.032,.022),silk)
+    elif hero=='miyamoto':
+        oval('Long hair fall',(0,.18,1.23),(.24,.12,.33),hair)
+        for i in range(5):
+            t=i*2*pi/5
+            oval('Plum blossom',(-.26+.061*cos(t),-.12,1.46+.061*sin(t)),(.058,.03,.044),cloth,tilt=t)
+        for i in range(3):
+            oval('Wind sash tail',(.16+i*.06,.14,.72-i*.048),(.065,.045,.19),cloth,'body',-.66)
+        oval('Obi',(0,0,.73),(.24,.18,.071),navy,'body')
+    elif hero=='babyjin':
+        oval('Tiger bonnet',(0,.04,1.49),(.34,.26,.184),cloth)
+        for side in [-1,1]:
+            oval('Tiger ear',(side*.245,.01,1.63),(.096,.08,.115),cloth,tilt=side*.3)
+            oval('Ear lining',(side*.246,-.05,1.64),(.051,.03,.068),leather)
+            oval('Tiger stripe',(side*.095,-.20,1.55),(.026,.022,.070),navy,tilt=side*.38)
+        medal=cut('Coin medallion',(0,-.20,.88),.095,.095,.035,silk,'body',16)
+        medal.rotation_euler.x=pi/2
+        oval('Square coin stamp',(0,-.22,.88),(.028,.012,.028),ash,'body')
     elif hero=='miya':
         flower=material('Hibiscus',(.91,.14,.21))
         for i in range(5):

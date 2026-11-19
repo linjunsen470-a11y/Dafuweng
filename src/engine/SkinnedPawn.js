@@ -2,7 +2,8 @@ import {AnimationMixer, LoopOnce} from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
 
-const models=['xiaoman','tianye','jingjing','baroque','lan','miya','hawk','afei'];
+const models=['xiaoman','tianye','jingjing','baroque','lan','miya','hawk','afei',
+  'audela','tangguo','kurosawa','milo','danny','sarah','miyamoto','babyjin'];
 const packs=new Map();
 export async function attachSkinnedPawn(pawn,profileId) {
   const model=models[profileId];
