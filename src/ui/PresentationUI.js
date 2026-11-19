@@ -229,7 +229,7 @@ export function describeImpactEvent(event, state) {
   const impacts = {
     PROPERTY_PURCHASED: { tone: 'success', eyebrow: 'CITY EXPANSION', icon: '🏙️', title: '版图扩张', detail: tile?.name || '新地产入手' },
     PROPERTY_UPGRADED: { tone: 'gold', eyebrow: 'PROPERTY LEVEL UP', icon: '🏗️', title: `建筑升至 LV ${event.level}`, detail: tile?.name || '地产完成升级' },
-    RENT_PAID: { tone: 'danger', eyebrow: 'TOLL SETTLEMENT', icon: '💸', title: '租金交锋', detail: `${current?.name || '玩家'} 支付 ${money(event.amount)}` },
+    RENT_PAID: { tone: 'danger', eyebrow: 'TOLL SETTLEMENT', icon: '💸', title: event.chainSize>1 ? `连片收租 ×${event.chainSize}` : '租金交锋', detail: `${current?.name || '玩家'} 支付 ${money(event.amount)}` },
     CARD_USED: {
       tone: 'accent', eyebrow: `STRATEGY CARD · ${cardView?.rarity.label || '战术'}`,
       icon: cardView?.icon || '🃏', title: cardView?.name || '策略发动',

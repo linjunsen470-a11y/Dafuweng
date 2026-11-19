@@ -18,7 +18,8 @@ export function createLandDecisionModel({ tileData, currentLevel = 0, player, st
   const ownedBefore = districtTiles.filter(tile => state?.propertyManager?.getProperty(tile.id)?.owner === player?.id).length;
   const alreadyOwned = property?.owner === player?.id;
   const projectedOwned = Math.min(districtTiles.length, ownedBefore + (action === 'BUY' && !alreadyOwned ? 1 : 0));
-  const monopolyMultiplier = tileData.group && projectedOwned === districtTiles.length ? 2 : 1;
+  const monopolyMultiplier = Math.max(tileData.group && projectedOwned === districtTiles.length ? 2 : 1,
+    state?.propertyManager?.streetChain(tileData.id,player?.id).size || 1);
   const chainCount = resolvedBuildingType === 'CHAIN_STORE'
     ? [...(state?.propertyManager?.properties?.values?.() || [])].filter(item => item.owner === player?.id && item.buildingType === 'CHAIN_STORE').length + (action === 'BUY' ? 1 : 0)
     : 0;

@@ -36,7 +36,7 @@ describe('land investment decision model', () => {
       quote: engine.getPropertyActionCost(player, tile.id, 'BUY')
     });
     expect(model).toMatchObject({ districtOwned: district.length, districtTotal: district.length, completesDistrict: true });
-    expect(model.currentToll).toBe((tile.tolls[0] || 0) * 2);
+    expect(model.currentToll).toBe((tile.tolls[0] || 0) * Math.max(2,district.length));
   });
 
   it('marks unaffordable investments without producing negative remaining cash', () => {

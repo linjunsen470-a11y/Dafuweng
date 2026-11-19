@@ -4123,3 +4123,13 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
 }
 
 .land-modal-box .land-building-art.land-tower-preview { background-image: url('/assets/residence-level-five.webp'); background-size: contain; background-position: center !important; }
+
+.presentation-dice-result, .presentation-dice-result.is-visible {
+  top: auto; bottom: 86px; left: 12px; min-width: 0; padding: 5px 10px;
+  display: flex; align-items: center; gap: 8px; transform: none;
+  border-radius: 12px; background: #fff0cf; color: #573b24; box-shadow: 0 2px 7px #51412740;
+}
+.presentation-dice-result .presentation-dice-row { margin: 0; gap: 3px; }
+.presentation-dice-result .presentation-die { width: 26px; height: 26px; font-size: 21px; }
+.presentation-dice-result .presentation-dice-total { margin: 0; color: #61462d; }
+.presentation-dice-result .presentation-dice-total strong { color: #8e461a; font-size: 19px; }

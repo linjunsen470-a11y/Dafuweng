@@ -594,6 +594,7 @@ export class PawnManager {
     if (!pawn || !tilePosition) return;
     pawn.currentTile = tileId;
     const target = tilePosition.clone().add(this.getPawnOffset(playerIndex));
+    if (duration === 0) { pawn.mesh.position.copy(target); return; }
     const reducedMotion = document.documentElement.classList.contains('reduce-motion')
       || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const color = pawn.ring?.material?.color?.getHex?.() ?? 0xffd166;

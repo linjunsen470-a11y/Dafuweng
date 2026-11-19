@@ -404,6 +404,27 @@ export class Scene3D {
     this.cameraShake = { intensity: Math.max(0, intensity), duration: Math.max(1, duration), startedAt: performance.now() };
   }
 
+  showRentCoins(position, chainSize) {
+    const count=Math.min(24,chainSize*5);
+    const coins=new THREE.InstancedMesh(new THREE.CylinderGeometry(.16,.16,.05,12),
+      new THREE.MeshStandardMaterial({color:'#ffcf45',emissive:'#bb7617',emissiveIntensity:.35,metalness:.35}),count);
+    coins.position.copy(position);
+    this.scene.add(coins);
+    const stamp=new THREE.Object3D(), start=performance.now();
+    const frame=now=>{
+      const t=Math.min(1,(now-start)/850);
+      for(let i=0;i<count;i++){
+        const a=i*2.4, fall=Math.max(0,(t-i/count*.22)/.78);
+        stamp.position.set(Math.cos(a)*(.3+fall),Math.max(.18,3.6+Math.sin(a)*.45-3.8*fall*fall),Math.sin(a)*(.3+fall));
+        stamp.rotation.set(fall*5+a,0,.8);stamp.updateMatrix();coins.setMatrixAt(i,stamp.matrix);
+      }
+      coins.instanceMatrix.needsUpdate=true;
+      if(t<1)requestAnimationFrame(frame);
+      else { coins.removeFromParent();coins.geometry.dispose();coins.material.dispose(); }
+    };
+    frame(start);
+  }
+
   createMovementTrail(from, to, color = 0xffd166) {
     const direction = to.clone().sub(from);
     const length = direction.length();

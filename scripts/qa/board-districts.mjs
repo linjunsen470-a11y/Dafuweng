@@ -30,6 +30,14 @@ try {
     await press('#btn-weather');
     if(size==='desktop') { await press('#btn-time-of-day');await press('#btn-time-of-day'); }
     else { await press('#btn-mobile-tools');await press('#btn-weather'); }
+    if(size==='desktop' && process.argv.includes('--plaza')) {
+      const next=state.createSnapshot();next.players[0].currentTile=59;
+      await page.evaluate(snapshot=>boardQA.restoreGame(snapshot),next);
+      await page.waitForFunction(()=>boardQA.scene3D.scene.getObjectByName('district-frontages'));
+      await page.screenshot({path:'qa/review/m4-business-square.png'});
+      await page.close();
+      break;
+    }
     const point=await page.evaluate(id=>{
       const p=boardQA.boardBuilder.tilePositions[id].clone().project(boardQA.scene3D.camera);
       return {x:(1+p.x)*innerWidth/2,y:(1-p.y)*innerHeight/2};
@@ -49,5 +57,5 @@ try {
     results[size]={...info,errors};
     await page.close();
   }
-  await writeFile('qa/review/m4-district-checks.json',JSON.stringify(results,null,2)+'\n');
+  if(!process.argv.includes('--plaza')) await writeFile('qa/review/m4-district-checks.json',JSON.stringify(results,null,2)+'\n');
 } finally {await browser?.close();await server.close();}

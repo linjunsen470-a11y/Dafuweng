@@ -26,6 +26,41 @@ export class PropertyManager {
         buildingType: tile.type === TileType.BIG_PROPERTY ? null : 'RESIDENTIAL'
       });
     });
+    this.streetLinks = this.buildStreetLinks();
+  }
+
+  buildStreetLinks() {
+    const links = new Map();
+    const tiles = [...this.tiles.values()];
+    const next = tile => tile.next || [tiles[(tiles.indexOf(tile)+1)%tiles.length]?.id];
+    for (const tile of tiles) {
+      if (tile.type !== TileType.PROPERTY || !tile.group) continue;
+      const seen = new Set([tile.id]), queue = [...next(tile)];
+      while (queue.length) {
+        const id = queue.pop(), other = this.tiles.get(id);
+        if (!other || seen.has(id)) continue;
+        seen.add(id);
+        if (isPropertyTile(other)) {
+          if (other.group === tile.group && other.type === TileType.PROPERTY) {
+            for (const [a,b] of [[tile.id,id],[id,tile.id]]) {
+              if (!links.has(a)) links.set(a,new Set());
+              links.get(a).add(b);
+            }
+          }
+        } else if (next(other).length===1) queue.push(...next(other));
+      }
+    }
+    return links;
+  }
+
+  streetChain(tileId, owner = this.getProperty(tileId)?.owner) {
+    const found = new Set([tileId]), pending = [tileId];
+    if (owner == null || !this.mapId || this.mapId.startsWith('shanhai-') || this.getProperty(tileId)?.isMortgaged) return found;
+    while (pending.length) for (const id of this.streetLinks.get(pending.pop()) || []) {
+      const lot = this.getProperty(id);
+      if (!found.has(id) && lot?.owner === owner && !lot.isMortgaged) { found.add(id);pending.push(id); }
+    }
+    return found;
   }
 
   getProperty(tileIndex) {
@@ -104,9 +139,7 @@ export class PropertyManager {
     }
 
     // 同色系垄断翻倍加成
-    if (this.checkGroupMonopoly(prop.owner, tileData.group)) {
-      baseToll *= 2;
-    }
+    baseToll *= Math.max(this.streetChain(tileIndex).size, this.checkGroupMonopoly(prop.owner, tileData.group) ? 2 : 1);
     if (prop.buildingType === 'CHAIN_STORE') {
       const chainCount = [...this.properties.values()].filter(property => property.buildingType === 'CHAIN_STORE'
         && property.owner === prop.owner).length;

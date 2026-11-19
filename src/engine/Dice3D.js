@@ -4,47 +4,6 @@ export class Dice3D {
   constructor(scene3D) {
     this.scene3D = scene3D;
     this.createDiceMesh();
-    this.createDiceOverlay();
-  }
-
-  createDiceOverlay() {
-    // 页面中心大屏 3D 掷骰子点数弹窗特效
-    const overlay = document.createElement('div');
-    overlay.id = 'dice-overlay';
-    overlay.style.cssText = `
-      position: absolute;
-      top: 35%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.5);
-      z-index: 99999;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    `;
-    overlay.innerHTML = `
-      <div id="dice-overlay-box" style="
-        background: rgba(22, 26, 48, 0.9);
-        border: 2px solid #ffaa00;
-        box-shadow: 0 0 30px rgba(255, 170, 0, 0.6);
-        border-radius: 24px;
-        padding: 20px 40px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        backdrop-filter: blur(12px);
-      ">
-        <span id="dice-overlay-icon" style="font-size: 3.5rem;">🎲</span>
-        <span id="dice-overlay-val" style="font-size: 3.2rem; font-weight: 900; color: #ffaa00;">6</span>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    this.overlayEl = overlay;
-    this.overlayValEl = document.getElementById('dice-overlay-val');
   }
 
   createDiceMesh() {
@@ -80,13 +39,15 @@ export class Dice3D {
     this.mesh.visible = false;
     this.scene3D.scene.add(this.mesh);
 
+    this.dice = [this.mesh,this.mesh.clone(),this.mesh.clone()];
+    this.scene3D.scene.add(...this.dice.slice(1));
     this.targetRotations = {
-      1: new THREE.Euler(0, 0, -Math.PI / 2),
-      6: new THREE.Euler(0, 0, Math.PI / 2),
-      2: new THREE.Euler(0, 0, 0),
-      5: new THREE.Euler(Math.PI, 0, 0),
-      3: new THREE.Euler(-Math.PI / 2, 0, 0),
-      4: new THREE.Euler(Math.PI / 2, 0, 0)
+      1: new THREE.Euler(0,0,Math.PI/2),
+      2: new THREE.Euler(0,0,-Math.PI/2),
+      3: new THREE.Euler(0,0,0),
+      4: new THREE.Euler(Math.PI,0,0),
+      5: new THREE.Euler(-Math.PI/2,0,0),
+      6: new THREE.Euler(Math.PI/2,0,0)
     };
   }
 
@@ -110,51 +71,27 @@ export class Dice3D {
 
   roll(targetValue, startPos = new THREE.Vector3(0, 8, 0), diceValues = null) {
     return new Promise((resolve) => {
-      this.mesh.position.copy(startPos);
-      this.mesh.visible = true;
-      this.mesh.scale.set(0.1, 0.1, 0.1);
-
+      const values = diceValues?.length ? diceValues : [targetValue];
       const startTime = performance.now();
       const speed = this.speed || 1;
-      const duration = 1000 / speed;
-
-      const targetEuler = this.targetRotations[targetValue] || this.targetRotations[1];
-      const extraSpinX = (Math.floor(Math.random() * 3) + 3) * Math.PI * 2;
-      const extraSpinY = (Math.floor(Math.random() * 3) + 3) * Math.PI * 2;
-      const extraSpinZ = (Math.floor(Math.random() * 3) + 3) * Math.PI * 2;
-
+      const duration = 880 / speed;
+      const right = new THREE.Vector3(1,0,0).applyQuaternion(this.scene3D.camera.quaternion).setY(0).normalize();
       const animateRoll = () => {
-        const elapsed = performance.now() - startTime;
-        const p = Math.min(elapsed / duration, 1.0);
-
-        const easeP = 1 - Math.pow(1 - p, 3);
-
-        this.mesh.rotation.x = targetEuler.x + (1 - easeP) * extraSpinX;
-        this.mesh.rotation.y = targetEuler.y + (1 - easeP) * extraSpinY;
-        this.mesh.rotation.z = targetEuler.z + (1 - easeP) * extraSpinZ;
-
-        const scale = Math.min(p * 2.2, 1.2);
-        this.mesh.scale.set(scale, scale, scale);
-
-        const bounceHeight = Math.abs(Math.sin(p * Math.PI * 3)) * (1 - p) * 5;
-        this.mesh.position.y = startPos.y - 3 + bounceHeight;
-
+        const p = Math.min((performance.now()-startTime)/duration,1);
+        values.forEach((value,i)=>{
+          const die=this.dice[i], target=this.targetRotations[value];
+          const spin=(1-p)**2*Math.PI*2;
+          die.visible=true;
+          die.rotation.set(target.x+spin*(2+i),target.y+spin*2,target.z+spin);
+          die.scale.setScalar(.92);
+          die.position.copy(startPos).addScaledVector(right,(i-(values.length-1)/2)*2.4-(1-p)*1.7);
+          die.position.y += -2.7 + (1-p)*1.4 + Math.abs(Math.sin(p*Math.PI*3))*(1-p)*2.5;
+        });
         if (p < 1.0) {
           requestAnimationFrame(animateRoll);
         } else {
-          // 显示大屏点数 Overlay
-          const values = diceValues?.length ? diceValues : [targetValue];
-          const total = values.reduce((sum, value) => sum + value, 0);
-          this.overlayValEl.textContent = values.length > 1
-            ? `${values.join(' + ')} = ${total} 点`
-            : `${total} 点`;
-          this.overlayEl.style.opacity = '1';
-          this.overlayEl.style.transform = 'translate(-50%, -50%) scale(1.1)';
-
           setTimeout(() => {
-            this.mesh.visible = false;
-            this.overlayEl.style.opacity = '0';
-            this.overlayEl.style.transform = 'translate(-50%, -50%) scale(0.5)';
+            this.dice.forEach(die=>die.visible=false);
             resolve(targetValue);
           }, 600 / speed);
         }

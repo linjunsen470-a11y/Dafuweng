@@ -700,7 +700,7 @@ export class GameEngine {
     player.cash -= amount;
     owner.cash += amount;
     this.state.addLog(`💸 ${player.name} 向 ${owner.name} 支付【${tile.name}】过路费 $${amount.toLocaleString()}！`, 'danger');
-    return withFacility({ success: true, type: 'RENT_PAID', amount, amountDue: amount, ownerId: owner.id }, amount);
+    return withFacility({ success: true, type: 'RENT_PAID', tileId, chainSize:this.state.propertyManager.streetChain(tileId).size, amount, amountDue: amount, ownerId: owner.id }, amount);
   }
 
   sellBuilding(player, tileId) {

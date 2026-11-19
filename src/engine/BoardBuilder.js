@@ -1616,6 +1616,32 @@ export class BoardBuilder {
     }
   }
 
+  syncStreetLinks(state) {
+    if (this.streetBands) {
+      this.streetBands.removeFromParent();
+      this.disposeObject(this.streetBands);
+    }
+    const group = new THREE.Group();
+    const manager=state.propertyManager;
+    for(const [id, others] of manager.streetLinks) {
+      const lot=manager.getProperty(id);
+      if(lot?.owner==null || lot.isMortgaged) continue;
+      for(const other of others) {
+        const neighbor=manager.getProperty(other);
+        if(other<=id || neighbor?.owner!==lot.owner || neighbor.isMortgaged) continue;
+        const a=this.buildingMeshes.get(id)?.position,b=this.buildingMeshes.get(other)?.position;
+        if(!a || !b) continue;
+        const color=state.players[lot.owner].colorHex;
+        const band=new THREE.Mesh(new THREE.BoxGeometry(.22,.06,a.distanceTo(b)),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.8}));
+        band.position.copy(a).lerp(b,.5);band.position.y+=.12;
+        band.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);
+        group.add(band);
+      }
+    }
+    this.streetBands=group;
+    this.scene3D.scene.add(group);
+  }
+
   createRoadToken(kind, position) {
     const model = this.harborArt?.clone('token_'+kind);
     if (!model || !position) return null;

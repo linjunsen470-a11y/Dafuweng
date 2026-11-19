@@ -18,7 +18,9 @@ export function describeMapTile(state, engine, id) {
       lines.push(`当前租金牌价 ${money(rent)}（非最终实收）`);
       if(owner.id!==player.id&&(player.godType==='GREAT_FORTUNE'||player.rentShieldActiveThisTurn))lines.push('当前有免租效果；落地时仍有效则免租。');
       else if(owner.id!==player.id&&player.godType)lines.push('当前附身状态可能改变费用；途中状态也可能变化。');
-      if (state.propertyManager.checkGroupMonopoly(owner.id,tile.group)) lines.push('同色组垄断 · 租金 ×2');
+      const chain = state.propertyManager.streetChain(id).size;
+      if (chain>1) lines.push(`同街连片 ${chain} 块 · 租金 ×${chain}`);
+      else if (state.propertyManager.checkGroupMonopoly(owner.id,tile.group)) lines.push('同色组垄断 · 租金 ×2');
       if (property.buildingType==='CHAIN_STORE') {
         const count=[...state.propertyManager.properties.values()].filter(p=>p.owner===owner.id && p.buildingType==='CHAIN_STORE').length;
         lines.push(`连锁店 ${count} 家 · 加成 ${25*Math.max(0,count-1)}%`);

@@ -103,7 +103,8 @@ class GameController {
     this.selectedInitialCash = 20000;
     this.isProcessingAction = false;
     this.syncedAssetRevision = -1;
-    this.actionSpeed = 1;
+    this.humanSpeed = 1;
+    this.aiPace = '1';
     this.gameEngine.subscribe(event => this.applyDomainEvent(event));
 
     this.renderSetupScreen();
@@ -254,6 +255,7 @@ class GameController {
       this.boardBuilder.updateBuildingMesh(tileId, property.level, owner?.colorHex, property.buildingType);
       this.boardBuilder.setObstacleMesh(tileId, Boolean(property.hasObstacle || this.gameState.roadEntities.some(entity => entity.tileId === tileId && entity.type === 'BARRIER')));
     });
+    this.boardBuilder.syncStreetLinks(this.gameState);
     this.syncedAssetRevision = this.gameState.assetRevision;
   }
 
@@ -576,11 +578,12 @@ class GameController {
     document.getElementById('btn-resume-game').onclick = () => this.hidePauseMenu();
     document.querySelectorAll('.speed-btn').forEach(button => {
       button.onclick = () => {
-        this.actionSpeed = Number(button.dataset.speed);
+        this.humanSpeed = Number(button.dataset.speed);
         this.dice3D.speed = this.actionSpeed;
         document.querySelectorAll('.speed-btn').forEach(item => item.classList.toggle('active', item === button));
       };
     });
+    document.querySelector('#ai-pace').onchange = e => { this.aiPace = e.target.value; };
     const musicVolume = document.getElementById('music-volume');
     const sfxVolume = document.getElementById('sfx-volume');
     try {
@@ -830,6 +833,12 @@ class GameController {
     }
   }
 
+  get skipAIAnimations() { return this.gameState.getCurrentPlayer()?.isAI && this.aiPace === 'skip'; }
+  get actionSpeed() {
+    if (!this.gameState.getCurrentPlayer()?.isAI) return this.humanSpeed;
+    return this.skipAIAnimations ? 32 : Number(this.aiPace);
+  }
+
   async runAITurn(aiPlayer) {
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
 
@@ -935,10 +944,11 @@ class GameController {
     this.audioManager.playDiceRoll();
 
     const pawnPos = this.boardBuilder.tilePositions[curPlayer.currentTile];
-    this.scene3D.focusOnPosition(pawnPos);
+    if (!this.skipAIAnimations) this.scene3D.focusOnPosition(pawnPos);
 
-    await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
-    await this.presentationUI.showDice({
+    this.dice3D.speed = this.actionSpeed;
+    if (!this.skipAIAnimations) await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
+    if (!this.skipAIAnimations) await this.presentationUI.showDice({
       player: curPlayer,
       dice,
       steps: diceVal,
@@ -961,7 +971,7 @@ class GameController {
     });
     if (!started.success) return;
 
-    const reducedMotion = document.documentElement.classList.contains('reduce-motion')
+    const reducedMotion = this.skipAIAnimations || document.documentElement.classList.contains('reduce-motion')
       || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const pawnMesh = this.pawnManager.getPawnMesh(curPlayer.id);
     if (pawnMesh && !reducedMotion) this.scene3D.followObject(pawnMesh);
@@ -991,9 +1001,9 @@ class GameController {
         this.minimapUI.setRouteChoices();
       }
       if (!result.success) break;
-      await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, Math.round(220 / (this.actionSpeed || 1)));
+      await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
       completedSteps++;
-      this.presentationUI.showMoveProgress({
+      if (!this.skipAIAnimations) this.presentationUI.showMoveProgress({
         player: curPlayer,
         current: completedSteps,
         total: steps,
@@ -1004,7 +1014,7 @@ class GameController {
 
     this.presentationUI.endMove();
     this.scene3D.stopFollowing();
-    this.pawnManager.celebrateLanding(curPlayer.id, completedSteps >= 8 ? 1.35 : 1);
+    if (!this.skipAIAnimations) this.pawnManager.celebrateLanding(curPlayer.id, completedSteps >= 8 ? 1.35 : 1);
     if (!reducedMotion) this.scene3D.shakeCamera(completedSteps >= 8 ? 0.42 : 0.24, 230);
 
     this.uiRenderer.renderHUD();
@@ -1016,8 +1026,8 @@ class GameController {
     const curPlayer = this.gameState.getCurrentPlayer();
     const landing = this.gameEngine.inspectLanding(curPlayer, tileIndex);
     const landingPosition = this.boardBuilder.tilePositions[tileIndex];
-    if (landingPosition) this.scene3D.focusOnPosition(landingPosition, new THREE.Vector3(0, 9, 11));
-    await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
+    if (landingPosition && !this.skipAIAnimations) this.scene3D.focusOnPosition(landingPosition, new THREE.Vector3(0, 9, 11));
+    if (!this.skipAIAnimations) await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
         const buildingType = landing.tile.type === TileType.BIG_PROPERTY ? AIPlayer.chooseCommercialBuilding(curPlayer, this.gameState) : null;
@@ -1080,7 +1090,12 @@ class GameController {
     }
     if (landing.kind === 'RENT') {
       const result = this.gameEngine.execute({ type: 'SETTLE_RENT', playerId: curPlayer.id, payload: { tileId: tileIndex } });
-      if (result.amount > 0) this.audioManager.playCoinSound();
+      if (result.amount > 0) {
+        this.audioManager.playCoinSound();
+        if (result.chainSize > 1 && !this.skipAIAnimations && !this.presentationUI.isReducedMotion()) {
+          this.scene3D.showRentCoins(this.boardBuilder.tilePositions[tileIndex], result.chainSize);
+        }
+      }
       if (result.type === 'DEBT_REQUIRED') await this.resolvePendingDebt(curPlayer);
       return this.finishTurn();
     }
@@ -1338,7 +1353,7 @@ class GameController {
     } else if (result.followUp?.mode === 'TELEPORT') {
       const moved = this.gameEngine.execute({ type: 'TELEPORT_PLAYER', playerId: player.id, payload: { tileId: result.followUp.tileId } });
       if (moved.success) {
-        await this.pawnManager.animatePlayerStep(player.id, moved.tileId, Math.round(220 / (this.actionSpeed || 1)));
+        await this.pawnManager.animatePlayerStep(player.id, moved.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
         await this.handleTileArrival(moved.tileId);
       }
     }
@@ -1390,7 +1405,7 @@ class GameController {
           payload: { tileId: result.followUp.tileId }
         });
         if (moved.success) {
-          await this.pawnManager.animatePlayerStep(curPlayer.id, moved.tileId, Math.round(220 / (this.actionSpeed || 1)));
+          await this.pawnManager.animatePlayerStep(curPlayer.id, moved.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
           await this.handleTileArrival(moved.tileId);
         }
       } else if (result.followUp?.type === 'AUCTION_REQUESTED') {
