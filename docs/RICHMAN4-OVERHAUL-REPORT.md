@@ -138,3 +138,9 @@ node scripts/qa/board-events.mjs
 **验收范围**　复现命令为 `node scripts/qa/board-clinic-and-coins.mjs`。本轮未逐人检查骑乘穿模，未体验多人同时住院，未人工试听配乐。远景中人物脸型和载具乘客的坐姿仍比近景难辨。其他小游戏进行中的界面继续保留各自的设计。
 
 **实际操作**　手机 390×844 从 108 号格进入挑战，触摸金币得 10 分，在奖励页领取 20 点券。桌面 1440×900 从起点掷骰到 1 号地触发住院，实际渲染依次出现驶入、上车、行驶和到院四个阶段；车辆停在 72 号医院路边。摄像机解除车辆跟随，角色回到棋盘可见位置，规则读数仍为 1 号格、住院 3 回合。证据为 `qa/review/coin-challenge-touch.png`、`qa/review/clinic-drive.png`、`qa/review/clinic-arrive.png` 与 `qa/review/clinic-and-coins.json`。首次复看发现软件渲染时镜头落在车后，已将接送镜头改用按经过时间计算的跟随。全量 verify 运行一次，包含类型检查、665 项测试与生产构建；最后的镜头修正用同一条接送路线复查。
+
+## 试玩交接 · 福星岔路岛
+
+从主游戏选择「福星岔路岛」，打开总览即可看到西侧果园和东侧池塘木桥。园内步道连起两处景点，棋盘路缘沿原有分岔铺设。丹尼骑机车的髋部向前下方移动，棠果驾驶敞篷车的髋部下移至座垫；近景还发现 1 号云杉空地的地牌横穿驾驶员，已把该地产落点移到路旁。两名角色在同一局面检查，实际操作丹尼从起点掷骰进入 1 号格。远景下果树细节仍小，乘员的手指与握把未逐帧检查。其余地图、角色和车辆组合本轮未验收。
+
+实机对照见 `qa/review/crossroads-garden-comparison.jpg`，读数见 `qa/review/crossroads-garden-checks.json`。运行 `node scripts/qa/board-crossroads-garden.mjs` 可复现。阶段内一次 `npm run verify` 通过类型检查、665 项测试和生产构建；末次路缘与地牌改动用同场景 WebGL 操作复验。

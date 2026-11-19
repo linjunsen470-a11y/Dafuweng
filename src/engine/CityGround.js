@@ -86,11 +86,10 @@ export function createCityGround(map) {
 }
 
 // Low citrus trees and fruit clusters sit inside the planted terraces.
-export function createTerraceOrchards() {
+export function createTerraceOrchards(trees = [[-22,-21],[-19,-21],[-16,-21],[-21,-18],[-18,-18],
+  [-45,-29],[-42,-29],[-39,-29],[-10,-26],[-7,-26],[-10,-29],[-7,-29]]) {
   const group = new THREE.Group();
   group.name = 'terrace-orchards';
-  const trees = [[-22,-21],[-19,-21],[-16,-21],[-21,-18],[-18,-18],
-    [-45,-29],[-42,-29],[-39,-29],[-10,-26],[-7,-26],[-10,-29],[-7,-29]];
   const crowns = [], trunks = [], fruit = [];
   for (const [index,[x,z]] of trees.entries()) {
     const h = .7 + (index % 3) * .1;

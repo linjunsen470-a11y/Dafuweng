@@ -143,7 +143,7 @@ const crossroadsNext = {
 
 const crossroadsOverrides = {
   0: { name: '风铃港起点', icon: '🚩' },
-  1: { name: '云杉空地', group: 'GREEN', price: 900, buildCost: 550, tolls: [120, 360, 820, 1800, 4000] },
+  1: { name: '云杉空地', lot: { position: { x: -6.6, z: 10.9 } }, group: 'GREEN', price: 900, buildCost: 550, tolls: [120, 360, 820, 1800, 4000] },
   2: { type: TileType.COMPANY, name: '极光百货', icon: '🏬', companyId: 'AURORA_RETAIL', desc: '消费会形成公司营收，最大股东担任董事长' },
   3: { type: TileType.CHANCE, name: '西岔路口', icon: '↗️', desc: '选择山谷或集市路线' },
   4: { type: TileType.PROPERTY, name: '苔石空地', group: 'GREEN', price: 1200, buildCost: 700, tolls: [160, 480, 1050, 2300, 5100] },

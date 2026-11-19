@@ -7,6 +7,7 @@ import { createCivicStation } from './CivicStation.js';
 import { createMagicFrontage } from './MagicFrontage.js';
 import { createIslandCoast, COAST_WATER_Y } from './IslandCoast.js';
 import { CITY_BLOCK_SITES, createCityBlock } from './CityBlocks.js';
+import { createCrossroadsGarden } from './CrossroadsGarden.js';
 import { createCityGround, createTerraceOrchards } from './CityGround.js';
 import { createHospitalClinic } from './HospitalStreet.js';
 import { isOldTownHome } from './OldTownStreet.js';
@@ -412,6 +413,7 @@ export class BoardBuilder {
     this.harborWaves = [];
     this.harborFerries = [];
     this.harborGulls = null;
+    if (mapDefinition.id === 'fortune-crossroads') group.add(createCrossroadsGarden(mapDefinition,this.halfBoard));
     if (mapDefinition.theme !== 'GRAND_BAY') {
       this.mapEnvironmentGroup = group;
       this.scene3D.scene.add(group);

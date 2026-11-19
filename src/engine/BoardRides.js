@@ -37,7 +37,7 @@ export function syncBoardRide(pawn, vehicle) {
     });
     pawn.ride = model;
     pawn.mesh.add(model);
-    pawn.characterMesh.userData.seatHeight = kind==='MOTOR' ? .50 : .23;
+    pawn.characterMesh.userData.seatHeight = kind==='MOTOR' ? .41 : .06;
   }).catch(()=>{ /* Walking model remains visible when the local asset is unavailable. */ });
 }
 
@@ -47,7 +47,7 @@ export function poseBoardRide(pawn, facing, scale) {
   pawn.ride.rotation.y = facing;
   pawn.ride.scale.setScalar(scale);
   model.rotation.y = facing;
-  const rear = pawn.rideKind==='MOTOR' ? -.35 : -.20;
+  const rear = pawn.rideKind==='MOTOR' ? -.12 : -.25;
   model.position.set(Math.sin(facing)*rear*scale,seat*scale,Math.cos(facing)*rear*scale);
   model.cityRig.legs.forEach((leg,i)=>{
     leg.rotation.x=-.93;
