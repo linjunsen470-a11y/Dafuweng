@@ -966,13 +966,13 @@ class GameController {
 
     this.dice3D.speed = this.actionSpeed;
     if (!this.skipAIAnimations) await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
-    if (!this.skipAIAnimations) await this.presentationUI.showDice({
-      player: curPlayer,
-      dice,
-      steps: diceVal,
-      bonusSteps,
-      speed: this.actionSpeed
-    });
+    if (!this.skipAIAnimations) {
+      // The corner receipt remains readable as the pawn starts walking.
+      const receipt = this.presentationUI.showDice({
+        player: curPlayer, dice, steps: diceVal, bonusSteps, speed: this.actionSpeed
+      });
+      if (this.presentationUI.isReducedMotion()) await receipt;
+    }
 
     const diceDetail = dice.length > 1 ? `（${dice.join(' + ')}）` : '';
     this.gameState.addLog(`🎲 ${curPlayer.name} 掷出了 ${diceVal} 点${diceDetail}！`, 'gold');
@@ -1047,7 +1047,10 @@ class GameController {
     const landing = this.gameEngine.inspectLanding(curPlayer, tileIndex);
     const landingPosition = this.boardBuilder.tilePositions[tileIndex];
     if (landingPosition && !this.skipAIAnimations) this.scene3D.focusOnPosition(landingPosition, new THREE.Vector3(0, 9, 11));
-    if (!this.skipAIAnimations) await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
+    const opensLandDecision = !curPlayer.isAI && ['PURCHASE', 'UPGRADE'].includes(landing.kind);
+    if (!opensLandDecision && !this.skipAIAnimations) {
+      await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
+    }
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
         const buildingType = landing.tile.type === TileType.BIG_PROPERTY ? AIPlayer.chooseCommercialBuilding(curPlayer, this.gameState) : null;
