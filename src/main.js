@@ -1,3 +1,7 @@
+import { bindBoardHover } from './ui/BoardHover.js';
+import { cardManager } from './game/CardManager.js';
+import { BoardTargetPicker } from './ui/BoardTargetPicker.js';
+import { ModalCoordinator } from './ui/ModalCoordinator.js';
 import { cityPortrait } from './ui/CityPortrait.js';
 import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
@@ -81,7 +85,11 @@ class GameController {
     this.modeUI = null;
     this.dialogUI = new DialogUI(this.audioManager);
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
+    this.modalCoordinator = new ModalCoordinator();
+    this.boardPicker = new BoardTargetPicker(this.scene3D, this.boardBuilder, this.pawnManager);
     this.mapInspector = new MapInspector(this.scene3D, this.boardBuilder, this.gameState, this.gameEngine);
+    bindBoardHover(this.scene3D, this.boardBuilder, this.pawnManager, this.gameState, this.gameEngine,
+      () => this.mapInspector.canInspect() && !this.mapInspector.isOpen && !this.boardPicker.cancel && !this.modalCoordinator.active);
     this.presentationUI = new PresentationUI(this.audioManager);
     this.auctionUI = new AuctionUI(this.audioManager);
     this.debtUI = new DebtUI(this.audioManager);
@@ -747,7 +755,8 @@ class GameController {
 
   bindKeyboardAndCanvasClick() {
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' || e.code === 'Enter') {
+      if (this.modalCoordinator.active || this.boardPicker.cancel) return;
+      if (e.code === 'Space') {
         const activeEl = document.activeElement;
         if (activeEl?.closest('button, a, input, textarea, select, summary, [role="button"], [contenteditable="true"]')
           || document.getElementById('hud-tools')?.classList.contains('is-open')) {
@@ -779,7 +788,7 @@ class GameController {
   }
 
   triggerHumanRoll() {
-    if (this.isProcessingAction) return;
+    if (this.modalCoordinator.active || this.boardPicker.cancel || this.isProcessingAction) return;
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
 
     const curPlayer = this.gameState.getCurrentPlayer();
@@ -1293,7 +1302,7 @@ class GameController {
     }
     let targetId = targetOverride;
     if (action.targets?.length && targetId === null) {
-      targetId = await this.dialogUI.chooseTarget({ title: '选择道具目标', options: action.targets });
+      targetId = await this.boardPicker.choose(action.targets);
       if (targetId === null) return null;
     }
     let value = valueOverride;
@@ -1334,10 +1343,10 @@ class GameController {
 
     let targetId = targetOverride;
     if (action.targets?.length && targetId === null) {
-      targetId = await this.dialogUI.chooseTarget({
-        title: '选择卡片目标',
-        options: action.targets
-      });
+      const type = cardManager.getCardById(cardId).targetType;
+      targetId = type === 'STOCK'
+        ? await this.dialogUI.chooseTarget({ title: '选择股票', options: action.targets })
+        : await this.boardPicker.choose(action.targets, type === 'PLAYER');
       if (targetId === null) return;
     }
 

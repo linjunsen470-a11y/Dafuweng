@@ -39,7 +39,7 @@ describe('presentation event descriptions', () => {
     const cues = describePresentationEvent({ type: 'PROPERTY_PURCHASED', tileId: 7, cost: 1800 }, createState());
     expect(cues).toEqual([
       { kind: 'cash', playerId: 0, amount: -1800, label: '购入地产' },
-      { kind: 'toast', icon: '🏡', title: '成功购入地产', detail: '小满 · 珊瑚湾 · $1,800', tone: 'success' }
+      { kind: 'toast', icon: '🏡', title: '成功购入地产', detail: '小满 · 珊瑚湾 · $1,800', tone: 'success', fullDetail:false }
     ]);
   });
 
@@ -85,7 +85,7 @@ describe('presentation event descriptions', () => {
     const cues = describePresentationEvent({
       type: 'COMMERCIAL_FACILITY_VISITED', playerId: 0, icon: '⛽', title: '能源性能调校', detail: '后续 2 次掷骰 +1 步', emotion: 'win'
     }, createState());
-    expect(cues).toEqual([{ kind: 'toast', icon: '⛽', title: '能源性能调校', detail: '后续 2 次掷骰 +1 步', tone: 'gold' }]);
+    expect(cues).toEqual([{ kind: 'toast', icon: '⛽', title: '能源性能调校', detail: '后续 2 次掷骰 +1 步', tone: 'gold', fullDetail:false }]);
   });
 
   it('presents quest acceptance, progress, completion, and expiry', () => {

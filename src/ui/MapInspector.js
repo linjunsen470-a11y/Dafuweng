@@ -18,10 +18,15 @@ export function describeMapTile(state, engine, id) {
       lines.push(`当前租金牌价 ${money(rent)}（非最终实收）`);
       if(owner.id!==player.id&&(player.godType==='GREAT_FORTUNE'||player.rentShieldActiveThisTurn))lines.push('当前有免租效果；落地时仍有效则免租。');
       else if(owner.id!==player.id&&player.godType)lines.push('当前附身状态可能改变费用；途中状态也可能变化。');
+      if (state.propertyManager.checkGroupMonopoly(owner.id,tile.group)) lines.push('同色组垄断 · 租金 ×2');
+      if (property.buildingType==='CHAIN_STORE') {
+        const count=[...state.propertyManager.properties.values()].filter(p=>p.owner===owner.id && p.buildingType==='CHAIN_STORE').length;
+        lines.push(`连锁店 ${count} 家 · 加成 ${25*Math.max(0,count-1)}%`);
+      }
       lines.push(owner.id===player.id?'自己停留不付租金':'牌价含地产及地主加成；最终按落地时的免租、神明、技能与保险结算。');
     }else lines.push(`当前默认购价 ${money(engine.getPropertyActionCost(player,id,'BUY'))}`);
   }else lines.push(tile.desc||tile.name);
-  const road=state.roadEntities?.find(e=>e.tileId===id&&!e.data?.attachedPlayerId);
+  const road=state.roadEntities?.find(e=>e.tileId===id && e.data?.attachedPlayerId == null);
   if(property?.hasObstacle||road?.type==='BARRIER')lines.push('🚧 路障：进入即截停，自己也会触发');
   if(property?.hasMine||road?.type==='MINE')lines.push('💥 地雷：进入有住院风险');
   if(road?.type==='TIME_BOMB')lines.push('⏱️ 定时炸弹：进入会附身');

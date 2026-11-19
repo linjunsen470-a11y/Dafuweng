@@ -11,7 +11,7 @@ export function createCityGround(map) {
   const ctx = canvas.getContext('2d');
   ctx.scale(canvas.width / 142, canvas.height / 92);
   ctx.translate(71, 49);
-  ctx.fillStyle = '#b7c5a0'; ctx.fillRect(-71,-49,142,92);
+  ctx.fillStyle = '#a7cc81'; ctx.fillRect(-71,-49,142,92);
   const polygon = (points, fill, edge) => {
     ctx.beginPath(); points.forEach(([x,z],i)=>i?ctx.lineTo(x,z):ctx.moveTo(x,z));ctx.closePath();
     ctx.fillStyle=fill;ctx.fill();if(edge){ctx.strokeStyle=edge;ctx.lineWidth=1.2;ctx.lineJoin='round';ctx.stroke();}
@@ -36,6 +36,13 @@ export function createCityGround(map) {
     ctx.strokeStyle='#8fa077';ctx.lineWidth=.22;
     for(let dz=-1.7;dz<2;dz+=.8){ctx.beginPath();ctx.moveTo(x-2.8,z+dz);ctx.lineTo(x+2.8,z+dz);ctx.stroke();}
   }
+  // Small clusters of grass blades break up open lawns before paths are painted.
+  for(let i=0;i<1100;i++){
+    const x=-70+((i*79)%1399)/10, z=-48+((i*37)%907)/10;
+    ctx.strokeStyle=i%3?'#96ba78':'#bbd996';
+    ctx.lineWidth=.12;ctx.beginPath();ctx.moveTo(x-.21,z-.17);
+    ctx.lineTo(x,z);ctx.lineTo(x+.17,z-.24);ctx.stroke();
+  }
   // Continuous built frontage follows existing roads; pavement has no arrows or tile markings.
   const tones={HARBOR:'#d7ceb1',OLD_TOWN:'#c9bba2',CBD:'#b8c5bc',HILLS:'#b7c19e'};
   ctx.lineCap='round';ctx.lineJoin='round';
@@ -45,7 +52,7 @@ export function createCityGround(map) {
     const gradient=ctx.createLinearGradient(a.x,a.z,b.x,b.z);
     gradient.addColorStop(0,tones[getTileDistrict(map,tile)?.id]||tones.HILLS);
     gradient.addColorStop(1,tones[getTileDistrict(map,next)?.id]||tones.HILLS);
-    ctx.strokeStyle=gradient;ctx.lineWidth=13.5;ctx.beginPath();ctx.moveTo(a.x,a.z);ctx.lineTo(b.x,b.z);ctx.stroke();
+    ctx.strokeStyle=gradient;ctx.lineWidth=10.4;ctx.beginPath();ctx.moveTo(a.x,a.z);ctx.lineTo(b.x,b.z);ctx.stroke();
   }
   // Subtle deterministic grain is baked once, independent of the game's random state.
   let seed=173;

@@ -40,7 +40,7 @@ describe('paid coastal transport',()=>{
     const copy=make();expect(copy.restore(s.snapshot()).success).toBe(true);
     expect(copy.lastTransport).toEqual(s.lastTransport);expect(copy.currentPlayer.currentTile).toBe(target);
     expect(copy.takeTransport('harbor','skiff').success).toBe(false);copy.resolveLanding();
-    if(target===4){expect(copy.pendingEvent).toEqual({tileId:4});expect(copy.chooseIslandEvent('work').cashDelta).toBe(300);}
+    if(target===4){expect(copy.pendingEvent).toEqual({tileId:4,eventId:'base'});expect(copy.chooseIslandEvent('work').cashDelta).toBe(300);}
     else expect(copy.focus.kind).toBe('PURCHASE');
     const settled=copy.snapshot();copy.restore(settled);expect(copy.resolveLanding().success).toBe(false);
     expect(copy.currentPlayer.cash).toBe(settled.players[0].cash);

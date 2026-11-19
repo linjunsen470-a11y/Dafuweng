@@ -19,6 +19,8 @@ export class HarborStreets {
     const loader = new GLTFLoader();
     const packs = await Promise.all(['residences', 'neighborhoods', 'harbor-facilities', 'old-town', 'civic-street', 'return-gate', 'company-court', 'summit-yard', 'hill-supply'].map(name =>
       loader.loadAsync(`${import.meta.env.BASE_URL}shanhai/models/${name}.glb`)));
+    const crown = await loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/exchange-crown.glb`).catch(() => null);
+    if (crown) packs.push(crown);
     this.prefabs = new THREE.Group();
     packs.forEach(pack => this.prefabs.add(...pack.scene.children.slice()));
   }

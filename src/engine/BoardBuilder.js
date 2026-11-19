@@ -478,6 +478,17 @@ export class BoardBuilder {
         transparent: true, opacity: 0.94
       })
     );
+    this.waterTime = {value:0};
+    ocean.material.onBeforeCompile = shader => {
+      shader.uniforms.waterTime = this.waterTime;
+      shader.vertexShader = 'varying vec2 seaPoint;\n' + shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nseaPoint = position.xy;');
+      shader.fragmentShader = 'varying vec2 seaPoint; uniform float waterTime;\n' + shader.fragmentShader.replace('#include <color_fragment>', `
+        #include <color_fragment>
+        float curve = seaPoint.y*2.9 + 1.4*sin(seaPoint.x*.37 + waterTime*.5) + waterTime;
+        float crest = smoothstep(.93,.999,sin(curve)) * smoothstep(.1,.85,sin(seaPoint.x*.8 + seaPoint.y*.31));
+        diffuseColor.rgb = mix(diffuseColor.rgb,vec3(.52,.92,.89),crest*.38);
+      `);
+    };
     ocean.rotation.x = -Math.PI / 2;
     // Surround the island below land and playable surfaces; never overlay property pads.
     ocean.name = 'island-sea';
@@ -498,7 +509,7 @@ export class BoardBuilder {
     });
 
     const trunkMaterial = new THREE.MeshBasicMaterial({ color: '#76543b' });
-    const leafMaterial = new THREE.MeshBasicMaterial({ color: '#3e9f62' });
+    const leafMaterial = new THREE.MeshStandardMaterial({color:'#66ac52',roughness:1,flatShading:true});
     const treePositions = [
       [-42, 13], [-35, 16], [-28, 18], [-18, 17], [-8, 17],
       [-43, 5], [-32, 3], [-13, 2], [-5, -7], [-13, -13],
@@ -509,6 +520,9 @@ export class BoardBuilder {
       const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.34, 1.8, 8), trunkMaterial.clone());
       trunk.position.y = 0.9;
       const crown = new THREE.Mesh(new THREE.DodecahedronGeometry(1.15 + (index % 3) * 0.12, 1), leafMaterial.clone());
+      crown.scale.set(1.05,1.15 + (index % 3)*.12,.88);
+      crown.rotation.y = index * 1.13;
+      crown.material.color.set(['#57ac62','#82b754','#468f65'][index%3]);
       crown.position.y = 2.25;
       crown.castShadow = true;
       tree.add(trunk, crown);
@@ -843,20 +857,13 @@ export class BoardBuilder {
       group.add(this.createFacilityLandmark(tile));
       return group;
     }
-    const canvas = document.createElement('canvas');
-    canvas.width = 320; canvas.height = 112;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fff2d5'; ctx.fillRect(0, 0, 320, 112);
-    ctx.fillStyle = spec.color; ctx.fillRect(0, 0, 320, 8);
-    ctx.textAlign = 'center'; ctx.fillStyle = '#142e30';
-    ctx.font = 'bold 42px sans-serif'; ctx.fillText(spec.title, 160, 54);
-    ctx.font = '25px sans-serif'; ctx.fillText(spec.detail, 160, 96);
-    const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
-    const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthWrite: false, toneMapped: false }));
-    // Draw after the transparent sea, while retaining depth tests against opaque buildings.
-    sign.renderOrder = 5;
-    sign.position.set(0, spec.height + .85, 0); sign.scale.set(4.8, 1.68, 1);
-    group.add(sign);
+    if (tile.type === TileType.STOCK) {
+      const crown = this.harborArt.clone('exchange_crown');
+      if (crown) {
+        crown.position.y = spec.height;
+        group.add(crown);
+      }
+    }
     return group;
   }
 
@@ -1147,6 +1154,7 @@ export class BoardBuilder {
         if (child.userData?.isFacilityHalo) child.rotation.z = time * .32 + group.userData.phase;
       });
     });
+    if (this.waterTime) this.waterTime.value = time;
     this.harborWaves?.forEach((wave, index) => {
       wave.position.x = wave.userData.originX + Math.sin(time * wave.userData.speed + index) * 9;
       wave.material.opacity = 0.22 + (Math.sin(time * 1.4 + index) + 1) * 0.09;

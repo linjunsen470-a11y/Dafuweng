@@ -74,7 +74,7 @@ export class DialogUI {
   }
 
   bindEvents() {
-    document.getElementById('land-modal-close').addEventListener('click', () => this.hideLandModal());
+    document.getElementById('land-modal-close').addEventListener('click', () => document.getElementById('btn-land-pass')?.click());
   }
 
   showLandPurchase({ tileData, currentLevel, player, gameState = null, quote = null, buildingType = null, onBuy, onUpgrade, onPass }) {

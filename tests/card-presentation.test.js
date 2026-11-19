@@ -14,7 +14,7 @@ import {
 
 describe('card presentation catalogue', () => {
   it('classifies every strategy card with valid decision metadata', () => {
-    expect(CARDS).toHaveLength(31);
+    expect(CARDS).toHaveLength(32);
     CARDS.forEach(card => {
       const view = createCardPresentation(card);
       expect(Object.values(CARD_CATEGORIES)).toContain(view.category);
@@ -63,7 +63,7 @@ describe('card presentation catalogue', () => {
     const propertyCards = filterCardPresentations(views, 'PROPERTY');
     expect(propertyCards.map(card => card.id)).toEqual(expect.arrayContaining(['DEMOLISH', 'LAND_BUY', 'AUCTION_CARD']));
     expect(propertyCards.every(card => card.category.id === 'PROPERTY')).toBe(true);
-    expect(filterCardPresentations(views, 'ALL')).toHaveLength(31);
+    expect(filterCardPresentations(views, 'ALL')).toHaveLength(32);
   });
 
   it('gives the auction card its own production artwork', () => {

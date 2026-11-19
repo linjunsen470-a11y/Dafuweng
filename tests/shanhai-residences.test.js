@@ -41,8 +41,8 @@ describe('regional residences and lightweight ambience',()=>{
   Object.assign(scene,{prefabs:{},scene:new THREE.Scene(),propertyGroup:new THREE.Group(),labels:[],renderer:{shadowMap:{}},tiles:[{...SHANHAI_COAST_MAP.tiles[9],visualLot:{x:0,z:0,rotation:0}}],clonePrefab:()=>new THREE.Group(),batch:g=>g,addLabel(text,position){const l={textContent:text,position,style:{},dataset:{},classList:{contains:c=>c==='property-badge',toggle(){}},remove(){this.removed=true;}};labels.push(l);this.labels.push({label:l});return l;}});
   const players=[{name:'阿屿',color:'#f5816c'},{name:'青禾',color:'#42b8a6'}];
   const draw=(owner,level)=>scene.syncProperties({players,propertyManager:{getProperty:()=>({owner,level})}});
-  draw(0,1);expect(scene.propertyBadges.get(9).textContent).toBe('阿屿 · L1');expect(scene.propertyVisuals[0].model).toBe('res_market_1');
-  draw(1,4);expect(labels[0].removed).toBe(true);expect(scene.labels).toHaveLength(1);expect(scene.propertyBadges.get(9).textContent).toBe('青禾 · L4');
+  draw(0,1);expect(scene.propertyBadges.get(9).textContent).toBe('业主 阿屿 · L1');expect(scene.propertyVisuals[0].model).toBe('res_market_1');
+  draw(1,4);expect(labels[0].removed).toBe(true);expect(scene.labels).toHaveLength(1);expect(scene.propertyBadges.get(9).textContent).toBe('业主 青禾 · L4');
   draw(null,0);expect(scene.propertyBadges.size).toBe(0);expect(scene.labels).toHaveLength(0);
  });
  it('animates only five tiny meshes, freezes offscreen and hides motion when reduced motion is requested',()=>{

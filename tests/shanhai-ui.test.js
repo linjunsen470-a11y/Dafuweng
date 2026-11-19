@@ -11,6 +11,8 @@ vi.mock('../src/shanhai/SliceScene.js', () => ({ SliceScene: class {
   constructor() { if(sceneFailure.constructor)throw new Error('WebGL unavailable'); this.renderer = {}; this.moves = []; }
   async load() { if(sceneFailure.load)throw new Error('Asset unavailable'); }
   dispose() {}
+  syncObstacles() {} syncPawns() {}
+  setGardenInfluence() {} restoreGardenView() {} express() {} frameJourney() {}
   createPawns() {} syncProperties() {} highlight() {} overview() {} rollDice() {} action() {} rotate() {} zoom() {}
   async move(playerId, tileId) { this.moves.push({ playerId, tileId }); }
   async travelByBoat(playerId, from, tileId) { this.moves.push({ playerId, from, tileId }); }
@@ -185,7 +187,8 @@ describe('Shanhai UI integration: DOM simulation with real rules, mocked scene/a
     const cards = [...snapshot().players[0].cards];
     for (let i = 0; i < 3; i++) {
       click('#remote-button'); expect($('#info-dialog').open).toBe(true);
-      expect(document.querySelectorAll('[data-step]')).toHaveLength(6);
+      expect([...document.querySelectorAll('#info-dialog [data-step]')].map(button => Number(button.dataset.step)))
+        .toEqual(game().session.getTravelOptions().map(option => option.steps));
       click('.modal-close'); expect($('#info-dialog').open).toBe(false);
     }
     expect(snapshot().players[0].cards).toEqual(cards);

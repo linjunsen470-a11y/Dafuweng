@@ -92,14 +92,14 @@ export class Scene3D {
     this.sunLight = sunLight;
 
     // 温暖的环境光
-    const ambientLight = new THREE.AmbientLight('#b9e3ff', 0.85);
+    const ambientLight = new THREE.HemisphereLight('#fff2d1', '#a5c6ac', 0.85);
     this.scene.add(ambientLight);
     this.ambientLight = ambientLight;
     // updateWeather runs before the player ever changes the time of day.
     this.baseAmbientIntensity = ambientLight.intensity;
 
     // 补光（蓝浅光增加立体感）
-    const fillLight = new THREE.DirectionalLight('#70a1ff', 0.5);
+    const fillLight = new THREE.DirectionalLight('#b9e8ff', 0.5);
     fillLight.position.set(-20, 20, -20);
     this.scene.add(fillLight);
     this.fillLight = fillLight;
@@ -203,7 +203,7 @@ export class Scene3D {
 
   applyAtmosphere() {
     const presets = {
-      DAY: { sky: '#87ceeb', fog: '#9cdcf2', sun: '#fff4d6', sunPower: 1.8, ambient: '#b9e3ff', ambientPower: 0.85, exposure: 1.1 },
+      DAY: { sky: '#87ceeb', fog: '#9cdcf2', sun: '#fff4d6', sunPower: 1.8, ambient: '#fff2d1', ambientPower: 0.85, exposure: 1.1 },
       SUNSET: { sky: '#f59f80', fog: '#df9b87', sun: '#ffb36b', sunPower: 1.35, ambient: '#8f80b8', ambientPower: 0.7, exposure: 1.0 },
       NIGHT: { sky: '#111a3a', fog: '#172447', sun: '#b7caff', sunPower: 0.72, ambient: '#6686bd', ambientPower: 0.82, exposure: 0.94 }
     };
@@ -318,7 +318,7 @@ export class Scene3D {
     // Keep the neighboring supply-shop sign in view on the narrow mountain frontage.
     const supplyCorner = compact && this.activeMapId === 'grand-bay' && position.z === -16 && position.x >= 26 && position.x <= 30;
     const target = position.clone().add(oldTown ? new THREE.Vector3(-1,0,-3) : new THREE.Vector3(supplyCorner ? -1 : 4,0,3));
-    const offset = oldTownOffset(this.activeMapId,position,{x:5,y:compact?28:22,z:compact?32:28});
+    const offset = oldTownOffset(this.activeMapId,position,this.activeMapId === 'grand-bay' && position.z >= 25 ? {x:compact?7:12,y:compact?26:20,z:compact?25:19} : {x:5,y:compact?28:22,z:compact?32:28});
     const cameraPosition = target.clone().add(new THREE.Vector3(offset.x,offset.y,offset.z));
     if (smooth) {
       this.targetLookAt = target;

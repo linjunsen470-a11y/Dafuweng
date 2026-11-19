@@ -1,0 +1,16 @@
+{
+  "desktop": {
+    "hudFraction": 0.18352083333333333,
+    "barrierTile": 1,
+    "saveVersion": 11,
+    "rolled": true,
+    "pageErrors": []
+  },
+  "mobile": {
+    "hudFraction": 0.20906550006076072,
+    "barrierTile": 1,
+    "saveVersion": 11,
+    "rolled": true,
+    "pageErrors": []
+  }
+}
