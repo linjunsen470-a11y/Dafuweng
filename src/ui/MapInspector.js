@@ -29,7 +29,10 @@ export function describeMapTile(state, engine, id) {
   const road=state.roadEntities?.find(e=>e.tileId===id && e.data?.attachedPlayerId == null);
   if(property?.hasObstacle||road?.type==='BARRIER')lines.push('🚧 路障：进入即截停，自己也会触发');
   if(property?.hasMine||road?.type==='MINE')lines.push('💥 地雷：进入有住院风险');
-  if(road?.type==='TIME_BOMB')lines.push('⏱️ 定时炸弹：进入会附身');
+  if(road?.type==='TIME_BOMB') {
+    const remaining=Number.isFinite(road.expiresRound) ? ` · 剩余 ${Math.max(0,road.expiresRound-state.round)} 轮` : '';
+    lines.push('⏱️ 定时炸弹：进入会附身'+remaining);
+  }
   const links=state.mapRuntime.getNextOptions(id,player.direction||1).map(next=>({id:next,name:state.getTile(next)?.name||`${next}号格`}));
   return {title:`${id} · ${tile.name}`,lines,links,direction:player.direction===-1?'逆向':'正向',color:owner?.color||'#67e8f9'};
 }

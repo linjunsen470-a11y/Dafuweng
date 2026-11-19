@@ -44,7 +44,7 @@ function stoppingEvent(state, player, tileId) {
   const property = state.propertyManager.getProperty(tileId);
   if (property?.hasMine) return { icon: '💥', label: '埋藏地雷', score: -520, tone: 'danger' };
   if (property?.hasObstacle) return { icon: '🚧', label: '路障截停', score: -120, tone: 'danger' };
-  const entity = state.roadEntities?.find(candidate => candidate.tileId === tileId && !candidate.data?.attachedPlayerId);
+  const entity = state.roadEntities?.find(candidate => candidate.tileId === tileId && candidate.data?.attachedPlayerId == null);
   const meta = entity && ROAD_META[entity.type];
   if (meta?.stops || (entity?.type === 'DOG' && player.vehicle === 'WALK')) return meta;
   return null;
@@ -80,7 +80,7 @@ function analyzePath(state, player, path) {
       encounters.push({ ...stopper, tileId });
       score += stopper.score;
     }
-    const entity = state.roadEntities?.find(candidate => candidate.tileId === tileId && !candidate.data?.attachedPlayerId);
+    const entity = state.roadEntities?.find(candidate => candidate.tileId === tileId && candidate.data?.attachedPlayerId == null);
     const road = entity && ROAD_META[entity.type];
     if (road && !stopper) {
       encounters.push({ ...road, tileId });

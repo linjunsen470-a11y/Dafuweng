@@ -21,7 +21,7 @@ export class HarborStreets {
       loader.loadAsync(`${import.meta.env.BASE_URL}shanhai/models/${name}.glb`)));
     const crown = await loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/exchange-crown.glb`).catch(() => null);
     if (crown) packs.push(crown);
-    packs.push(await loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/city-landmarks.glb`));
+    packs.push(...await Promise.all(['city-landmarks','board-tokens'].map(name => loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/${name}.glb`))));
     this.prefabs = new THREE.Group();
     packs.forEach(pack => this.prefabs.add(...pack.scene.children.slice()));
   }

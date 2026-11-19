@@ -416,7 +416,7 @@ export class GameEngine {
       if (!confinement.avoided) this.state.addLog(`💣 轰！${confinement.recipient.name} 被地雷炸伤，住院 ${confinement.turns} 回合！`, 'danger');
     }
 
-    const roadEntity = this.state.roadEntities.find(entity => entity.tileId === selected && !entity.data?.attachedPlayerId);
+    const roadEntity = this.state.roadEntities.find(entity => entity.tileId === selected && entity.data?.attachedPlayerId == null);
     if (roadEntity) {
       const roadEvents = this.resolveRoadEntity(player, roadEntity, pending);
       events.push(...roadEvents);
@@ -549,10 +549,10 @@ export class GameEngine {
     let targets = [];
     if (['BARRIER', 'MINE_ITEM', 'TIME_BOMB'].includes(itemId)) {
       targets = this.state.mapRuntime.getReachable(player.currentTile, 10, [1, -1])
-        .filter(({ id }) => !this.state.roadEntities.some(entity => entity.tileId === id && !entity.data?.attachedPlayerId))
+        .filter(({ id }) => !this.state.roadEntities.some(entity => entity.tileId === id && entity.data?.attachedPlayerId == null))
         .map(({ id, distance }) => ({ id, label: this.state.getTile(id).name, description: `距离 ${distance} 格` }));
     } else if (itemId === 'ROBOT_DOLL') {
-      targets = this.state.roadEntities.filter(entity => !entity.data?.attachedPlayerId)
+      targets = this.state.roadEntities.filter(entity => entity.data?.attachedPlayerId == null)
         .map(entity => ({ id: entity.tileId, label: this.state.getTile(entity.tileId)?.name || `${entity.tileId}`, description: entity.type }));
     } else if (itemId === 'ROBOT_WORKER') {
       targets = [...this.state.propertyManager.properties.entries()]
@@ -1141,7 +1141,7 @@ export class GameEngine {
         return { type: 'STATUS_CHANGED', playerId: player.id, status: 'IMMUNITY', duration: player.negativeImmuneTurns, chance };
       case 'ROAD_BARRIER': {
         const target = this.state.mapRuntime.projectPath(player.currentTile, 1, player.direction || 1)[0];
-        if (Number.isInteger(target) && !this.state.roadEntities.some(entity => entity.tileId === target && !entity.data?.attachedPlayerId)) {
+        if (Number.isInteger(target) && !this.state.roadEntities.some(entity => entity.tileId === target && entity.data?.attachedPlayerId == null)) {
           this.state.roadEntities.push({ id: `road-${this.state.rng.int(1, 1_000_000_000)}`, type: 'BARRIER', tileId: target, ownerId: null, expiresRound: this.state.round + 4, data: { source: 'CHANCE' } });
         }
         return { type: 'ROAD_ENTITY_CHANGED', tileId: target, entityType: 'BARRIER', chance };
@@ -1378,7 +1378,7 @@ export class GameEngine {
   placeRoadEntity(player, entityType, tileId) {
     const target = Number(tileId);
     if (!this.state.getTile(target)) return { success: false, reason: '道路目标无效' };
-    if (this.state.roadEntities.some(entity => entity.tileId === target && !entity.data?.attachedPlayerId)) return { success: false, reason: '目标道路已有实体' };
+    if (this.state.roadEntities.some(entity => entity.tileId === target && entity.data?.attachedPlayerId == null)) return { success: false, reason: '目标道路已有实体' };
     const entity = {
       id: `ENTITY_${this.state.round}_${player.id}_${this.state.rng.int(1000, 9999)}`,
       type: entityType,
@@ -1408,7 +1408,7 @@ export class GameEngine {
     } else if (itemId === 'ROBOT_DOLL') {
       const target = Number(targetId);
       const before = this.state.roadEntities.length;
-      this.state.roadEntities = this.state.roadEntities.filter(entity => entity.tileId !== target || entity.data?.attachedPlayerId);
+      this.state.roadEntities = this.state.roadEntities.filter(entity => entity.tileId !== target || entity.data?.attachedPlayerId != null);
       result = before === this.state.roadEntities.length ? { success: false, reason: '目标没有可清除实体' } : { success: true, type: 'ROAD_ENTITY_CHANGED', tileId: target, removed: true };
     } else if (itemId === 'ROBOT_WORKER') {
       const property = this.state.propertyManager.getProperty(Number(targetId));

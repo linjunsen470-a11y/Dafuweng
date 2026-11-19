@@ -1,3 +1,4 @@
+import { createHarborPromenade, createHarborGulls, updateHarborGulls } from './HarborPromenade.js';
 import { animateBuildingChange } from './BuildingChange.js';
 import { createHarborWorkingYard } from './HarborWorkingYard.js';
 import { createBankCivicCourt } from './BankCivicCourt.js';
@@ -25,6 +26,7 @@ export class BoardBuilder {
     this.tilePositions = [];
     this.buildingMeshes = new Map();
     this.obstacleMeshes = new Map();
+    this.mineMeshes = new Map();
     this.roadEntityMeshes = new Map();
     this.specialTileMeshes = new Map();
     this.vacantLotMeshes = new Map();
@@ -408,6 +410,7 @@ export class BoardBuilder {
     group.name = `environment-${mapDefinition.id}`;
     this.harborWaves = [];
     this.harborFerries = [];
+    this.harborGulls = null;
     if (mapDefinition.theme !== 'GRAND_BAY') {
       this.mapEnvironmentGroup = group;
       this.scene3D.scene.add(group);
@@ -415,6 +418,10 @@ export class BoardBuilder {
     }
 
     group.add(createIslandCoast(), createNorthMarketStreet(mapDefinition), createBankCivicCourt(mapDefinition), createHarborWorkingYard(mapDefinition));
+    this.harborGulls = createHarborGulls();
+    updateHarborGulls(this.harborGulls,0);
+    this.harborGulls.frustumCulled = false;
+    group.add(createHarborPromenade(),this.harborGulls);
     const districtGround = createCityGround(mapDefinition);
     if (districtGround) group.add(districtGround);
 
@@ -545,6 +552,11 @@ export class BoardBuilder {
       const records = [...this.buildingMeshes].map(([id, mesh]) => [id, mesh.userData.propertyVisual]);
       this.rebuildMapLandmarks(this.activeMapDefinition);
       for (const [id, record] of records) if (record) this.updateBuildingMesh(id, ...record, true);
+      for (const id of [...this.obstacleMeshes.keys()]) this.setObstacleMesh(id,true);
+      for (const id of [...this.mineMeshes.keys()]) this.setMineMesh(id,true);
+      for (const [id, mesh] of [...this.roadEntityMeshes]) {
+        if (mesh.userData.entity?.type === 'TIME_BOMB') this.setRoadEntityMesh(id,mesh.userData.entity);
+      }
     }).catch(error => {
       this.scene3D.container.dataset.harborArt = 'fallback';
       console.warn('Original harbor models unavailable; keeping procedural buildings.', error);
@@ -1079,6 +1091,12 @@ export class BoardBuilder {
       const rotor = building.userData.rotor;
       if (rotor && !this.motionPreference.matches) rotor.rotation.y = time;
     }
+    if (!this.motionPreference.matches) {
+      for (const collection of [this.mineMeshes,this.roadEntityMeshes]) for (const mesh of collection.values()) {
+        for (const lamp of mesh.userData.lamps || []) lamp.emissiveIntensity = .45+.55*Math.sin(time*4)**2;
+      }
+    }
+    if (this.harborGulls && !this.motionPreference.matches) updateHarborGulls(this.harborGulls,time);
     if (this.waterTime) this.waterTime.value = time;
     this.harborWaves?.forEach((wave, index) => {
       wave.position.x = wave.userData.originX + Math.sin(time * wave.userData.speed + index) * 9;
@@ -1291,6 +1309,7 @@ export class BoardBuilder {
       });
     });
     this.mapEnvironmentGroup?.traverse(child => {
+      if (child.userData?.isPromenadeLamp) child.material.emissiveIntensity = enabled ? 1.4 : .1;
       if (child.userData?.isOriginalCityWindow && child.material?.emissive) {
         child.material.emissiveIntensity = enabled ? .5 : 0;
       }
@@ -1595,16 +1614,64 @@ export class BoardBuilder {
     }
   }
 
+  createRoadToken(kind, position) {
+    const model = this.harborArt?.clone('token_'+kind);
+    if (!model || !position) return null;
+    const group = new THREE.Group();
+    group.userData.token = kind;
+    group.userData.lamps = [];
+    model.traverse(child=>{
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      for (const mat of materials) if (mat?.name === 'lamp') {
+        mat.emissive.set('#ff492b');
+        group.userData.lamps.push(mat);
+      }
+    });
+    group.add(model);
+    group.position.copy(position);
+    group.position.y += .18;
+    group.rotation.y = .3;
+    return group;
+  }
+
+  showClearingRobot(tileId) {
+    const group = this.createRoadToken('robot',this.tilePositions[tileId]);
+    if (!group) return;
+    const scene = this.scene3D.scene;
+    scene.add(group);
+    const start = performance.now(), x = group.position.x, y = group.position.y;
+    const map = this.activeMapDefinition;
+    const move = now => {
+      const t = Math.min(1,(now-start)/860);
+      if (!this.motionPreference.matches) {
+        group.position.x = x - 1.3 + 1.6*t;
+        group.position.y = y + .13*Math.abs(Math.sin(t*16));
+        group.rotation.z = .07*Math.sin(t*16);
+      }
+      if (t<1 && map===this.activeMapDefinition) requestAnimationFrame(move);
+      else { scene.remove(group); this.disposeObject(group); }
+    };
+    move(start);
+  }
+
   setObstacleMesh(tileIndex, hasObstacle) {
+    if (hasObstacle && this.obstacleMeshes.get(tileIndex)?.userData.token) return;
     if (this.obstacleMeshes.has(tileIndex)) {
       const oldMesh = this.obstacleMeshes.get(tileIndex);
       this.scene3D.scene.remove(oldMesh);
+      this.disposeObject(oldMesh);
       this.obstacleMeshes.delete(tileIndex);
     }
 
     if (!hasObstacle) return;
 
     const tilePos = this.tilePositions[tileIndex];
+    const token = this.createRoadToken('barrier',tilePos);
+    if (token) {
+      this.scene3D.scene.add(token);
+      this.obstacleMeshes.set(tileIndex,token);
+      return;
+    }
     const group = new THREE.Group();
     group.position.set(tilePos.x, tilePos.y + 0.6, tilePos.z);
 
@@ -1625,15 +1692,22 @@ export class BoardBuilder {
   }
 
   setMineMesh(tileIndex, hasMine) {
+    if (hasMine && this.mineMeshes.get(tileIndex)?.userData.token) return;
     if (this.mineMeshes?.has(tileIndex)) {
       const oldMesh = this.mineMeshes.get(tileIndex);
       this.scene3D.scene.remove(oldMesh);
+      this.disposeObject(oldMesh);
       this.mineMeshes.delete(tileIndex);
     }
-    if (!this.mineMeshes) this.mineMeshes = new Map();
     if (!hasMine) return;
 
     const tilePos = this.tilePositions[tileIndex];
+    const token = this.createRoadToken('mine',tilePos);
+    if (token) {
+      this.scene3D.scene.add(token);
+      this.mineMeshes.set(tileIndex,token);
+      return;
+    }
     const group = new THREE.Group();
     group.position.set(tilePos.x, tilePos.y + 0.3, tilePos.z);
 
@@ -1651,6 +1725,10 @@ export class BoardBuilder {
 
   setRoadEntityMesh(tileIndex, entity = null) {
     const previous = this.roadEntityMeshes.get(tileIndex);
+    if (entity?.type === 'TIME_BOMB' && previous?.userData.token && previous.userData.entity.id === entity.id) {
+      previous.userData.entity = entity;
+      return;
+    }
     if (previous) {
       this.scene3D.scene.remove(previous);
       this.disposeObject(previous);
@@ -1659,6 +1737,15 @@ export class BoardBuilder {
     if (!entity || ['BARRIER', 'MINE'].includes(entity.type)) return;
     const tilePos = this.tilePositions[tileIndex];
     if (!tilePos) return;
+    if (entity.type === 'TIME_BOMB') {
+      const token = this.createRoadToken('timer',tilePos);
+      if (token) {
+        token.userData.entity = entity;
+        this.scene3D.scene.add(token);
+        this.roadEntityMeshes.set(tileIndex,token);
+        return;
+      }
+    }
     const palettes = {
       TIME_BOMB: ['#111827', '#f59e0b'], GIFT_BOX: ['#ef4444', '#fde047'],
       COUPON_CHEST: ['#7c3aed', '#fbbf24'], DOG: ['#92400e', '#fef3c7'],
@@ -1677,6 +1764,7 @@ export class BoardBuilder {
     cap.position.y = 1.0;
     group.add(body, cap);
     this.scene3D.scene.add(group);
+    group.userData.entity = entity;
     this.roadEntityMeshes.set(tileIndex, group);
   }
 }

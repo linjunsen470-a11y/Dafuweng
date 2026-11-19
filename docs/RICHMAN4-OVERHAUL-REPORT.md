@@ -72,3 +72,11 @@ node scripts/qa/board-events.mjs
 复查主流程运行 `node scripts/qa/board-housing.mjs`，代码验收运行 `npm run verify`。复现美术运行 `blender -b --python scripts/art/create_city_landmarks.py`，量化新 GLB 后运行 `blender -b --python scripts/art/render_residence_review.py`。商业与公共设施已看过建模拼图，尚未逐栋进行游戏内访问录像；默认海港画面中岸线、人行道与防波堤之间仍显空旷。
 
 收尾通过类型检查、127 个测试文件共 663 项及 Vite 生产构建；实机两条路径均未捕获页面异常。
+
+## 第四里程碑首批 · 海港步道与路上道具
+
+在旗舰图海港沿岸加入连续防护栏、石缘、长椅、花箱、夜间亮起的步道灯和路口斑马线。219 件静态构件按材质合成 8 批实例，五只海鸥沿水边盘旋。场景使用现有地图坐标和道路连接。红白拒马、闪光软壳地雷、卡通倒计时钟及发条机器人均有原创 Blender 源文件与量化 GLB。地图道具跟随存档恢复和清除；机器人施放时向目标走格清障。修正了角色编号 0 携带的时钟会被当作地面目标的问题。
+
+桌面悬停、手机触摸均读到 3 号地报价，同时确认三类道路实体的模型已加载。桌面再通过手牌选择发条机器人并点中路障，确认道路实体移除。实机取景见 `qa/review/m4-promenade-desktop.png`、`qa/review/m4-promenade-mobile.png`；结构读数与操作结果见 `qa/review/m4-promenade-checks.json`；四件道具双角度图见 `qa/review/m4-road-tokens.jpg`。复查运行 `node scripts/qa/board-promenade.mjs`。此检查点通过类型检查、生产构建及道路实体和选路相关的 4 项测试。
+
+海港步道已有游戏内验收。旧城、商务区与山城仍需相同密度的街景打磨，昼夜与雨雪的全图可读性也待实机验收。桌面默认视距下地雷与倒计时钟的细部较小，可点地块查看说明。

@@ -184,7 +184,7 @@ class GameController {
     } else if (event.type === 'MINE_EXPLODED') {
       this.boardBuilder.setMineMesh(event.tileId, false);
     } else if (event.type === 'ROAD_ENTITY_CHANGED') {
-      const entity = this.gameState.roadEntities.find(item => item.tileId === event.tileId || item.id === event.entity?.id);
+      const entity = this.gameState.roadEntities.find(item => item.data?.attachedPlayerId == null && (item.tileId === event.tileId || item.id === event.entity?.id));
       this.boardBuilder.setObstacleMesh(event.tileId ?? entity?.tileId, entity?.type === 'BARRIER');
       this.boardBuilder.setMineMesh(event.tileId ?? entity?.tileId, entity?.type === 'MINE');
       this.boardBuilder.setRoadEntityMesh(event.tileId ?? entity?.tileId, entity || null);
@@ -235,14 +235,14 @@ class GameController {
 
   syncBoardAssets(force = false) {
     this.pawnManager.syncVehicles(this.gameState.players);
-    const activeRoadTiles = new Set(this.gameState.roadEntities.filter(entity => !entity.data?.attachedPlayerId).map(entity => entity.tileId));
+    const activeRoadTiles = new Set(this.gameState.roadEntities.filter(entity => entity.data?.attachedPlayerId == null).map(entity => entity.tileId));
     const renderedRoadTiles = new Set([
       ...this.boardBuilder.roadEntityMeshes.keys(),
       ...this.boardBuilder.obstacleMeshes.keys(),
       ...(this.boardBuilder.mineMeshes?.keys() || [])
     ]);
     new Set([...activeRoadTiles, ...renderedRoadTiles]).forEach(tileId => {
-      const entity = this.gameState.roadEntities.find(item => item.tileId === tileId && !item.data?.attachedPlayerId);
+      const entity = this.gameState.roadEntities.find(item => item.tileId === tileId && item.data?.attachedPlayerId == null);
       const property = this.gameState.propertyManager.getProperty(tileId);
       this.boardBuilder.setObstacleMesh(tileId, Boolean(property?.hasObstacle || entity?.type === 'BARRIER'));
       this.boardBuilder.setMineMesh(tileId, Boolean(property?.hasMine || entity?.type === 'MINE'));
@@ -1329,6 +1329,7 @@ class GameController {
       this.uiRenderer.renderHUD();
       return result;
     }
+    if (itemId === 'ROBOT_DOLL') this.boardBuilder.showClearingRobot(Number(targetId));
     this.audioManager.playCardSpell();
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
