@@ -187,9 +187,9 @@ export class Scene3D {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const material = new THREE.PointsMaterial({
       color: kind === 'SNOW' ? 0xffffff : 0x9ad8ff,
-      size: kind === 'SNOW' ? 0.22 : 0.11,
+      size: kind === 'SNOW' ? 0.15 : 0.10,
       transparent: true,
-      opacity: kind === 'SNOW' ? 0.9 : 0.7,
+      opacity: kind === 'SNOW' ? 0.7 : 0.58,
       depthWrite: false,
       blending: kind === 'SNOW' ? THREE.AdditiveBlending : THREE.NormalBlending
     });
@@ -227,7 +227,7 @@ export class Scene3D {
     const presets = {
       DAY: { sky: '#87ceeb', fog: '#9cdcf2', sun: '#fff4d6', sunPower: 1.8, ambient: '#fff2d1', ambientPower: 0.85, exposure: 1.1 },
       SUNSET: { sky: '#f59f80', fog: '#df9b87', sun: '#ffb36b', sunPower: 1.35, ambient: '#8f80b8', ambientPower: 0.7, exposure: 1.0 },
-      NIGHT: { sky: '#111a3a', fog: '#172447', sun: '#b7caff', sunPower: 0.72, ambient: '#6686bd', ambientPower: 0.82, exposure: 0.94 }
+      NIGHT: { sky: '#111a3a', fog: '#172447', sun: '#b7caff', sunPower: 1.02, ambient: '#9faecb', ambientPower: 1.05, exposure: 1.07 }
     };
     const preset = presets[this.timeOfDay];
     const stormy = this.weather === 'RAIN' || this.weather === 'STORM';
@@ -265,6 +265,7 @@ export class Scene3D {
   updateWeather() {
     this.weatherElapsed += 0.016;
     if (this.precipitation) {
+      this.precipitation.position.set(this.controls.target.x,0,this.controls.target.z);
       const positions = this.precipitation.geometry.attributes.position.array;
       const { kind, drift } = this.precipitation.userData;
       for (let i = 0; i < positions.length / 3; i++) {

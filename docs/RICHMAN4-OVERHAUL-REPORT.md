@@ -80,3 +80,9 @@ node scripts/qa/board-events.mjs
 桌面悬停、手机触摸均读到 3 号地报价，同时确认三类道路实体的模型已加载。桌面再通过手牌选择发条机器人并点中路障，确认道路实体移除。实机取景见 `qa/review/m4-promenade-desktop.png`、`qa/review/m4-promenade-mobile.png`；结构读数与操作结果见 `qa/review/m4-promenade-checks.json`；四件道具双角度图见 `qa/review/m4-road-tokens.jpg`。复查运行 `node scripts/qa/board-promenade.mjs`。此检查点通过类型检查、生产构建及道路实体和选路相关的 4 项测试。
 
 海港步道已有游戏内验收。旧城、商务区与山城仍需相同密度的街景打磨，昼夜与雨雪的全图可读性也待实机验收。桌面默认视距下地雷与倒计时钟的细部较小，可点地块查看说明。
+
+## 第四里程碑收尾 · 三区与天气
+
+旧城新增连续遮阳骑楼，商务区新增玻璃冬园与双翼办公楼广场，山城新增阶梯茶垄与木作棚。沿用项目已有原创模型与路网，新增构件不参与寻路、落地结算或地块拾取。降水区域跟随镜头目标；复看第一张雨夜图后，提高夜间环境光并给街区窗户加入暖光。
+
+**实测**：桌面 1440×900 切至雨夜，在旧城悬停 34 号道路；手机 390×844 切至晴昼下雪，在山城触摸 102 号补给铺。两端都正确显示所选地块，降水粒子已加载，页面异常为零。**视觉检查**：两张 PNG 中道路、角色、屋顶轮廓和地块说明可区分。商务区冬园已接入，未单独做商务区天气轨迹或截图。**剩余**：此轮未测低端真机帧率及全地图各类天气组合。复现命令为 `node scripts/qa/board-districts.mjs`，证据为 `qa/review/m4-district-desktop.png`、`qa/review/m4-district-mobile.png`、`qa/review/m4-district-checks.json`。

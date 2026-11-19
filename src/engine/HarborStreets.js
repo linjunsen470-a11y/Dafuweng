@@ -1,3 +1,4 @@
+import {createDistrictFrontages} from './DistrictFrontages.js';
 import { hillStreets } from './HillStreet.js';
 import { isOldTownHome } from './OldTownStreet.js';
 import { isCivicHome, civicStreets } from './CivicStreet.js';
@@ -106,7 +107,7 @@ export class HarborStreets {
         walk.position.set(x,.17,z); walk.receiveShadow=true; group.add(walk);
       }
     }
-    group.add(civicStreets(map),hillStreets(map));
+    group.add(civicStreets(map),hillStreets(map),createDistrictFrontages(this));
     // An inhabited frontage behind the first street, clear of the playable
     // road and property plots. These are scenery, not additional facilities.
     for (const [name,x,z,rotation] of [

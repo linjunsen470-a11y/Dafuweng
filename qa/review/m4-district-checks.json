@@ -1,0 +1,18 @@
+{
+  "desktop": {
+    "tile": "小满 · 34 · 山海道路 · 继续前进",
+    "weather": "RAIN",
+    "time": "NIGHT",
+    "frontages": true,
+    "precipitation": 950,
+    "errors": []
+  },
+  "mobile": {
+    "tile": "102 · 山海卡片屋 · 获得卡片点券补给",
+    "weather": "SNOW",
+    "time": "DAY",
+    "frontages": true,
+    "precipitation": 650,
+    "errors": []
+  }
+}

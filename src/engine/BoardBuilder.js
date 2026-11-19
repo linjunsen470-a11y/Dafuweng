@@ -1309,6 +1309,8 @@ export class BoardBuilder {
       });
     });
     this.mapEnvironmentGroup?.traverse(child => {
+      const materials=Array.isArray(child.material)?child.material:[child.material];
+      for(const material of materials) if(material?.userData.districtWindow) material.emissiveIntensity=enabled ? .75 : .10;
       if (child.userData?.isPromenadeLamp) child.material.emissiveIntensity = enabled ? 1.4 : .1;
       if (child.userData?.isOriginalCityWindow && child.material?.emissive) {
         child.material.emissiveIntensity = enabled ? .5 : 0;
