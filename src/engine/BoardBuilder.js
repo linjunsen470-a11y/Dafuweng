@@ -7,7 +7,7 @@ import { createCivicStation } from './CivicStation.js';
 import { createMagicFrontage } from './MagicFrontage.js';
 import { createIslandCoast, COAST_WATER_Y } from './IslandCoast.js';
 import { CITY_BLOCK_SITES, createCityBlock } from './CityBlocks.js';
-import { createCityGround } from './CityGround.js';
+import { createCityGround, createTerraceOrchards } from './CityGround.js';
 import { createHospitalClinic } from './HospitalStreet.js';
 import { isOldTownHome } from './OldTownStreet.js';
 import { isCivicHome } from './CivicStreet.js';
@@ -15,6 +15,7 @@ import { harborTileStyle, harborForkDirections } from './HarborBoardStyle.js';
 import { HarborStreets, isHarborHome, facingRoad } from './HarborStreets.js';
 import { harborFacility, facilityFacing } from './HarborFacilities.js';
 import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { BOARD_TILES, COLOR_GROUPS, TileType, isPropertyTile } from '../game/BoardData.js';
 import { getBoardThemeProfile, getTileVisualSpec } from '../game/BoardVisualRules.js';
 
@@ -423,7 +424,7 @@ export class BoardBuilder {
     this.harborGulls.frustumCulled = false;
     group.add(createHarborPromenade(),this.harborGulls);
     const districtGround = createCityGround(mapDefinition);
-    if (districtGround) group.add(districtGround);
+    if (districtGround) group.add(districtGround, createTerraceOrchards());
 
     const ocean = new THREE.Mesh(
       new THREE.PlaneGeometry(600, 600),
@@ -935,26 +936,15 @@ export class BoardBuilder {
 
   createMonsterLandmark() {
     const group = new THREE.Group();
-    const purple = new THREE.MeshStandardMaterial({ color: '#7c3aed', roughness: 0.45, emissive: '#2e1065', emissiveIntensity: 0.3 });
-    const body = new THREE.Mesh(new THREE.SphereGeometry(0.86, 20, 16), purple);
-    body.scale.y = 1.08;
-    body.position.y = 1.05;
-    body.castShadow = true;
-    group.add(body);
-    const eyeMat = new THREE.MeshBasicMaterial({ color: '#f8fafc' });
-    const pupilMat = new THREE.MeshBasicMaterial({ color: '#111827' });
-    [-0.3, 0.3].forEach(x => {
-      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 10), eyeMat);
-      eye.position.set(x, 1.25, 0.72);
-      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), pupilMat);
-      pupil.position.set(x, 1.25, 0.88);
-      group.add(eye, pupil);
-    });
-    [-0.48, 0.48].forEach(x => {
-      const horn = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.72, 10), new THREE.MeshStandardMaterial({ color: '#fde68a' }));
-      horn.position.set(x, 1.88, 0);
-      horn.rotation.z = x < 0 ? 0.35 : -0.35;
-      group.add(horn);
+    group.name = 'kite-fox-landmark';
+    new GLTFLoader().load(`${import.meta.env.BASE_URL}assets/models/kite-fox.glb`, ({scene}) => {
+      if (!group.parent) {
+        this.disposeObject(scene);
+        return;
+      }
+      scene.traverse(part => { if (part.isMesh) part.castShadow = true; });
+      scene.scale.setScalar(1.28);
+      group.add(scene);
     });
     return group;
   }

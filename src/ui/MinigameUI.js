@@ -140,15 +140,16 @@ export class MinigameUI {
         });
         keyHandlers.forEach(handler => window.removeEventListener('keydown', handler));
         const performance = getMinigamePerformance(definition.id, finalScore);
-        timerLabel.textContent = 'CLEAR';
+        overlay.classList.add('has-result');
+        timerLabel.textContent = '已结算';
         timerLabel.classList.remove('is-urgent');
         stage.className = 'minigame-stage minigame-result-stage';
         stage.innerHTML = `
           <section class="minigame-result-card tone-${performance.rank.tone}">
             <div class="minigame-result-rank"><span>${performance.rank.icon}</span><b>${performance.rank.id}</b></div>
-            <div class="minigame-result-copy"><small>CHALLENGE RESULT</small><h3>${performance.rank.label}</h3><p>${performance.nextRank ? `距离 ${performance.nextRank.id} 级还差 ${performance.pointsToNext} 分` : '已达成本挑战最高评价'}</p></div>
+            <div class="minigame-result-copy"><h3>${performance.rank.label}</h3><p>${performance.nextRank ? `距离 ${performance.nextRank.id} 级还差 ${performance.pointsToNext} 分` : '已达成本挑战最高评价'}</p></div>
             <div class="minigame-result-numbers"><span><small>最终得分</small><strong>${performance.score}</strong></span><span><small>最佳连击</small><strong>×${bestCombo}</strong></span><span><small>点券奖励</small><strong>${performance.reward} 点券</strong></span></div>
-            <div class="minigame-result-track"><i style="width:${performance.progress * 100}%"></i><em>${performance.rank.id} RANK</em></div>
+            <div class="minigame-result-track"><i style="width:${performance.progress * 100}%"></i></div>
             <button type="button" class="btn-primary minigame-claim">领取 ${performance.reward} 点券</button>
           </section>`;
         overlay.querySelector('.minigame-skip').disabled = true;

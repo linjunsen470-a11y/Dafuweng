@@ -120,3 +120,13 @@ node scripts/qa/board-events.mjs
 桌面 1440×900 与手机 390×844 分别加载四名新角色，八名的运行时动画表均有七段。桌面有长新闻时，常驻 HUD 占屏 15.28%，中心净空 66.97%；手机折叠新闻栏后分别为 20.91% 和 75.83%。桌面实际掷骰进入云端游乐场，点击金币得 10 分，从领取按钮取得 20 点券。仅验收这一条街机场景。
 
 浏览器 Web Audio 对四小节和声及回到首和弦的第五小节均采到非零音乐信号。音乐、音效、混音的采样峰值分别为 0.027、0.130、0.259，采样窗口内留有余量。此为数字电平与播放进程检查，扬声器实际听感和循环接缝仍待试听。小游戏结算面板仍采用深色皮肤。复现运行 `node scripts/qa/board-roster-arcade.mjs`。数据与三张实机图保存在 `qa/review/second-cast-checks.json` 与同目录的 `second-cast-{desktop,mobile,arcade}.png`。本轮一次 `npm run verify` 通过类型检查、665 项测试与生产构建。
+
+## 山城游乐场沿线的视觉收尾
+
+62 号怪兽地标换成原创风筝狐。双耳、三片叠翼、深色短靴和上扬的双色尾巴构成正反面轮廓。模型约 103 KiB，已纳入离线清单。生成命令为 `blender -b --python scripts/art/create_kite_fox.py`，两角度渲染见 `qa/review/kite-fox.jpg`。山城沿线新增有弯曲垄线的种植带和低矮柑橘园，调整了道路外铺地宽度。小游戏结算收拢为一张奶油色奖券，保留等级、得分、最佳连击、点券及领取操作。
+
+用同一份开局对照：原桌面为 `qa/review/second-cast-desktop.png`，本轮为 `qa/review/kite-festival-desktop.png`；旧结算为 `qa/review/second-cast-arcade.png`，新结算为 `qa/review/kite-festival-reward-desktop.png`。山城路口前景能同时看见橘园、编号地块与角色，怪兽格旁可辨认狐狸的耳朵和青金色双翼。
+
+本轮聚焦山城样板。其他街区和地图的郊野覆盖、角色骑乘穿模、救护车接送全程及音效与配乐的实际听感仍缺验收。山城画面中仍有平坦单色空地；小游戏的挑战中界面也保留了旧样式。实机复现入口为 `node scripts/qa/board-kite-festival.mjs`。收尾一次 `npm run verify` 通过类型检查、665 项测试及生产构建。
+
+桌面 1440×900 与手机 390×844 均实际从 108 号格掷骰进入游乐场，击中金币得 10 分，点击或触摸领取，核对结算事件与 20 点券到账。领取按钮两端均完整可见且至少高 44 CSS 像素。手机首轮触摸错过移动金币，按实时位置重新触摸后完成；手机观景较窄，画面主要覆盖入口和果园。手机结果为 `qa/review/kite-festival-mobile-checks.json`，结算画面为 `qa/review/kite-festival-reward-mobile.png`。

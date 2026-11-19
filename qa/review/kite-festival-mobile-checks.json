@@ -1,0 +1,17 @@
+{
+  "mobile": {
+    "models": [
+      "danny",
+      "sarah",
+      "miyamoto",
+      "babyjin"
+    ],
+    "clearance": 0.7582938388625592,
+    "hud": 0.20906550006076072,
+    "news": {
+      "visible": false,
+      "headline": "\n        ⚡ 实时新闻\n        第 1 轮 · 【城市】海港周末市集开张 — 沿港步行街本周增设十个摊位，市民可以搭乘渡轮到场。\n        ›\n      "
+    },
+    "reward": 20
+  }
+}

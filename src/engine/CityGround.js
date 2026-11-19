@@ -20,6 +20,23 @@ export function createCityGround(map) {
   polygon([[-50,-32],[-34,-34],[-20,-26],[-18,-9],[-23,7],[-35,14],[-49,8]],'#9db28f');
   polygon([[-45,-27],[-33,-29],[-24,-22],[-23,-10],[-28,4],[-38,7],[-45,1]],'#90a889');
   polygon([[-39,-23],[-31,-23],[-27,-14],[-30,-3],[-37,1],[-42,-7]],'#839e83');
+  // Curving planted terraces leave visible walkways between the crop rows.
+  for (const [x,z,w,d] of [[-20,-20,14,8],[-41,-29,12,6],[-9,-28,11,7],[-32,10,11,6],[-18,16,10,5]]) {
+    ctx.save();
+    ctx.translate(x,z);
+    ctx.rotate(-.16);
+    ctx.fillStyle='#d9c99a';
+    ctx.beginPath();ctx.ellipse(0,0,w*.52,d*.52,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(0,0,w*.49,d*.47,0,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle='#b3b66f';ctx.fillRect(-w,-d,2*w,2*d);
+    for(let row=-d;row<=d;row+=.95) {
+      ctx.beginPath();ctx.moveTo(-w,row);
+      ctx.bezierCurveTo(-w*.3,row-2,w*.24,row+1.7,w,row-1);
+      ctx.strokeStyle='#809f62';ctx.lineWidth=.58;ctx.stroke();
+      ctx.strokeStyle='#c0cc81';ctx.lineWidth=.15;ctx.stroke();
+    }
+    ctx.restore();
+  }
   // A shared market court ties the north street's low backdrop to its two sidewalks.
   polygon([[27,-31],[50,-31],[50,-24],[28,-24]],'#c2b99e','#cdbf9f');
   for(const x of [30,39]){ctx.fillStyle='#9caa83';ctx.fillRect(x,-24.6,6,.7);}
@@ -52,7 +69,7 @@ export function createCityGround(map) {
     const gradient=ctx.createLinearGradient(a.x,a.z,b.x,b.z);
     gradient.addColorStop(0,tones[getTileDistrict(map,tile)?.id]||tones.HILLS);
     gradient.addColorStop(1,tones[getTileDistrict(map,next)?.id]||tones.HILLS);
-    ctx.strokeStyle=gradient;ctx.lineWidth=10.4;ctx.beginPath();ctx.moveTo(a.x,a.z);ctx.lineTo(b.x,b.z);ctx.stroke();
+    ctx.strokeStyle=gradient;ctx.lineWidth=7.4;ctx.beginPath();ctx.moveTo(a.x,a.z);ctx.lineTo(b.x,b.z);ctx.stroke();
   }
   // Subtle deterministic grain is baked once, independent of the game's random state.
   let seed=173;
@@ -66,4 +83,34 @@ export function createCityGround(map) {
   const ground=new THREE.Mesh(createIslandSurfaceGeometry(),material);
   ground.name='city-district-ground';ground.rotation.x=-Math.PI/2;ground.position.set(0,-.095,0);ground.receiveShadow=true;ground.userData.isDistrictGround=true;
   return ground;
+}
+
+// Low citrus trees and fruit clusters sit inside the planted terraces.
+export function createTerraceOrchards() {
+  const group = new THREE.Group();
+  group.name = 'terrace-orchards';
+  const trees = [[-22,-21],[-19,-21],[-16,-21],[-21,-18],[-18,-18],
+    [-45,-29],[-42,-29],[-39,-29],[-10,-26],[-7,-26],[-10,-29],[-7,-29]];
+  const crowns = [], trunks = [], fruit = [];
+  for (const [index,[x,z]] of trees.entries()) {
+    const h = .7 + (index % 3) * .1;
+    trunks.push([x,h/2,z,.15,h,.15]);
+    for (const [dx,dy,dz,r] of [[-.32,0,.07,.52],[.30,.11,-.08,.55],[0,.38,.02,.49]]) {
+      crowns.push([x+dx,h+dy,z+dz,r, r*.77,r*.83]);
+      fruit.push([x+dx+.12,h+dy+.06,z+dz+r*.76,.084,.086,.082]);
+    }
+  }
+  const stamp = new THREE.Object3D();
+  function batch(rows, geometry, palette) {
+    const mesh = new THREE.InstancedMesh(geometry,new THREE.MeshStandardMaterial({roughness:.92,flatShading:true}),rows.length);
+    rows.forEach(([x,y,z,w,h,d],i)=>{
+      stamp.position.set(x,y,z);stamp.scale.set(w,h,d);stamp.rotation.y=i*.57;stamp.updateMatrix();
+      mesh.setMatrixAt(i,stamp.matrix);mesh.setColorAt(i,new THREE.Color(palette[i%palette.length]));
+    });
+    mesh.castShadow=true; mesh.receiveShadow=true;group.add(mesh);
+  }
+  batch(trunks,new THREE.CylinderGeometry(.72,1,1,7),['#885f45']);
+  batch(crowns,new THREE.IcosahedronGeometry(1,1),['#699959','#80a95e','#599067']);
+  batch(fruit,new THREE.IcosahedronGeometry(1),['#f5ac48','#ffd077']);
+  return group;
 }

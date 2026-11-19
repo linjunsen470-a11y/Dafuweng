@@ -4144,3 +4144,27 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
 .stock-chart-box { position:relative; }
 #stock-chart-mode { position:absolute; top:3px; right:3px; padding:3px 8px; color:#422919; background:#fff1c6; border-radius:8px; }
 #stock-chart-mode[aria-pressed="true"] { background:#ffbc57; }
+
+.minigame-modal.has-result .minigame-box {
+  width:min(410px,calc(100vw - 24px)); padding:16px; border:3px solid #bd8245;
+  background:#fff4d7; color:#52341f; border-radius:22px; box-shadow:0 6px 0 #875937,0 15px 48px #36231655;
+}
+.has-result .minigame-header { margin:0 0 12px; padding:0 0 10px; border-bottom:1px solid #dcb987; }
+.has-result .minigame-header h2 { color:#55331c; font-size:1.12rem; }
+.has-result :is(.minigame-kicker,.minigame-live-rank,.minigame-instructions,.minigame-footer) { display:none; }
+.has-result .minigame-timer { color:#155648; background:#d2f0ce; border-color:#84b79c; }
+.has-result .minigame-result-stage { height:auto; min-height:0; overflow:visible; background:transparent; border:0; box-shadow:none; }
+.has-result .minigame-result-card {
+  position:static; display:grid; grid-template-columns:68px 1fr; padding:12px; gap:12px; align-items:center;
+  border:1px solid #dfbd83; border-radius:14px; background:linear-gradient(130deg,#fffdf0,#ffebbe); box-shadow:none;
+}
+.has-result .minigame-result-rank { grid-row:auto; width:56px;height:56px;background:#ffda81;border-color:#c58b40;border-radius:50%;box-shadow:0 3px 0 #d09c53; }
+.has-result .minigame-result-rank span {font-size:1.65rem;}
+.has-result .minigame-result-rank b {width:24px;height:24px;bottom:-3px;right:-3px;border-color:#82603f;background:#fff5d7;font-size:.85rem;}
+.has-result .minigame-result-copy h3,.has-result .minigame-result-numbers strong { color:#53371f; }
+.has-result .minigame-result-copy p,.has-result .minigame-result-numbers small { color:#705536; font-size:.76rem; }
+.has-result .minigame-result-numbers {grid-column:1/-1;}
+.has-result .minigame-result-numbers span {background:#fffae8;border-left:3px solid #dca74c;border-radius:5px;}
+.has-result .minigame-result-track {background:#e6d4a9;}
+.has-result .minigame-result-track i {background:#53a188;}
+.has-result .minigame-claim {width:100%;min-width:0;min-height:44px;background:#ffd169;color:#4c321b;border:2px solid #ae773e;}
