@@ -330,7 +330,7 @@ export class Scene3D {
     this.controls.update();
   }
 
-  showStreetView(position, smooth = false) {
+  showStreetView(position, smooth = false, tallLot = null) {
     if (!position) return;
     this.followedObject = null;
     this.targetCameraPos = null;
@@ -342,6 +342,14 @@ export class Scene3D {
     const target = position.clone().add(oldTown ? new THREE.Vector3(-1,0,-3) : new THREE.Vector3(supplyCorner ? -1 : 4,0,3));
     const offset = oldTownOffset(this.activeMapId,position,this.activeMapId === 'grand-bay' && position.z >= 25 ? {x:compact?7:12,y:compact?26:20,z:compact?25:19} : {x:5,y:compact?28:22,z:compact?32:28});
     const cameraPosition = target.clone().add(new THREE.Vector3(offset.x,offset.y,offset.z));
+    if (compact && tallLot && position.distanceToSquared(tallLot) > 1) {
+      // Frame the owner and tower side by side from the road side of the plot.
+      const street = position.clone().sub(tallLot).setY(0).normalize();
+      const tangent = new THREE.Vector3(-street.z,0,street.x);
+      target.copy(position).lerp(tallLot,.5).y += 1.1;
+      cameraPosition.copy(target).addScaledVector(tangent,14).addScaledVector(street,17);
+      cameraPosition.y += 24;
+    }
     if (smooth) {
       this.targetLookAt = target;
       this.targetCameraPos = cameraPosition;

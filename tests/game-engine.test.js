@@ -33,9 +33,9 @@ describe('GameEngine landing commands', () => {
     expect(buyer.cash).toBe(cash);
   });
 
-  it('upgrades owned property through level four and then reports max level', () => {
+  it('upgrades owned property through level five and then reports max level', () => {
     state.propertyManager.buyProperty(1, buyer.id);
-    for (let expectedLevel = 1; expectedLevel <= 4; expectedLevel++) {
+    for (let expectedLevel = 1; expectedLevel <= 5; expectedLevel++) {
       const result = engine.upgradeProperty(buyer, 1);
       expect(result).toMatchObject({ success: true, level: expectedLevel });
     }

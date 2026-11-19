@@ -21,8 +21,8 @@ describe('land investment decision model', () => {
     const model = createLandDecisionModel({ tileData: tile, player, state, action: 'BUY', quote });
     expect(quote).toBe(Math.round(tile.price * 0.85));
     expect(model).toMatchObject({ cost: quote, affordable: true, cash: 20000, cashAfter: 20000 - quote, currentLevel: 0, targetLevel: 0 });
-    expect(model.rentGrowth).toHaveLength(5);
-    expect(model.rentGrowth[4].value).toBeGreaterThan(model.rentGrowth[0].value);
+    expect(model.rentGrowth).toHaveLength(6);
+    expect(model.rentGrowth[5].value).toBeGreaterThan(model.rentGrowth[4].value);
     expect(model.paybackPasses).toBeGreaterThan(0);
   });
 

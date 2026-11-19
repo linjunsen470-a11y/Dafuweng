@@ -1,3 +1,4 @@
+import { propertyLimit } from './GameRules.js';
 import { isPropertyTile } from './BoardData.js';
 
 const ROAD_META = {
@@ -97,7 +98,7 @@ function analyzePath(state, player, path) {
       score += value;
     });
     if (player.godType === 'EARTH' && isPropertyTile(tile) && property?.owner === null) score += 115;
-    if (player.godType === 'ANGEL' && isPropertyTile(tile) && property?.owner === player.id && property.level < 4) score += 45;
+    if (player.godType === 'ANGEL' && isPropertyTile(tile) && property?.owner === player.id && property.level < propertyLimit(property.buildingType, state.mapId)) score += 45;
     if (player.godType === 'DEMON' && isPropertyTile(tile) && property?.owner !== null) score += property.owner === player.id ? -55 : 55;
     if (player.vehicle === 'ENGINEER' && isPropertyTile(tile) && property?.owner !== null && property.owner !== player.id && property.level > 0) score += 45;
   });

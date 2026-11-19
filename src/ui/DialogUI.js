@@ -1,5 +1,5 @@
 import { rentAbility, costAbilityNote } from './CharacterAbilityFeedback.js';
-import { MAX_PROPERTY_LEVEL } from '../game/GameRules.js';
+import { residentialRent, MAX_PROPERTY_LEVEL } from '../game/GameRules.js';
 import { COLOR_GROUPS, isPropertyTile } from '../game/BoardData.js';
 import { BUILDINGS } from '../game/ContentRegistry.js';
 import { MinigameUI } from './MinigameUI.js';
@@ -11,7 +11,7 @@ export function createLandDecisionModel({ tileData, currentLevel = 0, player, st
   const resolvedBuildingType = buildingType || property?.buildingType || (tileData.large ? 'MALL' : 'RESIDENTIAL');
   const building = BUILDINGS.find(item => item.id === resolvedBuildingType);
   const cost = Math.max(0, Number(quote ?? (action === 'UPGRADE' ? tileData.buildCost : tileData.price)) || 0);
-  const targetLevel = action === 'UPGRADE' ? Math.min(currentLevel + 1, MAX_PROPERTY_LEVEL) : currentLevel;
+  const targetLevel = action === 'UPGRADE' ? Math.min(currentLevel + 1, building?.maxLevel ?? MAX_PROPERTY_LEVEL) : currentLevel;
   const rentMultiplier = building?.rentMultiplier ?? 1;
   const economyMultiplier = (state?.priceIndex || 1) * (state?.newsEffect === 'DOUBLE_RENT' || state?.newsEffect?.id === 'DOUBLE_RENT' ? 2 : 1);
   const districtTiles = state?.mapDefinition?.tiles?.filter(tile => tile.group === tileData.group && isPropertyTile(tile)) || [tileData];
@@ -26,13 +26,13 @@ export function createLandDecisionModel({ tileData, currentLevel = 0, player, st
   const rentOwner = action === 'UPGRADE' ? state?.players?.find(p => p.id === property?.owner) || player : player;
   const ability = rentAbility(rentOwner);
   const withOwnerAbility = amount => Math.round(amount * ability.multiplier);
-  const projectedRent = level => withOwnerAbility(Math.floor((tileData.tolls?.[level] || 0) * rentMultiplier * economyMultiplier * monopolyMultiplier * chainMultiplier));
+  const projectedRent = level => withOwnerAbility(Math.floor(residentialRent(tileData, level) * rentMultiplier * economyMultiplier * monopolyMultiplier * chainMultiplier));
   const currentToll = property?.owner !== null && property?.owner !== undefined
     ? Math.round(state.propertyManager.calculateToll(tileData.id, state.newsEffect, state.priceIndex) * rentAbility(state.players?.find(p => p.id === property.owner) || player).multiplier)
     : projectedRent(currentLevel);
   const nextToll = projectedRent(targetLevel);
   const cash = Math.max(0, Number(player?.cash) || 0);
-  const rentGrowth = Array.from({ length: MAX_PROPERTY_LEVEL + 1 }, (_, level) => projectedRent(level));
+  const rentGrowth = Array.from({ length: (building?.maxLevel ?? MAX_PROPERTY_LEVEL) + 1 }, (_, level) => projectedRent(level));
   const maxRent = Math.max(1, ...rentGrowth);
   return {
     action,
@@ -94,7 +94,8 @@ export class DialogUI {
     titleEl.textContent = action === 'BUY' ? `发现投资机会 · ${tileData.name}` : `地产升级规划 · ${tileData.name}`;
     document.getElementById('land-modal-subtitle').textContent = `${model.districtName} · ${model.buildingIcon} ${model.buildingName}`;
     badgeEl.textContent = action === 'BUY' ? 'LV 0 待开发地块' : `LV ${currentLevel} → LV ${model.targetLevel}`;
-    buildingArtEl.style.backgroundPosition = `${Math.min(model.artLevel, MAX_PROPERTY_LEVEL) * 25}% 50%`;
+    buildingArtEl.classList.toggle('land-tower-preview', model.artLevel === 5);
+    buildingArtEl.style.backgroundPosition = `${Math.min(model.artLevel, 4) * 25}% 50%`;
     buildingArtEl.style.setProperty('--district-color', model.districtColor);
     buildingArtEl.setAttribute('aria-label', `${model.buildingName} LV ${model.artLevel} 建筑预览`);
     buildingArtEl.setAttribute('role', 'img');

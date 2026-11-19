@@ -1,3 +1,4 @@
+import { animateBuildingChange } from './BuildingChange.js';
 import { createHarborWorkingYard } from './HarborWorkingYard.js';
 import { createBankCivicCourt } from './BankCivicCourt.js';
 import { createNorthMarketStreet } from './NorthMarketStreet.js';
@@ -19,6 +20,7 @@ import { getBoardThemeProfile, getTileVisualSpec } from '../game/BoardVisualRule
 export class BoardBuilder {
   constructor(scene3D) {
     this.scene3D = scene3D;
+    this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.tileMeshes = [];
     this.tilePositions = [];
     this.buildingMeshes = new Map();
@@ -71,9 +73,7 @@ export class BoardBuilder {
       this.textures.mapBg.repeat.set(2, 2);
     }
 
-    this.buildingAtlasImage = new Image();
-    this.buildingAtlasImage.decoding = 'async';
-    this.buildingAtlasImage.src = '/assets/buildings-v2-atlas.webp';
+
   }
 
   createAssetTexture(path, primary, accent) {
@@ -91,59 +91,6 @@ export class BoardBuilder {
     texture.anisotropy = Math.min(8, this.scene3D.renderer.capabilities.getMaxAnisotropy());
     texture.userData.sharedBoardTexture = true;
     return texture;
-  }
-
-  createBuildingArtworkSprite(level, ownerColor) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 320;
-    canvas.height = 500;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
-    const sprite = new THREE.Sprite(material);
-    const visualLevel = Math.max(1, Math.min(4, level));
-    const heights = [0, 3.6, 4.5, 5.8, 7.2];
-    const widths = [0, 3.1, 3.5, 4.1, 4.8];
-    sprite.position.set(0, heights[visualLevel] * 0.48, 0.18);
-    sprite.scale.set(widths[visualLevel], heights[visualLevel], 1);
-    sprite.userData.isBuildingStandee = true;
-
-    const draw = () => {
-      const image = this.buildingAtlasImage;
-      if (!image?.naturalWidth) return;
-      const sourceWidth = image.naturalWidth / 5;
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(
-        image,
-        visualLevel * sourceWidth,
-        0,
-        sourceWidth,
-        image.naturalHeight,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-      for (let index = 0; index < pixels.data.length; index += 4) {
-        const red = pixels.data[index];
-        const green = pixels.data[index + 1];
-        const blue = pixels.data[index + 2];
-        if (red > 238 && green > 228 && blue > 216 && Math.max(red, green, blue) - Math.min(red, green, blue) < 32) {
-          pixels.data[index + 3] = Math.max(0, (246 - red) * 18);
-        }
-      }
-      context.putImageData(pixels, 0, 0);
-      context.fillStyle = `#${new THREE.Color(ownerColor ?? 0xffaa00).getHexString()}`;
-      context.beginPath();
-      context.roundRect(55, 468, 210, 16, 8);
-      context.fill();
-      texture.needsUpdate = true;
-    };
-    if (this.buildingAtlasImage.complete) draw();
-    else this.buildingAtlasImage.addEventListener('load', draw, { once: true });
-    return sprite;
   }
 
   createProceduralTexture(primary, accent) {
@@ -313,7 +260,7 @@ export class BoardBuilder {
     });
     this.rebuildMapLandmarks(mapDefinition);
     this.createMapEnvironment(mapDefinition);
-    if (mapDefinition.id === 'grand-bay') this.loadHarborStreets();
+    this.loadHarborStreets();
     const island = mapDefinition.theme === 'ISLAND';
     const crossroads = mapDefinition.theme === 'CROSSROADS';
     const grand = mapDefinition.theme === 'GRAND_BAY';
@@ -593,11 +540,11 @@ export class BoardBuilder {
     this.scene3D.container.dataset.harborArt = 'loading';
     this.harborArtLoading = this.harborArt.load().then(() => {
       this.scene3D.container.dataset.harborArt = 'ready';
-      if (this.activeMapDefinition?.id !== 'grand-bay') return;
-      this.mapEnvironmentGroup.add(this.harborArt.streets(this.activeMapDefinition));
+      if (!this.activeMapDefinition) return;
+      if (this.activeMapDefinition.id === 'grand-bay') this.mapEnvironmentGroup.add(this.harborArt.streets(this.activeMapDefinition));
       const records = [...this.buildingMeshes].map(([id, mesh]) => [id, mesh.userData.propertyVisual]);
       this.rebuildMapLandmarks(this.activeMapDefinition);
-      for (const [id, record] of records) if (record) this.updateBuildingMesh(id, ...record);
+      for (const [id, record] of records) if (record) this.updateBuildingMesh(id, ...record, true);
     }).catch(error => {
       this.scene3D.container.dataset.harborArt = 'fallback';
       console.warn('Original harbor models unavailable; keeping procedural buildings.', error);
@@ -819,7 +766,10 @@ export class BoardBuilder {
       let group = null;
       const service = harborFacility(mapDefinition, tile);
       if (service) group = this.createHarborFacility(tile, service);
-      else if (isPropertyTile(tile)) {
+      else if (tile.type === TileType.CHANCE && this.harborArt?.prefabs) {
+        group = this.harborArt.clone('board_news');
+        if (group) group.userData.isStaticFacility = true;
+      } else if (isPropertyTile(tile)) {
         group = this.createVacantLotMarker(tile);
         this.vacantLotMeshes.set(tile.id, group);
       } else if (tile.type === TileType.MONSTER) group = this.createMonsterLandmark();
@@ -931,10 +881,12 @@ export class BoardBuilder {
       ,[TileType.MINIGAME]: ['#ec4899', '#fce7f3']
     };
     const [roofColor, wallColor] = palette[tile.type] || ['#7bed9f', '#ffffff'];
-    const clinic = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 72;
-    const magic = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 29 && tile.type === TileType.MAGIC_HOUSE;
-    const station = this.activeMapDefinition?.id === 'grand-bay' && tile.id === 42 && tile.type === TileType.PRISON;
-    const streetSign = magic || station;
+    const source = {HOSPITAL:'board_clinic', PRISON:'board_prison', MAGIC_HOUSE:'board_magic', BANK:'harbor_bank', STOCK:'old_town_exchange', CARD_SHOP:'market_clock_gallery', LOTTERY:'harbor_lottery'}[tile.type];
+    const prefab = source && this.harborArt?.clone(source);
+    if (prefab) { prefab.userData.isStaticFacility = true; return prefab; }
+    const clinic = tile.type === TileType.HOSPITAL;
+    const magic = tile.type === TileType.MAGIC_HOUSE;
+    const station = tile.type === TileType.PRISON;
     const group = station ? createCivicStation() : clinic ? createHospitalClinic() : magic ? createMagicFrontage() : new THREE.Group();
     if (!clinic && !magic && !station) {
       const plinth = new THREE.Mesh(
@@ -965,37 +917,6 @@ export class BoardBuilder {
         group.add(window);
       });
     }
-    const canvas = document.createElement('canvas');
-    canvas.width = streetSign ? 320 : 192;
-    canvas.height = streetSign ? 112 : 128;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = streetSign ? '#fff2d5' : '#15223b';
-    ctx.beginPath();
-    ctx.roundRect(4, 4, canvas.width - 8, canvas.height - 8, 18);
-    ctx.fill();
-    ctx.fillStyle = streetSign ? '#263f40' : '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    if (station) {
-      ctx.font = 'bold 32px sans-serif'; ctx.fillText('42 · 海岛警署', 160, 42);
-      ctx.font = '22px sans-serif'; ctx.fillText('通常停2次 · 原格继续', 160, 82);
-    } else if (magic) {
-      ctx.font = 'bold 32px sans-serif'; ctx.fillText('29 · 奇迹魔法屋', 160, 42);
-      ctx.font = '22px sans-serif'; ctx.fillText('到访选目标 · 选效果', 160, 82);
-    } else if (clinic) {
-      ctx.font = 'bold 24px sans-serif'; ctx.fillText(`72 · ${tile.name}`, 96, 40);
-      ctx.font = '21px sans-serif'; ctx.fillText('停留后休养1次', 96, 78);
-      ctx.font = '18px sans-serif'; ctx.fillText('恢复后从原格继续', 96, 105);
-    } else {
-      ctx.font = '56px sans-serif'; ctx.fillText(tile.icon || '🏛️', 96, 47);
-      ctx.font = 'bold 23px "Noto Sans SC", sans-serif'; ctx.fillText(tile.name, 96, 94);
-    }
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    const sign = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, ...(streetSign ? {depthWrite:false,toneMapped:false} : {}) }));
-    sign.position.set(0, station ? 3.35 : magic ? 4.05 : 3.15, 0);
-    sign.scale.set(streetSign ? 3.4 : 3, streetSign ? 1.2 : 2, 1);
-    group.add(sign);
     group.userData.isFacilityLandmark = true;
     return group;
   }
@@ -1154,6 +1075,10 @@ export class BoardBuilder {
         if (child.userData?.isFacilityHalo) child.rotation.z = time * .32 + group.userData.phase;
       });
     });
+    for (const building of this.buildingMeshes.values()) {
+      const rotor = building.userData.rotor;
+      if (rotor && !this.motionPreference.matches) rotor.rotation.y = time;
+    }
     if (this.waterTime) this.waterTime.value = time;
     this.harborWaves?.forEach((wave, index) => {
       wave.position.x = wave.userData.originX + Math.sin(time * wave.userData.speed + index) * 9;
@@ -1414,7 +1339,9 @@ export class BoardBuilder {
     });
   }
 
-  updateBuildingMesh(tileIndex, level, ownerColor = null, buildingType = null) {
+  updateBuildingMesh(tileIndex, level, ownerColor = null, buildingType = null, refresh = false, purchased = false) {
+    const previous = this.buildingMeshes.get(tileIndex)?.userData.propertyVisual;
+    if (!refresh && previous && previous[0] === level && previous[1] === ownerColor && previous[2] === buildingType) return;
     const vacantLot = this.vacantLotMeshes.get(tileIndex);
     if (vacantLot) vacantLot.visible = level === 0 && ownerColor === null;
     if (this.buildingMeshes.has(tileIndex)) {
@@ -1437,14 +1364,24 @@ export class BoardBuilder {
     const originalDistrict = isCivicHome(this.activeMapDefinition,tile,buildingType) ? 'civic'
       : isOldTownHome(this.activeMapDefinition,tile,buildingType) ? 'market'
         : isHarborHome(this.activeMapDefinition,tile,buildingType) ? 'harbor' : null;
-    const originalHome = originalDistrict && level > 0 && this.harborArt?.residence(level,originalDistrict);
+    const district = originalDistrict || 'garden';
+    const shopModel = {MALL: `commerce_mall_${level}`, PARK: `commerce_park_${level}`, HOTEL:'board_hotel', GAS_STATION:'board_gas_station', LAB:'board_lab'}[buildingType];
+    const originalHome = shopModel ? this.harborArt?.clone(shopModel)
+      : level > 0 && this.harborArt?.residence(level,district);
     if (originalHome) {
-      group.rotation.y = facingRoad(tile);
+      if (tile?.lot?.position && tile.position) group.rotation.y = facingRoad(tile);
       group.add(originalHome);
-      this.addBuildingOwnerLighting(group, ownerColor, false);
+      group.userData.rotor = originalHome.getObjectByName('radar_rotor') || originalHome.getObjectByName('lobby_door');
+
+      if (buildingType === 'PARK') {
+        const fountain = this.harborArt.clone('board_fountain');
+        if (fountain) { fountain.position.set(.52,.22,.22); fountain.scale.setScalar(.78); group.add(fountain); }
+      }
+      this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
       group.userData.originalModel = originalHome.name;
       this.scene3D.scene.add(group);
       this.buildingMeshes.set(tileIndex, group);
+      if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group,previous?.[0] ?? -1,level,this.scene3D);
       return;
     }
 
@@ -1515,6 +1452,14 @@ export class BoardBuilder {
       );
       flag.position.set(0.35, 1, 0);
       group.add(pole, flag);
+      for (const side of [-1,1]) {
+        for (const z of [-1.15,0,1.15]) {
+          const post = new THREE.Mesh(new THREE.BoxGeometry(.12,.48,.12),roofMat);
+          post.position.set(side*1.3,.24,z); group.add(post);
+        }
+        const rail = new THREE.Mesh(new THREE.BoxGeometry(.08,.10,2.4),roofMat);
+        rail.position.set(side*1.3,.32,0); group.add(rail);
+      }
     } else if (level === 1) {
       const wall = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.3, 2.0), wallMat);
       wall.position.y = 0.65;
@@ -1597,25 +1542,14 @@ export class BoardBuilder {
     if (level > 0) {
       this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
       this.addBuildingWindows(group, level);
-      if (!tile?.large) group.add(this.createBuildingArtworkSprite(level, ownerColor));
+
     }
-    group.scale.set(0.1, 0.1, 0.1);
+
     this.scene3D.scene.add(group);
     this.buildingMeshes.set(tileIndex, group);
 
-    let scale = 0.1;
-    const anim = () => {
-      scale += (1.0 - scale) * 0.2;
-      group.scale.set(scale, scale, scale);
-      if (Math.abs(1.0 - scale) > 0.01) {
-        requestAnimationFrame(anim);
-      } else {
-        group.scale.set(1, 1, 1);
-      }
-    };
-    anim();
-
-    this.scene3D.createSparkles(tilePos, ownerColor, 30);
+    group.scale.setScalar(1);
+    if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group,previous?.[0] ?? -1,level,this.scene3D);
   }
 
   addBuildingOwnerLighting(group, ownerColor, large = false) {

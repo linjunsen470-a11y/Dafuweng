@@ -17,10 +17,11 @@ export function facingRoad(tile) {
 export class HarborStreets {
   async load() {
     const loader = new GLTFLoader();
-    const packs = await Promise.all(['residences', 'neighborhoods', 'harbor-facilities', 'old-town', 'civic-street', 'return-gate', 'company-court', 'summit-yard', 'hill-supply'].map(name =>
+    const packs = await Promise.all(['residences', 'harbor-tower', 'commerce', 'neighborhoods', 'harbor-facilities', 'old-town', 'civic-street', 'return-gate', 'company-court', 'summit-yard', 'hill-supply'].map(name =>
       loader.loadAsync(`${import.meta.env.BASE_URL}shanhai/models/${name}.glb`)));
     const crown = await loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/exchange-crown.glb`).catch(() => null);
     if (crown) packs.push(crown);
+    packs.push(await loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/city-landmarks.glb`));
     this.prefabs = new THREE.Group();
     packs.forEach(pack => this.prefabs.add(...pack.scene.children.slice()));
   }
@@ -42,11 +43,12 @@ export class HarborStreets {
   }
 
   residence(level, district = 'harbor') {
-    const model = this.clone(`res_${district}_${level}`);
-    if (district === 'market') model?.traverse(mesh=>{
+    const newResidence = {3:'board_villa',4:'board_apartment'}[level];
+    const model = this.clone(level === 5 ? 'res_harbor_5' : newResidence || `res_${district}_${level}`);
+    if (district !== 'harbor') model?.traverse(mesh=>{
       for (const material of (Array.isArray(mesh.material) ? mesh.material : [mesh.material])) {
         if (!material) continue;
-        if (material.name === 'coral') material.color.set('#566b65');
+        if (['coral','brick','teal','sea'].includes(material.name)) material.color.set(({market:'#566b65',civic:'#587d94',garden:'#658660'})[district]);
         if (material.name === 'cream') material.color.set('#e4cfa9');
       }
     });

@@ -1498,7 +1498,7 @@ body, html {
 .land-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
 .land-section-heading span { color: #eaf5f8; font-size: .72rem; font-weight: 850; }
 .land-section-heading small { color: #ffd166; font-size: .61rem; }
-.land-rent-chart { height: 118px; display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; gap: 8px; }
+.land-rent-chart { height: 118px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: end; gap: 8px; }
 .land-rent-bar { height: 100%; min-width: 0; display: grid; grid-template-rows: 1fr auto auto; justify-items: center; gap: 3px; }
 .land-rent-bar > span { align-self: end; width: min(38px, 72%); height: var(--rent-share); min-height: 4px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, #4e7184, #1b394a); box-shadow: inset 0 1px 0 rgba(255,255,255,.14); transition: height 300ms ease; }
 .land-rent-bar.is-complete > span { background: linear-gradient(180deg, #2fc68e, #17674f); }
@@ -4121,3 +4121,5 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
   .hud-layer .action-buttons {width:365px;}
   .hud-layer .action-buttons .btn-action {padding:3px;line-height:1.1;}
 }
+
+.land-modal-box .land-building-art.land-tower-preview { background-image: url('/assets/residence-level-five.webp'); background-size: contain; background-position: center !important; }

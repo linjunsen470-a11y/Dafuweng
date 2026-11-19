@@ -426,7 +426,7 @@ class GameController {
     this.syncAdaptiveMusic();
     this.uiRenderer.renderHUD();
     if (this.gameState.mapDefinition.id === 'grand-bay') {
-      this.scene3D.showStreetView(this.boardBuilder.tilePositions[this.gameState.getCurrentPlayer().currentTile]);
+      this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
     }
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
 
@@ -454,7 +454,7 @@ class GameController {
     document.getElementById('hud-layer').classList.remove('hidden');
     this.uiRenderer.renderHUD();
     if (this.gameState.mapDefinition.id === 'grand-bay') {
-      this.scene3D.showStreetView(this.boardBuilder.tilePositions[this.gameState.getCurrentPlayer().currentTile]);
+      this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
     }
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
     this.checkAITurn();
@@ -753,7 +753,7 @@ class GameController {
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
     if (this.gameState.mapDefinition.id === 'grand-bay') {
-      this.scene3D.showStreetView(this.boardBuilder.tilePositions[this.gameState.getCurrentPlayer().currentTile]);
+      this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
     }
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
     this.checkAITurn();
@@ -793,6 +793,12 @@ class GameController {
     });
   }
 
+  showPlayerStreet(tileId, smooth = false) {
+    const position = this.boardBuilder.tilePositions[tileId];
+    const lot = this.boardBuilder.buildingMeshes.get(tileId);
+    this.scene3D.showStreetView(position, smooth, lot?.userData.propertyVisual?.[0] >= 4 ? lot.position : null);
+  }
+
   triggerHumanRoll() {
     if (this.modalCoordinator.active || this.boardPicker.cancel || this.isProcessingAction) return;
     if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
@@ -818,7 +824,7 @@ class GameController {
       if (reframeHuman && this.gameState.mapId === 'grand-bay' && curPlayer && !curPlayer.isBankrupt
         && this.gameState.phase === GamePhase.PRE_ROLL_ACTION) {
         const position = this.boardBuilder.tilePositions[curPlayer.currentTile];
-        this.scene3D.showStreetView(position, this.actionSpeed <= 1 && !this.presentationUI.isReducedMotion());
+        this.showPlayerStreet(curPlayer.currentTile, this.actionSpeed <= 1 && !this.presentationUI.isReducedMotion());
       }
       this.uiRenderer.renderHUD();
     }
@@ -1261,7 +1267,7 @@ class GameController {
   buyLand(tileIndex, player, buildingType = null) {
     const result = this.gameEngine.execute({ type: 'PURCHASE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex, buildingType } });
     if (result.success) {
-      this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex, result.buildingType);
+      this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex, result.buildingType, false, true);
       this.audioManager.playBuildSound();
     }
     return result;

@@ -26,7 +26,7 @@ describe('P0 Features Validation', () => {
     expect(state.priceIndex).toBe(1.8);
   });
 
-  it('supports 5-level property upgrades (level 0 to 4)', () => {
+  it('supports five built levels above a vacant lot', () => {
     const state = new GameState({ seed: 42 });
     state.setupGame([
       { profileIndex: 0, name: '林小满', isAI: false },
@@ -35,13 +35,20 @@ describe('P0 Features Validation', () => {
     const engine = new GameEngine(state);
     state.propertyManager.buyProperty(1, 0);
 
-    for (let level = 1; level <= 4; level++) {
+    for (let level = 1; level <= 5; level++) {
       const result = state.propertyManager.upgradeProperty(1);
       expect(result).toBe(true);
     }
     const prop = state.propertyManager.getProperty(1);
-    expect(prop.level).toBe(4);
-    // Upgrade past level 4 should fail
+    expect(prop.level).toBe(5);
+    const restored = new GameState();
+    restored.restoreSnapshot(state.createSnapshot());
+    expect(restored.propertyManager.getProperty(1)).toMatchObject({owner:0, level:5});
+    const rents = restored.propertyManager.calculateToll(1);
+    expect(restored.propertyManager.demolishProperty(1)).toBe(true);
+    expect(restored.propertyManager.getProperty(1).level).toBe(4);
+    expect(rents).toBeGreaterThan(restored.propertyManager.calculateToll(1));
+    // Level five is the cap
     expect(state.propertyManager.upgradeProperty(1)).toBe(false);
   });
 

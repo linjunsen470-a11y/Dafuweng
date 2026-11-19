@@ -1,15 +1,16 @@
 import { BOARD_TILES, COLOR_GROUPS, TileType, isPropertyTile } from './BoardData.js';
-import { MAX_PROPERTY_LEVEL } from './GameRules.js';
+import { residentialRent, propertyLimit } from './GameRules.js';
 import { BUILDINGS } from './ContentRegistry.js';
 
 export class PropertyManager {
   constructor() {
-    this.properties = new Map(); // tileIndex -> { owner: null/int, level: 0..4, hasObstacle: false }
+    this.properties = new Map(); // tileIndex -> { owner: null/int, level: 0..5, hasObstacle: false }
     this.tiles = new Map();
     this.init();
   }
 
-  init(tiles = BOARD_TILES) {
+  init(tiles = BOARD_TILES, mapId = null) {
+    this.mapId = mapId;
     this.properties.clear();
     this.tiles = new Map();
     tiles.forEach((tile, index) => {
@@ -61,8 +62,7 @@ export class PropertyManager {
 
   upgradeProperty(tileIndex) {
     const prop = this.properties.get(tileIndex);
-    const building = BUILDINGS.find(definition => definition.id === prop?.buildingType);
-    const maxLevel = building?.maxLevel ?? MAX_PROPERTY_LEVEL;
+    const maxLevel = propertyLimit(prop?.buildingType, this.mapId);
     if (!prop || prop.level >= maxLevel) return false;
     prop.level += 1;
     return true;
@@ -95,7 +95,7 @@ export class PropertyManager {
       return 0;
     }
 
-    let baseToll = tileData.tolls[prop.level] || tileData.tolls[0];
+    let baseToll = residentialRent(tileData, prop.level);
 
     const building = BUILDINGS.find(definition => definition.id === prop.buildingType);
     if (building) {

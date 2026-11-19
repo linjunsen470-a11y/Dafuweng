@@ -1,6 +1,6 @@
 import { cardManager } from './CardManager.js';
 import { getMagicPreview } from './MagicRules.js';
-import { MAX_PROPERTY_LEVEL } from './GameRules.js';
+import { residentialRent, propertyLimit } from './GameRules.js';
 import { chooseRouteByPlan } from './RouteDecisionRules.js';
 
 export class AIPlayer {
@@ -19,13 +19,13 @@ export class AIPlayer {
   }
 
   static evaluateLandUpgrade(aiPlayer, landData, currentLevel, gameState = null) {
-    if (currentLevel >= MAX_PROPERTY_LEVEL) return false;
+    if (currentLevel >= propertyLimit(gameState?.propertyManager?.getProperty(landData.id)?.buildingType, gameState?.mapId)) return false;
     const upgradeCost = landData.buildCost || 600;
     const reserveByDifficulty = { EASY: 3000, NORMAL: 1800, HARD: 800 };
     const safetyReserve = reserveByDifficulty[aiPlayer.aiDifficulty] ?? 1800;
     if (aiPlayer.cash - upgradeCost < safetyReserve) return false;
-    const currentRent = landData.tolls?.[currentLevel] || 0;
-    const nextRent = landData.tolls?.[currentLevel + 1] || currentRent;
+    const currentRent = residentialRent(landData, currentLevel);
+    const nextRent = residentialRent(landData, currentLevel + 1);
     const roi = (nextRent - currentRent) / Math.max(1, upgradeCost);
     const opponents = gameState?.players?.filter(player => !player.isBankrupt && player.id !== aiPlayer.id).length || 1;
     return landData.large || (aiPlayer.aiStrategy === 'PROPERTY' && roi * opponents >= 0.22) || roi * opponents >= 0.45 || aiPlayer.cash > upgradeCost * 3;

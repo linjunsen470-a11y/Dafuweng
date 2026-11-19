@@ -88,7 +88,7 @@ export class GameState {
     this.mapDefinition = getMapDefinition(this.mapId);
     this.mapRuntime = new MapRuntime(this.mapDefinition);
     if (this.propertyManager) {
-      this.propertyManager.init(this.mapDefinition.tiles);
+      this.propertyManager.init(this.mapDefinition.tiles, this.mapDefinition.id);
     }
   }
 
@@ -102,7 +102,7 @@ export class GameState {
     this.currentPlayerIndex = 0;
     this.phase = GamePhase.PRE_ROLL_ACTION;
     this.setMap(options.mapId || this.mapId || 'city-loop');
-    this.propertyManager.init(this.mapDefinition.tiles);
+    this.propertyManager.init(this.mapDefinition.tiles, this.mapDefinition.id);
     this.stockMarket.reset();
     this.companyManager.reset();
     this.newsEffect = null;

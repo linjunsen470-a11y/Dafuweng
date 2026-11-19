@@ -2,7 +2,7 @@ import { CardRules } from './CardRules.js';
 import { SaveManager } from './SaveManager.js';
 import { TileType, isPropertyTile } from './BoardData.js';
 import { cardManager } from './CardManager.js';
-import { MAX_PROPERTY_LEVEL } from './GameRules.js';
+import { propertyLimit } from './GameRules.js';
 import { validateCommand } from './CommandPolicy.js';
 import { BUILDINGS, COMPANIES, ITEMS, MAGIC_CONDITIONS, MAGIC_EFFECTS, MINIGAMES } from './ContentRegistry.js';
 import { CARD_CAPACITY, ITEM_CAPACITY } from './InventoryManager.js';
@@ -434,7 +434,7 @@ export class GameEngine {
       events.push({ type: 'PROPERTY_CHANGED', tileId: selected, ownerId: player.id, level: property.level });
     }
 
-    if (player.godType === 'ANGEL' && isPropertyTile(this.state.getTile(selected)) && property.level < 4) {
+    if (player.godType === 'ANGEL' && isPropertyTile(this.state.getTile(selected)) && property.level < propertyLimit(property.buildingType, this.state.mapId)) {
       property.level++;
       this.state.assetRevision++;
       events.push({ type: 'PROPERTY_CHANGED', tileId: selected, ownerId: property.owner, level: property.level });
@@ -556,7 +556,7 @@ export class GameEngine {
         .map(entity => ({ id: entity.tileId, label: this.state.getTile(entity.tileId)?.name || `${entity.tileId}`, description: entity.type }));
     } else if (itemId === 'ROBOT_WORKER') {
       targets = [...this.state.propertyManager.properties.entries()]
-        .filter(([, property]) => property.owner === player.id && property.level < MAX_PROPERTY_LEVEL)
+        .filter(([, property]) => property.owner === player.id && property.level < propertyLimit(property.buildingType, this.state.mapId))
         .map(([id, property]) => ({ id, label: this.state.getTile(id).name, description: `LV ${property.level}` }));
     } else if (['MISSILE_ITEM', 'NUCLEAR_MISSILE', 'TELEPORTER'].includes(itemId)) {
       targets = this.state.mapDefinition.tiles.map(tile => ({ id: tile.id, label: tile.name, description: tile.type }));
@@ -573,7 +573,7 @@ export class GameEngine {
     if (property.owner === null) return { kind: 'PURCHASE', tile, property };
     if (property.isMortgaged) return { kind: 'MORTGAGED', tile, property };
     const building = BUILDINGS.find(definition => definition.id === property.buildingType);
-    const maxLevel = building?.maxLevel ?? MAX_PROPERTY_LEVEL;
+    const maxLevel = propertyLimit(property?.buildingType, this.state.mapId);
     if (property.owner === player.id) {
       if (property.buildingType === 'LAB') return { kind: 'LAB', tile, property, researchOptions: this.getResearchOptions(property.level) };
       return { kind: property.level < maxLevel ? 'UPGRADE' : 'OWN_MAX', tile, property };
@@ -616,7 +616,7 @@ export class GameEngine {
     const owner = this.state.players[property?.owner];
     const canTeamUpgrade = this.state.gameMode === 'TEAM' && owner?.teamId === player.teamId;
     const building = BUILDINGS.find(definition => definition.id === property?.buildingType);
-    const maxLevel = building?.maxLevel ?? MAX_PROPERTY_LEVEL;
+    const maxLevel = propertyLimit(property?.buildingType, this.state.mapId);
     if (!tile || (property.owner !== player.id && !canTeamUpgrade) || property.level >= maxLevel || property.isMortgaged) {
       return { success: false, reason: '该地产当前不可升级' };
     }
@@ -1164,11 +1164,15 @@ export class GameEngine {
       }
       case 'PROPERTY_UP':
       case 'PROPERTY_DOWN': {
-        const owned = [...this.state.propertyManager.properties.values()].filter(property => property.owner === player.id && property.level > 0);
-        const property = this.state.rng.pick(owned);
-        const building = BUILDINGS.find(definition => definition.id === property?.buildingType);
-        if (property) property.level = Math.max(1, Math.min(building?.maxLevel || 4, property.level + (chance.kind === 'PROPERTY_UP' ? 1 : -1)));
-        return { type: 'PROPERTY_CHANGED', tileId: property?.tileId ?? null, ownerId: player.id, level: property?.level ?? null, chance };
+        const up = chance.kind === 'PROPERTY_UP';
+        const owned = [...this.state.propertyManager.properties.entries()].filter(([,lot]) =>
+          lot.owner === player.id && (up ? lot.level < propertyLimit(lot.buildingType, this.state.mapId) : lot.level > 0));
+        const selected = this.state.rng.pick(owned);
+        if (!selected) return {type:'PROPERTY_CHANGED', tileId:null, ownerId:player.id, level:null, chance};
+        const [tileId, property] = selected;
+        property.level += up ? 1 : -1;
+        this.state.assetRevision++;
+        return { type: 'PROPERTY_CHANGED', tileId, ownerId: player.id, level: property.level, chance };
       }
       case 'LOTTERY': {
         const number = this.state.rng.int(1, 10);
@@ -1222,7 +1226,7 @@ export class GameEngine {
       this.state.players.filter(item => !item.isBankrupt).forEach(item => { item.cash += 800; });
     } else if (magicId === 'PROPERTY_BOOM') {
       this.state.propertyManager.properties.forEach(property => {
-        if (property.owner === player.id && property.level < MAX_PROPERTY_LEVEL) property.level++;
+        if (property.owner === player.id && property.level < propertyLimit(property.buildingType, this.state.mapId)) property.level++;
       });
       this.state.assetRevision++;
     } else if (magicId === 'GOD_SHUFFLE') {

@@ -60,3 +60,15 @@ node scripts/qa/board-events.mjs
 角色可用 `blender -b --python scripts/art/create_baseball_pawn.py -- xiaoman` 重建，神明用 `blender -b --python scripts/art/create_board_spirits.py` 重建；运行时 GLB 使用 glTF Transform quantize。运行 `node scripts/qa/board-ride.mjs` 可复查实机操作。俯视镜头中角色主要靠帽形、配色和载具辨认，脸部细节在手机默认缩放下较小。后八名可选角色仍使用原模型，五级住宅与后续城市美术尚待实现。
 
 本轮收尾运行一次 `npm run verify`，类型检查通过，127 个测试文件的 663 项全部通过，生产构建成功。
+
+## 第三里程碑 · 空地与五级住宅
+
+从 `55b081b` 接入主游戏。空地保留业主色围栏与旗帜，住宅依次成为平房、双层洋房、带花园与廊柱的别墅、带错层阳台的公寓、带冠塔的摩天楼。三级和四级新增原创 Blender 模型，其他级别复用项目原创资产，各街区有不同住宅配色。升级时出现脚手架与金光，模型弹起；降级时散落碎块并轻震镜头。主棋盘移除了旧的住宅平面立牌和公共设施悬浮文字牌。商业地块使用五种对应模型；酒店门与研究所天线可转动，医院有救护车停靠位。新增资产集中在 `scripts/art/create_city_landmarks.py`、`art-source/main/city-landmarks.blend`、`public/assets/models/city-landmarks.glb`。设施沿用各自等级上限。
+
+旧 V11 住宅按原等级读入。四级宅可继续付费升至五级，新五级存档可恢复，不重新认定业主或补扣旧账。没有显式第五级报价的地图，以四级基础租金的 1.5 倍作为第五级基础租金；现有垄断、物价和折扣规则继续生效。独立山海章节保留原四级住宅上限。
+
+实机检查从 V11 的蓝湾码头 2 号四级宅开始，在正常落地对话框点击或触摸升级。桌面和手机均得到五级冠塔，基础过路费从 5,570 升至 8,355，桌面下一位玩家通过手牌点中地图上的同一块地，拆回四级。初次看片发现手机镜头会让塔楼挡住棋子而变透明；已针对路旁高楼调整交棒取景，镜头从街侧同时纳入塔楼和棋子。两端实机结果见 `qa/review/m3-upgrade-checks.json`、`qa/review/m3-upgrade-desktop.png` 和 `qa/review/m3-upgrade-mobile.png`。离线双角度拼图见 `qa/review/m3-residences.jpg` 和 `qa/review/m3-landmarks.jpg`。
+
+复查主流程运行 `node scripts/qa/board-housing.mjs`，代码验收运行 `npm run verify`。复现美术运行 `blender -b --python scripts/art/create_city_landmarks.py`，量化新 GLB 后运行 `blender -b --python scripts/art/render_residence_review.py`。商业与公共设施已看过建模拼图，尚未逐栋进行游戏内访问录像；默认海港画面中岸线、人行道与防波堤之间仍显空旷。
+
+收尾通过类型检查、127 个测试文件共 663 项及 Vite 生产构建；实机两条路径均未捕获页面异常。

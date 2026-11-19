@@ -1,5 +1,5 @@
+import { propertyLimit } from './GameRules.js';
 import { CARD_CAPACITY, ITEM_CAPACITY } from './InventoryManager.js';
-import { MAX_PROPERTY_LEVEL } from './GameRules.js';
 
 export const MAGIC_CONDITION_META = {
   SELF: { icon: '🪞', label: '自己', category: '个人', description: '只影响施法者本人' },
@@ -55,7 +55,7 @@ export function getMagicTargets(state, caster, conditionId) {
 }
 
 function getEffectCapacity(state, target, effectId) {
-  if (effectId === 'PROPERTY_BOOM') return propertyEntries(state, target.id).filter(([, property]) => property.level < MAX_PROPERTY_LEVEL).length;
+  if (effectId === 'PROPERTY_BOOM') return propertyEntries(state, target.id).filter(([, property]) => property.level < propertyLimit(property.buildingType, state.mapId)).length;
   if (effectId === 'DEMOLISH_ONE') return propertyEntries(state, target.id).filter(([, property]) => property.level > 0).length;
   if (effectId === 'GAIN_CARD') return Math.max(0, CARD_CAPACITY - (target.cards?.length || 0));
   if (effectId === 'GAIN_ITEM') return Math.max(0, ITEM_CAPACITY - (target.items?.length || 0));
