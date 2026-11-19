@@ -1,0 +1,50 @@
+{
+  "mobile": {
+    "hudFraction": 0.20906550006076072,
+    "clear": 0.7582938388625592,
+    "vehicle": "MOTOR",
+    "target": {
+      "x": 319.88608073609504,
+      "y": 387.67322622970636,
+      "element": "CANVAS"
+    },
+    "cast": [
+      "miya",
+      "lan",
+      "hawk",
+      "afei"
+    ],
+    "attached": "ANGEL",
+    "roaming": "DEMON",
+    "hover": "3 · 蓝湾码头 2号 · 无主地产 · 当前默认购价 $1,160",
+    "clip": "Ride",
+    "wheels": 2,
+    "count": 2,
+    "rolled": true,
+    "errors": []
+  },
+  "desktop": {
+    "hudFraction": 0.15669953221450617,
+    "clear": 0.6696503062307099,
+    "vehicle": "CAR",
+    "target": {
+      "x": 898.2126903946838,
+      "y": 440.4793013417482,
+      "element": "CANVAS"
+    },
+    "cast": [
+      "xiaoman",
+      "tianye",
+      "jingjing",
+      "baroque"
+    ],
+    "attached": "EARTH",
+    "roaming": "GREAT_FORTUNE",
+    "hover": "3 · 蓝湾码头 2号 · 无主地产 · 当前默认购价 $986",
+    "clip": "Ride",
+    "wheels": 4,
+    "count": 3,
+    "rolled": true,
+    "errors": []
+  }
+}

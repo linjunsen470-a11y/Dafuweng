@@ -1,4 +1,4 @@
-import {boardClearance} from './board-clearance.mjs';
+import {boardClearance,boardHudFraction} from './board-clearance.mjs';
 import assert from 'node:assert/strict';
 import puppeteer from 'puppeteer-core';
 import {createServer} from 'vite';
@@ -37,20 +37,7 @@ try {
         if (size === 'mobile') await page.tap(selector);
         else await page.click(selector);
       };
-      const area = await page.evaluate(()=>{
-        const rects = [...document.querySelectorAll('.hud-layer > :not(.hidden)')].map(el=>el.getBoundingClientRect()).filter(r=>r.width && r.height);
-        const xs = [...new Set(rects.flatMap(r=>[r.left,r.right]))].sort((a,b)=>a-b);
-        let sum = 0;
-        for(let i=1;i<xs.length;i++){
-          const intervals = rects.filter(r=>r.left<xs[i] && r.right>xs[i-1]).sort((a,b)=>a.top-b.top);
-          let end = 0;
-          for(const r of intervals){
-            sum += (xs[i]-xs[i-1])*Math.max(0,Math.min(innerHeight,r.bottom)-Math.max(end,r.top,0));
-            end = Math.max(end,r.bottom);
-          }
-        }
-        return sum/(innerWidth*innerHeight);
-      });
+      const area = await page.evaluate(boardHudFraction);
       const centralClearFraction = await page.evaluate(boardClearance);
       results[size]={hudFraction:area,centralClearFraction};
       if(size==='mobile'){

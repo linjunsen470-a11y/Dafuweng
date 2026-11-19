@@ -192,6 +192,10 @@ class GameController {
       const property = this.gameState.propertyManager.getProperty(event.tileId);
       const owner = property?.owner === null ? null : this.gameState.players[property?.owner];
       this.boardBuilder.updateBuildingMesh(event.tileId, property?.level || 0, owner?.colorHex, property?.buildingType);
+    } else if (event.type === 'GOD_TRANSFERRED') {
+      for (const id of [event.fromPlayerId,event.toPlayerId]) this.pawnManager.updateGodAura(id,this.gameState.players[id]?.godType);
+    } else if (event.type === 'GOD_DEPARTED') {
+      this.pawnManager.updateGodAura(event.playerId,null);
     } else if (event.type === 'STATUS_CHANGED') {
       this.pawnManager.updateGodAura(event.playerId, event.status);
     } else if (event.type === 'BOARD_GOD_COLLECTED') {

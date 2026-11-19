@@ -1,5 +1,6 @@
-import {attachBaseballPawn,animateSkin,detachSkin,reactSkin} from './SkinnedPawn.js';
-import {syncBoardRide,poseBoardRide} from './BoardRides.js';
+import {createSpirit,releaseSpirit,animateSpirits,spiritColor} from './BoardSpirits.js';
+import {attachSkinnedPawn,animateSkin,detachSkin,reactSkin} from './SkinnedPawn.js';
+import {syncBoardRide,poseBoardRide,updateRideDust} from './BoardRides.js';
 import { createCityCharacter, poseCityCharacter, disposeCityCharacter } from './CityCharacters.js';
 import { harborPawnSlot } from './HarborPawnLayout.js';
 import * as THREE from 'three';
@@ -73,7 +74,7 @@ export class PawnManager {
         targetPos: group.position.clone()
       };
       this.pawns.push(pawn);
-      if (profile.id === 7) void attachBaseballPawn(pawn);
+      void attachSkinnedPawn(pawn,profile.id);
     });
 
     // Register once: restores replace pawns, not the animation callback.
@@ -85,12 +86,14 @@ export class PawnManager {
         this.layoutHarborPawns();
         const time = performance.now() * 0.003;
         const reduced = document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        animateSpirits(this,time,reduced);
         this.pawns.forEach((pawn, idx) => {
           animateSkin(pawn,reduced);
           if (pawn.ride) {
             const facing = pawn.mesh.userData.isMoving ? pawn.characterMesh.rotation.y : this.harborFacing || 0;
             poseBoardRide(pawn,facing,pawn.characterMesh.scale.x);
             const distance = pawn.lastRidePosition?.distanceTo(pawn.mesh.position) || 0;
+            updateRideDust(pawn,distance,reduced);
             for(const wheel of pawn.wheels) wheel.rotation.x += distance / .32;
             (pawn.lastRidePosition ??= pawn.mesh.position.clone()).copy(pawn.mesh.position);
             return;
@@ -122,6 +125,11 @@ export class PawnManager {
   }
 
   reactToEvent(event) {
+    if(['GOD_TURN_EFFECT','BOARD_GOD_COLLECTED','GOD_ATTACHED','GOD_TRANSFERRED'].includes(event.type)){
+      const pawn=this.pawns[event.playerId ?? event.toPlayerId];
+      if(pawn && !document.documentElement.classList.contains('reduce-motion'))
+        this.scene3D.createSparkles(pawn.mesh.position,spiritColor(event.godType ?? event.status),12);
+    }
     const clip = {PROPERTY_PURCHASED:'Cheer',PROPERTY_UPGRADED:'Cheer',RENT_PAID:'Sad',CARD_USED:'Cast',
       MINE_EXPLODED:'Shock_Hit',HOSPITALIZED:'Shock_Hit',PLAYER_BANKRUPT:'Sad'}[event.type];
     if (clip) reactSkin(this.pawns[event.playerId],clip);
@@ -134,11 +142,13 @@ export class PawnManager {
 
   clearPawns() {
     this.pawns.forEach(pawn => {
+      for(const mat of pawn.bankruptcyMaterials || []) mat.dispose();
       detachSkin(pawn);
       if (pawn.characterMesh?.cityRig) disposeCityCharacter(pawn.characterMesh);
       this.scene3D.scene.remove(pawn.mesh);
     });
-    this.boardGodMeshes.forEach(mesh => this.scene3D.scene.remove(mesh));
+    this.boardGodMeshes.forEach(releaseSpirit);
+    this.godAuraMeshes.forEach(releaseSpirit);
     this.pawns = [];
     this.godAuraMeshes.clear();
     this.boardGodMeshes.clear();
@@ -626,78 +636,52 @@ export class PawnManager {
     const activeIds = new Set(boardGods.map(god => god.id));
     this.boardGodMeshes.forEach((mesh, id) => {
       if (!activeIds.has(id)) {
-        this.scene3D.scene.remove(mesh);
+        releaseSpirit(mesh);
         this.boardGodMeshes.delete(id);
       }
     });
-    const colors = {
-      FORTUNE: 0xffd166, GREAT_FORTUNE: 0xff9f1c, LUCK: 0x22d3ee, EARTH: 0x2ed573,
-      MISFORTUNE: 0x2d3436, BAD: 0xd63031, ANGEL: 0xffffff, DEMON: 0x8e44ad
-    };
-    boardGods.forEach((god, index) => {
-      let group = this.boardGodMeshes.get(god.id);
-      if (!group) {
-        group = new THREE.Group();
-        const orb = new THREE.Mesh(
-          new THREE.SphereGeometry(0.5, 18, 14),
-          new THREE.MeshStandardMaterial({ color: colors[god.type] || 0x74b9ff, emissive: colors[god.type] || 0x74b9ff, emissiveIntensity: 0.42 })
-        );
-        orb.position.y = 1.25;
-        const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(0.72, 0.07, 12, 28),
-          new THREE.MeshBasicMaterial({ color: colors[god.type] || 0x74b9ff })
-        );
-        ring.position.y = 1.25;
-        ring.rotation.x = Math.PI / 2;
-        group.add(orb, ring);
-        group.userData.phase = index * 1.7;
+    boardGods.forEach((god,index)=>{
+      const point=this.boardBuilder.tilePositions[god.tileId];
+      if(!point)return;
+      let group=this.boardGodMeshes.get(god.id);
+      if(!group || group.userData.type!==god.type){
+        if(group)releaseSpirit(group);
+        group=createSpirit(god.type,index*1.7);
+        group.position.copy(point);
         this.scene3D.scene.add(group);
-        this.boardGodMeshes.set(god.id, group);
+        this.boardGodMeshes.set(god.id,group);
       }
-      const tilePosition = this.boardBuilder.tilePositions[god.tileId];
-      if (tilePosition) group.position.copy(tilePosition).add(new THREE.Vector3(0, 0.2, 0));
+      group.userData.tilePosition=point;
     });
   }
 
-  updateGodAura(playerIndex, godType) {
-    const pawn = this.pawns[playerIndex];
-    if (!pawn) return;
-
-    if (this.godAuraMeshes.has(playerIndex)) {
-      const oldMesh = this.godAuraMeshes.get(playerIndex);
-      pawn.mesh.remove(oldMesh);
-      this.godAuraMeshes.delete(playerIndex);
-    }
-
-    if (!godType) return;
-
-    let auraColor = 0xffd700; // 金光 (财神 / 大财神)
-    if (godType === 'LUCK' || godType === 'FORTUNE' || godType === 'GREAT_FORTUNE' || godType === 'SMALL_FORTUNE') auraColor = 0xffd700;
-    else if (godType === 'ANGEL') auraColor = 0xffffff; // 圣白光 (天使)
-    else if (godType === 'DEMON') auraColor = 0x8e44ad; // 紫黑 (恶魔)
-    else if (godType === 'MISFORTUNE' || godType === 'GREAT_POOR' || godType === 'SMALL_POOR') auraColor = 0x2d3436; // 幽黑 (穷神)
-    else if (godType === 'BAD') auraColor = 0xd63031; // 警红 (衰神)
-    else if (godType === 'EARTH') auraColor = 0x00b894; // 碧绿 (土地公)
-
-    const geo = new THREE.TorusGeometry(0.85, 0.09, 16, 32);
-    const mat = new THREE.MeshBasicMaterial({ color: auraColor });
-    const aura = new THREE.Mesh(geo, mat);
-    aura.rotation.x = Math.PI / 2;
-    aura.position.y = 2.2;
-
-    pawn.mesh.add(aura);
-    this.godAuraMeshes.set(playerIndex, aura);
+  updateGodAura(playerIndex,godType) {
+    const pawn=this.pawns[playerIndex];
+    if(!pawn)return;
+    const old=this.godAuraMeshes.get(playerIndex);
+    if(old && old.userData.type===godType)return;
+    if(old){releaseSpirit(old);this.godAuraMeshes.delete(playerIndex);}
+    if(!godType)return;
+    const group=createSpirit(godType,playerIndex*.74);
+    group.scale.setScalar(.74);
+    group.position.set(.86,1.75,-.26);
+    pawn.mesh.add(group);
+    this.godAuraMeshes.set(playerIndex,group);
   }
 
   setBankrupt(playerIndex) {
     const pawn = this.pawns[playerIndex];
-    if (pawn) {
-      pawn.mesh.traverse((child) => {
-        if (child.isMesh) {
-          child.material.transparent = true;
-          child.material.opacity = 0.3;
-        }
-      });
-    }
+    if (!pawn || pawn.bankruptcyMaterials) return;
+    pawn.bankruptcyMaterials=[];
+    pawn.mesh.traverse(child=>{
+      if(!child.isMesh)return;
+      const fade=material=>{
+        const copy=material.clone();
+        copy.transparent=true;copy.opacity=.3;
+        pawn.bankruptcyMaterials.push(copy);
+        return copy;
+      };
+      child.material=Array.isArray(child.material)?child.material.map(fade):fade(child.material);
+    });
   }
 }

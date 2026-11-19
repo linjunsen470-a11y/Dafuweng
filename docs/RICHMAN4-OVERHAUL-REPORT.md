@@ -50,3 +50,13 @@ node scripts/qa/board-events.mjs
 同一条搭乘操作已通过真实 WebGL：390×844 触摸查 3 号地，驾驶小绵羊掷两骰；1440×900 悬停查同一地块，驾驶跑车掷三骰。两端均核实 Ride 正在播放、模型有相应车轮、玩家真正走格，零页面异常。棋盘中心最大无常驻 HUD 矩形在桌面为 **66.97%**，手机为 **75.83%**。结果和图见 `qa/review/ride-checks.json`、`ride-desktop.png` 和 `ride-mobile.png`。较早的 HUD 面积与收租截图来自布局收窄前的轮次。旧手机股市截图保留了施卡提示遮挡问题，修复后的桌面股市图和源代码反映最终层级。
 
 续作可从该分支运行 `npm run dev`。只复查这条路径运行 `node scripts/qa/board-ride.mjs`。下一批应补齐至少七名风格不同的骨骼角色、载具尘迹与神明模型；后续五级住宅与演出待实现。
+
+## 第二里程碑 · 八人角色与八位巡游神明
+
+主游戏角色 0–7 均接入独立 GLB。八份量化模型各含一个蒙皮、九个骨骼节点和全部七段标准动作。眼、眉、嘴随动作变化。持有机车或跑车的角色切换为 Ride，车轮和尘迹跟随位移。八位神明共用一份按需加载的模型包，地图巡游和肩后附身都使用对应造型。原始模型、角色姿态和神明双角度图分别见 `art-source/main/`、`qa/review/core-cast-poses.jpg` 和 `qa/review/spirits-sheet.jpg`。
+
+两端各跑一局，共覆盖八名角色。桌面悬停查看地块，再驾驶跑车掷三骰；手机触摸查看地块，再骑机车掷两骰。两局均已观察到走格、Ride 动作、地图神明与肩后神明，并且没有页面异常。按常驻 HUD 元素可见矩形的并集直接量测，1440×900 占 **15.67%**，390×844 占 **20.91%**；中心连续净空另计为 **66.97%** 和 **75.83%**。实机图与各项读数见 `qa/review/cast-spirits-desktop.png`、`qa/review/cast-spirits-mobile.png` 和 `qa/review/cast-spirits-checks.json`。
+
+角色可用 `blender -b --python scripts/art/create_baseball_pawn.py -- xiaoman` 重建，神明用 `blender -b --python scripts/art/create_board_spirits.py` 重建；运行时 GLB 使用 glTF Transform quantize。运行 `node scripts/qa/board-ride.mjs` 可复查实机操作。俯视镜头中角色主要靠帽形、配色和载具辨认，脸部细节在手机默认缩放下较小。后八名可选角色仍使用原模型，五级住宅与后续城市美术尚待实现。
+
+本轮收尾运行一次 `npm run verify`，类型检查通过，127 个测试文件的 663 项全部通过，生产构建成功。

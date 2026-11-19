@@ -2,11 +2,14 @@ import {AnimationMixer, LoopOnce} from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
 
-let baseballPack;
-export async function attachBaseballPawn(pawn) {
+const models=['xiaoman','tianye','jingjing','baroque','lan','miya','hawk','afei'];
+const packs=new Map();
+export async function attachSkinnedPawn(pawn,profileId) {
+  const model=models[profileId];
+  if(!model)return;
   try {
-    baseballPack ??= new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}assets/models/afei.glb`);
-    const pack=await baseballPack;
+    if(!packs.has(model)) packs.set(model,new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}assets/models/${model}.glb`));
+    const pack=await packs.get(model);
     if (!pawn.mesh.parent) return;
     const figure=clone(pack.scene);
     figure.scale.setScalar(1.15);
@@ -14,9 +17,10 @@ export async function attachBaseballPawn(pawn) {
     const actions=new Map(pack.animations.map(clip=>[clip.name,mixer.clipAction(clip)]));
     for(const part of pawn.characterMesh.children) part.visible=false;
     pawn.characterMesh.add(figure);
-    pawn.skin={figure,mixer,actions,last:performance.now(),name:null,reaction:null};
+    pawn.skin={model,figure,mixer,actions,last:performance.now(),name:null,reaction:null};
     mixer.addEventListener('finished',()=>{if(pawn.skin) pawn.skin.reaction=null;});
   } catch {
+    packs.delete(model);
     // The original procedural figure remains playable if the asset fails to load.
   }
 }

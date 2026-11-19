@@ -1,6 +1,9 @@
+import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 let models;
+const dustShape=new THREE.IcosahedronGeometry(1,0);
+const dustMaterial=new THREE.MeshBasicMaterial({color:0xffe2b1,transparent:true,opacity:.42,depthWrite:false});
 function loadModels() {
   models ??= new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}assets/models/board-rides.glb`).then(pack=>pack.scene);
   return models;
@@ -28,6 +31,10 @@ export function syncBoardRide(pawn, vehicle) {
       if (part.name.startsWith('wheel_')) pawn.wheels.push(part);
       if (part.isMesh) part.castShadow = true;
     });
+    pawn.dust=Array.from({length:4},()=>{
+      const mote=new THREE.Mesh(dustShape,dustMaterial);
+      mote.visible=false;model.add(mote);return mote;
+    });
     pawn.ride = model;
     pawn.mesh.add(model);
     pawn.characterMesh.userData.seatHeight = kind==='MOTOR' ? .50 : .23;
@@ -47,4 +54,15 @@ export function poseBoardRide(pawn, facing, scale) {
     leg.rotation.z=(i?1:-1)*.17;
   });
   model.cityRig.arms.forEach(arm=>{arm.rotation.x=-.90;});
+}
+
+export function updateRideDust(pawn,distance,reduced){
+  pawn.dustTravel=(pawn.dustTravel || 0)+Math.min(distance,.5);
+  pawn.dust.forEach((mote,i)=>{
+    mote.visible=!reduced && distance>.008 && pawn.mesh.userData.isMoving;
+    if(!mote.visible)return;
+    const phase=(pawn.dustTravel*1.25+i*.25)%1;
+    mote.position.set((i%2?1:-1)*(.14+phase*.21),.13+phase*.26,-.92-phase*.67);
+    mote.scale.setScalar(.10*(1-phase));
+  });
 }
