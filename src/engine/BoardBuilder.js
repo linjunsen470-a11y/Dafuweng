@@ -1,3 +1,4 @@
+import {regionalDistrict} from './RegionalDistricts.js';
 import {createMarketDistrict} from './MarketDistrict.js';
 import {createCardHouse, addServiceThreshold} from './CardHouses.js';
 import {createStreetAprons} from './StreetAprons.js';
@@ -385,6 +386,18 @@ export class BoardBuilder {
     });
     const shoulderMaterial = new THREE.MeshStandardMaterial({ color: profile.shoulder, roughness: 0.74, metalness: 0.06 });
     const pavement=hasClassicFrontages(mapDefinition)?new THREE.MeshStandardMaterial({color:'#cfb18b',roughness:.96}):null;
+    if(pavement){
+      const canvas=document.createElement('canvas');canvas.width=canvas.height=128;
+      const ctx=canvas.getContext('2d'),city=mapDefinition.id==='city-loop';
+      ctx.fillStyle=city?'#b5afaa':'#b99e81';ctx.fillRect(0,0,128,128);
+      const tones=city?['#d8d3c8','#e0d9ca','#d3d4cb']:['#dfc7a2','#e5cfad','#d9c09e'];
+      for(let row=0;row<4;row++)for(let col=-1;col<3;col++){
+        ctx.fillStyle=tones[(col+row+4)%3];ctx.fillRect(col*64+(row%2)*32+1,row*32+1,62,30);
+      }
+      const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
+      texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.anisotropy=4;
+      pavement.map=texture;pavement.color.set('#ffffff');
+    }
     const laneMaterials = new Map();
     const seen = new Set();
     let segmentCount = 0;
@@ -408,6 +421,12 @@ export class BoardBuilder {
         }
         if(pavement){
           const sidewalk=new THREE.Mesh(new THREE.BoxGeometry(roadWidth+4.4,.20,length+.45),pavement);
+          // World-aligned paving bonds continue through oblique road joins.
+          const geo=sidewalk.geometry, uv=geo.attributes.uv, vertices=geo.attributes.position;
+          for(let i=0;i<vertices.count;i++){
+            const x=vertices.getX(i),z=vertices.getZ(i);
+            uv.setXY(i,(midpoint.x+x*Math.cos(angle)+z*Math.sin(angle))/4,(midpoint.z+z*Math.cos(angle)-x*Math.sin(angle))/4);
+          }
           sidewalk.position.set(midpoint.x,-.035,midpoint.z);sidewalk.rotation.y=angle;sidewalk.receiveShadow=true;group.add(sidewalk);
         }
         const shoulder = new THREE.Mesh(new THREE.BoxGeometry(roadWidth + 0.7, 0.12, length + 0.35), shoulderMaterial);
@@ -455,8 +474,11 @@ export class BoardBuilder {
     const group = new THREE.Group();
     group.name = `environment-${mapDefinition.id}`;
     group.add(createTownCourts(mapDefinition));
-    const marketDistrict=createMarketDistrict(mapDefinition);
-    if(marketDistrict)group.add(marketDistrict);
+    const marketDistrict=createMarketDistrict(mapDefinition) || regionalDistrict(mapDefinition.id);
+    if(marketDistrict){
+      group.add(marketDistrict);
+      group.streetOccluders=marketDistrict.children.filter(child=>child.userData.streetOccluder);
+    }
     if(hasClassicFrontages(mapDefinition))group.add(createStreetAprons(mapDefinition));
     this.harborWaves = [];
     this.harborFerries = [];
@@ -1000,7 +1022,8 @@ export class BoardBuilder {
       ,[TileType.MINIGAME]: ['#ec4899', '#fce7f3']
     };
     const [roofColor, wallColor] = palette[tile.type] || ['#7bed9f', '#ffffff'];
-    const source = {HOSPITAL:'board_clinic', PRISON:'board_prison', MAGIC_HOUSE:'board_magic', BANK:'harbor_bank', STOCK:'old_town_exchange', CARD_SHOP:'market_clock_gallery', LOTTERY:'harbor_lottery'}[tile.type];
+    const company = {AURORA_RETAIL:'commerce_mall_1',SUMMIT_MATERIAL:'company_summit_yard',NOVA_BUILD:'company_summit_yard'}[tile.companyId] || 'company_cloud_court';
+    const source = {COMPANY:company, MINIGAME:'civic_arcade', HOSPITAL:'board_clinic', PRISON:'board_prison', MAGIC_HOUSE:'board_magic', BANK:'harbor_bank', STOCK:'old_town_exchange', CARD_SHOP:'market_clock_gallery', LOTTERY:'harbor_lottery'}[tile.type];
     const prefab = source && this.harborArt?.clone(source);
     if (prefab) { prefab.userData.isStaticFacility = true; return prefab; }
     const clinic = tile.type === TileType.HOSPITAL;
@@ -1126,7 +1149,7 @@ export class BoardBuilder {
   }
 
   updateHarborPawnVisibility(pawns, now = performance.now()) {
-    if (this.activeMapDefinition?.id !== 'grand-bay' || now - (this.lastPawnVisibilityCheck ?? -Infinity) < 180) return;
+    if (!this.activeMapDefinition || now - (this.lastPawnVisibilityCheck ?? -Infinity) < 180) return;
     this.lastPawnVisibilityCheck = now;
     const camera = this.scene3D.camera.position;
     const targets = [];
@@ -1143,17 +1166,24 @@ export class BoardBuilder {
       return Math.abs(screen.x)<1.1 && Math.abs(screen.y)<1.1 && screen.z<1;
     });
     const scenery = this.mapEnvironmentGroup?.children.filter(o=>o.userData.harborOccluder) || [];
-    const candidates = [...this.buildingMeshes.values(),...scenery];
-    const ray = new THREE.Ray(), hit = new THREE.Vector3(), box = new THREE.Box3();
+    const facilities = [...(this.specialTileMeshes?.values() || [])].filter(group=>group.userData.isStaticFacility);
+    const candidates = [...this.buildingMeshes.values(),...facilities,...scenery,...(this.mapEnvironmentGroup?.streetOccluders || [])];
+    const rays=visibleTargets.map(target=>({
+      ray:new THREE.Ray(camera,target.clone().sub(camera).normalize()),
+      distance:camera.distanceTo(target)-.35
+    }));
+    const hit = new THREE.Vector3(), box = new THREE.Box3();
     for (const group of candidates) {
       if (group.userData.propertyVisual?.[0] === 0) continue;
       const model = group.userData.originalModel ? group.getObjectByName(group.userData.originalModel) : group;
       if (!model) continue;
-      model.updateWorldMatrix(true,true); box.setFromObject(model);
-      const obstructs = visibleTargets.some(target => {
-        ray.set(camera,target.clone().sub(camera).normalize());
-        return ray.intersectBox(box,hit) && camera.distanceTo(hit) < camera.distanceTo(target) - .35;
-      });
+      // Rebuilt lots and facilities get new groups. Cache settled, stationary bounds.
+      if (!group.userData.visibilityBounds) {
+        model.updateWorldMatrix(true,true);
+        box.setFromObject(model);
+        if (Math.abs(group.scale.y-1)<.002) group.userData.visibilityBounds=box.clone();
+      } else box.copy(group.userData.visibilityBounds);
+      const obstructs = rays.some(({ray,distance}) => ray.intersectBox(box,hit) && camera.distanceTo(hit)<distance);
       if (Boolean(group.userData.isPawnOccluder) === obstructs) continue;
       group.userData.isPawnOccluder = obstructs;
       model.traverse(child => {
@@ -1162,6 +1192,25 @@ export class BoardBuilder {
           if (!material) continue;
           material.userData.harborOpaqueState ??= {opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite};
           const normal = material.userData.harborOpaqueState;
+          // A transparent stack of tower floors can still hide the silhouette.
+          // All floors leave the same screen pixels clear, keeping the pawn readable.
+          if (group.userData.propertyVisual?.[0]>=4) {
+            if (!normal.shader) {
+              normal.shader=material.onBeforeCompile;
+              normal.cacheKey=material.customProgramCacheKey;
+            }
+            if (obstructs) {
+              material.onBeforeCompile=function(shader,renderer){
+                normal.shader.call(this,shader,renderer);
+                shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',
+                  'if (mod(floor(gl_FragCoord.x) + 2.0*floor(gl_FragCoord.y), 4.0) >= 1.0) discard;\n#include <opaque_fragment>');
+              };
+              material.customProgramCacheKey=function(){return normal.cacheKey.call(this)+'-tower-cutaway';};
+            } else {
+              material.onBeforeCompile=normal.shader;
+              material.customProgramCacheKey=normal.cacheKey;
+            }
+          }
           material.opacity = obstructs ? .22 : normal.opacity;
           material.transparent = obstructs || normal.transparent;
           material.depthWrite = obstructs ? false : normal.depthWrite;
@@ -1488,6 +1537,16 @@ export class BoardBuilder {
       }
     }
     group.userData.propertyVisual = [level, ownerColor, buildingType];
+    if(tile?.lot?.position && ownerColor!=null){
+      const trim=new THREE.MeshStandardMaterial({color:ownerColor,roughness:.78});
+      const marker=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),trim,4);
+      const stamp=new THREE.Object3D();
+      for(const [i,[x,z,w,d]] of [[-1.36,1.56,.56,.21],[1.36,1.56,.56,.21],[-1.55,.92,.18,1.36],[1.55,.92,.18,1.36]].entries()){
+        stamp.position.set(x,-.11,z);stamp.scale.set(w,.25,d);stamp.updateMatrix();marker.setMatrixAt(i,stamp.matrix);
+      }
+      marker.userData.isOwnerBeacon=true;
+      group.add(marker);
+    }
     const originalDistrict = isCivicHome(this.activeMapDefinition,tile,buildingType) ? 'civic'
       : isOldTownHome(this.activeMapDefinition,tile,buildingType) ? 'market'
         : isHarborHome(this.activeMapDefinition,tile,buildingType) ? 'harbor' : null;
