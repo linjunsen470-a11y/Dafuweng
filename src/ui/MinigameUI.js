@@ -1,14 +1,13 @@
 import { showCombo, decorateResult } from './ArcadeFeedback.js';
+import { launchSkyCoinsArcade } from './MinigameCanvas.js';
 import { MINIGAMES } from '../game/ContentRegistry.js';
 import {
   HARBOR_CARGO,
   ROUTE_PATTERNS,
-  SKY_OBJECTS,
   clampMinigameScore,
   getMinigamePerformance,
   scoreHarborAttempt,
-  scoreRouteRound,
-  scoreSkyObject
+  scoreRouteRound
 } from '../game/MinigameRules.js';
 
 export class MinigameUI {
@@ -29,16 +28,16 @@ export class MinigameUI {
       overlay.innerHTML = `
         <div class="glass-card modal-box minigame-box" role="dialog" aria-modal="true" aria-labelledby="minigame-title">
           <div class="modal-header minigame-header">
-            <div><span class="minigame-kicker">WEALTH CHALLENGE</span><h2 id="minigame-title">${definition.icon} ${definition.name}</h2></div>
-            <div class="minigame-header-status"><span class="minigame-live-rank">D</span><strong class="minigame-timer" aria-label="剩余时间">READY</strong></div>
+            <div><span class="minigame-kicker">🎪 大富翁游乐场</span><h2 id="minigame-title">${definition.icon} ${definition.name}</h2></div>
+            <div class="minigame-header-status"><span class="minigame-live-rank">D</span><strong class="minigame-timer" aria-label="剩余时间">准备中</strong></div>
           </div>
           <p class="minigame-instructions">${definition.instructions}</p>
           <div class="minigame-stage" role="application" aria-label="${definition.name}游戏区域">
             <section class="minigame-briefing">
               <span class="minigame-briefing-icon">${definition.icon}</span>
-              <div><small>ARCADE MISSION</small><h3>${definition.name}</h3><p>${definition.instructions}</p></div>
-              <div class="minigame-briefing-stats"><span><b>${definition.durationMs / 1000}s</b>挑战时间</span><span><b>${definition.rewardPerPoint} 点券</b>每分奖励</span><span><b>90+</b>S级目标</span></div>
-              <button type="button" class="btn-primary minigame-start">开始挑战 <kbd>SPACE</kbd></button>
+              <div><small>限时狂赚点券</small><h3>${definition.name}</h3><p>${definition.instructions}</p></div>
+              <div class="minigame-briefing-stats"><span><b>${definition.durationMs / 1000}秒</b>限时挑战</span><span><b>${definition.rewardPerPoint} 点券</b>每分奖励</span><span><b>90+</b>S级大奖</span></div>
+              <button type="button" class="btn-primary minigame-start">开始挑战 <kbd>空格</kbd></button>
             </section>
           </div>
           <div class="minigame-footer">
@@ -259,49 +258,7 @@ export class MinigameUI {
   }
 
   playSkyCoins(session) {
-    session.stage.classList.add('sky-coins-stage');
-    session.stage.innerHTML = `
-      <div class="skyline-cloud cloud-one" aria-hidden="true">☁️</div>
-      <div class="skyline-cloud cloud-two" aria-hidden="true">☁️</div>
-      <div class="sky-airship" aria-hidden="true">🎈</div>
-      <div class="minigame-feedback" aria-live="polite">点击金币，避开炸弹</div>
-    `;
-    const feedback = session.stage.querySelector('.minigame-feedback');
-    const positions = [[12, 18], [37, 54], [68, 20], [80, 62], [24, 68], [53, 30], [8, 48], [71, 70]];
-    let spawnIndex = 0;
-    const spawn = () => {
-      const definition = SKY_OBJECTS[spawnIndex % SKY_OBJECTS.length];
-      const [left, top] = positions[(spawnIndex * 3 + 1) % positions.length];
-      spawnIndex++;
-      const object = document.createElement('button');
-      object.type = 'button';
-      object.className = `sky-object kind-${definition.kind.toLowerCase()}`;
-      object.dataset.kind = definition.kind;
-      object.style.left = `${left}%`;
-      object.style.top = `${top}%`;
-      object.textContent = definition.icon;
-      object.setAttribute('aria-label', definition.kind === 'BOMB' ? '炸弹，不要点击' : `${definition.kind === 'STAR' ? '星星' : '金币'}，点击收集`);
-      const collect = () => {
-        if (!object.isConnected) return;
-        session.updateScore(scoreSkyObject(session.getScore(), definition.points), definition.points > 0 ? 'HIT' : 'MISS');
-        feedback.textContent = definition.points > 0 ? `✨ +${definition.points}` : `💥 ${definition.points}`;
-        feedback.className = `minigame-feedback ${definition.points > 0 ? 'is-correct' : 'is-wrong'}`;
-        this.audioManager?.playClick();
-        object.remove();
-      };
-      object.onpointerdown = event => {
-        if (event.pointerType === 'touch' && event.isPrimary) {
-          event.preventDefault();
-          collect();
-        }
-      };
-      object.onclick = collect;
-      session.stage.appendChild(object);
-      session.later(() => object.remove(), 1800);
-      session.progress.textContent = `空中目标 ${spawnIndex}`;
-    };
-    spawn();
-    session.every(spawn, 520);
+    launchSkyCoinsArcade(session, this.audioManager);
   }
 
   playRouteMemory(session) {

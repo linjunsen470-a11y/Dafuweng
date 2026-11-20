@@ -191,6 +191,12 @@ export class UIRenderer {
         ? `<img src="${player.avatarImg}" class="player-avatar-img" alt="${player.name}">`
         : `<span class="player-avatar">${player.avatar}</span>`;
 
+      const prevCash = this.lastCashByPlayer?.get(player.id);
+      const cashTrend = prevCash === undefined || prevCash === player.cash ? '' : player.cash > prevCash ? ' is-up' : ' is-down';
+      (this.lastCashByPlayer ??= new Map()).set(player.id, player.cash);
+
+      const loanTag = (player.loan || 0) > 0 ? `<span class="buff-tag" style="background:#d63031;color:#fff;">🏦 贷款 $${player.loan.toLocaleString()}</span>` : '';
+
       card.innerHTML = `
         <div class="card-top">
           <div class="player-name-group">
@@ -202,13 +208,13 @@ export class UIRenderer {
           </div>
           <span class="player-tag">${player.isLord ? '👹 领主' : player.isAI ? '🤖 AI' : '👤 玩家'}${['TEAM', 'CHALLENGE'].includes(this.gameState.gameMode) ? ` · 队伍 ${player.teamId}` : ''}</span>
         </div>
-        <div class="cash-display">现金 $${player.cash.toLocaleString()}</div>
+        <div class="cash-display${cashTrend}">现金 $${player.cash.toLocaleString()}</div>
         <div class="player-details"><span>存款 $${(player.deposit || 0).toLocaleString()}</span><span>点券 ${player.cardPoints}</span></div>
-        <div class="buff-icons">${buffHtml}</div>
+        <div class="buff-icons">${buffHtml}${loanTag}</div>
       `;
 
       this.playersList.appendChild(card);
-      if (focused === card.dataset.playerId) card.focus({preventScroll:true});
+      if (focused === card.dataset.playerId) card.focus({ preventScroll: true });
     });
   }
 

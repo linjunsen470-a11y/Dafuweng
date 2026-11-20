@@ -65,19 +65,31 @@ export class BoardTargetPicker {
     document.body.append(bar);
     const hud = document.getElementById('hud-layer');
     hud.inert = true;
-    if(choices.length) bar.querySelector('label').hidden=true;
-    (choices[0]?.[0] || select).focus({preventScroll:true});
+    if (choices.length) bar.querySelector('label').hidden = true;
+    (choices[0]?.[0] || select).focus({ preventScroll: true });
     const canvas = this.scene.renderer.domElement;
     const events = new AbortController();
-    const listen = (node, type, fn) => node.addEventListener(type, fn, {signal:events.signal});
+    const listen = (node, type, fn) => node.addEventListener(type, fn, { signal: events.signal });
+    let pulseRaf = null;
+    const pulseStart = performance.now();
+    const animateMarkers = now => {
+      const s = 1 + 0.12 * Math.sin((now - pulseStart) * 0.008);
+      for (const marker of group.children) {
+        marker.scale.setScalar(s);
+        if (!origin) marker.rotation.z = (now - pulseStart) * 0.0022;
+      }
+      pulseRaf = requestAnimationFrame(animateMarkers);
+    };
+    if (typeof requestAnimationFrame === 'function') pulseRaf = requestAnimationFrame(animateMarkers);
     return new Promise(resolve => {
       const finish = id => {
+        if (pulseRaf) cancelAnimationFrame(pulseRaf);
         events.abort();
         if (movingPawn?.parent) this.scene.followObject(movingPawn);
         group.removeFromParent();
         geometry.dispose();
         arrow?.dispose();
-        for(const marker of group.children)if(marker.material!==material)marker.material.dispose();
+        for (const marker of group.children) if (marker.material !== material) marker.material.dispose();
         material.dispose();
         bar.remove();
         hud.inert = false;

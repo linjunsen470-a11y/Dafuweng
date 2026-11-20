@@ -10,6 +10,7 @@ import { ModalCoordinator } from './ui/ModalCoordinator.js';
 import { SetupScreenUI } from './ui/SetupScreenUI.js';
 import { HandTrayUI } from './ui/HandTrayUI.js';
 import { OnboardingGuide } from './ui/OnboardingGuide.js';
+import { PassingBankPill } from './ui/PassingBankPill.js';
 import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
 import { Scene3D } from './engine/Scene3D.js';
@@ -98,6 +99,11 @@ class GameController {
       cash: value => { this.selectedInitialCash = value; }
     });
     this.guide = new OnboardingGuide();
+    this.passingBankPill = new PassingBankPill(() => {
+      const player = this.gameState.getCurrentPlayer();
+      if (!player || player.isAI || player.isBankrupt) return;
+      void this.handleBankVisit(player, player.currentTile, true);
+    });
     this.handTray = new HandTrayUI(this.gameEngine, () => this.canOpenPlayerAction() && !this.modalCoordinator.active && !this.boardPicker.cancel,
       entry => entry.kind === 'ITEM' ? this.handleItemUsage(entry.definition.id) : this.handleCardUsage(entry.definition.id, entry.index));
     this.uiRenderer.bindActions(id => {
@@ -225,9 +231,22 @@ class GameController {
     }
     const eventSounds = {
       TURN_CHANGED: 'turn', DEBT_REQUIRED: 'danger', PLAYER_BANKRUPT: 'bankrupt',
-      QUEST_COMPLETED: 'confirm', MINIGAME_COMPLETED: 'confirm', NEWS_FLASH: 'confirm'
+      QUEST_COMPLETED: 'confirm', MINIGAME_COMPLETED: 'victory'
     };
-    if (eventSounds[event.type]) this.audioManager.playSFX(eventSounds[event.type]);
+    if (event.type === 'NEWS_FLASH') this.audioManager.playSceneSound('news');
+    else if (['BOARD_GOD_COLLECTED', 'STATUS_APPLIED', 'STATUS_CHANGED'].includes(event.type)) {
+      const g = event.godType || event.status;
+      const bad = ['MISFORTUNE', 'BAD', 'DEMON', 'GREAT_POOR', 'SMALL_POOR'].includes(g);
+      this.audioManager.playSceneSound(bad ? 'bad_god' : 'good_god');
+    } else if (event.type === 'OBSTACLE_CONSUMED' || event.hitEntityType === 'BARRIER') {
+      this.audioManager.playSceneSound('brake');
+    } else if (event.type === 'MINE_EXPLODED' && !event.avoided) {
+      this.audioManager.playSceneSound('mine');
+    } else if ((event.type === 'CARD_USED' && ['MISSILE', 'NUKES'].includes(event.cardId)) || (event.type === 'ITEM_USED' && ['MISSILE_ITEM', 'NUCLEAR_MISSILE'].includes(event.itemId))) {
+      this.audioManager.playSceneSound('missile');
+    } else if (eventSounds[event.type]) {
+      this.audioManager.playSFX(eventSounds[event.type]);
+    }
     const adaptiveEvents = new Set([
       'TURN_CHANGED', 'DEBT_REQUIRED', 'PLAYER_BANKRUPT', 'MINE_EXPLODED', 'HOSPITALIZED', 'JAILED',
       'PROPERTY_PURCHASED', 'PROPERTY_UPGRADED', 'RENT_PAID', 'CARD_USED', 'MAGIC_CAST', 'MINIGAME_COMPLETED'
@@ -452,7 +471,7 @@ class GameController {
     document.getElementById('btn-pause-game').onclick = () => this.showPauseMenu();
 
     document.getElementById('btn-stock-market').onclick = async () => {
-      if (!this.canOpenPlayerAction()) return;
+      if (this.modalCoordinator.active || this.boardPicker.cancel || this.gameState.phase === GamePhase.SETUP) return;
       (await this.getStockUI()).show();
     };
 
@@ -611,6 +630,7 @@ class GameController {
     if (this.gameState.players.length && this.gameState.phase !== GamePhase.GAME_OVER
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
     this.boardEffects.clear();
+    this.passingBankPill.hide();
     this.guide.close();
     this.audioManager.stopMusic();
     this.presentationUI.clear();
@@ -786,6 +806,10 @@ class GameController {
     if (cardDecision) {
       await this.handleCardUsage(cardDecision.cardId, aiPlayer.cards.indexOf(cardDecision.cardId), cardDecision.targetId ?? null);
       if (cardDecision.cardId === 'TELEPORT') return;
+      if (!this.skipAIAnimations && !this.presentationUI.isReducedMotion()) {
+        await new Promise(resolve => setTimeout(resolve, Math.round(520 / this.actionSpeed)));
+        if (this.gameState.getCurrentPlayer() !== aiPlayer) return;
+      }
     }
 
     const stockDecision = AIPlayer.decideStockAction(aiPlayer, this.gameState.stockMarket);
@@ -923,6 +947,9 @@ class GameController {
         tile: this.gameState.getTile(result.tileId)
       });
       if (result.events.some(event => event.type === 'START_BONUS_GRANTED')) this.audioManager.playCoinSound();
+      if (!curPlayer.isAI && result.remainingSteps > 0 && this.gameState.getTile(result.tileId)?.type === TileType.BANK) {
+        this.passingBankPill.show(curPlayer.name);
+      }
     }
 
     if (this.pendingPickup) {
@@ -1012,7 +1039,7 @@ class GameController {
     if (landing.kind === 'RENT') {
       const result = this.gameEngine.execute({ type: 'SETTLE_RENT', playerId: curPlayer.id, payload: { tileId: tileIndex } });
       if (result.amount > 0) {
-        this.audioManager.playCoinSound();
+        this.audioManager.playCoinSound(result.amount);
       }
       if (result.type === 'DEBT_REQUIRED') await this.resolvePendingDebt(curPlayer);
       return this.finishTurn();
@@ -1074,7 +1101,7 @@ class GameController {
     this.uiRenderer.renderHUD();
   }
 
-  async handleBankVisit(player, tileId) {
+  async handleBankVisit(player, tileId, passing = false) {
     if (player.isAI) {
       const decision = chooseAIBankTransfer(this.gameState, player);
       if (decision) this.gameEngine.execute({
@@ -1083,7 +1110,7 @@ class GameController {
       });
       return;
     }
-    const decision = await this.bankUI.choose({ player, state: this.gameState });
+    const decision = await this.bankUI.choose({ player, state: this.gameState, passing });
     if (!decision) return;
     this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, ...decision } });
     this.uiRenderer.renderHUD();
