@@ -858,7 +858,7 @@ class GameController {
   }
 
   async runAITurn(aiPlayer) {
-    if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
+    if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL || this.gameState.getCurrentPlayer() !== aiPlayer) return;
 
     if (aiPlayer.isSleepwalkingThisTurn) {
       await this.doRollDice();
@@ -966,6 +966,7 @@ class GameController {
 
     this.dice3D.speed = this.actionSpeed;
     if (!this.skipAIAnimations) await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
+    if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     if (!this.skipAIAnimations) {
       // The corner receipt remains readable as the pawn starts walking.
       const receipt = this.presentationUI.showDice({
@@ -974,6 +975,7 @@ class GameController {
       if (this.presentationUI.isReducedMotion()) await receipt;
     }
 
+    if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     const diceDetail = dice.length > 1 ? `（${dice.join(' + ')}）` : '';
     this.gameState.addLog(`🎲 ${curPlayer.name} 掷出了 ${diceVal} 点${diceDetail}！`, 'gold');
 
@@ -1014,6 +1016,7 @@ class GameController {
                 return {id:plan.optionId,label:street.name,color:street.color,detail:`${plan.destinationName} · ${outcome}`};
               }),
               false,this.boardBuilder.tilePositions[curPlayer.currentTile]);
+        if (this.gameState.getCurrentPlayer() !== curPlayer) return;
         result = this.gameEngine.execute({
           type: 'ADVANCE_MOVE',
           playerId: curPlayer.id,
@@ -1024,6 +1027,7 @@ class GameController {
       }
       if (!result.success) break;
       await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
+      if (this.gameState.getCurrentPlayer() !== curPlayer) return;
       completedSteps++;
       if(!this.skipAIAnimations) this.audioManager.playBoardCue(curPlayer.vehicle==='WALK'?'step':'motor');
       if (!this.skipAIAnimations) this.presentationUI.showMoveProgress({
@@ -1057,6 +1061,7 @@ class GameController {
     const opensLandDecision = !curPlayer.isAI && ['PURCHASE', 'UPGRADE'].includes(landing.kind);
     if (!opensLandDecision && !this.skipAIAnimations) {
       await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
+      if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     }
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
@@ -1456,8 +1461,9 @@ class GameController {
       return;
     }
 
+    const previousPlayer = this.gameState.getCurrentPlayer();
     setTimeout(async () => {
-      const previousPlayer = this.gameState.getCurrentPlayer();
+      if (this.gameState.getCurrentPlayer() !== previousPlayer) return;
       const transition = this.gameEngine.execute({
         type: 'END_TURN',
         playerId: this.gameState.currentPlayerIndex
