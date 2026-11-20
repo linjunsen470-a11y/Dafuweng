@@ -1,3 +1,4 @@
+import {quayRoutes} from './engine/QuayStreet.js';
 import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
 import { bindBoardHover } from './ui/BoardHover.js';
 import { cardManager } from './game/CardManager.js';
@@ -1005,7 +1006,14 @@ class GameController {
           : curPlayer.isAI
             ? AIPlayer.chooseRoute(curPlayer, result.options, this.gameState, result.remainingSteps)
           : await this.boardPicker.choose(getRouteChoicePlans(this.gameState,curPlayer,result.options,result.remainingSteps)
-              .map(plan=>({id:plan.optionId,label:`${this.gameState.getTile(plan.optionId).name} → ${plan.destinationName} · ${plan.label}`})),
+              .map(plan=>{
+                const street=this.gameState.mapId==='grand-bay' && curPlayer.currentTile===12 && quayRoutes[plan.optionId];
+                if(!street)return {id:plan.optionId,label:`${this.gameState.getTile(plan.optionId).name} → ${plan.destinationName} · ${plan.label}`};
+                const outcome=plan.purchasePrice
+                  ? `可购 $${this.gameEngine.getPropertyActionCost(curPlayer,plan.destinationId,'BUY').toLocaleString()}`
+                  : plan.outcome;
+                return {id:plan.optionId,label:street.name,color:street.color,detail:`${plan.destinationName} · ${outcome}`};
+              }),
               false,this.boardBuilder.tilePositions[curPlayer.currentTile]);
         result = this.gameEngine.execute({
           type: 'ADVANCE_MOVE',

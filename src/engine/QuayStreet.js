@@ -1,0 +1,115 @@
+import * as THREE from 'three';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+
+export const quayLot = id => [1,3,6,8,11,13,15,16].includes(id);
+export const quayRoutes = {
+  13:{name:'沿港置业街', color:'#b74e31'},
+  84:{name:'金帆内街', color:'#187d7c'}
+};
+
+// The shops on the inland side are permanent frontage. The opposite parcels
+// remain empty until purchased and built through the normal property rules.
+export function createQuayStreet(map) {
+  const group=new THREE.Group(), batches=new Map();
+  group.name='quay-market-quarter';
+  function add(geometry,color,x,y,z,angle=0) {
+    geometry.rotateY(angle);geometry.translate(x,y,z);
+    if(geometry.index){const indexed=geometry;geometry=indexed.toNonIndexed();indexed.dispose();}
+    if(!batches.has(color)) batches.set(color,[]);
+    batches.get(color).push(geometry);
+  }
+  const box=(x,y,z,w,h,d,c,angle=0)=>add(new THREE.BoxGeometry(w,h,d),c,x,y,z,angle);
+  const cylinder=(x,y,z,top,bottom,height,c,n=20)=>add(new THREE.CylinderGeometry(top,bottom,height,n),c,x,y,z);
+  const cream='#ffe6bd', glass='#365e65', stone='#e4cda7', iron='#427b78';
+  function roof(x,z,w,d,h,base,color) {
+    const outline=new THREE.Shape();
+    outline.moveTo(-w/2,0);outline.lineTo(w/2,0);outline.lineTo(0,h);outline.closePath();
+    const g=new THREE.ExtrudeGeometry(outline,{depth:d,bevelEnabled:false});
+    add(g,color,x,base,z-d/2);
+  }
+  // Each arched shopfront is real recessed geometry with a shaded display behind it.
+  function arch(x,y,z,w,h) {
+    const profile=new THREE.Shape(),r=w*.39;
+    profile.moveTo(-w/2,0);profile.lineTo(-r,0);profile.lineTo(-r,h-r-.13);
+    profile.absarc(0,h-r-.13,r,Math.PI,0,true);profile.lineTo(r,0);profile.lineTo(w/2,0);
+    profile.lineTo(w/2,h);profile.lineTo(-w/2,h);profile.closePath();
+    add(new THREE.ExtrudeGeometry(profile,{depth:.27,bevelEnabled:false,curveSegments:8}),cream,x,y,z);
+  }
+  function shop(x,z,w,d,h,wall,trim,style) {
+    const f=z+d/2;
+    box(x,h/2+.20,z,w,h,d,wall);
+    box(x,.32,f+.45,w+.25,.28,1.15,stone);
+    const bays=Math.max(2,Math.round(w/1.55)),bw=w/bays;
+    for(let i=0;i<bays;i++){
+      const px=x-w/2+bw*(i+.5);
+      box(px,1.10,f+.03,bw-.18,1.56,.08,glass);
+      box(px,1.02,f+.11,.075,1.52,.09,cream);
+      arch(px,.43,f+.30,bw,1.62);
+      for(let y=2.67;y<h-.22;y+=1.28){
+        box(px,y,f+.05,bw*.63,.81,.12,glass);
+        box(px,y,f+.14,.07,.83,.07,cream);
+        box(px,y-.46,f+.12,bw*.82,.13,.24,cream);
+      }
+    }
+    box(x,2.17,f+.40,w+.15,.17,.64,trim);
+    box(x,h+.16,z,w+.25,.20,d+.25,cream);
+    if(style===0)roof(x,z,w+.30,d+.32,1.03,h+.22,trim);
+    else if(style===1){
+      box(x,h+.40,z,w*.84,.36,d*.81,trim);
+      for(const side of [-1,1])box(x+side*w*.38,h+.67,z,.20,.42,d*.85,cream);
+    }else{
+      roof(x,z,w+.20,d+.25,.69,h+.22,trim);
+      box(x+w*.25,h+.80,z-.38,.42,.98,.48,wall);
+    }
+  }
+  box(-18,.12,24.95,68,.17,2.15,stone);
+  box(-18,.12,30.65,68,.17,1.55,stone);
+  // Broken curb at lot gates, tactile brick strip connecting all doors.
+  for(const id of [1,3,6,8,11,13,15,16]){
+    const {x,z}=map.tiles[id].position;
+    box(x,.20,z+2.90,1.36,.10,2.05,'#f7dc9c');
+    for(const side of [-1,1])box(x+side*.85,.23,z+2.85,.13,.15,1.65,'#bf6d49');
+  }
+  for(let x=-51;x<16;x+=2)box(x,.226,25.85,1.87,.07,.15,cream);
+  const styles=[
+    [-43.8,21.9,4.3,4,4.6,'#eeb38a','#ae5c47',0],[-39.1,21.8,4.65,4.2,5.7,'#f3cf92','#608f89',1],
+    [-33.9,21.7,5.2,4.3,3.6,'#efa687','#a75948',2],[-28.9,21.8,4.45,4.2,4.9,'#bbd6be','#367d7e',0],
+    [-18.2,21.95,3.2,3.5,3.8,'#ffe0a0','#b67042',1],[-10.2,21.8,3.6,3.8,4.8,'#a9d4c3','#558585',2]
+  ];
+  for(const args of styles)shop(...args);
+  // A second, staggered row encloses the walking lane behind the arcades.
+  box(-28,.10,17.75,31,.14,1.55,'#d6bda4');
+  for(const [x,w,h,wall,trim] of [[-41,5.0,5.4,'#e7cba4','#617d86'],[-34.8,5.7,6.2,'#e5a99a','#9d6159'],[-27.8,5.5,4.7,'#efcc8e','#957356'],[-20.7,4.5,5.9,'#abccc1','#498786']])
+    shop(x,14.85,w,3.65,h,wall,trim,1);
+  // The bank court opens toward the junction, with a terraced tide gauge and basin.
+  box(-3.8,.14,22.60,8.3,.18,5.55,'#d5b994');
+  box(-3.8,.235,23.06,7.65,.06,4.5,'#f3dcad');
+  for(let i=0;i<3;i++)box(-3,.24+i*.095,24.8-i*.31,3.60-i*.17,.12,.42,cream);
+  cylinder(-6, .41,23.7,1.03,1.13,.31,cream);
+  cylinder(-6,.58,23.7,.87,.87,.06,'#4bbcbc');
+  cylinder(-6,1.01,23.7,.12,.22,.86,iron);
+  cylinder(-6,1.5,23.7,.55,.23,.24,'#66c9c5');
+  // A clock lantern gives the low bank a silhouette above the shops.
+  box(-3,2.8,19.1,2.15,5.45,1.90,'#78a59c');
+  box(-3,5.48,19.1,2.48,.24,2.15,cream);
+  for(const side of [-1,1])box(-3+side*.78,4.5,20.09,.17,1.85,.17,cream);
+  const clock=new THREE.CylinderGeometry(.55,.55,.12,24);clock.rotateX(Math.PI/2);
+  add(clock,'#fff0c2',-3,4.9,20.12);
+  box(-3,5.05,20.20,.065,.31,.05,glass);box(-2.87,4.90,20.20,.27,.07,.05,glass);
+  cylinder(-3,6.06,19.1,.12,1.62,1.04,iron,4);
+  cylinder(-3,6.85,19.1,.035,.09,.72,'#d19d46');
+  // Street edges follow the actual routes and stay clear of tile numbers.
+  for(const [ids,color] of [[[12,13,14,15,16,17,18],quayRoutes[13].color],[[12,84,85,86,87,88,89],quayRoutes[84].color]]){
+    for(let i=1;i<ids.length;i++){
+      const a=map.tiles[ids[i-1]].position,b=map.tiles[ids[i]].position;
+      const dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);
+      box((a.x+b.x)/2-dz/len*1.77,.265,(a.z+b.z)/2+dx/len*1.77,.21,.09,len,color,Math.atan2(dx,dz));
+    }
+  }
+  for(const [color,parts] of batches){
+    const mesh=new THREE.Mesh(mergeGeometries(parts,false),new THREE.MeshStandardMaterial({color,roughness:.83}));
+    for(const g of parts)g.dispose();
+    mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);
+  }
+  return group;
+}

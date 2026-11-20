@@ -28,12 +28,15 @@ export class BoardTargetPicker {
       bar.querySelector('label').firstChild.textContent='选择前进方向 ';
       bar.querySelector('button').hidden=true;
     }
+    const choices = [];
     const select = bar.querySelector('select');
     for (const option of options) {
       const pawn = playerTargets && this.pawns.pawns[option.id]?.mesh;
       const position = pawn ? pawn.position : this.board.tilePositions[option.id];
       if (!position) continue;
-      const marker = new THREE.Mesh(arrow || geometry, material);
+      const tint = option.color ? material.clone() : material;
+      if(option.color)tint.color.set(option.color);
+      const marker = new THREE.Mesh(arrow || geometry, tint);
       marker.position.copy(position);
       marker.position.y += 0.24;
       if(origin) marker.rotation.y=Math.atan2(origin.x-position.x,origin.z-position.z);
@@ -44,12 +47,21 @@ export class BoardTargetPicker {
       const object = pawn || this.board.tileMeshes[option.id];
       if (object) hits.set(object, option.id);
       select.add(new Option(option.label, String(option.id)));
+      if (option.detail) {
+        const button=document.createElement('button');
+        button.type='button';button.className='quay-route-choice';
+        button.style.setProperty('--street-color',option.color);
+        const name=document.createElement('strong'), detail=document.createElement('span');
+        name.textContent=option.label;detail.textContent=option.detail;
+        button.append(name,detail);bar.append(button);choices.push([button,option.id]);
+      }
     }
     this.scene.scene.add(group);
     document.body.append(bar);
     const hud = document.getElementById('hud-layer');
     hud.inert = true;
-    select.focus({preventScroll:true});
+    if(choices.length) bar.querySelector('label').hidden=true;
+    (choices[0]?.[0] || select).focus({preventScroll:true});
     const canvas = this.scene.renderer.domElement;
     const events = new AbortController();
     const listen = (node, type, fn) => node.addEventListener(type, fn, {signal:events.signal});
@@ -59,6 +71,7 @@ export class BoardTargetPicker {
         group.removeFromParent();
         geometry.dispose();
         arrow?.dispose();
+        for(const marker of group.children)if(marker.material!==material)marker.material.dispose();
         material.dispose();
         bar.remove();
         hud.inert = false;
@@ -69,6 +82,7 @@ export class BoardTargetPicker {
       this.cancel = () => finish(null);
       listen(bar.querySelector('button'), 'click', this.cancel);
       listen(document, 'keydown', event => {if (!origin && event.key === 'Escape') this.cancel();});
+      for(const [button,id] of choices)listen(button,'click',()=>finish(id));
       listen(select, 'change', () => {if (select.value !== '') finish(Number(select.value));});
       let down;
       listen(canvas, 'pointerdown', e => {down = e.button === 0 ? [e.clientX,e.clientY] : null;});

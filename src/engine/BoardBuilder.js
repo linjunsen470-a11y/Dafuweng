@@ -1,3 +1,4 @@
+import {createQuayStreet,quayLot} from './QuayStreet.js';
 import { createHarborPromenade, createHarborGulls, updateHarborGulls } from './HarborPromenade.js';
 import { animateBuildingChange } from './BuildingChange.js';
 import { createHarborWorkingYard } from './HarborWorkingYard.js';
@@ -420,7 +421,7 @@ export class BoardBuilder {
       return;
     }
 
-    group.add(createIslandCoast(), createNorthMarketStreet(mapDefinition), createBankCivicCourt(mapDefinition), createHarborWorkingYard(mapDefinition));
+    group.add(createQuayStreet(mapDefinition),createIslandCoast(), createNorthMarketStreet(mapDefinition), createBankCivicCourt(mapDefinition), createHarborWorkingYard(mapDefinition));
     this.harborGulls = createHarborGulls();
     updateHarborGulls(this.harborGulls,0);
     this.harborGulls.frustumCulled = false;
@@ -835,6 +836,25 @@ export class BoardBuilder {
   createVacantLotMarker(tile) {
     const group = new THREE.Group();
     const accent = getTileVisualSpec(this.activeMapDefinition, tile).accent;
+    if (this.activeMapDefinition.id==='grand-bay' && quayLot(tile.id)) {
+      // A buildable courtyard has an open street entrance and no billboard.
+      const slab=new THREE.Mesh(new THREE.BoxGeometry(3.35,.12,3.15),new THREE.MeshStandardMaterial({color:'#e6c69e'}));
+      group.add(slab);
+      const edging=new THREE.MeshStandardMaterial({color:'#ad8966'});
+      for(const side of [-1,1]){
+        const wall=new THREE.Mesh(new THREE.BoxGeometry(.14,.30,3.20),edging);
+        wall.position.set(1.65*side,.15,0);group.add(wall);
+      }
+      for(const x of [-1.17,1.17]){
+        const sill=new THREE.Mesh(new THREE.BoxGeometry(.99,.24,.17),edging);
+        sill.position.set(x,.12,-1.54);group.add(sill);
+      }
+      const planter=new THREE.Mesh(new THREE.BoxGeometry(3.35,.34,.42),edging);
+      planter.position.set(0,.16,1.36);group.add(planter);
+      const hedge=new THREE.Mesh(new THREE.BoxGeometry(3.10,.31,.36),new THREE.MeshStandardMaterial({color:'#649159'}));
+      hedge.position.set(0,.45,1.36);group.add(hedge);
+      return group;
+    }
     const pad = new THREE.Mesh(
       new THREE.BoxGeometry(2.72, 0.14, 2.72),
       new THREE.MeshStandardMaterial({ color: '#17372f', roughness: 0.76, emissive: accent, emissiveIntensity: 0.12 })
@@ -1373,6 +1393,16 @@ export class BoardBuilder {
     const group = new THREE.Group();
     group.position.set(buildingAnchor.x, tilePos.y + 0.25, buildingAnchor.z);
     group.rotation.y = tile?.lot?.rotation || 0;
+    if (this.activeMapDefinition?.id==='grand-bay' && quayLot(tileIndex) && ownerColor!=null) {
+      // In local space +Z faces the road after the residence is oriented.
+      group.rotation.y=facingRoad(tile);
+      const doorstep=new THREE.Mesh(new THREE.BoxGeometry(2.85,.13,.49),new THREE.MeshStandardMaterial({color:ownerColor}));
+      doorstep.position.set(0,.16,1.65);group.add(doorstep);
+      for(const side of [-1,1]){
+        const gate=new THREE.Mesh(new THREE.BoxGeometry(.27,.75,.27),doorstep.material);
+        gate.position.set(side*1.26,.42,1.65);group.add(gate);
+      }
+    }
     group.userData.propertyVisual = [level, ownerColor, buildingType];
     const originalDistrict = isCivicHome(this.activeMapDefinition,tile,buildingType) ? 'civic'
       : isOldTownHome(this.activeMapDefinition,tile,buildingType) ? 'market'

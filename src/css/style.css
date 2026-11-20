@@ -4199,3 +4199,7 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
   .sky-object {animation:coinTouchPulse 1.8s ease forwards;}
   @keyframes coinTouchPulse {0%,100% {opacity:.65;} 12%,84% {opacity:1;}}
 }
+.route-target-bar:has(.quay-route-choice) { display:flex; max-width:calc(100vw - 16px); gap:5px; padding:5px; }
+.route-target-bar label[hidden] {display:none;}
+.route-target-bar button.quay-route-choice {display:grid; gap:2px; text-align:left; max-width:240px; min-height:44px; padding:5px 9px; background:#fff3d5;color:#50381f;border:0;border-left:5px solid var(--street-color);border-radius:6px;}
+.quay-route-choice span {font-size:11px;line-height:1.25;}
