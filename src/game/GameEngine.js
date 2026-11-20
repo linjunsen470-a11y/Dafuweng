@@ -471,7 +471,7 @@ export class GameEngine {
     const events = [];
     const remove = () => {
       this.state.roadEntities = this.state.roadEntities.filter(item => item.id !== entity.id);
-      events.push({ type: 'ROAD_ENTITY_CHANGED', entityId: entity.id, tileId: entity.tileId, removed: true });
+      events.push({ type: 'ROAD_ENTITY_CHANGED', entityId: entity.id, tileId: entity.tileId, removed: true, hitEntityType: entity.type, playerId: player.id });
     };
     if (entity.type === 'BARRIER') {
       pending.remainingSteps = 0;

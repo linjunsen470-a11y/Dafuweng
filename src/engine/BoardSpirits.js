@@ -6,7 +6,7 @@ const aliases={SMALL_FORTUNE:'FORTUNE',GREAT_POOR:'MISFORTUNE',SMALL_POOR:'MISFO
 let silhouettes;
 export function spiritColor(type){return colors[aliases[type] || type] ?? 0xffc660;}
 
-export function createSpirit(type,phase=0) {
+export function createSpirit(type,phase=0,attached=false) {
   const kind=aliases[type] || type;
   const group=new THREE.Group();
   Object.assign(group.userData,{type,phase});
@@ -14,6 +14,25 @@ export function createSpirit(type,phase=0) {
   const marker=new THREE.Mesh(new THREE.OctahedronGeometry(.28), new THREE.MeshStandardMaterial({color:spiritColor(type)}));
   marker.position.y=.45;
   group.add(marker);
+  if (attached) {
+    const dark = ['MISFORTUNE','BAD','DEMON'].includes(kind);
+    const ornament = new THREE.Group();
+    const geometry = dark ? new THREE.IcosahedronGeometry(.29,1) : new THREE.OctahedronGeometry(.14);
+    const material = new THREE.MeshBasicMaterial({color:dark ? '#886095' : '#ffd150'});
+    for (let i=0;i<4;i++) {
+      const part = new THREE.Mesh(geometry,material);
+      if (dark) part.position.set((i-1.5)*.2,.98+.1*Math.sin(i),0);
+      else part.position.set(.64*Math.cos(i*Math.PI/2),.6,.64*Math.sin(i*Math.PI/2));
+      if (!dark) part.scale.y=1.6;
+      ornament.add(part);
+    }
+    if (dark) {
+      const bolt = new THREE.Mesh(new THREE.ConeGeometry(.12,.42,3),new THREE.MeshBasicMaterial({color:'#ffdc68'}));
+      bolt.rotation.z=2.8; bolt.position.y=.65; ornament.add(bolt);
+    }
+    group.add(ornament);
+    group.userData.ornament=ornament;
+  }
   silhouettes ??= new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}assets/models/board-spirits.glb`).catch(()=>{silhouettes=null;return null;});
   silhouettes.then(pack=>{
     if(!group.parent) return;
@@ -30,6 +49,8 @@ export function releaseSpirit(group) {
     const marker=group.children[0];
     marker?.geometry?.dispose();marker?.material?.dispose();
   }
+  const ornaments = group.userData.ornament?.children || [];
+  new Set(ornaments.flatMap(part => [part.geometry,part.material])).forEach(resource => resource.dispose());
   group.removeFromParent();
 }
 export function animateSpirits(manager,time,reduced){
@@ -41,6 +62,7 @@ export function animateSpirits(manager,time,reduced){
   }
   for(const group of manager.godAuraMeshes.values()){
     const t=reduced?0:time*.38+group.userData.phase;
+    if (group.userData.ornament) group.userData.ornament.rotation.y=t;
     const a=(manager.harborFacing || 0)+.45*Math.sin(t);
     group.position.set(.86*Math.cos(a)-.26*Math.sin(a),1.75+.12*Math.sin(t),-.86*Math.sin(a)-.26*Math.cos(a));
     group.rotation.y=(manager.harborFacing || 0)-.12;

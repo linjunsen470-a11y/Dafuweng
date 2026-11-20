@@ -1,3 +1,4 @@
+import { quietMotion } from './EffectTimeline.js';
 import { projectedBox, overlapsBoard } from './CloudVisibility.js';
 import { isOldTownView, oldTownOffset } from './OldTownStreet.js';
 import * as THREE from 'three';
@@ -40,7 +41,9 @@ export class Scene3D {
       this.targetLookAt = null;
     });
     this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.05;
+    this.controls.dampingFactor = 0.09;
+    this.controls.rotateSpeed = .75;
+    this.controls.zoomSpeed = .85;
     this.controls.maxPolarAngle = Math.PI / 2.1; // 防止掉入地板下方
     this.controls.minDistance = 15;
     this.controls.maxDistance = 75;
@@ -326,6 +329,7 @@ export class Scene3D {
   }
 
   showOverview() {
+    this.followedObject = null;
     const center = this.mapCamera?.center || new THREE.Vector3();
     const distance = this.mapCamera?.overviewDistance || 62;
     const position = center.clone().add(new THREE.Vector3(distance * 0.4, distance * 0.82, distance * 0.54));
@@ -429,27 +433,6 @@ export class Scene3D {
     this.cameraShake = { intensity: Math.max(0, intensity), duration: Math.max(1, duration), startedAt: performance.now() };
   }
 
-  showRentCoins(position, chainSize) {
-    const count=Math.min(24,chainSize*5);
-    const coins=new THREE.InstancedMesh(new THREE.CylinderGeometry(.16,.16,.05,12),
-      new THREE.MeshStandardMaterial({color:'#ffcf45',emissive:'#bb7617',emissiveIntensity:.35,metalness:.35}),count);
-    coins.position.copy(position);
-    this.scene.add(coins);
-    const stamp=new THREE.Object3D(), start=performance.now();
-    const frame=now=>{
-      const t=Math.min(1,(now-start)/850);
-      for(let i=0;i<count;i++){
-        const a=i*2.4, fall=Math.max(0,(t-i/count*.22)/.78);
-        stamp.position.set(Math.cos(a)*(.3+fall),Math.max(.18,3.6+Math.sin(a)*.45-3.8*fall*fall),Math.sin(a)*(.3+fall));
-        stamp.rotation.set(fall*5+a,0,.8);stamp.updateMatrix();coins.setMatrixAt(i,stamp.matrix);
-      }
-      coins.instanceMatrix.needsUpdate=true;
-      if(t<1)requestAnimationFrame(frame);
-      else { coins.removeFromParent();coins.geometry.dispose();coins.material.dispose(); }
-    };
-    frame(start);
-  }
-
   createMovementTrail(from,to,color=0xffd166,riding=false) {
     const dx=to.x-from.x,dz=to.z-from.z,length=Math.hypot(dx,dz);
     if(length<.4)return;
@@ -539,24 +522,20 @@ export class Scene3D {
     requestAnimationFrame(() => this.animate());
 
     // 旋转云朵
-    if (this.clouds) {
+    if (this.clouds && !quietMotion()) {
       this.clouds.rotation.y += 0.0003;
     }
     this.updateWeather();
 
-    // 相机平滑插值过渡
-    if (this.targetCameraPos) {
-      this.camera.position.lerp(this.targetCameraPos, 0.05);
-      if (this.camera.position.distanceTo(this.targetCameraPos) < 0.2) {
-        this.targetCameraPos = null;
-      }
-    }
-
-    if (this.targetLookAt) {
-      this.controls.target.lerp(this.targetLookAt, 0.05);
-      if (this.controls.target.distanceTo(this.targetLookAt) < 0.2) {
-        this.targetLookAt = null;
-      }
+    const frameTime = performance.now();
+    const elapsed = (frameTime - (this.cameraFrame ?? frameTime - 16)) / 1000;
+    this.cameraFrame = frameTime;
+    const blend = quietMotion() ? 1 : 1 - Math.exp(-5 * elapsed);
+    for (const [key, point] of [['targetCameraPos',this.camera.position],['targetLookAt',this.controls.target]]) {
+      const goal = this[key];
+      if (!goal) continue;
+      point.lerp(goal,blend);
+      if (point.distanceToSquared(goal) < .0025) { point.copy(goal); this[key]=null; }
     }
 
     if (this.followedObject?.position) {

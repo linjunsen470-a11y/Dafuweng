@@ -1,8 +1,9 @@
+import { playEffect, quietMotion } from './EffectTimeline.js';
 import * as THREE from 'three';
 
 // Effects belong to the lot instance so replacing a building also removes its scaffolding.
 export function animateBuildingChange(group, previousLevel, level, scene) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (quietMotion()) return;
   const demolition = level < previousLevel;
   const effect = new THREE.Group();
   const material = new THREE.MeshStandardMaterial({color: demolition ? '#b9744d' : '#edb251'});
@@ -27,30 +28,27 @@ export function animateBuildingChange(group, previousLevel, level, scene) {
   }
   group.add(effect);
   scene.createSparkles(group.position,demolition ? 0xcd9b7c : 0xffc644,16);
-  const start=performance.now();
-  function frame(now) {
-    if (!group.parent) return;
-    const t=Math.min(1,(now-start)/740);
-    group.scale.y=1+(demolition ? .22 : -.65)*Math.exp(-5*t)*Math.cos(t*9);
+  const base = group.scale.clone();
+  playEffect(740,t => {
+    group.scale.x = base.x * (1+.19*Math.sin(Math.PI*t*2)*(1-t));
+    group.scale.z = base.z * (1+.19*Math.sin(Math.PI*t*2)*(1-t));
+    group.scale.y=base.y +(demolition ? .22 : -.65)*Math.exp(-5*t)*Math.cos(t*9);
     if (demolition) for (const part of effect.children) {
       const a=part.userData.direction;
       part.position.set(Math.cos(a)*(1+1.8*t),.12+1.4*(1-t)+2*t*(1-t),Math.sin(a)*(1+1.8*t));
       part.rotation.set(t*4,a,t*2);
     }
-    if (t<1) requestAnimationFrame(frame);
-    else {
-      group.scale.y=1;
+  }, () => {
+      group.scale.copy(base);
       group.remove(effect);
       geometry.dispose();
       material.dispose();
-    }
-  }
-  frame(start);
+  }, () => quietMotion() || !group.parent);
 }
 
 // Carry the owner's colours from the occupied square to the purchased frontage.
 export function markPurchase(scene, road, lot, ownerColor) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (quietMotion()) return;
   const seal = new THREE.Group();
   const rim = new THREE.Mesh(new THREE.CylinderGeometry(.49,.49,.10,12),
     new THREE.MeshStandardMaterial({color:'#ffda80'}));
@@ -61,20 +59,15 @@ export function markPurchase(scene, road, lot, ownerColor) {
   const origin = new THREE.Vector3(road.x,road.y+1.2,road.z);
   const end = lot.position.clone();
   end.y += .45;
-  const start = performance.now();
-  function frame(now) {
-    const t = Math.min(1,(now-start)/730);
+  playEffect(730,t => {
     seal.position.lerpVectors(origin,end,t);
     seal.position.y += Math.sin(Math.PI*t)*1.4;
     seal.rotation.x = (1-t)*Math.PI*1.6;
-    if (t<1 && lot.parent) requestAnimationFrame(frame);
-    else {
+  }, () => {
       scene.remove(seal);
       for (const mesh of seal.children) {
         mesh.geometry.dispose();
         mesh.material.dispose();
       }
-    }
-  }
-  frame(start);
+  }, () => quietMotion() || !lot.parent);
 }

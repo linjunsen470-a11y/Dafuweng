@@ -1,3 +1,4 @@
+import { showCombo, decorateResult } from './ArcadeFeedback.js';
 import { MINIGAMES } from '../game/ContentRegistry.js';
 import {
   HARBOR_CARGO,
@@ -88,6 +89,7 @@ export class MinigameUI {
           hits++;
           combo++;
           bestCombo = Math.max(bestCombo, combo);
+          showCombo(stage,combo);
         } else if (outcome === 'MISS') {
           misses++;
           combo = 0;
@@ -154,6 +156,7 @@ export class MinigameUI {
           </section>`;
         overlay.querySelector('.minigame-skip').disabled = true;
         progress.textContent = `${hits} 次命中 · ${misses} 次失误`;
+        decorateResult(stage.querySelector('.minigame-result-card'),performance.rank.id);
         const claim = stage.querySelector('.minigame-claim');
         claim.onclick = () => complete(performance.score);
         claim.focus({ preventScroll: true });

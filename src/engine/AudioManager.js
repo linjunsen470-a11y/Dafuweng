@@ -1,3 +1,5 @@
+import { mallet, playSceneSound } from './SoundBank.js';
+import { CharacterVoice } from './CharacterVoice.js';
 /**
  * Original procedural soundtrack and sound-design system.
  * Everything is synthesized with Web Audio so the game stays offline-ready
@@ -34,7 +36,7 @@ export const THEME_LIBRARY = Object.freeze({
     melody: [69, 73, null, 76, 78, 76, 73, 71, 66, null, 71, 73, 76, 80, 76, 68]
   },
   'fortune-crossroads': {
-    title: '福星岔路', bpm: 118, lead: 'square', pad: 'triangle',
+    title: '福星岔路', bpm: 118, lead: 'triangle', pad: 'triangle',
     chords: [[59, 63, 66], [64, 68, 71], [56, 59, 63], [61, 64, 68]],
     bass: [35, 40, 32, 37],
     melody: [71, 75, 78, 75, 83, 78, 75, 71, 76, 80, 83, 80, 75, 76, 78, null]
@@ -47,6 +49,7 @@ export const getThemeConfig = themeId => THEME_LIBRARY[themeId] || THEME_LIBRARY
 
 export class AudioManager {
   constructor() {
+    this.voice = new CharacterVoice(this);
     this.ctx = null;
     this.muted = false;
     try { this.muted = globalThis.localStorage?.getItem('fortune-empire:audio-muted') === '1'; } catch {}
@@ -89,12 +92,13 @@ export class AudioManager {
       this.sfxGain.connect(this.masterCompressor);
       this.masterCompressor.connect(this.ctx.destination);
     }
-    if (this.ctx.state === 'suspended') void this.ctx.resume();
+    if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
     return true;
   }
 
   toggleMute() {
     this.muted = !this.muted;
+    if (this.muted) this.voice.stop();
     try { globalThis.localStorage?.setItem('fortune-empire:audio-muted', this.muted ? '1' : '0'); } catch {}
     if (this.sfxGain) this.sfxGain.gain.setTargetAtTime(this.muted ? 0 : this.sfxVolume, this.ctx.currentTime, 0.02);
     if (this.musicGain) this.musicGain.gain.setTargetAtTime(this.muted ? 0 : this.musicVolume, this.ctx.currentTime, 0.04);
@@ -120,6 +124,7 @@ export class AudioManager {
       const cutoff = stormy ? 3100 : timeOfDay === 'NIGHT' ? 4300 : timeOfDay === 'SUNSET' ? 5200 : 6800;
       this.musicFilter.frequency.setTargetAtTime(cutoff, this.ctx.currentTime, 0.18);
     }
+    if (weather === 'STORM' || weather === 'RAIN') this.duckMusic(1.2,.7);
     this.setMusicContext({ weather, timeOfDay });
     return { ...this.atmosphere };
   }
@@ -204,9 +209,10 @@ export class AudioManager {
     for (let step = 0; step < 8; step++) {
       const note = theme.melody[(barIndex * 8 + step) % theme.melody.length];
       const playLead = step === 0 || ((step + barIndex) % 8) / 7 <= profile.leadDensity;
-      if (playLead && note !== null && note !== undefined) this.scheduleTone(midiToFrequency(note), start + step * beat / 2, beat * 0.4, {
-        destination: this.musicGain, type: theme.lead, volume: theme.lead === 'square' ? 0.018 : 0.032,
-        attack: 0.018, release: 0.09, trackMusic: true
+      const swing = step % 2 ? beat * .07 : 0;
+      if (playLead && note != null) mallet(this,midiToFrequency(note),start+step*beat/2+swing,beat*.52,theme.lead==='triangle');
+      if (step === 3 || step === 7) this.scheduleTone(midiToFrequency(chord[1]+12),start+step*beat/2+swing,beat*.22,{
+        type:'triangle',destination:this.musicGain,trackMusic:true,volume:.021,attack:.005,release:.09
       });
       if (step % 2 === 0 && profile.percussion >= 0.45) this.scheduleNoise(start + step * beat / 2, 0.045, {
         destination: this.musicGain, volume: (step % 4 === 0 ? 0.014 : 0.009) * profile.percussion, highpass: 5200, trackMusic: true
@@ -238,6 +244,7 @@ export class AudioManager {
   }
 
   stopMusic() {
+    this.voice.stop();
     if (this.musicTimer) globalThis.clearInterval(this.musicTimer);
     this.musicTimer = null;
     this.activeMusicNodes.forEach(node => {
@@ -326,6 +333,8 @@ export class AudioManager {
     if (['danger', 'bankrupt', 'victory', 'card', 'build'].includes(name)) this.duckMusic(name === 'victory' ? 1.4 : 0.72, name === 'danger' || name === 'bankrupt' ? 0.3 : 0.46);
     return (effects[name] || effects.click)();
   }
+
+  playSceneSound(kind) { return playSceneSound(this,kind); }
 
   playBoardCue(kind,combo=0) {
     if(this.muted || !this.init())return false;

@@ -1,3 +1,5 @@
+import { bindModelLoading } from './ui/ModelLoadingUI.js';
+import { BoardEffects } from './engine/BoardEffects.js';
 import { createItemPresentation } from './game/CardPresentation.js';
 import {quayRoutes} from './game/QuayRoutes.js';
 import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
@@ -5,7 +7,9 @@ import { bindBoardHover } from './ui/BoardHover.js';
 import { cardManager } from './game/CardManager.js';
 import { BoardTargetPicker } from './ui/BoardTargetPicker.js';
 import { ModalCoordinator } from './ui/ModalCoordinator.js';
-import { cityPortrait } from './ui/CityPortrait.js';
+import { SetupScreenUI } from './ui/SetupScreenUI.js';
+import { HandTrayUI } from './ui/HandTrayUI.js';
+import { OnboardingGuide } from './ui/OnboardingGuide.js';
 import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
 import { Scene3D } from './engine/Scene3D.js';
@@ -46,31 +50,9 @@ import { MechanismUI } from './ui/MechanismUI.js';
 import { chooseAIMechanismRoute } from './game/MechanismRules.js';
 import { getRouteChoicePlans } from './game/RouteDecisionRules.js';
 
-const SETUP_MAP_PRESENTATION = {
-  'grand-bay': {
-    icon: '🌊', name: '山海都市岛', description: '穿越蓝湾、榕城、星河与云顶，争夺旗舰群岛的财富王冠。',
-    stats: [['120', '格棋盘'], ['4', '大区域'], ['旗舰', '难度']]
-  },
-  'fortune-crossroads': {
-    icon: '🍀', name: '福星岔路岛', description: '在多条财富捷径之间权衡风险，用路线选择扭转每一轮局势。',
-    stats: [['32', '格棋盘'], ['多线', '岔路'], ['经典', '难度']]
-  },
-  'city-loop': {
-    icon: '🌃', name: '霓虹财富城', description: '环绕不夜金融城高速周转，让地产连锁与股市波动彼此放大。',
-    stats: [['32', '格棋盘'], ['都市', '环线'], ['激进', '节奏']]
-  },
-  'island-fork': {
-    icon: '🏝️', name: '潮汐宝藏岛', description: '沿双岔海岸搜寻机会，在潮汐般变化的路线中抢占黄金地段。',
-    stats: [['32', '格棋盘'], ['双岔', '路线'], ['探索', '节奏']]
-  },
-  'taiwan-loop': {
-    icon: '🚂', name: '宝岛环岛图', description: '乘环岛路线串联城市与港湾，以稳定经营完成一场长线财富旅行。',
-    stats: [['32', '格棋盘'], ['环岛', '路线'], ['均衡', '难度']]
-  }
-};
-
 class GameController {
   constructor() {
+    bindModelLoading();
     this.audioManager = audioManager;
     this.gameState = new GameState();
     this.gameEngine = new GameEngine(this.gameState);
@@ -78,6 +60,7 @@ class GameController {
     this.scene3D = new Scene3D('game-container');
     this.boardBuilder = new BoardBuilder(this.scene3D);
     this.pawnManager = new PawnManager(this.scene3D, this.boardBuilder);
+    this.boardEffects = new BoardEffects(this.scene3D, this.boardBuilder, this.pawnManager, this.gameState);
     this.dice3D = new Dice3D(this.scene3D);
 
     this.uiRenderer = new UIRenderer(this.gameState);
@@ -90,7 +73,7 @@ class GameController {
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
     this.modalCoordinator = new ModalCoordinator();
     this.boardPicker = new BoardTargetPicker(this.scene3D, this.boardBuilder, this.pawnManager);
-    this.mapInspector = new MapInspector(this.scene3D, this.boardBuilder, this.gameState, this.gameEngine);
+    this.mapInspector = new MapInspector(this.scene3D, this.boardBuilder, this.gameState, this.gameEngine, this.pawnManager);
     bindBoardHover(this.scene3D, this.boardBuilder, this.pawnManager, this.gameState, this.gameEngine,
       () => this.mapInspector.canInspect() && !this.mapInspector.isOpen && !this.boardPicker.cancel && !this.modalCoordinator.active);
     this.presentationUI = new PresentationUI(this.audioManager);
@@ -109,15 +92,25 @@ class GameController {
     this.aiPace = '1';
     this.gameEngine.subscribe(event => this.applyDomainEvent(event));
 
-    this.renderSetupScreen();
+    this.setupScreen = new SetupScreenUI(this.gameEngine.saves, {
+      start: () => { this.audioManager.playClick(); this.startGame(); },
+      restore: snapshot => this.restoreGame(snapshot),
+      cash: value => { this.selectedInitialCash = value; }
+    });
+    this.guide = new OnboardingGuide();
+    this.handTray = new HandTrayUI(this.gameEngine, () => this.canOpenPlayerAction() && !this.modalCoordinator.active && !this.boardPicker.cancel,
+      entry => entry.kind === 'ITEM' ? this.handleItemUsage(entry.definition.id) : this.handleCardUsage(entry.definition.id, entry.index));
+    this.uiRenderer.bindActions(id => {
+      const pawn = this.pawnManager.getPawnMesh(id);
+      if (!pawn || this.boardPicker.cancel || this.modalCoordinator.active) return;
+      this.scene3D.stopFollowing({ settle: false });
+      this.scene3D.focusOnPosition(pawn.position);
+    });
+    this.uiRenderer.onHandChange = player => this.handTray.render(player);
+    this.setupScreen.render();
     this.bindHUDButtons();
     bindMobileHUD();
     this.bindKeyboardAndCanvasClick();
-    setTimeout(() => {
-      try {
-        if (!localStorage.getItem('fortune-empire:tutorial-seen')) this.dialogUI.showHelp(true);
-      } catch {}
-    }, 250);
   }
 
   async getStockUI() {
@@ -176,7 +169,8 @@ class GameController {
 
   applyDomainEvent(event) {
     document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
-    this.pawnManager.reactToEvent(event);
+    this.boardEffects.present(event);
+    if (!this.skipAIAnimations && !this.presentationUI.isReducedMotion()) this.pawnManager.reactToEvent({ playerId:this.gameState.currentPlayerIndex, ...event });
     if(event.type==='CLINIC_PICKUP' && !this.skipAIAnimations) {
       this.audioManager.playBoardCue('clinic');
       if (!this.presentationUI.isReducedMotion()) {
@@ -190,7 +184,7 @@ class GameController {
         }
         const pawn = this.pawnManager.pawns[event.playerId];
         const pickup = Promise.resolve(this.pendingPickup).then(()=>
-          showClinicPickup(this.scene3D,pawn,points,()=>this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile,true)));
+          showClinicPickup(this.scene3D,pawn,points,()=>{ const current=this.gameState.getCurrentPlayer(); if (current) this.showPlayerStreet(current.currentTile,true); }));
         this.pendingPickup = pickup;
         pickup.finally(()=>{ if (this.pendingPickup===pickup) this.pendingPickup=null; });
       }
@@ -218,8 +212,9 @@ class GameController {
       for (const id of [event.fromPlayerId,event.toPlayerId]) this.pawnManager.updateGodAura(id,this.gameState.players[id]?.godType);
     } else if (event.type === 'GOD_DEPARTED') {
       this.pawnManager.updateGodAura(event.playerId,null);
-    } else if (event.type === 'STATUS_CHANGED') {
-      this.pawnManager.updateGodAura(event.playerId, event.status);
+    } else if (event.type === 'STATUS_CHANGED' || event.type === 'STATUS_APPLIED') {
+      const id = event.playerId ?? this.gameState.currentPlayerIndex;
+      this.pawnManager.updateGodAura(id, this.gameState.players[id]?.godType);
     } else if (event.type === 'BOARD_GOD_COLLECTED') {
       this.pawnManager.updateGodAura(event.playerId, event.godType);
       this.pawnManager.syncBoardGods(this.gameState.boardGods);
@@ -280,126 +275,6 @@ class GameController {
     this.syncedAssetRevision = this.gameState.assetRevision;
   }
 
-  renderSetupScreen() {
-    const configList = document.getElementById('player-config-list');
-    configList.innerHTML = '';
-
-    const defaultProfiles = [0, 1, 2, 3];
-    const defaultTypes = ['HUMAN', 'AI', 'AI', 'AI'];
-
-    const playerCount = parseInt(document.getElementById('player-count')?.value || '4', 10);
-    for (let i = 0; i < playerCount; i++) {
-      const item = document.createElement('div');
-      item.className = 'player-config-item';
-
-      let optionsHtml = '';
-      PLAYER_PROFILES.forEach((prof) => {
-        optionsHtml += `<option value="${prof.id}" ${prof.id === defaultProfiles[i] ? 'selected' : ''}>${prof.avatar} ${prof.name} (${prof.skillName})</option>`;
-      });
-
-      item.innerHTML = `
-        <div class="player-info-meta">
-          <span class="setup-character-portrait" role="img" aria-label="角色肖像"></span>
-          <div class="setup-character-copy">
-            <select class="player-profile-select" name="player-profile-${i}" data-index="${i}" aria-label="选择玩家${i + 1}角色">
-              ${optionsHtml}
-            </select>
-            <span class="setup-character-skill"></span>
-          </div>
-        </div>
-        <select class="player-type-select" name="player-type-${i}" data-index="${i}" aria-label="选择玩家${i + 1}类型">
-          <option value="HUMAN" ${defaultTypes[i] === 'HUMAN' ? 'selected' : ''}>👤 人类玩家</option>
-          <option value="AI" ${defaultTypes[i] === 'AI' ? 'selected' : ''}>🤖 电脑 AI</option>
-        </select>
-      `;
-      configList.appendChild(item);
-    }
-
-    // 绑定角色重复选择校验机制 (自动互换，防冲突)
-    const profSelects = document.querySelectorAll('.player-profile-select');
-    let previousSelections = Array.from(profSelects).map(s => parseInt(s.value, 10));
-    const updateSetupPortraits = () => {
-      profSelects.forEach((profileSelect) => {
-        const profile = PLAYER_PROFILES.find(item => item.id === Number(profileSelect.value));
-        const configItem = profileSelect.closest('.player-config-item');
-        const portrait = configItem?.querySelector('.setup-character-portrait');
-        const skill = configItem?.querySelector('.setup-character-skill');
-        if (!profile || !portrait || !skill) return;
-        const modelPortrait = cityPortrait({ profileId: profile.id }, document.getElementById('map-select')?.value);
-        portrait.style.backgroundImage = modelPortrait ? `url('${modelPortrait}')` : profile.avatarAtlas
-          ? `url('${profile.avatarAtlas}')`
-          : profile.avatarImg ? `url('${profile.avatarImg}')` : 'none';
-        portrait.style.backgroundPosition = modelPortrait ? 'center' : profile.avatarPosition || 'center';
-        portrait.style.backgroundSize = modelPortrait ? 'cover' : profile.avatarAtlas ? '400% 300%' : 'cover';
-        portrait.style.setProperty('--profile-color', profile.color);
-        portrait.textContent = profile.avatarAtlas || profile.avatarImg ? '' : profile.avatar;
-        portrait.setAttribute('aria-label', `${profile.name}角色肖像`);
-        skill.textContent = `⚡ ${profile.skillName} · ${profile.skillDesc}`;
-        configItem.style.setProperty('--profile-color', profile.color);
-      });
-    };
-
-    profSelects.forEach((sel, changedIdx) => {
-      sel.addEventListener('change', (e) => {
-        const newValue = parseInt(e.target.value, 10);
-        // 检查是否有其他下拉框占用了该角色
-        profSelects.forEach((otherSel, otherIdx) => {
-          if (changedIdx !== otherIdx && parseInt(otherSel.value, 10) === newValue) {
-            // 将被冲突的下拉框值调整为改动前的值 (互换)
-            otherSel.value = previousSelections[changedIdx];
-          }
-        });
-        previousSelections = Array.from(profSelects).map(s => parseInt(s.value, 10));
-        updateSetupPortraits();
-      });
-    });
-    updateSetupPortraits();
-
-    const cashBtns = document.querySelectorAll('.cash-btn');
-    cashBtns.forEach(btn => {
-      btn.onclick = () => {
-        cashBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.selectedInitialCash = parseInt(btn.dataset.cash, 10);
-      };
-    });
-
-    document.getElementById('start-game-btn').onclick = () => {
-      this.audioManager.playClick();
-      this.startGame();
-    };
-
-    document.getElementById('player-count').onchange = () => this.renderSetupScreen();
-
-    const mapSelect = document.getElementById('map-select');
-    const updateMapShowcase = () => {
-      const mapIds = Object.keys(SETUP_MAP_PRESENTATION);
-      const mapId = mapSelect?.value || mapIds[0];
-      const presentation = SETUP_MAP_PRESENTATION[mapId] || SETUP_MAP_PRESENTATION[mapIds[0]];
-      const icon = document.getElementById('setup-map-icon');
-      const name = document.getElementById('setup-map-name');
-      const description = document.getElementById('setup-map-description');
-      const index = document.getElementById('setup-map-index');
-      const stats = document.getElementById('setup-map-stats');
-      if (icon) icon.textContent = presentation.icon;
-      if (name) name.textContent = presentation.name;
-      if (description) description.textContent = presentation.description;
-      if (index) index.textContent = `${String(mapIds.indexOf(mapId) + 1).padStart(2, '0')} / ${String(mapIds.length).padStart(2, '0')}`;
-      if (stats) stats.innerHTML = presentation.stats.map(([value, label]) => `<span><b>${value}</b> ${label}</span>`).join('');
-    };
-    if (mapSelect) mapSelect.onchange = () => { updateMapShowcase(); updateSetupPortraits(); };
-    updateMapShowcase();
-
-    const autoSave = this.gameEngine.saves.loadAuto();
-    const manualSave = this.gameEngine.saves.loadManual();
-    const autoButton = document.getElementById('load-auto-save-btn');
-    const manualButton = document.getElementById('load-manual-save-btn');
-    autoButton.classList.toggle('hidden', !autoSave.success);
-    manualButton.classList.toggle('hidden', !manualSave.success);
-    autoButton.onclick = () => autoSave.success && this.restoreGame(autoSave.snapshot);
-    manualButton.onclick = () => manualSave.success && this.restoreGame(manualSave.snapshot);
-  }
-
   startGame() {
     const setupScreen = document.getElementById('setup-screen');
     if (setupScreen.contains(document.activeElement)) {
@@ -432,6 +307,7 @@ class GameController {
     });
 
     const mode = document.getElementById('game-mode').value;
+    this.boardEffects.clear();
     this.gameState.setupGame(playerConfigs, this.selectedInitialCash, {
       maxRounds: mode === 'QUICK' ? 24 : mode === 'HEAT' ? 30 : 40,
       mapId: document.getElementById('map-select').value,
@@ -452,6 +328,7 @@ class GameController {
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
 
     this.checkAITurn();
+    this.guide.start();
   }
 
   restartMatch() {
@@ -461,6 +338,7 @@ class GameController {
     this.presentationUI.clear();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
     this.pawnManager.clearPawns();
+    this.boardEffects.clear();
     this.gameState.setupGame(config.playerConfigs, config.initialCash, config.options);
     this.syncModeButton();
     document.getElementById('btn-economic-report')?.classList.add('hidden');
@@ -549,7 +427,7 @@ class GameController {
       const button = document.getElementById('btn-time-of-day');
       button.textContent = icon;
       button.title = `切换时间：${label}`;
-      this.boardBuilder.setNightMode(timeOfDay === 'NIGHT');
+      this.boardBuilder.setNightMode(timeOfDay !== 'DAY');
       this.audioManager.setAtmosphere({ weather: this.scene3D.weather, timeOfDay });
       this.audioManager.playConfirm();
       this.gameState.addLog(`${icon} 场景时间切换为${label}。`, 'accent');
@@ -602,8 +480,12 @@ class GameController {
     });
     document.querySelector('#ai-pace').onchange = e => {
       this.aiPace = e.target.value;
+      document.getElementById('btn-ai-pace').textContent = this.aiPace === 'skip' ? 'AI 快进' : 'AI ×' + this.aiPace;
       document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
     };
+    const voiceToggle = document.getElementById('spoken-lines');
+    voiceToggle.checked = this.audioManager.voice.spoken;
+    voiceToggle.onchange = () => this.audioManager.voice.setSpoken(voiceToggle.checked);
     const musicVolume = document.getElementById('music-volume');
     const sfxVolume = document.getElementById('sfx-volume');
     try {
@@ -728,6 +610,8 @@ class GameController {
   returnToMenu() {
     if (this.gameState.players.length && this.gameState.phase !== GamePhase.GAME_OVER
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
+    this.boardEffects.clear();
+    this.guide.close();
     this.audioManager.stopMusic();
     this.presentationUI.clear();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
@@ -749,10 +633,12 @@ class GameController {
     setup.classList.add('active');
     setup.setAttribute('aria-hidden', 'false');
     document.getElementById('hud-layer').classList.add('hidden');
-    this.renderSetupScreen();
+    this.setupScreen.render();
   }
 
   restoreGame(snapshot) {
+    this.presentationUI.clear();
+    this.boardEffects.clear();
     this.gameEngine.restore(snapshot);
     this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
     this.minimapUI.setMap(this.gameState.mapDefinition);
@@ -1127,9 +1013,6 @@ class GameController {
       const result = this.gameEngine.execute({ type: 'SETTLE_RENT', playerId: curPlayer.id, payload: { tileId: tileIndex } });
       if (result.amount > 0) {
         this.audioManager.playCoinSound();
-        if (result.chainSize > 1 && !this.skipAIAnimations && !this.presentationUI.isReducedMotion()) {
-          this.scene3D.showRentCoins(this.boardBuilder.tilePositions[tileIndex], result.chainSize);
-        }
       }
       if (result.type === 'DEBT_REQUIRED') await this.resolvePendingDebt(curPlayer);
       return this.finishTurn();
@@ -1138,8 +1021,10 @@ class GameController {
     const result = this.gameEngine.execute({ type: 'RESOLVE_LANDING', playerId: curPlayer.id, payload: { tileId: tileIndex } });
     if (['CARD_POINTS', 'COUPON_COLLECTED', 'CARD_GAINED'].includes(result.type)) this.audioManager.playCardSpell();
     if (result.type === 'CASH_GAINED' || result.type === 'CASH_LOST') this.audioManager.playCoinSound();
+    if (result.chance && !result.events.some(event => event.chance)) {
+      this.presentationUI.chanceRevealUI.show({event:result,player:curPlayer});
+    }
     if (result.type === 'MONSTER_ATTACK') this.triggerExplosionVFX();
-    if (result.type === 'STATUS_APPLIED') this.pawnManager.updateGodAura(curPlayer.id, result.status);
     if (result.type === 'OPEN_STOCK' && !curPlayer.isAI) {
       const stockUI = await this.getStockUI();
       await new Promise(resolve => stockUI.show(resolve));
@@ -1318,7 +1203,7 @@ class GameController {
     const result = this.gameEngine.execute({ type: 'PURCHASE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex, buildingType } });
     if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex, result.buildingType, false, true);
-      this.audioManager.playBuildSound();
+      this.audioManager.playSceneSound('stamp');
     }
     return result;
   }
@@ -1327,7 +1212,7 @@ class GameController {
     const result = this.gameEngine.execute({ type: 'UPGRADE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex } });
     if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, result.level, player.colorHex, this.gameState.propertyManager.getProperty(tileIndex)?.buildingType);
-      this.audioManager.playBuildSound();
+      this.audioManager.playSceneSound('hammer');
     }
     return result;
   }
@@ -1357,12 +1242,15 @@ class GameController {
       value = await this.dialogUI.chooseDiceValue();
       if (value === null) return null;
     }
-    if (['MISSILE_ITEM', 'NUCLEAR_MISSILE', 'MINE_ITEM'].includes(itemId)) this.triggerExplosionVFX();
     const result = this.gameEngine.execute({ type: 'USE_ITEM', playerId: player.id, payload: { itemId, targetId, value } });
     if (!result.success) {
       this.gameState.addLog(`⚠️ 道具未发动：${result.reason}`, 'danger');
       this.uiRenderer.renderHUD();
       return result;
+    }
+    if (result.type === 'BLAST_RESOLVED' && !this.skipAIAnimations) {
+      this.boardEffects.blast(this.pawnManager.getPawnMesh(player.id)?.position, result.centerTileId, result.destructive);
+      this.audioManager.playSceneSound('missile');
     }
     const item = this.gameState.inventoryManager.getDefinition(itemId);
     void this.presentationUI.showImpact({ title: item.name, icon: item.icon, eyebrow: '道具发动',
@@ -1402,10 +1290,6 @@ class GameController {
     }
 
     const activate = async (value = null) => {
-      if (['MISSILE', 'NUKES', 'MINE', 'DEMOLISH'].includes(cardId)) {
-        this.triggerExplosionVFX();
-      }
-
       const result = this.gameEngine.execute({
         type: 'USE_CARD',
         playerId: curPlayer.id,

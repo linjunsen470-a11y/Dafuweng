@@ -1,4 +1,4 @@
-// Reuse the full game's existing toolbar; keep a small board view on phones.
+// The same disclosure works with a mouse, touchscreen or keyboard.
 export function bindMobileHUD(root = document) {
   const button = root.getElementById('btn-mobile-tools');
   const tools = root.getElementById('hud-tools');
@@ -6,10 +6,17 @@ export function bindMobileHUD(root = document) {
   const setOpen = open => {
     tools.classList.toggle('is-open', open);
     button.setAttribute('aria-expanded', String(open));
-    button.textContent = open ? '关闭菜单' : '地图 / 菜单';
+    button.textContent = open ? '收起 ▴' : '更多 ▾';
   };
-  const compact = root.defaultView?.matchMedia('(max-width: 820px)');
-  compact?.addEventListener('change', event => { if (!event.matches) setOpen(false); });
+  root.addEventListener('pointerdown', event => {
+    if (tools.classList.contains('is-open') && !tools.contains(event.target) && !button.contains(event.target)) setOpen(false);
+  });
+  root.getElementById('btn-news-menu').onclick = () => root.getElementById('btn-news-history').click();
+  const pace = root.getElementById('ai-pace');
+  root.getElementById('btn-ai-pace').onclick = () => {
+    pace.selectedIndex = (pace.selectedIndex + 1) % pace.options.length;
+    pace.dispatchEvent(new Event('change'));
+  };
   button.addEventListener('click', () => setOpen(button.getAttribute('aria-expanded') !== 'true'));
   tools.addEventListener('click', event => {
     if (event.target.closest('button')) setOpen(false);

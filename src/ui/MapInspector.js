@@ -1,3 +1,6 @@
+import { createLandDecisionModel } from './LandDecisionModel.js';
+import { pickBoardTarget } from './BoardTarget.js';
+import { deedDetails, renderDeed } from './DeedCard.js';
 import * as THREE from 'three';
 import {isPropertyTile} from '../game/BoardData.js';
 import {rentAbility} from './CharacterAbilityFeedback.js';
@@ -8,7 +11,13 @@ export function describeMapTile(state, engine, id) {
   if(!tile||!player)return null;
   const property=state.propertyManager.getProperty(id),owner=state.players.find(p=>p.id===property?.owner);
   const lines=[];
+  let deed;
   if(isPropertyTile(tile)){
+    const level=property?.level || 0;
+    const model=createLandDecisionModel({tileData:tile,currentLevel:level,player:owner||player,state,action:owner?'UPGRADE':'BUY'});
+    const standard=state.gameMode!=='HEAT' && !property?.isMortgaged &&
+      !(state.gameMode==='TEAM' && owner && owner.id!==player.id && owner.teamId===player.teamId);
+    deed=deedDetails(model,owner,level,state.mapId,standard);
     lines.push(owner?`${owner.name} · LV ${property.level}${owner.id===player.id?' · 本人地产':''}`:'无主地产');
     if(state.gameMode==='HEAT')lines.push('热斗模式：此格按补给规则结算，不使用标准购租报价');
     else if(state.gameMode==='TEAM'&&owner&&owner.id!==player.id&&owner.teamId===player.teamId)lines.push('队友地产 · 停留不付租金');
@@ -26,7 +35,7 @@ export function describeMapTile(state, engine, id) {
         lines.push(`连锁店 ${count} 家 · 加成 ${25*Math.max(0,count-1)}%`);
       }
       lines.push(owner.id===player.id?'自己停留不付租金':'牌价含地产及地主加成；最终按落地时的免租、神明、技能与保险结算。');
-    }else lines.push(`当前默认购价 ${money(engine.getPropertyActionCost(player,id,'BUY'))}`);
+    }else lines.push('未售出 · 当前不收租', `当前默认购价 ${money(engine.getPropertyActionCost(player,id,'BUY'))}`);
   }else lines.push(tile.desc||tile.name);
   const road=state.roadEntities?.find(e=>e.tileId===id && e.data?.attachedPlayerId == null);
   if(property?.hasObstacle||road?.type==='BARRIER')lines.push('🚧 路障：进入即截停，自己也会触发');
@@ -36,11 +45,11 @@ export function describeMapTile(state, engine, id) {
     lines.push('⏱️ 定时炸弹：进入会附身'+remaining);
   }
   const links=state.mapRuntime.getNextOptions(id,player.direction||1).map(next=>({id:next,name:state.getTile(next)?.name||`${next}号格`}));
-  return {title:`${id} · ${tile.name}`,lines,links,direction:player.direction===-1?'逆向':'正向',color:owner?.color||'#67e8f9'};
+  return {deed,title:`${id} · ${tile.name}`,lines,links,direction:player.direction===-1?'逆向':'正向',color:owner?.color||'#67e8f9'};
 }
 
 export class MapInspector {
-  constructor(scene,board,state,engine){
+  constructor(scene,board,state,engine,pawns){
     this.scene=scene;this.board=board;this.state=state;this.engine=engine;this.isOpen=false;this.selected=null;
     this.button=document.getElementById('btn-inspect-map');
     this.panel=document.createElement('section');this.panel.id='map-inspector';this.panel.className='map-inspector hidden';this.panel.setAttribute('aria-label','地图地块详情');
@@ -59,8 +68,8 @@ export class MapInspector {
       if(!this.isOpen||!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>6)return;
       down=null;const r=canvas.getBoundingClientRect(),ray=new THREE.Raycaster();
       ray.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),scene.camera);
-      const hit=ray.intersectObjects(board.tileMeshes.filter(Boolean),false)[0];
-      if(hit)this.choose(hit.object.userData.tileData.id,false);
+      const hit=pickBoardTarget(ray,board,pawns,state);
+      if(hit)this.choose(hit.id,false);
     });
     canvas.addEventListener('pointercancel',()=>{down=null;});
     let last=0;scene.addUpdatable({update:()=>{if(performance.now()-last<200)return;last=performance.now();this.button.disabled=!this.canInspect();if(this.isOpen){if(!this.canInspect())this.close();else this.refresh();}}});
@@ -78,9 +87,9 @@ export class MapInspector {
     if(dock)this.panel.style.bottom=`${Math.max(12,innerHeight-dock.getBoundingClientRect().top+12)}px`;
     const model=describeMapTile(this.state,this.engine,this.selected);if(!model)return;
     const key=JSON.stringify(model);if(key===this.lastModel)return;this.lastModel=key;this.panel.style.setProperty('--inspection-owner',model.color);
-    const title=document.createElement('h3');title.textContent=model.title;const rows=model.lines.map(line=>{const p=document.createElement('p');p.textContent=line;return p;});
+    const card=renderDeed(model);
     const note=document.createElement('p');note.className='inspection-path-note';note.textContent=`从此格继续（${model.direction}）· 点击仅查看`;
     const nav=document.createElement('nav');nav.setAttribute('aria-label','相邻路线');model.links.forEach(link=>{const b=document.createElement('button');b.type='button';b.textContent=`→ ${link.id} · ${link.name}`;b.onclick=()=>this.choose(link.id,true);nav.appendChild(b);});
-    this.body.replaceChildren(title,...rows,note,nav);
+    this.body.replaceChildren(card,note,nav);
   }
 }

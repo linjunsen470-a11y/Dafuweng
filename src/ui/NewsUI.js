@@ -49,8 +49,8 @@ export class NewsUI {
     overlay.innerHTML = `
       <article class="news-flash-card" role="dialog" aria-modal="true" aria-labelledby="news-flash-title">
         <div class="news-flash-masthead">
-          <span class="news-live-dot"></span>
-          <strong>FORTUNE CITY NEWS</strong>
+          <span class="paper-extra">号外</span>
+          <strong>大富翁日报</strong>
           <span class="news-round-label"></span>
         </div>
         <div class="news-flash-body">
@@ -66,7 +66,7 @@ export class NewsUI {
         <span class="news-auto-progress" aria-hidden="true"></span>
       </article>
     `;
-    overlay.querySelector('.news-round-label').textContent = `ROUND ${news.round}`;
+    overlay.querySelector('.news-round-label').textContent = `第 ${news.round} 轮`;
     overlay.querySelector('.news-category-icon').textContent = news.icon || '📰';
     overlay.querySelector('.news-category').textContent = news.category || '快讯';
     overlay.querySelector('h2').textContent = news.title;

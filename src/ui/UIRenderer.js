@@ -19,9 +19,21 @@ export class UIRenderer {
     this.cardCountBadge = document.getElementById('card-count-badge');
     this.btnRoll = document.getElementById('btn-roll');
     this.diceCountSelect = document.getElementById('dice-count-select');
+    this.diceButtons = [...document.querySelectorAll('[data-dice]')];
     this.questPanel = document.getElementById('quest-panel');
     this.questList = document.getElementById('quest-list');
     this.questCount = document.getElementById('quest-count');
+  }
+
+  bindActions(onPlayerFocus) {
+    this.playersList.onclick = event => {
+      const card = event.target.closest('[data-player-id]');
+      if (card) onPlayerFocus(Number(card.dataset.playerId));
+    };
+    this.diceButtons.forEach(button => button.onclick = () => {
+      this.diceCountSelect.value = button.dataset.dice;
+      this.diceCountSelect.dispatchEvent(new Event('change'));
+    });
   }
 
   renderHUD() {
@@ -59,24 +71,31 @@ export class UIRenderer {
     if (curPlayer) {
       if (curPlayer.isAI) {
         this.turnIndicator.innerHTML = `
-          <span style="color:${curPlayer.color}">●</span> 🤖 <strong>${curPlayer.name}${curPlayer.direction === -1 ? ' · 逆向' : ''}</strong> 正在思考与行动中...
+          <span style="color:${curPlayer.color}">●</span> 🤖 <strong>${curPlayer.name}${curPlayer.direction === -1 ? ' · 逆向' : ''}</strong> 行动中
         `;
         this.btnRoll.style.opacity = '0.5';
         this.btnRoll.style.pointerEvents = 'none';
       } else {
         this.turnIndicator.innerHTML = `
-          <span style="color:${curPlayer.color}">●</span> 👤 <strong>你的回合${curPlayer.direction === -1 ? ' · 逆向' : ''}</strong>：请点击【掷骰子】或按 [空格键]！
+          <span style="color:${curPlayer.color}">●</span> 👤 <strong>你的回合${curPlayer.direction === -1 ? ' · 逆向' : ''}</strong>
         `;
         const canRoll = this.gameState.phase === 'PRE_ROLL_ACTION';
         this.btnRoll.style.opacity = canRoll ? '1' : '0.5';
         this.btnRoll.style.pointerEvents = canRoll ? 'all' : 'none';
       }
+      this.btnRoll.disabled = curPlayer.isAI || this.gameState.phase !== 'PRE_ROLL_ACTION';
+      this.btnRoll.classList.toggle('roll-ready', !this.btnRoll.disabled);
+      this.onHandChange?.(curPlayer);
       this.cardCountBadge.textContent = (curPlayer.cards?.length || 0) + (curPlayer.items?.length || 0);
       if (this.diceCountSelect) {
         const limit = curPlayer.vehicle === 'MOTOR' ? 2 : ['CAR', 'ENGINEER'].includes(curPlayer.vehicle) ? 3 : 1;
         [...this.diceCountSelect.options].forEach(option => { option.disabled = Number(option.value) > limit; });
         this.diceCountSelect.value = String(Math.min(limit, curPlayer.selectedDiceCount || 1));
-        this.diceCountSelect.disabled = curPlayer.isAI || this.gameState.phase !== 'PRE_ROLL_ACTION';
+        this.diceCountSelect.disabled = this.btnRoll.disabled;
+        this.diceButtons.forEach(button => {
+          button.disabled = this.diceCountSelect.disabled || Number(button.dataset.dice) > limit;
+          button.setAttribute('aria-pressed', String(button.dataset.dice === this.diceCountSelect.value));
+        });
       }
     }
 
@@ -111,14 +130,15 @@ export class UIRenderer {
   }
 
   renderPlayersList() {
+    const focused = document.activeElement?.closest('.player-card')?.dataset.playerId;
     this.playersList.innerHTML = '';
     this.gameState.players.forEach((player) => {
       const isCur = player.id === this.gameState.currentPlayerIndex;
-      const card = document.createElement('div');
+      const card = document.createElement('button');
       card.className = `player-card ${isCur ? 'active-turn' : ''} ${player.isBankrupt ? 'bankrupt' : ''}`;
       card.dataset.playerId = String(player.id);
 
-      const netWorth = this.gameState.calculateNetWorth(player);
+      card.title = `聚焦${player.name}的棋子`;
 
       let buffHtml = '';
       const godRule = getGodRule(player.godType);
@@ -182,15 +202,13 @@ export class UIRenderer {
           </div>
           <span class="player-tag">${player.isLord ? '👹 领主' : player.isAI ? '🤖 AI' : '👤 玩家'}${['TEAM', 'CHALLENGE'].includes(this.gameState.gameMode) ? ` · 队伍 ${player.teamId}` : ''}</span>
         </div>
-        <div class="cash-display">$${player.cash.toLocaleString()}</div>
-        <div class="player-details">
-          <span>存款: $${(player.deposit || 0).toLocaleString()} · 总资产: $${netWorth.toLocaleString()}</span>
-          <span>卡片积分: ${player.cardPoints}</span>
-        </div>
+        <div class="cash-display">现金 $${player.cash.toLocaleString()}</div>
+        <div class="player-details"><span>存款 $${(player.deposit || 0).toLocaleString()}</span><span>点券 ${player.cardPoints}</span></div>
         <div class="buff-icons">${buffHtml}</div>
       `;
 
       this.playersList.appendChild(card);
+      if (focused === card.dataset.playerId) card.focus({preventScroll:true});
     });
   }
 

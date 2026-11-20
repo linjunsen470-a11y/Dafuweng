@@ -15,6 +15,9 @@
   <a class="skip-link" href="#hud-layer">跳到游戏操作</a>
   <!-- 3D Canvas 容器 -->
   <div id="game-container"></div>
+  <aside id="model-loading" hidden aria-label="棋盘载入进度">
+    <b>正在布置棋盘</b><progress aria-label="已载入素材"></progress><small>点玩家头像，就能找到棋子。</small>
+  </aside>
 
   <!-- 游戏启动与设置界面 -->
   <div id="setup-screen" class="overlay-screen active">
@@ -27,16 +30,10 @@
 
     <section class="setup-title-stage" aria-labelledby="setup-game-title">
       <div class="logo-area">
-        <div class="game-badge"><span></span> GRAND ISLAND EDITION</div>
         <h1 id="setup-game-title">富翁帝国 <span>3D</span></h1>
-        <p>踏上山海都市岛，在港湾、老城与云顶之间建立你的财富版图。</p>
-        <div class="setup-feature-strip" aria-label="游戏特色">
-          <span>🗺️ 120 格大地图</span><span>🏙️ 四大实景区域</span><span>🤖 智能对手</span><span>💾 随时存档</span>
-        </div>
       </div>
 
       <div class="setup-map-showcase" aria-live="polite">
-        <div class="setup-map-kicker"><span>FEATURED MAP</span><b id="setup-map-index">01 / 05</b></div>
         <div class="setup-map-copy">
           <span class="setup-map-icon" id="setup-map-icon" aria-hidden="true">🌊</span>
           <div>
@@ -51,21 +48,14 @@
     </section>
 
     <div class="glass-card setup-box">
-      <div class="setup-panel-heading">
-        <span>NEW GAME CONFIGURATION</span>
-        <div>
-          <h2>建立财富对局</h2>
-          <p>选择角色、规则与经济起点</p>
-        </div>
-      </div>
-
-      <div class="setup-section setup-players">
-        <h3><span class="icon">👥</span> 玩家与电脑 AI 设置</h3>
-        <div class="player-config-list" id="player-config-list">
-          <!-- 动态渲染 4 位玩家选择 -->
-        </div>
-      </div>
-
+      <section class="lobby-characters" aria-labelledby="roster-title">
+        <h2 id="roster-title">选择出场角色</h2>
+        <div id="player-config-list" aria-label="选择玩家席位"></div>
+        <div id="character-preview" aria-live="polite"></div>
+        <div id="character-roster" aria-label="角色卡片"></div>
+      </section>
+      <section class="lobby-maps"><h3>对局地图</h3><div id="map-cards"></div></section>
+      <details class="lobby-advanced"><summary>高级设置</summary>
       <div class="setup-section setup-economy">
         <h3><span class="icon">💰</span> 初始对局资金</h3>
         <div class="cash-options">
@@ -106,7 +96,7 @@
             <option value="HARD">困难</option>
           </select>
         </label>
-        <label>对局地图
+        <label hidden>对局地图
           <select id="map-select">
             <option value="grand-bay" selected>山海都市岛 · 120格旗舰地图</option>
             <option value="fortune-crossroads">经典 · 福星岔路岛</option>
@@ -117,6 +107,7 @@
         </label>
       </div>
 
+      </details>
       <div class="setup-actions">
         <button id="start-game-btn" class="btn-primary btn-large">
           <span class="btn-glow"></span>
@@ -150,30 +141,28 @@
         <span class="ticker-history-hint" aria-hidden="true">›</span>
       </button>
 
-      <button type="button" id="btn-mobile-tools" class="mobile-tools-toggle" aria-controls="hud-tools" aria-expanded="false">地图 / 菜单</button>
-      <div class="top-actions" id="hud-tools">
-        <div class="tool-cluster" aria-label="地图视角">
-          <button id="btn-map-overview" class="icon-btn" title="全图总览" aria-label="全图总览">🗺️</button>
-          <button id="btn-rotate-left" class="icon-btn" title="视角左转45度" aria-label="视角左转45度">↶</button>
-          <button id="btn-rotate-right" class="icon-btn" title="视角右转45度" aria-label="视角右转45度">↷</button>
-          <button id="btn-inspect-map" class="icon-btn" title="掷骰前查地：产权、租金与路线" aria-label="查地：产权租金与路线" aria-pressed="false">🔎</button>
-          <button id="btn-follow-view" class="icon-btn" title="跟随当前玩家" aria-label="跟随当前玩家">🎯</button>
-          <button id="btn-reset-view" class="icon-btn" title="复位3D视角" aria-label="复位3D视角">🎥</button>
-        </div>
-        <div class="tool-cluster" aria-label="场景设置">
-          <button id="btn-toggle-audio" class="icon-btn" title="切换音效" aria-label="切换音效">🔊</button>
-          <button id="btn-weather" class="icon-btn atmosphere-btn" title="切换天气：晴朗" aria-label="切换天气">☀️</button>
-          <button id="btn-time-of-day" class="icon-btn atmosphere-btn" title="切换时间：白天" aria-label="切换时间">🌤️</button>
-        </div>
-        <div class="tool-cluster" aria-label="游戏菜单">
-          <button id="btn-mode-status" class="icon-btn" title="对局模式与目标" aria-label="对局模式与目标">🧭</button>
-          <button id="btn-economic-report" class="icon-btn hidden" title="查看上期周期财报" aria-label="查看上期周期财报">🧾</button>
-          <button id="btn-market" class="icon-btn" title="玩家公告交易" aria-label="玩家公告交易">📋</button>
-          <button id="btn-help" class="icon-btn" title="规则与教程" aria-label="规则与教程">❔</button>
-          <button id="btn-save-game" class="icon-btn" title="手动存档" aria-label="手动存档">💾</button>
-          <button id="btn-pause-game" class="icon-btn" title="暂停菜单" aria-label="暂停菜单">⏸️</button>
-          <button id="btn-assets" class="icon-btn" title="资产排名" aria-label="资产排名">🏆</button>
-        </div>
+      <nav class="quick-tools" aria-label="棋盘工具">
+        <button id="btn-map-overview" class="icon-btn" data-label="总览" title="全图总览" aria-label="全图总览">🗺️</button>
+        <button id="btn-inspect-map" class="icon-btn" data-label="查地" title="掷骰前查地：产权、租金与路线" aria-label="查地：产权租金与路线" aria-pressed="false">🔎</button>
+        <button id="btn-toggle-audio" class="icon-btn" data-label="声音" title="切换音效" aria-label="切换音效">🔊</button>
+        <button id="btn-ai-pace" class="icon-btn" aria-label="切换电脑行动速度">AI ×1</button>
+        <button id="btn-mobile-tools" aria-controls="hud-tools" aria-expanded="false">更多 ▾</button>
+      </nav>
+      <div class="top-actions" id="hud-tools" aria-label="更多游戏工具">
+        <button id="btn-news-menu" data-label="城市新闻" class="icon-btn" aria-label="城市新闻">📰</button>
+        <button id="btn-rotate-left" data-label="左转" class="icon-btn" title="视角左转45度" aria-label="视角左转45度">↶</button>
+        <button id="btn-rotate-right" data-label="右转" class="icon-btn" title="视角右转45度" aria-label="视角右转45度">↷</button>
+        <button id="btn-follow-view" data-label="跟随玩家" class="icon-btn" title="跟随当前玩家" aria-label="跟随当前玩家">🎯</button>
+        <button id="btn-reset-view" data-label="视角复位" class="icon-btn" title="复位3D视角" aria-label="复位3D视角">🎥</button>
+        <button id="btn-weather" data-label="天气" class="icon-btn atmosphere-btn" title="切换天气：晴朗" aria-label="切换天气">☀️</button>
+        <button id="btn-time-of-day" data-label="昼夜" class="icon-btn atmosphere-btn" title="切换时间：白天" aria-label="切换时间">🌤️</button>
+        <button id="btn-mode-status" data-label="模式目标" class="icon-btn" title="对局模式与目标" aria-label="对局模式与目标">🧭</button>
+        <button id="btn-economic-report" data-label="周期财报" class="icon-btn hidden" title="查看上期周期财报" aria-label="查看上期周期财报">🧾</button>
+        <button id="btn-market" data-label="交易大厅" class="icon-btn" title="玩家公告交易" aria-label="玩家公告交易">📋</button>
+        <button id="btn-help" data-label="规则帮助" class="icon-btn" title="规则与教程" aria-label="规则与教程">❔</button>
+        <button id="btn-save-game" data-label="保存对局" class="icon-btn" title="手动存档" aria-label="手动存档">💾</button>
+        <button id="btn-pause-game" data-label="暂停" class="icon-btn" title="暂停菜单" aria-label="暂停菜单">⏸️</button>
+        <button id="btn-assets" data-label="资产排名" class="icon-btn" title="资产排名" aria-label="资产排名">🏆</button>
       </div>
     </header>
 
@@ -202,19 +191,26 @@
 
     <!-- 右下角：回合操作核心控制区 -->
     <div class="control-panel">
-      <div class="dock-heading"><span>行动中心</span><kbd>SPACE</kbd></div>
+      <section class="hand-tray" aria-label="手牌托盘">
+        <button id="tray-toggle" aria-controls="tray-cards" aria-expanded="true">手牌 ▾</button>
+        <div id="tray-cards"></div>
+        <output id="tray-hint" hidden></output>
+      </section>
       <div class="current-turn-banner" id="turn-indicator" aria-live="polite">
         <!-- 轮到谁掷骰子 -->
       </div>
 
       <div class="action-buttons">
-        <label class="dice-count-control" title="载具决定最多可用骰子数量">骰子
-          <select id="dice-count-select" aria-label="选择骰子数量">
+        <div class="dice-count-control" role="group" aria-label="选择骰子数量">
+          <select hidden id="dice-count-select" aria-label="选择骰子数量">
             <option value="1">1 颗</option>
             <option value="2">2 颗</option>
             <option value="3">3 颗</option>
           </select>
-        </label>
+          <button data-dice="1" aria-label="一颗骰子">⚀</button>
+          <button data-dice="2" aria-label="两颗骰子">⚁</button>
+          <button data-dice="3" aria-label="三颗骰子">⚂</button>
+        </div>
         <button id="btn-roll" class="btn-action btn-roll">
           <span class="dice-icon" aria-hidden="true">🎲</span>
           <span class="action-text">掷骰子</span>
@@ -222,7 +218,7 @@
 
         <button id="btn-use-card" class="btn-action btn-card">
           <span class="btn-icon" aria-hidden="true">🃏</span>
-          <span class="action-text">卡片包</span>
+          <span class="action-text">全部卡包</span>
           <span id="card-count-badge" class="badge">0</span>
         </button>
 
@@ -484,6 +480,7 @@
           <button class="speed-btn" data-speed="2">2×</button>
         </div>
         <div class="speed-options">
+          <label><input id="spoken-lines" type="checkbox"> 朗读角色台词（本机中文语音）</label>
           <label for="ai-pace">AI 回合速度</label>
           <select id="ai-pace"><option value="1">1×</option><option value="2">2×</option><option value="skip">极速 · 跳过动画</option></select>
         </div>

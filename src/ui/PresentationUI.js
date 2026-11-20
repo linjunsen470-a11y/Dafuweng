@@ -520,6 +520,7 @@ export class PresentationUI {
   }
 
   playNextReaction() {
+    if (document.documentElement.classList.contains('skip-ai-motion')) this.reactionQueue.length = 0;
     const queued = this.reactionQueue.shift();
     if (!queued || !this.reactionHost) {
       this.reactionActive = false;
@@ -529,6 +530,7 @@ export class PresentationUI {
     const { cue, state } = queued;
     const player = playerFor(state, cue.playerId);
     if (!player) return this.playNextReaction();
+    this.audioManager?.voice?.play(player,cue);
     this.reactionHost.replaceChildren();
     const card = document.createElement('article');
     card.className = `character-reaction emotion-${cue.emotion || 'win'}`;
@@ -559,13 +561,19 @@ export class PresentationUI {
   }
 
   presentDomainEvent(event, state) {
+    const skip = document.documentElement.classList.contains('skip-ai-motion');
     if (event.type === 'NEWS_FLASH') {
-      if (!this.economicReportUI.appendNews(event.news)) this.newsUI.show(event.news);
+      if (!this.economicReportUI.appendNews(event.news) && !skip && !this.isReducedMotion?.()) this.newsUI.show(event.news);
       return;
     }
     if (event.type === 'ECONOMIC_CYCLE_ENDED' && event.report) {
       this.economicReportUI.show(event.report);
     }
+    if (skip) return;
+    const sound = {OBSTACLE_CONSUMED:'brake',MINE_EXPLODED:'blast'}[event.type]
+      || (['MISSILE','NUKES'].includes(event.cardId) ? 'missile' : event.cardId === 'RED_BULL' ? 'stock' : null);
+    if (event.hitEntityType === 'BARRIER') this.audioManager?.playSceneSound?.('brake');
+    if (sound && !event.avoided) this.audioManager?.playSceneSound?.(sound);
     if (event.chance) this.chanceRevealUI.show({ event, player: playerFor(state, event.playerId) });
     describePresentationEvent(event, state).forEach(cue => {
       if (cue.kind === 'toast') this.showToast(cue);
@@ -578,6 +586,7 @@ export class PresentationUI {
   }
 
   clear() {
+    this.audioManager?.voice?.stop();
     this.bannerToken++;
     this.impactToken++;
     if (this.turnTimer) clearTimeout(this.turnTimer);

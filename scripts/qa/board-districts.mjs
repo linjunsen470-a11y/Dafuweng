@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {mkdir,writeFile} from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import {createServer} from 'vite';
 import {GameState} from '../../src/game/GameState.js';
 
+await mkdir('/tmp/dafuweng-qa',{recursive:true});
 const server=await createServer({plugins:[{name:'qa-controller',transform(code,id){
   if(id.endsWith('/src/main.js')) return code.replace('new GameController();','window.boardQA = new GameController();');
 }}],server:{host:'127.0.0.1',port:5198,strictPort:true,hmr:false,watch:null}});
@@ -26,15 +27,17 @@ try {
     await page.evaluate(s=>boardQA.restoreGame(s),state.createSnapshot());
     await page.waitForFunction(()=>document.querySelector('#game-container').dataset.harborArt==='ready');
     const press=sel=>size==='mobile'?page.tap(sel):page.click(sel);
-    if(size==='mobile') await press('#btn-mobile-tools');
+    await press('#btn-mobile-tools');
     await press('#btn-weather');
-    if(size==='desktop') { await press('#btn-time-of-day');await press('#btn-time-of-day'); }
+    if(size==='desktop') {
+      for (let i=0;i<2;i++) { await press('#btn-mobile-tools'); await press('#btn-time-of-day'); }
+    }
     else { await press('#btn-mobile-tools');await press('#btn-weather'); }
     if(size==='desktop' && process.argv.includes('--plaza')) {
       const next=state.createSnapshot();next.players[0].currentTile=59;
       await page.evaluate(snapshot=>boardQA.restoreGame(snapshot),next);
       await page.waitForFunction(()=>boardQA.scene3D.scene.getObjectByName('district-frontages'));
-      await page.screenshot({path:'qa/review/m4-business-square.png'});
+      await page.screenshot({path:'/tmp/dafuweng-qa/m4-business-square.png'});
       await page.close();
       break;
     }
@@ -53,9 +56,9 @@ try {
     assert.equal(info.weather,size==='desktop'?'RAIN':'SNOW');
     assert.equal(info.time,size==='desktop'?'NIGHT':'DAY');
     assert.deepEqual(errors,[]);
-    await page.screenshot({path:`qa/review/m4-district-${size}.png`});
+    await page.screenshot({path:`/tmp/dafuweng-qa/m4-district-${size}.png`});
     results[size]={...info,errors};
     await page.close();
   }
-  if(!process.argv.includes('--plaza')) await writeFile('qa/review/m4-district-checks.json',JSON.stringify(results,null,2)+'\n');
+  if(!process.argv.includes('--plaza')) await writeFile('/tmp/dafuweng-qa/m4-district-checks.json',JSON.stringify(results,null,2)+'\n');
 } finally {await browser?.close();await server.close();}

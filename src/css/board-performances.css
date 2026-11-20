@@ -1,0 +1,45 @@
+.board-speech { position:fixed; z-index:12; pointer-events:none; width:120px; transform:translate(-50%,-100%);
+  background:var(--paper); border:2px solid var(--caramel); border-radius:13px 13px 13px 2px; padding:4px 7px;
+  box-shadow:2px 3px 0 #80563966; color:var(--ink); font:600 12px/1.35 system-ui; }
+.board-speech b { display:block; color:#aa3f30; font-size:19px; }
+.board-speech.income b { color:#956300; text-shadow:0 1px #ffe08e; }
+.news-flash-card { background:repeating-linear-gradient(0deg,#fff2ce 0 3px,#f9ebc7 4px); }
+.news-flash-card .news-flash-masthead { border-bottom:4px double var(--caramel); background:transparent; color:var(--ink); }
+.news-flash-masthead strong { font:bold 25px/1.3 serif; letter-spacing:.1em; }
+.paper-extra { padding:2px 5px; color:#a33a24; border:2px solid currentColor; transform:rotate(-8deg); }
+.chance-stage { perspective:950px; }
+.chance-reveal-overlay { --luck-glow:#d79aff; }
+.chance-reveal-overlay.tone-gain { --luck-glow:#ffd458; }
+.chance-card-front { outline:3px solid var(--luck-glow); outline-offset:-5px; }
+.arcade-streak { position:absolute; top:16%; left:50%; z-index:4; color:#8b3320; background:#ffe483; padding:5px 12px;
+  border:2px solid #a26e3e; border-radius:18px; pointer-events:none; transform:translateX(-50%); }
+.arcade-stars { color:#aa641a; letter-spacing:.23em; font-size:22px; }
+.minigame-result-card { position:relative; overflow:hidden; }
+.arcade-confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.arcade-confetti i { position:absolute; top:-15px; width:7px; height:12px; }
+@keyframes coin-pop { 38% { scale:1.13; } }
+@keyframes rent-shake { 25%,75% { translate:-3px; } 50% { translate:3px; } }
+@keyframes luck-light { 50% { box-shadow:0 0 48px var(--luck-glow); } }
+@keyframes confetti-fall { to { top:110%; transform:translateX(28px) rotate(270deg); } }
+@keyframes press-slide { from { translate:0 28px; rotate:-3deg; opacity:0; } }
+@media(prefers-reduced-motion:no-preference) {
+  html:not(.reduce-motion,.skip-ai-motion) .income b,html:not(.reduce-motion,.skip-ai-motion) .arcade-stars { animation:coin-pop .5s 2; }
+  html:not(.reduce-motion,.skip-ai-motion) .expense b { animation:rent-shake .28s 2; }
+  html:not(.reduce-motion,.skip-ai-motion) .news-flash-overlay.is-visible .news-flash-card { animation:press-slide .38s ease-out; }
+  html:not(.reduce-motion,.skip-ai-motion) .is-revealed .chance-card-front { animation:luck-light 1s .28s 2; }
+  html:not(.reduce-motion,.skip-ai-motion) .arcade-confetti i { animation:confetti-fall 1s var(--delay) ease-in both; }
+  html:not(.reduce-motion,.skip-ai-motion) .minigame-timer.is-urgent { animation:coin-pop .55s 6; }
+}
+.board-tip { width:max-content; max-width:min(234px,85vw); padding:0; }
+.board-tip[hidden],#model-loading[hidden] { display:none; }
+.deed-card { display:grid; gap:3px; padding:8px 10px; border-top:6px solid var(--district); border-radius:8px; background:var(--panel-paint); color:var(--ink); }
+.deed-card header { color:var(--muted-ink); font-size:11px; font-weight:700; }
+.deed-card h3,.deed-card p { margin:0; }
+.deed-card p { font:12px/1.45 system-ui; }
+.deed-card .deed-chain { color:#8f4f19; font-weight:bold; }
+.deed-owner { display:flex; align-items:center; gap:5px; }
+.deed-owner i { display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--parchment) center/cover; }
+.deed-owner b { margin-left:auto; }
+#model-loading { position:fixed; bottom:12%; left:50%; transform:translateX(-50%); z-index:80; pointer-events:none;
+  display:grid; gap:4px; padding:9px 14px; border:2px solid var(--caramel); border-radius:13px; background:var(--paper); color:var(--ink); }
+#model-loading progress { accent-color:#cf8931; width:100%; }

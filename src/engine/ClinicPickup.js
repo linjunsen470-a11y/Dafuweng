@@ -1,3 +1,4 @@
+import { quietMotion } from './EffectTimeline.js';
 import * as THREE from 'three';
 import {clone} from 'three/examples/jsm/utils/SkeletonUtils.js';
 
@@ -66,9 +67,11 @@ export function showClinicPickup(view, pawn, points, handBack) {
   const cameraOffset = new THREE.Vector3(4,11,13);
   view.followObject(van,cameraOffset);
   return new Promise(resolve => {
-    function frame(now) {
-      const elapsed=now-start;
-      if (!pawn.mesh.parent || elapsed>=duration+1650) {
+    let raf;
+    const timeout = setTimeout(finish,duration+1750);
+    function finish() {
+        clearTimeout(timeout);
+        cancelAnimationFrame(raf);
         const ownsCamera = view.followedObject === van;
         if (ownsCamera) view.stopFollowing({settle:false});
         pawn.mesh.visible=wasVisible;
@@ -78,8 +81,10 @@ export function showClinicPickup(view, pawn, points, handBack) {
         rider.traverse(node=>{if(node.isSkinnedMesh)node.skeleton.dispose();});
         if (ownsCamera && pawn.mesh.parent) handBack();
         resolve();
-        return;
-      }
+    }
+    function frame(now) {
+      const elapsed=now-start;
+      if (!pawn.mesh.parent || quietMotion() || elapsed>=duration+1650) return finish();
       const drive = THREE.MathUtils.clamp((elapsed-920)/duration,0,1);
       van.userData.phase=elapsed<450?'approach':elapsed<920?'board':drive<1?'drive':'arrive';
       if (elapsed<450) {
@@ -113,7 +118,7 @@ export function showClinicPickup(view, pawn, points, handBack) {
         mixer?.setTime(elapsed/1000);
       }
       lamp.material.emissive.setHex(Math.sin(elapsed*.018)>0?0xff9632:0x431e16);
-      requestAnimationFrame(frame);
+      raf=requestAnimationFrame(frame);
     }
     frame(start);
   });

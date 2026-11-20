@@ -85,7 +85,7 @@ export class PawnManager {
       update: () => {
         this.layoutHarborPawns();
         const time = performance.now() * 0.003;
-        const reduced = document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const reduced = document.documentElement.classList.contains('skip-ai-motion') || document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         animateSpirits(this,time,reduced);
         this.pawns.forEach((pawn, idx) => {
           animateSkin(pawn,reduced);
@@ -548,7 +548,7 @@ export class PawnManager {
 
   animateHop(mesh, targetPos) {
     const cityModel = mesh.children.find(child => child.cityRig);
-    const reduced = document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const reduced = document.documentElement.classList.contains('skip-ai-motion') || document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (cityModel) cityModel.rotation.y = Math.atan2(targetPos.x-mesh.position.x,targetPos.z-mesh.position.z);
     mesh.userData.isMoving = true;
     return new Promise((resolve) => {
@@ -674,7 +674,7 @@ export class PawnManager {
     if(old && old.userData.type===godType)return;
     if(old){releaseSpirit(old);this.godAuraMeshes.delete(playerIndex);}
     if(!godType)return;
-    const group=createSpirit(godType,playerIndex*.74);
+    const group=createSpirit(godType,playerIndex*.74,true);
     group.scale.setScalar(.74);
     group.position.set(.86,1.75,-.26);
     pawn.mesh.add(group);

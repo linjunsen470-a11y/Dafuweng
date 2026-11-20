@@ -1,6 +1,7 @@
+import { renderDeed } from './DeedCard.js';
 import * as THREE from 'three';
 import {describeMapTile} from './MapInspector.js';
-import {getGodRule} from '../game/GodRules.js';
+import { pickBoardTarget } from './BoardTarget.js';
 
 // Resolve the frontmost interactive mesh, including nested original GLB parts.
 export function bindBoardHover(scene, board, pawns, state, engine, isBrowsing) {
@@ -32,33 +33,22 @@ export function bindBoardHover(scene, board, pawns, state, engine, isBrowsing) {
       const rect = canvas.getBoundingClientRect();
       ray.setFromCamera(new THREE.Vector2(2*(pending[0]-rect.left)/rect.width-1,1-2*(pending[1]-rect.top)/rect.height),scene.camera);
       pending = null;
-      const entries = new Map();
-      for(const [id,mesh] of board.tileMeshes.entries()) if(mesh) entries.set(mesh,{id});
-      for(const meshes of [board.buildingMeshes,board.specialTileMeshes,board.vacantLotMeshes,board.obstacleMeshes,board.mineMeshes,board.roadEntityMeshes])
-        for(const [id,mesh] of meshes || []) entries.set(mesh,{id});
-      for(const player of state.players) {
-        const mesh = pawns.getPawnMesh(player.id);
-        if(mesh) entries.set(mesh,{id:player.currentTile,name:player.name});
-      }
-      for(const god of state.boardGods) {
-        const mesh = pawns.boardGodMeshes.get(god.id);
-        if(mesh) entries.set(mesh,{id:god.tileId,name:getGodRule(god.type)?.name});
-      }
-      const hit = ray.intersectObjects([...entries.keys()],true)[0];
-      let object = hit?.object;
-      while(object && !entries.has(object)) object = object.parent;
-      if(!object) {hide();return;}
-      selected = entries.get(object);
-      anchor = hit.point.clone();
+      const hit = pickBoardTarget(ray, board, pawns, state);
+      if (!hit) {hide();return;}
+      selected = hit;
+      anchor = hit.point;
       const info = describeMapTile(state,engine,selected.id);
       if(!info) {hide();return;}
-      tip.textContent = [selected.name,info.title,...info.lines.filter((line,index)=>index<2 || /垄断|连锁店|路障|地雷|炸弹/.test(line))].filter(Boolean).join(' · ');
+      tip.replaceChildren(renderDeed(info,selected.name));
     }
     const projected = anchor.clone().project(scene.camera);
     tip.hidden = Math.abs(projected.x)>1 || Math.abs(projected.y)>1 || Math.abs(projected.z)>1;
     if (!tip.hidden) {
       tip.style.left = Math.max(4,Math.min(innerWidth-tip.offsetWidth-4,(1+projected.x)*innerWidth/2+8))+'px';
-      tip.style.top = Math.max(4,Math.min(innerHeight-tip.offsetHeight-4,(1-projected.y)*innerHeight/2-tip.offsetHeight-8))+'px';
+      const y=(1-projected.y)*innerHeight/2;
+      const above=y-tip.offsetHeight-14;
+      const dock=document.querySelector('.control-panel')?.getBoundingClientRect().top || innerHeight;
+      tip.style.top=Math.max(4,Math.min(dock-tip.offsetHeight-5,above>=4 ? above : y+14))+'px';
     }
   }});
 }
