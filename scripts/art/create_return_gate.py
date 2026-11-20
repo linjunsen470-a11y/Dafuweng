@@ -46,7 +46,7 @@ box('crown beam',(0,.5,3.38),(1.65,1.45,.18),'teal')
 for x in [-.55,0,.55]:box('tidal fins',(x,.5,3.65),(.16,1.2,.4),'gold')
 finish('return_tide_gate')
 bpy.ops.object.select_all(action='SELECT')
-out=ROOT/'public/shanhai/models';src=ROOT/'art-source/shanhai'
+out=ROOT/'public/assets/models';src=ROOT/'art-source/main'
 bpy.ops.export_scene.gltf(filepath=str(out/'return-gate.glb'),export_format='GLB',use_selection=True,export_yup=True,export_apply=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(src/'return-gate.blend'))
 data={'asset':'return-gate.glb','generator':'scripts/art/create_return_gate.py','license':license,'axes':'GLB Y-up, front +Z, origin ground center','models':manifest}

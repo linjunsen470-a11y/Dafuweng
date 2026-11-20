@@ -2,8 +2,8 @@ import { BUILDINGS } from './ContentRegistry.js';
 
 export const MAX_PROPERTY_LEVEL = 5;
 
-export function propertyLimit(type, mapId = null) {
-  return BUILDINGS.find(building => building.id === type)?.maxLevel ?? (mapId?.startsWith('shanhai-') ? 4 : MAX_PROPERTY_LEVEL);
+export function propertyLimit(type, _mapId = null) {
+  return BUILDINGS.find(building => building.id === type)?.maxLevel ?? MAX_PROPERTY_LEVEL;
 }
 
 export function residentialRent(tile, level) {

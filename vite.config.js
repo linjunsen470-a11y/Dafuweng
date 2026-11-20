@@ -4,7 +4,7 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 550,
     rolldownOptions: {
-      input: { main: 'index.html', shanhai: 'shanhai.html' },
+      input: { main: 'index.html' },
       output: {
         codeSplitting: {
           groups: [

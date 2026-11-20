@@ -55,7 +55,7 @@ box('minute hand',(0,-1.36,3.61),(.035,.025,.22),'gold')
 box('hour hand',(.09,-1.36,3.5),(.18,.025,.035),'gold')
 finish('old_town_exchange')
 bpy.ops.object.select_all(action='SELECT')
-out=ROOT/'public/shanhai/models';src=ROOT/'art-source/shanhai'
+out=ROOT/'public/assets/models';src=ROOT/'art-source/main'
 bpy.ops.export_scene.gltf(filepath=str(out/'old-town.glb'),export_format='GLB',use_selection=True,export_yup=True,export_apply=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(src/'old-town.blend'))
 data={'asset':'old-town.glb','generator':'scripts/art/create_old_town.py','license':license,'axes':'GLB Y-up, front +Z, origin ground center','models':manifest}

@@ -28,7 +28,7 @@ source,cloth_name,tint=catalog[hero]
 prefix=source+'_'
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene=bpy.context.scene
-bpy.ops.import_scene.gltf(filepath=str(root/f'art-source/shanhai/character-{source}-unmerged.glb'))
+bpy.ops.import_scene.gltf(filepath=str(root/f'art-source/main/character-{source}-unmerged.glb'))
 for o in list(scene.objects):
     o.animation_data_clear()
 bpy.context.view_layer.update()

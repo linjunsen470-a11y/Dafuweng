@@ -55,7 +55,7 @@ export class PropertyManager {
 
   streetChain(tileId, owner = this.getProperty(tileId)?.owner) {
     const found = new Set([tileId]), pending = [tileId];
-    if (owner == null || !this.mapId || this.mapId.startsWith('shanhai-') || this.getProperty(tileId)?.isMortgaged) return found;
+    if (owner == null || !this.mapId || this.getProperty(tileId)?.isMortgaged) return found;
     while (pending.length) for (const id of this.streetLinks.get(pending.pop()) || []) {
       const lot = this.getProperty(id);
       if (!found.has(id) && lot?.owner === owner && !lot.isMortgaged) { found.add(id);pending.push(id); }
