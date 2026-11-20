@@ -7,20 +7,7 @@ fs.mkdirSync('/tmp/dafuweng-qa', { recursive: true });
 const artifactDirectory = fs.mkdtempSync('/tmp/dafuweng-qa/e2e-');
 const artifact = name => path.join(artifactDirectory, name);
 
-const paths = [
-  process.env.BROWSER_PATH,
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-  `C:\\Users\\${process.env.USERNAME}\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe`,
-  '/usr/bin/google-chrome',
-  '/usr/bin/chromium',
-  '/usr/bin/chromium-browser',
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-].filter(Boolean);
-
-let executablePath = paths.find(p => fs.existsSync(p));
+import { executablePath } from './browser-path.mjs';
 
 async function runTest() {
   if (!executablePath) {

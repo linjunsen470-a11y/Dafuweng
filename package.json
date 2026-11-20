@@ -13,8 +13,8 @@
     "test:balance": "node scripts/simulate-matrix.mjs 30",
     "test:matrix": "node scripts/simulate-matrix.mjs 100",
     "test:watch": "vitest",
-    "test:e2e": "node test-monopoly.js",
-    "test:pwa": "npm run build && node test-pwa.js",
+    "test:e2e": "node scripts/qa/gameplay.mjs",
+    "test:pwa": "npm run build && node scripts/qa/offline.mjs",
     "verify": "npm run typecheck && npm test && npm run build",
     "verify:full": "npm run verify && npm run test:e2e && npm run test:pwa"
   },

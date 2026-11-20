@@ -2,15 +2,7 @@ import puppeteer from 'puppeteer-core';
 import fs from 'node:fs';
 import { preview } from 'vite';
 
-const browserPaths = [
-  process.env.BROWSER_PATH,
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  '/usr/bin/google-chrome',
-  '/usr/bin/chromium'
-].filter(Boolean);
-const executablePath = browserPaths.find(candidate => fs.existsSync(candidate));
+import { executablePath } from './browser-path.mjs';
 if (!executablePath) throw new Error('No Chromium browser found for PWA verification.');
 
 const server = await preview({ preview: { host: '127.0.0.1', port: 4173, strictPort: true } });
