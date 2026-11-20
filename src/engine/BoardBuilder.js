@@ -1,9 +1,10 @@
+import {createCardHouse, addServiceThreshold} from './CardHouses.js';
 import {createStreetAprons} from './StreetAprons.js';
 import {hasClassicFrontages,planClassicFrontages} from './ClassicFrontages.js';
 import {createTownCourts} from './TownCourts.js';
 import {createQuayStreet,quayLot} from './QuayStreet.js';
 import { createHarborPromenade, createHarborGulls, updateHarborGulls } from './HarborPromenade.js';
-import { animateBuildingChange } from './BuildingChange.js';
+import { animateBuildingChange, markPurchase } from './BuildingChange.js';
 import { createHarborWorkingYard } from './HarborWorkingYard.js';
 import { createBankCivicCourt } from './BankCivicCourt.js';
 import { createNorthMarketStreet } from './NorthMarketStreet.js';
@@ -840,6 +841,11 @@ export class BoardBuilder {
       let group = null;
       const service = harborFacility(mapDefinition, tile);
       if (service) group = this.createHarborFacility(tile, service);
+      else if (tile.serviceFrontage) {
+        const regionalShop = tile.type === TileType.CARD_SHOP && ['island-fork','taiwan-loop'].includes(mapDefinition.id);
+        group = regionalShop ? createCardHouse(mapDefinition.id === 'island-fork') : this.createFacilityLandmark(tile);
+        addServiceThreshold(group, tile, mapDefinition.roadWidth || Math.max(2.8,(mapDefinition.tileSize || 4.4)*.82));
+      }
       else if (tile.type === TileType.CHANCE && this.harborArt?.prefabs) {
         group = this.harborArt.clone('board_news');
         if (group) group.userData.isStaticFacility = true;
@@ -861,6 +867,7 @@ export class BoardBuilder {
       group.position.set(anchor.x, service || tile.serviceFrontage || (isPropertyTile(tile) && tile.lot?.position) || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
       group.rotation.y = service ? facilityFacing(tile, service) : tile.serviceFrontage ? tile.serviceFrontage.rotation : group.userData.originalStation ? Math.PI : tile.lot?.rotation || 0;
       if (isPropertyTile(tile) && tile.lot?.position) group.rotation.y=facingRoad(tile)+Math.PI;
+      if (tile.serviceFrontage && !service) group.position.y = .075;
       group.userData.baseY = group.position.y;
       group.userData.phase = tile.id * 0.71;
       group.userData.tileType = tile.type;
@@ -1498,6 +1505,7 @@ export class BoardBuilder {
       group.userData.originalModel = originalHome.name;
       this.scene3D.scene.add(group);
       this.buildingMeshes.set(tileIndex, group);
+      if (purchased) markPurchase(this.scene3D.scene,tilePos,group,ownerColor);
       if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group,previous?.[0] ?? -1,level,this.scene3D);
       return;
     }
@@ -1664,6 +1672,7 @@ export class BoardBuilder {
 
     this.scene3D.scene.add(group);
     this.buildingMeshes.set(tileIndex, group);
+    if (purchased) markPurchase(this.scene3D.scene,tilePos,group,ownerColor);
 
     group.scale.setScalar(1);
     if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group,previous?.[0] ?? -1,level,this.scene3D);

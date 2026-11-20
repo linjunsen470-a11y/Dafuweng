@@ -47,3 +47,34 @@ export function animateBuildingChange(group, previousLevel, level, scene) {
   }
   frame(start);
 }
+
+// Carry the owner's colours from the occupied square to the purchased frontage.
+export function markPurchase(scene, road, lot, ownerColor) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const seal = new THREE.Group();
+  const rim = new THREE.Mesh(new THREE.CylinderGeometry(.49,.49,.10,12),
+    new THREE.MeshStandardMaterial({color:'#ffda80'}));
+  const face = new THREE.Mesh(new THREE.CylinderGeometry(.39,.39,.13,12),
+    new THREE.MeshStandardMaterial({color:ownerColor}));
+  seal.add(rim,face);
+  scene.add(seal);
+  const origin = new THREE.Vector3(road.x,road.y+1.2,road.z);
+  const end = lot.position.clone();
+  end.y += .45;
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min(1,(now-start)/730);
+    seal.position.lerpVectors(origin,end,t);
+    seal.position.y += Math.sin(Math.PI*t)*1.4;
+    seal.rotation.x = (1-t)*Math.PI*1.6;
+    if (t<1 && lot.parent) requestAnimationFrame(frame);
+    else {
+      scene.remove(seal);
+      for (const mesh of seal.children) {
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+      }
+    }
+  }
+  frame(start);
+}
