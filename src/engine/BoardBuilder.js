@@ -1,3 +1,4 @@
+import {finishRoofs,surfaceTexture} from './BoardSurfaceArt.js';
 import {regionalDistrict} from './RegionalDistricts.js';
 import {createMarketDistrict} from './MarketDistrict.js';
 import {createCardHouse, addServiceThreshold} from './CardHouses.js';
@@ -382,21 +383,12 @@ export class BoardBuilder {
     const group = new THREE.Group();
     group.name = `roads-${mapDefinition.id}`;
     const roadMaterial = new THREE.MeshStandardMaterial({
-      color: mapDefinition.id === 'grand-bay' ? '#788b88' : profile.road, roughness: 0.88, metalness: 0.03
+      color: '#ffffff', map:surfaceTexture(mapDefinition.id,'road'), roughness: 0.88, metalness: 0.03
     });
     const shoulderMaterial = new THREE.MeshStandardMaterial({ color: profile.shoulder, roughness: 0.74, metalness: 0.06 });
     const pavement=hasClassicFrontages(mapDefinition)?new THREE.MeshStandardMaterial({color:'#cfb18b',roughness:.96}):null;
     if(pavement){
-      const canvas=document.createElement('canvas');canvas.width=canvas.height=128;
-      const ctx=canvas.getContext('2d'),city=mapDefinition.id==='city-loop';
-      ctx.fillStyle=city?'#b5afaa':'#b99e81';ctx.fillRect(0,0,128,128);
-      const tones=city?['#d8d3c8','#e0d9ca','#d3d4cb']:['#dfc7a2','#e5cfad','#d9c09e'];
-      for(let row=0;row<4;row++)for(let col=-1;col<3;col++){
-        ctx.fillStyle=tones[(col+row+4)%3];ctx.fillRect(col*64+(row%2)*32+1,row*32+1,62,30);
-      }
-      const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
-      texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.anisotropy=4;
-      pavement.map=texture;pavement.color.set('#ffffff');
+      pavement.map=surfaceTexture(mapDefinition.id,'pave');pavement.color.set('#ffffff');
     }
     const laneMaterials = new Map();
     const seen = new Set();
@@ -419,14 +411,17 @@ export class BoardBuilder {
             color: visual.lane, transparent: true, opacity: 0.72, depthWrite: false
           }));
         }
+        function alignPaving(geo,span){
+          const uv=geo.attributes.uv,vertices=geo.attributes.position;
+          for(let i=0;i<vertices.count;i++){
+            const x=vertices.getX(i),z=vertices.getZ(i);
+            uv.setXY(i,(midpoint.x+x*Math.cos(angle)+z*Math.sin(angle))/span,(midpoint.z+z*Math.cos(angle)-x*Math.sin(angle))/span);
+          }
+        }
         if(pavement){
           const sidewalk=new THREE.Mesh(new THREE.BoxGeometry(roadWidth+4.4,.20,length+.45),pavement);
           // World-aligned paving bonds continue through oblique road joins.
-          const geo=sidewalk.geometry, uv=geo.attributes.uv, vertices=geo.attributes.position;
-          for(let i=0;i<vertices.count;i++){
-            const x=vertices.getX(i),z=vertices.getZ(i);
-            uv.setXY(i,(midpoint.x+x*Math.cos(angle)+z*Math.sin(angle))/4,(midpoint.z+z*Math.cos(angle)-x*Math.sin(angle))/4);
-          }
+          alignPaving(sidewalk.geometry,4.6);
           sidewalk.position.set(midpoint.x,-.035,midpoint.z);sidewalk.rotation.y=angle;sidewalk.receiveShadow=true;group.add(sidewalk);
         }
         const shoulder = new THREE.Mesh(new THREE.BoxGeometry(roadWidth + 0.7, 0.12, length + 0.35), shoulderMaterial);
@@ -435,6 +430,7 @@ export class BoardBuilder {
         shoulder.receiveShadow = true;
         group.add(shoulder);
         const road = new THREE.Mesh(new THREE.BoxGeometry(roadWidth, 0.16, length + 0.22), roadMaterial);
+        alignPaving(road.geometry,4);
         road.position.set(midpoint.x, 0.12, midpoint.z);
         road.rotation.y = angle;
         road.receiveShadow = true;
@@ -473,10 +469,10 @@ export class BoardBuilder {
   createMapEnvironment(mapDefinition) {
     const group = new THREE.Group();
     group.name = `environment-${mapDefinition.id}`;
-    group.add(createTownCourts(mapDefinition));
+    group.add(finishRoofs(createTownCourts(mapDefinition),mapDefinition.id));
     const marketDistrict=createMarketDistrict(mapDefinition) || regionalDistrict(mapDefinition.id);
     if(marketDistrict){
-      group.add(marketDistrict);
+      group.add(finishRoofs(marketDistrict,mapDefinition.id));
       group.streetOccluders=marketDistrict.children.filter(child=>child.userData.streetOccluder);
     }
     if(hasClassicFrontages(mapDefinition))group.add(createStreetAprons(mapDefinition));
@@ -490,7 +486,7 @@ export class BoardBuilder {
       return;
     }
 
-    group.add(createQuayStreet(mapDefinition),createIslandCoast(), createNorthMarketStreet(mapDefinition), createBankCivicCourt(mapDefinition), createHarborWorkingYard(mapDefinition));
+    group.add(finishRoofs(createQuayStreet(mapDefinition),mapDefinition.id),createIslandCoast(), finishRoofs(createNorthMarketStreet(mapDefinition),mapDefinition.id), finishRoofs(createBankCivicCourt(mapDefinition),mapDefinition.id), createHarborWorkingYard(mapDefinition));
     this.harborGulls = createHarborGulls();
     updateHarborGulls(this.harborGulls,0);
     this.harborGulls.frustumCulled = false;
@@ -934,6 +930,7 @@ export class BoardBuilder {
       const tea=map==='taiwan-loop' || (map==='island-fork' && tile.id>=16 && tile.id<=22);
       const edging=new THREE.MeshStandardMaterial({color:dock?'#886345':arcade?'#97795d':'#ac8b63'});
       const surface=new THREE.MeshStandardMaterial({color:dock?'#c08c54':arcade?'#c5baba':tea?'#afbc82':'#a2b87a'});
+      surface.map=surfaceTexture(map,'plot');
       const slab=new THREE.Mesh(new THREE.BoxGeometry(3.30,.11,3.05),surface);
       group.add(slab);
       const detail=(x,y,z,w,h,d,material)=>{
@@ -1198,6 +1195,7 @@ export class BoardBuilder {
             if (!normal.shader) {
               normal.shader=material.onBeforeCompile;
               normal.cacheKey=material.customProgramCacheKey;
+              normal.cutawayKey=normal.cacheKey.call(material)+'-tower-cutaway';
             }
             if (obstructs) {
               material.onBeforeCompile=function(shader,renderer){
@@ -1205,7 +1203,7 @@ export class BoardBuilder {
                 shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',
                   'if (mod(floor(gl_FragCoord.x) + 2.0*floor(gl_FragCoord.y), 4.0) >= 1.0) discard;\n#include <opaque_fragment>');
               };
-              material.customProgramCacheKey=function(){return normal.cacheKey.call(this)+'-tower-cutaway';};
+              material.customProgramCacheKey=()=>normal.cutawayKey;
             } else {
               material.onBeforeCompile=normal.shader;
               material.customProgramCacheKey=normal.cacheKey;
@@ -1556,7 +1554,7 @@ export class BoardBuilder {
       : level > 0 && this.harborArt?.residence(level,district);
     if (originalHome) {
       if (tile?.lot?.position && tile.position) group.rotation.y = facingRoad(tile);
-      group.add(originalHome);
+      group.add(finishRoofs(originalHome,this.activeMapDefinition.id));
       group.userData.rotor = originalHome.getObjectByName('radar_rotor') || originalHome.getObjectByName('lobby_door');
 
       if (buildingType === 'PARK') {
