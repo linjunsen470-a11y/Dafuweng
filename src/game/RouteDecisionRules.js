@@ -1,3 +1,4 @@
+import {companyVisitFee} from './CompanyRules.js';
 import { propertyLimit } from './GameRules.js';
 import { isPropertyTile } from './BoardData.js';
 
@@ -136,6 +137,11 @@ function analyzePath(state, player, path) {
   } else {
     score += FACILITY_VALUES[destination?.type] || 0;
     outcome = destination?.desc || destination?.name || '平稳落地';
+    const company = destination?.companyId && state.companyManager?.get(destination.companyId);
+    if (company) {
+      const fee = companyVisitFee(company, player, state.priceIndex);
+      outcome = company.chairmanId === player.id ? '董事长免服务费' : `预计服务费 ${money(fee)}`;
+    }
   }
   score -= path.length * 0.5;
   return {

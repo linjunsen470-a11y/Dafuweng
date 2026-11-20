@@ -1,3 +1,4 @@
+import {quayRoutes} from '../game/QuayRoutes.js';
 import { COLOR_GROUPS, TileType, isPropertyTile } from '../game/BoardData.js';
 
 export class MinimapUI {
@@ -102,6 +103,24 @@ export class MinimapUI {
         ctx.stroke();
       });
     });
+
+    if (this.mapDefinition.id === 'grand-bay') {
+      for (const {ids,color} of Object.values(quayRoutes)) {
+        ctx.strokeStyle=color;
+        ctx.lineWidth=4;
+        ctx.beginPath();
+        ids.forEach((id,index)=>{
+          const point=this.project(this.mapDefinition.tiles[id].position);
+          if(index===0)ctx.moveTo(point.x,point.y);
+          else ctx.lineTo(point.x,point.y);
+        });
+        ctx.stroke();
+      }
+      const join=this.project(this.mapDefinition.tiles[24].position);
+      ctx.strokeStyle='#ffdf8f';
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(join.x,join.y,6,0,Math.PI*2);ctx.stroke();
+    }
 
     const choiceSet = new Set(this.routeChoices);
     this.mapDefinition.tiles.forEach(tile => {

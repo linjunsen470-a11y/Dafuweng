@@ -14,7 +14,7 @@ import { getMechanismRoutePlans } from './MechanismRules.js';
 import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from './AuctionRules.js';
 import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
 import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
-import { hasChairmanPerk } from './CompanyRules.js';
+import { companyVisitFee, hasChairmanPerk } from './CompanyRules.js';
 import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js';
 import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
 import { applyCommercialFacilityVisit } from './CommercialFacilityRules.js';
@@ -1017,7 +1017,7 @@ export class GameEngine {
       const company = this.state.companyManager.get(tile.companyId);
       if (!company) return { type: 'NO_ACTION' };
       const isChairman = company.chairmanId === player.id;
-      const fee = isChairman ? 0 : Math.min(player.cash, Math.round(company.baseFee * this.state.priceIndex));
+      const fee = companyVisitFee(company, player, this.state.priceIndex);
       player.cash -= fee;
       this.state.companyManager.recordRevenue(company.id, fee);
       if (isChairman && company.perk === 'SHOP') {

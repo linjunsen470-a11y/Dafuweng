@@ -1,4 +1,4 @@
-import {quayRoutes} from './engine/QuayStreet.js';
+import {quayRoutes} from './game/QuayRoutes.js';
 import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
 import { bindBoardHover } from './ui/BoardHover.js';
 import { cardManager } from './game/CardManager.js';

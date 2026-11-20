@@ -41,3 +41,7 @@ export function chooseAICompanyPolicy(player, state) {
     .find(entry => entry && company.treasury >= entry.cost);
   return policy ? { companyId: company.id, policyId: policy.id } : null;
 }
+
+export function companyVisitFee(company, player, priceIndex) {
+  return company.chairmanId === player.id ? 0 : Math.min(player.cash, Math.round(company.baseFee * priceIndex));
+}

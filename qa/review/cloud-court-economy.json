@@ -1,0 +1,92 @@
+[
+  {
+    "player": 0,
+    "before": {
+      "cash": [
+        20000,
+        23000
+      ],
+      "owner": null,
+      "level": 0,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    },
+    "after": {
+      "event": "PROPERTY_PURCHASED",
+      "cash": [
+        16855,
+        23000
+      ],
+      "owner": 0,
+      "level": 0,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    }
+  },
+  {
+    "player": 0,
+    "before": {
+      "cash": [
+        16855,
+        23000
+      ],
+      "owner": 0,
+      "level": 0,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    },
+    "after": {
+      "event": "PROPERTY_UPGRADED",
+      "cash": [
+        15112,
+        23000
+      ],
+      "owner": 0,
+      "level": 1,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    }
+  },
+  {
+    "player": 1,
+    "before": {
+      "cash": [
+        15112,
+        23000
+      ],
+      "owner": 0,
+      "level": 1,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    },
+    "after": {
+      "event": "RENT_PAID",
+      "cash": [
+        16782,
+        21330
+      ],
+      "owner": 0,
+      "level": 1,
+      "hasObstacle": false,
+      "isMortgaged": false,
+      "mortgageValue": 0,
+      "buildingType": "RESIDENTIAL",
+      "hasMine": false
+    }
+  }
+]
