@@ -1,0 +1,28 @@
+name: Deploy main to Cloudflare Pages
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: e26c66aac0fab1b0515eddc3b992a70c
+          command: pages deploy dist --project-name=dafuweng-maoshanyiyuan --branch=main --commit-hash=${{ github.sha }}
