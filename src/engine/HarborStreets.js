@@ -19,7 +19,7 @@ export class HarborStreets {
   async load() {
     const loader = new GLTFLoader();
     const packs = await Promise.all(['residences', 'harbor-tower', 'commerce', 'neighborhoods', 'harbor-facilities', 'old-town', 'civic-street', 'return-gate', 'company-court', 'summit-yard', 'hill-supply'].map(name =>
-      loader.loadAsync(`${import.meta.env.BASE_URL}shanhai/models/${name}.glb`)));
+      loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/${name}.glb`)));
     const crown = await loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/exchange-crown.glb`).catch(() => null);
     if (crown) packs.push(crown);
     packs.push(...await Promise.all(['city-landmarks','board-tokens'].map(name => loader.loadAsync(`${import.meta.env.BASE_URL}assets/models/${name}.glb`))));

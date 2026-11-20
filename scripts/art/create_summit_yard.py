@@ -45,7 +45,7 @@ for x,z in [(-.17,2.95),(.17,3.12)]:
  stone=box('stone emblem',(x,0,z),(.33,.33,.33),'gold');stone.rotation_euler[1]=.35
 finish('company_summit_yard')
 bpy.ops.object.select_all(action='SELECT')
-out=ROOT/'public/shanhai/models';src=ROOT/'art-source/shanhai'
+out=ROOT/'public/assets/models';src=ROOT/'art-source/main'
 bpy.ops.export_scene.gltf(filepath=str(out/'summit-yard.glb'),export_format='GLB',use_selection=True,export_yup=True,export_apply=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(src/'summit-yard.blend'))
 data={'asset':'summit-yard.glb','generator':'scripts/art/create_summit_yard.py','license':license,'axes':'GLB Y-up, front +Z, origin ground center','models':manifest}

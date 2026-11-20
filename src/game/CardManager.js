@@ -273,8 +273,24 @@ export const CARDS = [
     targetType: 'PROPERTY',
     desc: '将自己的一块地产公开拍卖给其他玩家'
   },
-  {id:'BORROW_PASS',name:'借道通行旗',icon:'⚑',cardImg:'/shanhai/icons/borrow-pass.svg',cost:50,targetType:'PLAYER',desc:'掷骰前为自己举旗，仅本回合免付地产租金。仍被围栏拦停，其他费用照常；未遇租金也消耗此卡。'},
-  {id:'SWAP_STOPS',name:'换站风筝',icon:'↔',cardImg:'/shanhai/icons/swap-kite.svg',cost:60,targetType:'PLAYER',desc:'与前后六格内一名自由行动对手互换站位；方向不变，不立即结算落点。对方下回合可转向、遥控或换站应对。'}
+  {
+    id: 'BORROW_PASS',
+    name: '借道通行旗',
+    icon: '⚑',
+    cardImg: '/assets/card_borrow_pass.svg',
+    cost: 50,
+    targetType: 'PLAYER',
+    desc: '掷骰前为自己举旗，仅本回合免付地产租金。仍被围栏拦停，其他费用照常；未遇租金也消耗此卡。'
+  },
+  {
+    id: 'SWAP_STOPS',
+    name: '换站风筝',
+    icon: '↔',
+    cardImg: '/assets/card_swap_stops.svg',
+    cost: 60,
+    targetType: 'PLAYER',
+    desc: '与前后六格内一名自由行动对手互换站位；方向不变，不立即结算落点。对方下回合可转向、遥控或换站应对。'
+  }
 ];
 
 export class CardManager {

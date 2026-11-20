@@ -95,7 +95,7 @@ for x in [-.24,.24]:box('badge buttons',(x,-.25,2.45),(.15,.06,.15),'gold')
 finish('civic_arcade')
 
 bpy.ops.object.select_all(action='SELECT')
-out=ROOT/'public/shanhai/models';src=ROOT/'art-source/shanhai'
+out=ROOT/'public/assets/models';src=ROOT/'art-source/main'
 bpy.ops.export_scene.gltf(filepath=str(out/'civic-street.glb'),export_format='GLB',use_selection=True,export_yup=True,export_apply=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(src/'civic-street.blend'))
 data={'asset':'civic-street.glb','generator':'scripts/art/create_civic_street.py','license':license,'axes':'GLB Y-up, front +Z, origin ground center','models':manifest}

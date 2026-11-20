@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parents[2]
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 for pack in ['residences','harbor-tower']:
-    bpy.ops.import_scene.gltf(filepath=str(root/f'public/shanhai/models/{pack}.glb'))
+    bpy.ops.import_scene.gltf(filepath=str(root/f'public/assets/models/{pack}.glb'))
 bpy.ops.import_scene.gltf(filepath=str(root/'public/assets/models/city-landmarks.glb'))
 houses=[bpy.data.objects[key] for key in ['res_harbor_1','res_harbor_2','board_villa','board_apartment','res_harbor_5']]
 for obj in bpy.context.scene.objects:

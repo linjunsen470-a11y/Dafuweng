@@ -5,7 +5,7 @@ import bpy, math, json
 from pathlib import Path
 from mathutils import Vector
 ROOT=Path(__file__).resolve().parents[2]
-OUT=ROOT/'public/shanhai/models'; SRC=ROOT/'art-source/shanhai'
+OUT=ROOT/'public/assets/models'; SRC=ROOT/'art-source/main'
 bpy.ops.object.select_all(action='SELECT'); bpy.ops.object.delete(use_global=False)
 bpy.context.preferences.filepaths.save_version=0
 # Exact shared colors/names from the original coastal architecture pack.

@@ -6,26 +6,20 @@ coverage/
 test_step*.png
 .DS_Store
 
-# Local-only analysis and asset generation helpers
+# QA screenshots, videos, and local verification outputs must never be committed
+qa/
+/tmp/
+
+# Blender autosave backups
+*.blend[0-9]*
+
+# Local-only scripts outside tracked tooling
 /scripts/
 !/scripts/
 /scripts/*
 !/scripts/generate-offline-manifest.mjs
 !/scripts/simulate-matrix.mjs
-
-# Reproducible original coastal chapter sources
 !/scripts/art/
 !/scripts/art/**
-!/scripts/audio/
-!/scripts/audio/**
-qa/*.png
-qa/*.json
-
-/dist-shanhai/
-!/scripts/build-shanhai.mjs
-!/scripts/inspect-shanhai-scene.mjs
-
-!/scripts/simulate-shanhai.mjs
-
-# Blender autosave backups
-*.blend[0-9]*
+!/scripts/qa/
+!/scripts/qa/**

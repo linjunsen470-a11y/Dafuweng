@@ -54,7 +54,7 @@ bpy.context.scene.cursor.location=(0,0,0);bpy.ops.object.origin_set(type='ORIGIN
 root=bpy.data.objects.new('res_harbor_5',None);bpy.context.collection.objects.link(root);mesh.parent=root;root.select_set(True)
 license='Original project artwork; owner may use, modify and redistribute. No external assets, textures or fonts.'
 root['license']=license
-out=ROOT/'public/shanhai/models';src=ROOT/'art-source/shanhai'
+out=ROOT/'public/assets/models';src=ROOT/'art-source/main'
 bpy.ops.export_scene.gltf(filepath=str(out/'harbor-tower.glb'),export_format='GLB',use_selection=True,export_yup=True,export_apply=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(src/'harbor-tower.blend'))
 mesh.data.calc_loop_triangles()

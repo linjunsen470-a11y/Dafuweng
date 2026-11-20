@@ -45,7 +45,7 @@ for x in [-.4,0,.4]:
  cylinder('circuit node',(x,-.32,2.65),.13,.07,'gold',8)
 finish('company_cloud_court')
 bpy.ops.object.select_all(action='SELECT')
-out=ROOT/'public/shanhai/models';src=ROOT/'art-source/shanhai'
+out=ROOT/'public/assets/models';src=ROOT/'art-source/main'
 bpy.ops.export_scene.gltf(filepath=str(out/'company-court.glb'),export_format='GLB',use_selection=True,export_yup=True,export_apply=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(src/'company-court.blend'))
 data={'asset':'company-court.glb','generator':'scripts/art/create_company_court.py','license':license,'axes':'GLB Y-up, front +Z, origin ground center','models':manifest}
