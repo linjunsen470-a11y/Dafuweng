@@ -363,7 +363,7 @@ async function runTest() {
     await page.waitForSelector('.news-flash-overlay.is-visible .news-flash-card');
     const newsImpactCount = await page.$$eval('.news-impact', elements => elements.length);
     if (newsImpactCount !== 2) throw new Error(`Expected 2 news impacts, got ${newsImpactCount}`);
-    await page.screenshot({ path: artifact('test_step_news_flash.png') });
+    // Dismiss before the six-second news timer expires on software-rendered CI.
     await page.click('.news-dismiss');
     await page.waitForSelector('.news-flash-overlay', { hidden: true });
     await page.evaluate(() => window.__e2eNewsUI.showHistory([window.__e2eNewsFixture]));
@@ -657,9 +657,9 @@ async function runTest() {
     await page.waitForSelector('.minigame-modal[data-game-id="HARBOR_SORT"] .harbor-cargo');
     await page.click('.harbor-bins [data-bin="COLD"]');
     await page.waitForFunction(() => document.querySelector('.minigame-score span')?.textContent === '10');
-    await page.screenshot({ path: artifact('test_step_minigame_harbor.png') });
     await page.click('.minigame-skip');
     await page.waitForSelector('.minigame-claim');
+    await page.screenshot({ path: artifact('test_step_minigame_harbor.png') });
     await page.click('.minigame-claim');
     await page.waitForSelector('.minigame-modal', { hidden: true });
 
@@ -668,9 +668,9 @@ async function runTest() {
     await page.waitForSelector('.minigame-modal[data-game-id="SKY_COINS"] .sky-object[data-kind="COIN"]');
     await page.click('.sky-object[data-kind="COIN"]');
     await page.waitForFunction(() => Number(document.querySelector('.minigame-score span')?.textContent) >= 10);
-    await page.screenshot({ path: artifact('test_step_minigame_sky.png') });
     await page.click('.minigame-skip');
     await page.waitForSelector('.minigame-claim');
+    await page.screenshot({ path: artifact('test_step_minigame_sky.png') });
     await page.click('.minigame-claim');
     await page.waitForSelector('.minigame-modal', { hidden: true });
 
@@ -685,9 +685,9 @@ async function runTest() {
     await page.click('.route-beacons [data-direction="0"]');
     await page.click('.route-beacons [data-direction="2"]');
     await page.waitForFunction(() => document.querySelector('.minigame-score span')?.textContent === '20');
-    await page.screenshot({ path: artifact('test_step_minigame_route.png') });
     await page.click('.minigame-skip');
     await page.waitForSelector('.minigame-claim');
+    await page.screenshot({ path: artifact('test_step_minigame_route.png') });
     await page.click('.minigame-claim');
     await page.waitForSelector('.minigame-modal', { hidden: true });
     console.log('✅ Harbor sorting, sky collection, and route memory minigames passed.');
