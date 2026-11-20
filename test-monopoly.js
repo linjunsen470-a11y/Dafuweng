@@ -1,10 +1,10 @@
 import puppeteer from 'puppeteer-core';
 import fs from 'fs';
-import os from 'os';
 import path from 'path';
 import { createServer } from 'vite';
 
-const artifactDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'fortune-empire-e2e-'));
+fs.mkdirSync('/tmp/dafuweng-qa', { recursive: true });
+const artifactDirectory = fs.mkdtempSync('/tmp/dafuweng-qa/e2e-');
 const artifact = name => path.join(artifactDirectory, name);
 
 const paths = [
@@ -55,6 +55,22 @@ async function runTest() {
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
+
+  await page.evaluateOnNewDocument(() => {
+    // Compact HUD receipts size to their contents. Check the painted labels
+    // against both the receipt and the viewport while the receipt is visible.
+    window.receiptTextFits = (receipt, labels) => {
+      const box = receipt.getBoundingClientRect();
+      return box.left >= 0 && box.top >= 0 && box.right <= innerWidth && box.bottom <= innerHeight
+        && labels.every(label => {
+          const range = document.createRange();
+          range.selectNodeContents(receipt.querySelector(label));
+          const text = range.getBoundingClientRect();
+          return text.width > 0 && text.height > 0 && text.left >= box.left - 1
+            && text.right <= box.right + 1 && text.top >= box.top - 1 && text.bottom <= box.bottom + 1;
+        });
+    };
+  });
 
   page.on('console', msg => {
     const text = msg.text();
@@ -124,6 +140,7 @@ async function runTest() {
               text: element.textContent.replace(/\s+/g, ' ').trim(),
               opacity: Number(style.opacity), visibility: style.visibility,
               display: style.display, width: rect.width, height: rect.height,
+              fits: window.receiptTextFits(element, ['.presentation-eyebrow', 'strong']),
               layerZIndex: Number(getComputedStyle(document.getElementById('presentation-layer')).zIndex)
             };
             return;
@@ -141,7 +158,7 @@ async function runTest() {
     const turnPresentation = await page.evaluate(() => window.__turnPresentation);
     if (!turnPresentation.text.includes('ROUND 1') || !turnPresentation.text.includes('的回合')
       || turnPresentation.opacity < 0.9 || turnPresentation.visibility !== 'visible'
-      || turnPresentation.display === 'none' || turnPresentation.width < 200 || turnPresentation.layerZIndex < 100) {
+      || turnPresentation.display === 'none' || !turnPresentation.fits || turnPresentation.layerZIndex < 100) {
       throw new Error(`Turn presentation mismatch: ${JSON.stringify(turnPresentation)}`);
     }
     await page.screenshot({ path: artifact('test_step_turn_presentation.png') });
@@ -688,6 +705,7 @@ async function runTest() {
             const rect = element.getBoundingClientRect();
             window.__dicePresentation = {
               dice: element.querySelectorAll('.presentation-die').length,
+              fits: window.receiptTextFits(element, ['.presentation-dice-row', '.presentation-dice-total']),
               text: element.textContent.replace(/\s+/g, ' ').trim(),
               opacity: Number(style.opacity), visibility: style.visibility,
               width: rect.width, height: rect.height
@@ -705,7 +723,7 @@ async function runTest() {
     ]);
     const dicePresentation = await page.evaluate(() => window.__dicePresentation);
     if (dicePresentation.dice < 1 || !dicePresentation.text.includes('前进') || !dicePresentation.text.includes('步')
-      || dicePresentation.opacity < 0.9 || dicePresentation.visibility !== 'visible' || dicePresentation.width < 200) {
+      || dicePresentation.opacity < 0.9 || dicePresentation.visibility !== 'visible' || !dicePresentation.fits) {
       throw new Error(`Dice presentation content mismatch: ${JSON.stringify(dicePresentation)}`);
     }
     await page.screenshot({ path: artifact('test_step_dice_presentation.png') });
