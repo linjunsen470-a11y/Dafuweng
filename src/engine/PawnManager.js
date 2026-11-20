@@ -477,7 +477,14 @@ export class PawnManager {
       || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const groups = new Map();
     for (const pawn of this.pawns) {
-      if (pawn.mesh.userData.isMoving) continue;
+      if (pawn.mesh.userData.isMoving) {
+        // A pawn leaving a crowded tile regains its walking scale on the first step.
+        if (pawn.skin && !pawn.ride) {
+          pawn.characterMesh.scale.lerp(this.walkingScale ??= new THREE.Vector3(1.53,1.53,1.53),.30);
+          pawn.namePlate.position.y = pawn.labelHeight * pawn.characterMesh.scale.y / 1.15;
+        }
+        continue;
+      }
       if (!groups.has(pawn.currentTile)) groups.set(pawn.currentTile,[]);
       groups.get(pawn.currentTile).push(pawn);
     }
@@ -490,8 +497,9 @@ export class PawnManager {
         const spread=occupants.length===4?(slot.x*right.x+slot.z*right.z)*.26:0;
         const destination=center.clone().add(new THREE.Vector3(slot.x+right.x*spread,.20,slot.z+right.z*spread));
         pawn.mesh.position.lerp(destination,reduced ? 1 : .22);
-        pawn.characterMesh.scale.lerp(new THREE.Vector3(slot.scale,slot.scale,slot.scale),reduced ? 1 : .22);
-        pawn.namePlate.position.y = (pawn.labelHeight || 2.72) * slot.scale / 1.15;
+        const scale = pawn.skin && !pawn.ride ? slot.scale * (occupants.length>2 ? 1.23 : 1.33) : slot.scale;
+        pawn.characterMesh.scale.lerp(new THREE.Vector3(scale,scale,scale),reduced ? 1 : .22);
+        pawn.namePlate.position.y = (pawn.labelHeight || 2.72) * scale / 1.15;
         pawn.ring.scale.setScalar(occupants.length > 1 ? .72 : 1);
         pawn.mesh.userData.crowdCount = occupants.length;
       });

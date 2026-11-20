@@ -370,6 +370,21 @@ export class Scene3D {
     }
   }
 
+  frameRouteChoice(origin, destinations) {
+    const forward = new THREE.Vector3();
+    for (const destination of destinations) forward.add(destination.clone().sub(origin).setY(0).normalize());
+    if (forward.lengthSq() < .25) return;
+    forward.normalize();
+    this.stopFollowing({settle:false});
+    this.targetCameraPos = this.targetLookAt = null;
+    const compact = this.container.clientWidth < 680;
+    this.controls.target.copy(origin).addScaledVector(forward, compact ? 6.7 : 11.2);
+    this.controls.target.y += compact ? 1.5 : 2.65;
+    this.camera.position.copy(origin).addScaledVector(forward, compact ? -17.4 : -18.4);
+    this.camera.position.y += compact ? 13.8 : 11.6;
+    this.controls.update();
+  }
+
   rotateView(direction = 1) {
     const target = (this.targetLookAt || this.controls.target).clone();
     const cameraPosition = (this.targetCameraPos || this.camera.position).clone();
@@ -555,6 +570,10 @@ export class Scene3D {
       this.camera.position.lerp(desired, 1 - Math.exp(-7 * seconds));
     }
 
+    // Visibility and pawn layout must use the camera that will draw this frame.
+    this.controls.update();
+    this.camera.updateMatrixWorld();
+
     // 更新可动画物体
     for (const item of this.updatables) {
       if (item.update) item.update();
@@ -600,7 +619,6 @@ export class Scene3D {
       }
     }
 
-    this.controls.update();
     let shakeOffset = null;
     if (this.cameraShake) {
       const elapsed = performance.now() - this.cameraShake.startedAt;

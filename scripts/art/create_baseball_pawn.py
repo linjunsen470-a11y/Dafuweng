@@ -7,8 +7,8 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[2]
 catalog = {
     'xiaoman': ('courier','coral',(.85,.08,.18)),
-    'tianye': ('cartographer','violet',(.44,.29,.09)),
-    'jingjing': ('cartographer','violet',(.43,.13,.65)),
+    'tianye': ('cartographer','violet',(.15,.34,.25)),
+    'jingjing': ('cartographer','violet',(.40,.095,.66)),
     'baroque': ('builder','workBlue',(.55,.19,.05)),
     'lan': ('courier','coral',(.035,.16,.43)),
     'miya': ('botanist','teal',(.03,.47,.31)),
@@ -89,13 +89,17 @@ else:
         obj=bpy.context.object;obj.name=name;attach(obj,bone,mat);return obj
     if hero=='xiaoman':
         for side in [-1,1]:
-            oval('Braided bun',(side*.27,.03,1.53),(.16,.15,.16),hair)
-            oval('Ribbon loop',(side*.14,-.13,1.57),(.14,.07,.067),cloth,tilt=side*.38)
-        oval('Bow knot',(0,-.15,1.58),(.055,.06,.06),silk)
+            oval('Braided bun',(side*.29,.03,1.55),(.18,.15,.19),hair)
+            oval('Ribbon loop',(side*.24,-.12,1.68),(.18,.085,.10),cloth,tilt=-side*.55)
+            oval('Ribbon tail',(side*.32,-.045,1.42),(.067,.054,.16),cloth,tilt=side*.38)
+        oval('Bow knot',(0,-.15,1.62),(.085,.07,.08),silk)
         cut('Pleated coat skirt',(0,0,.55),.30,.205,.23,cloth,'body',14)
     elif hero in ('hawk','tianye'):
         straw=material('Tanned brim',(.67,.36,.13) if hero=='hawk' else (.85,.62,.29))
         oval('Swept brim',(0,.035,1.50),(.46,.36,.055),straw,tilt=.12 if hero=='hawk' else -.07)
+        if hero=='tianye':
+            oval('Broad woven sun brim',(0,.028,1.50),(.52,.40,.053),straw,tilt=-.07)
+            oval('Field scarf',(-.19,.10,1.02),(.17,.08,.17),cloth,'body',-.77)
         cut('Felt crown',(0,.025,1.59),.30,.235,.23,straw)
         cut('Woven band',(0,.025,1.53),.303,.292,.05,navy)
         if hero=='hawk':
@@ -108,11 +112,19 @@ else:
         oval('Side swept bob',(-.24,.025,1.27),(.12,.19,.27),hair,tilt=.16)
         for side in [-1,1]:
             cut('Crystal earring',(side*.315,-.06,1.20),.008,.064,.135,cloth,vertices=6)
-        cut('Crystal hair comb',(.22,-.14,1.54),.08,.008,.17,silk,vertices=5)
+        violet=material('Amethyst glass',(.56,.31,.94))
+        for i in range(3):
+            shard=cut('Amethyst fan',(.14+.075*i,-.01,1.64+.038*i),.09,.008,.28+i*.04,violet,vertices=5)
+            shard.rotation_euler.y=.16+i*.22
+        cut('Evening cape',(0,.025,.82),.355,.21,.43,cloth,'body',16)
+        oval('Ivory collar',(0,-.05,1.00),(.238,.172,.066),leather,'body')
     elif hero=='baroque':
         for i in range(3):
             oval('Twisted turban',(0,.015,1.51+i*.066),(.36-i*.026,.28-i*.014,.105),leather,tilt=(-1)**i*.16)
-        oval('Plume',(.17,.035,1.79),(.073,.042,.205),cloth,tilt=-.32)
+        peacock=material('Peacock plume',(.01,.42,.45))
+        oval('Plume',(.16,.035,1.86),(.120,.077,.28),peacock,tilt=.35)
+        oval('Plume eye',(.21,-.025,1.98),(.067,.039,.086),silk,tilt=.35)
+        oval('Saffron sash',(0,-.04,.82),(.244,.189,.091),silk,'body',-.23)
         cut('Turban jewel',(0,-.24,1.57),.07,.01,.10,silk,vertices=6)
         for side in [-1,1]:oval('Waxed moustache',(side*.054,-.292,1.22),(.067,.02,.025),hair,tilt=side*.28)
     elif hero=='lan':

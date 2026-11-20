@@ -56,6 +56,11 @@ export class BoardTargetPicker {
         button.append(name,detail);bar.append(button);choices.push([button,option.id]);
       }
     }
+    // OrbitControls receives pointerdown on the route tile and releases the follow camera.
+    const movingPawn = origin ? this.scene.followedObject : null;
+    if (origin && this.scene.activeMapId==='grand-bay') {
+      this.scene.frameRouteChoice(origin, options.map(option=>this.board.tilePositions[option.id]).filter(Boolean));
+    }
     this.scene.scene.add(group);
     document.body.append(bar);
     const hud = document.getElementById('hud-layer');
@@ -68,6 +73,7 @@ export class BoardTargetPicker {
     return new Promise(resolve => {
       const finish = id => {
         events.abort();
+        if (movingPawn?.parent) this.scene.followObject(movingPawn);
         group.removeFromParent();
         geometry.dispose();
         arrow?.dispose();

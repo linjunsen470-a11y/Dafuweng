@@ -4,7 +4,7 @@ import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 // Ribbons and retaining faces share a centreline so their joints follow the
 // whole turn. Coordinates are scenic only; legal edges come from MapData.
 export function connectingStreet(mapId){
-  if(!['city-loop','taiwan-loop','island-fork','fortune-crossroads'].includes(mapId))return null;
+  if(!['grand-bay','city-loop','taiwan-loop','island-fork','fortune-crossroads'].includes(mapId))return null;
   const coast=mapId==='island-fork', root=new THREE.Group(), batches=new Map();
   const stone='#b39a79', cap='#efd6ab', wood='#916345', iron='#416365';
   function add(geometry,color){
@@ -56,6 +56,113 @@ export function connectingStreet(mapId){
     }
     batches.clear();root.add(group);
   };
+  if(mapId==='grand-bay'){
+    // Outer route: a continuous colonnade extends the boatyard towards the signal house.
+    // Low spans leave sightlines through to the courtyard and both rows of property.
+    const brick='#b35c42', tile='#a74434', stonePier='#efca91', shade='#694f46';
+    const blue='#226a72', mint='#8ecbc1', brass='#e7ae50';
+    for(const [start,end] of [[5.6,9.8],[11.7,18.4],[20.2,31.9],[33.3,39.1]]){
+      const z=24.95,mid=(start+end)/2,w=end-start;
+      box(mid,.21,z,w+.6,.23,2.34,stonePier);
+      box(mid,2.16,z,w+.4,.23,1.55,brick);
+      for(const side of [-1,1]){
+        const roof=new THREE.BoxGeometry(w+.58,.16,.96);
+        roof.rotateX(side*.25);roof.translate(mid,2.44,z+side*.44);add(roof,tile);
+      }
+      for(let i=0,n=Math.ceil(w/2.75);i<=n;i++){
+        const x=start+w*i/n;
+        box(x,.29,z+.57,.36,.36,.38,shade);
+        box(x,1.19,z+.57,.20,1.75,.22,brick);
+        box(x,1.99,z+.57,.42,.20,.35,stonePier);
+        box(x,1.18,z-.56,.17,1.9,.17,shade);
+      }
+      section('quay-loggia',true);
+    }
+    // Inner road: curved glass canopies form a ribbon on the exchange side.
+    // Keep the homes along the branch and the mouth of each court open.
+    function glassGallery(x,z,angle,span){
+      const pivot=v(x,0,z);
+      const place=(geometry,color)=>{
+        geometry.rotateY(angle);geometry.translate(pivot.x,0,pivot.z);add(geometry,color);
+      };
+      const localBox=(lx,y,lz,w,h,d,color)=>{
+        const g=new THREE.BoxGeometry(w,h,d);g.translate(lx,y,lz);place(g,color);
+      };
+      localBox(0,.21,0,span+.34,.28,2.1,cap);
+      for(const end of [-1,1]){
+        localBox(end*(span/2-.12),1.42,-.60,.16,2.58,.20,blue);
+        localBox(end*(span/2-.12),1.05,.64,.14,1.72,.14,blue);
+      }
+      for(let k=0;k<5;k++){
+        const u=k/4,z=-.89+u*1.80,y=2.70-.65*u*u;
+        const g=new THREE.BoxGeometry(span+.26,.13,.52);
+        g.rotateX(Math.atan(.72*u));g.translate(0,y,z);
+        place(g,k===0 || k===4?blue:mint);
+      }
+      section('exchange-glass-walk',true);
+    }
+    glassGallery(.35,21.15,-Math.PI/4,3.7);
+    glassGallery(10.1,11.95,Math.PI/4,3.4);
+    glassGallery(32.55,6.31,-Math.PI/4,4.8);
+    glassGallery(37.93,11.91,-Math.PI/4,4.8);
+    glassGallery(42.97,16.94,-Math.PI/4,4.25);
+    // The two glass walks reach the doors of the sailmakers’ loft. Northlight
+    // roof bays, sailcloth on hanging rails and display windows face the street.
+    const loftAngle=-Math.PI/4;
+    function loftPart(lx,y,lz,w,h,d,color,pitch=0){
+      const geom=new THREE.BoxGeometry(w,h,d);
+      geom.rotateX(pitch);geom.translate(lx,y,lz);geom.rotateY(loftAngle);
+      geom.translate(40.65,0,8.25);add(geom,color);
+    }
+    loftPart(0,.22,0,16,.30,5.2,cap);
+    loftPart(0,1.70,-.25,15.1,2.72,3.40,'#c9bc91');
+    loftPart(0,2.94,1.56,15.3,.28,.47,blue);
+    for(let i=0;i<7;i++){
+      const u=(i-3)*2.14;
+      loftPart(u,1.72,1.47,1.66,1.82,.12,blue);
+      loftPart(u,1.96,1.56,1.46,.88,.10,mint);
+      loftPart(u,1.04,1.61,1.48,.22,.24,stonePier);
+      loftPart(u+.88,1.72,1.59,.20,2.50,.32,cap);
+    }
+    for(let k=0;k<3;k++){
+      const z=-1.64+k*1.51;
+      loftPart(0,3.42,z,15.52,.18,1.74,'#537e81',-.36);
+      loftPart(0,3.35,z+.71,15.4,.52,.16,mint);
+      for(let i=-3;i<=3;i++)loftPart(i*2.10,3.37,z+.82,.10,.56,.10,blue);
+    }
+    section('harbor-sail-loft',true);
+    // A two-faced port signal is shared by the parallel routes. Stepped brick
+    // and bronze needles repeat the outside arcade and the inland roof rhythm.
+    const x=50.1,z=21.75;
+    for(const [w,d,y,h,color] of [[6.0,4.25,.22,.31,stonePier],[5.45,3.80,.48,.27,brick],[4.9,3.35,.68,.15,cap]])
+      box(x,y,z,w,h,d,color);
+    box(x,2.22,z,2.84,3.1,2.55,brick);
+    for(const dx of [-1.25,1.25])for(const dz of [-1.10,1.10])
+      box(x+dx,2.35,z+dz,.30,3.35,.30,stonePier);
+    for(const yaw of [0,-Math.PI/2]){
+      const normal=v(Math.sin(yaw),0,Math.cos(yaw));
+      const face=v(x,2.59,z).addScaledVector(normal,yaw===0?1.32:1.46);
+      for(const [r,step,color] of [[.88,0,blue],[.74,.09,cap]]){
+        const dial=new THREE.CylinderGeometry(r,r,.11,24);dial.rotateX(Math.PI/2);dial.rotateY(yaw);
+        dial.translate(face.x+normal.x*step,face.y,face.z+normal.z*step);add(dial,color);
+      }
+      const hand=face.clone().addScaledVector(normal,.17);
+      beam(hand,v(hand.x+.12*Math.cos(yaw),hand.y+.53,hand.z-.12*Math.sin(yaw)),.054,brick);
+      beam(hand,v(hand.x-.37*Math.cos(yaw),hand.y+.13,hand.z+.37*Math.sin(yaw)),.052,blue);
+    }
+    box(x,4.04,z,3.34,.32,3.05,cap);
+    for(const dx of [-.91,.91])for(const dz of [-.91,.91])
+      box(x+dx,5.04,z+dz,.22,1.86,.22,blue);
+    const lens=new THREE.SphereGeometry(.74,14,10);lens.scale(1,1.13,1);lens.translate(x,5.04,z);add(lens,brass);
+    const capRoof=new THREE.ConeGeometry(2.12,1.36,4);capRoof.rotateY(Math.PI/4);
+    capRoof.translate(x,6.47,z);add(capRoof,blue);
+    box(x,7.40,z,.13,1.00,.13,brass);
+    const vane=new THREE.Shape();vane.moveTo(0,0);vane.lineTo(1.04,.27);vane.lineTo(0,.53);vane.closePath();
+    const flag=new THREE.ExtrudeGeometry(vane,{depth:.09,bevelEnabled:false});
+    flag.translate(x,7.44,z);add(flag,brick);
+    section('harbor-signal-house',true);
+    return root;
+  }
   if(mapId==='city-loop'){
     // The surface railway sweeps diagonally to the carriage sheds. Track fans,
     // not another playable street, give the station a visible city-side boundary.

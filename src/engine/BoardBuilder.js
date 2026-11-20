@@ -1208,13 +1208,24 @@ export class BoardBuilder {
   }
 
   updateHarborPawnVisibility(pawns, now = performance.now()) {
-    if (!this.activeMapDefinition || now - (this.lastPawnVisibilityCheck ?? -Infinity) < 180) return;
+    if (!this.activeMapDefinition) return;
+    const walking = pawns.some(pawn=>pawn.mesh.userData.isMoving);
+    if (now - (this.lastPawnVisibilityCheck ?? -Infinity) < (walking ? 55 : 180)) return;
     this.lastPawnVisibilityCheck = now;
     const camera = this.scene3D.camera.position;
     const targets = [];
     const occupied = new Set();
+    const right = new THREE.Vector3().setFromMatrixColumn(this.scene3D.camera.matrixWorld,0);
     for (const pawn of pawns.filter(p=>p.mesh.visible)) {
-      targets.push(pawn.mesh.position.clone().add(new THREE.Vector3(0,1.25 * (pawn.characterMesh?.scale.y || 1),0)));
+      const scale = pawn.characterMesh?.scale.y || 1;
+      const face = pawn.mesh.position.clone().add(new THREE.Vector3(0,1.25*scale,0));
+      targets.push(face);
+      if (pawn.mesh.userData.isMoving) {
+        // A tall roof corner can cover one shoulder while leaving the face centre
+        // and the destination tile clear. Test the silhouette on the current step.
+        targets.push(face.clone().addScaledVector(right,.39*scale),face.clone().addScaledVector(right,-.39*scale));
+        targets.push(pawn.mesh.position.clone().add(new THREE.Vector3(0,.5*scale,0)));
+      }
       if (!occupied.has(pawn.currentTile) && this.tilePositions[pawn.currentTile]) {
         targets.push(this.tilePositions[pawn.currentTile].clone().add(new THREE.Vector3(0,.25,0)));
         occupied.add(pawn.currentTile);
