@@ -1,3 +1,4 @@
+import {classicStreetRows} from './ClassicFrontages.js';
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
@@ -15,11 +16,12 @@ const schemes=[
 export function createTownCourts(map){
   const group=new THREE.Group(), batches=new Map();
   const stamp=new THREE.Object3D();
-  for(const [cx,cz,scale,style] of courts[map.id]||[]){
+  for(const [cx,cz,scale,style,angle] of [...(courts[map.id]||[]),...classicStreetRows(map)]){
+    const yaw=angle??0,cos=Math.cos(yaw),sin=Math.sin(yaw);
     const [wall,roof,trim]=schemes[style];
     const place=(geometry,color,x,y,z,rotation=0)=>{
-      stamp.position.set(cx+x*scale,y*scale,cz+z*scale);
-      stamp.scale.setScalar(scale);stamp.rotation.set(0,rotation,0);stamp.updateMatrix();
+      stamp.position.set(cx+(x*cos+z*sin)*scale,y*scale,cz+(z*cos-x*sin)*scale);
+      stamp.scale.setScalar(scale);stamp.rotation.set(0,rotation+yaw,0);stamp.updateMatrix();
       geometry.applyMatrix4(stamp.matrix);
       if(geometry.index){const indexed=geometry;geometry=indexed.toNonIndexed();indexed.dispose();}
       if(!batches.has(color))batches.set(color,[]);
@@ -29,9 +31,29 @@ export function createTownCourts(map){
     function hall(x,z,w,d,h){
       const cream='#ffe8bf',glass='#35565d',front=z+d/2;
       box(x,h/2+.15,z,w,h,d,wall);
-      const cross=new THREE.Shape();cross.moveTo(-w*.56,0);cross.lineTo(-w*.30,.84);
-      cross.lineTo(w*.29,.84);cross.lineTo(w*.56,0);cross.closePath();
-      place(new THREE.ExtrudeGeometry(cross,{depth:d+.48,bevelEnabled:false}),roof,x,h+.13,z-d/2-.24);
+      const top=h+.16;
+      if(style===1 && x<0){
+        // A stepped brick parapet shields a flat roof with a small glazed lantern.
+        box(x,top,z,w+.24,.22,d+.27,trim);
+        for(const edge of [-1,1])box(x+edge*w*.47,top+.26,z,.18,.54,d,wall);
+        for(let step=0;step<3;step++)box(x,top+.22+step*.27,front,w*(.92-step*.23),.29,.26,wall);
+        box(x,top+.42,z-.30,w*.42,.75,d*.38,glass);
+        box(x,top+.86,z-.30,w*.48,.13,d*.45,roof);
+      }else if(style===2 && x>0){
+        const radius=w*.54;
+        for(let panel=0;panel<9;panel++){
+          const a=(panel+.5)*Math.PI/9,skin=new THREE.BoxGeometry(radius*.36,.15,d+.32);
+          skin.rotateZ(Math.PI/2-a);
+          place(skin,panel%3===1?'#9cb6a1':roof,x-radius*Math.cos(a),top+radius*Math.sin(a),z);
+        }
+      }else{
+        const cross=new THREE.Shape();cross.moveTo(-w*.56,0);
+        if(style===0)cross.lineTo(0,x<0?1.72:1.19);
+        else {cross.lineTo(-w*.30,.84);cross.lineTo(w*.29,.84);}
+        cross.lineTo(w*.56,0);cross.closePath();
+        place(new THREE.ExtrudeGeometry(cross,{depth:d+.48,bevelEnabled:false}),roof,x,top,z-d/2-.24);
+        if(style===0)box(x,top+(x<0?1.72:1.19),z,.14,.16,d+.66,trim);
+      }
       box(x,h+.13,z,w+.42,.16,d+.46,cream);
       const bays=Math.round(w/1.2);
       for(let i=0;i<bays;i++){
@@ -43,14 +65,24 @@ export function createTownCourts(map){
           box(xx,floor-.39,front+.14,.84,.12,.29,cream);
         }
       }
+      // Side windows and rear galleries keep corner shops legible from a rotated camera.
+      for(const side of [-1,1])for(const zz of [-.85,.65]){
+        box(x+side*(w/2+.05),1.03,z+zz,.14,.96,.70,glass);
+        if(h>3)box(x+side*(w/2+.09),2.45,z+zz,.16,.69,.65,trim);
+      }
+      for(let i=0;i<bays;i++)box(x-w/2+(i+.5)*w/bays,1.35,z-d/2-.06,.62,1.20,.13,glass);
       box(x,1.69,front+.29,w+.14,.18,.70,roof);
       for(const side of [-1,1])box(x+side*(w/2-.13),.87,front+.48,.14,1.56,.14,cream);
     }
     box(0,.035,0,10,.11,7.5,'#bf9c77');
     box(0,.115,2.65,9.8,.08,1.85,'#e5c59a');
+    if(angle!==undefined){
+      box(0,.16,3.60,11.6,.23,1.55,'#edc69a');
+      for(let seam=-5;seam<=5;seam++)box(seam,.29,3.65,.04,.02,1.44,'#b39674');
+    }
     hall(-2.6,-.23,3.95,3.7,style===1?4.9:3.2);
     hall(2.15,-.6,3.55,3.15,style===2?4.3:2.7);
-    if(map.id==='island-fork'){
+    if(map.id==='island-fork' && angle===undefined){
       // A conical navigation light and its lantern balcony identify the tide harbor.
       const ring=(top,bottom,h,y,color)=>place(new THREE.CylinderGeometry(top,bottom,h,16),color,-3,y,4.7);
       ring(1.4,1.8,.45,.23,'#816e5c');
@@ -59,7 +91,7 @@ export function createTownCourts(map){
       ring(.66,.68,.92,5.91,'#e6bf6a');ring(.04,1.01,.70,6.70,'#a04a39');
       for(const dx of [-.50,.50])for(const dz of [-.40,.40])box(-3+dx,5.89,4.7+dz,.09,.95,.09,'#395b64');
     }
-    if(map.id==='taiwan-loop'){
+    if(map.id==='taiwan-loop' && angle===undefined){
       // Contoured planted terraces descend from the tea houses into the valley.
       for(let n=0;n<4;n++){
         const geom=new THREE.CylinderGeometry(1,1.05,.27,32);

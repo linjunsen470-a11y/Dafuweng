@@ -446,9 +446,7 @@ class GameController {
     this.audioManager.playMapTheme(this.gameState.mapDefinition.musicId);
     this.syncAdaptiveMusic();
     this.uiRenderer.renderHUD();
-    if (this.gameState.mapDefinition.id === 'grand-bay') {
-      this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
-    }
+    this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
 
     this.checkAITurn();
@@ -474,9 +472,7 @@ class GameController {
     document.getElementById('setup-screen').classList.add('hidden');
     document.getElementById('hud-layer').classList.remove('hidden');
     this.uiRenderer.renderHUD();
-    if (this.gameState.mapDefinition.id === 'grand-bay') {
-      this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
-    }
+    this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
     this.checkAITurn();
   }
@@ -774,9 +770,7 @@ class GameController {
     this.syncAdaptiveMusic();
     this.syncBoardAssets(true);
     this.uiRenderer.renderHUD();
-    if (this.gameState.mapDefinition.id === 'grand-bay') {
-      this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
-    }
+    this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile);
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
     this.checkAITurn();
   }

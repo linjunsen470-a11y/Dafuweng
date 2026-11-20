@@ -1,3 +1,4 @@
+import {hasClassicFrontages,planClassicFrontages} from './ClassicFrontages.js';
 import {createTownCourts} from './TownCourts.js';
 import {createQuayStreet,quayLot} from './QuayStreet.js';
 import { createHarborPromenade, createHarborGulls, updateHarborGulls } from './HarborPromenade.js';
@@ -276,8 +277,10 @@ export class BoardBuilder {
   applyMapDefinition(mapDefinition) {
     if (!mapDefinition) return;
     this.clearDynamicMap();
+    mapDefinition=planClassicFrontages(mapDefinition);
     this.activeMapDefinition = mapDefinition;
-    this.createTiles(mapDefinition.tiles, mapDefinition.tileSize || 4.4);
+    const tileSize=mapDefinition.tileSize || 4.4;
+    this.createTiles(mapDefinition.tiles,hasClassicFrontages(mapDefinition)?Math.min(3.15,tileSize):tileSize);
     if (this.scene3D.container) {
       this.scene3D.container.dataset.tileCount = String(mapDefinition.tiles.length);
       this.scene3D.container.dataset.lotCount = String(mapDefinition.tiles.filter(isPropertyTile).length);
@@ -378,6 +381,7 @@ export class BoardBuilder {
       color: mapDefinition.id === 'grand-bay' ? '#788b88' : profile.road, roughness: 0.88, metalness: 0.03
     });
     const shoulderMaterial = new THREE.MeshStandardMaterial({ color: profile.shoulder, roughness: 0.74, metalness: 0.06 });
+    const pavement=hasClassicFrontages(mapDefinition)?new THREE.MeshStandardMaterial({color:'#cfb18b',roughness:.96}):null;
     const laneMaterials = new Map();
     const seen = new Set();
     let segmentCount = 0;
@@ -398,6 +402,10 @@ export class BoardBuilder {
           laneMaterials.set(visual.lane, new THREE.MeshBasicMaterial({
             color: visual.lane, transparent: true, opacity: 0.72, depthWrite: false
           }));
+        }
+        if(pavement){
+          const sidewalk=new THREE.Mesh(new THREE.BoxGeometry(roadWidth+4.4,.20,length+.45),pavement);
+          sidewalk.position.set(midpoint.x,-.035,midpoint.z);sidewalk.rotation.y=angle;sidewalk.receiveShadow=true;group.add(sidewalk);
         }
         const shoulder = new THREE.Mesh(new THREE.BoxGeometry(roadWidth + 0.7, 0.12, length + 0.35), shoulderMaterial);
         shoulder.position.set(midpoint.x, 0.035, midpoint.z);
@@ -640,7 +648,7 @@ export class BoardBuilder {
   }
 
   applyTileTextures(tileMesh, tileData) {
-    if (this.activeMapDefinition?.id === 'grand-bay') {
+    if (this.activeMapDefinition?.id === 'grand-bay' || hasClassicFrontages(this.activeMapDefinition)) {
       const spec = harborTileStyle(tileData);
       const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
       const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256;
@@ -845,12 +853,12 @@ export class BoardBuilder {
         group = this.createFacilityLandmark(tile);
       }
       if (!group) return;
-      const anchor = service || (isPropertyTile(tile) && tile.lot?.position
+      const anchor = service || tile.serviceFrontage?.position || (isPropertyTile(tile) && tile.lot?.position
         ? tile.lot.position
         : this.getRoadsideAnchor(tile, position));
-      group.position.set(anchor.x, service || (isPropertyTile(tile) && tile.lot?.position) || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
-      group.rotation.y = service ? facilityFacing(tile, service) : group.userData.originalStation ? Math.PI : tile.lot?.rotation || 0;
-      if (mapDefinition.id==='grand-bay' && isPropertyTile(tile) && tile.lot?.position) group.rotation.y=facingRoad(tile)+Math.PI;
+      group.position.set(anchor.x, service || tile.serviceFrontage || (isPropertyTile(tile) && tile.lot?.position) || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
+      group.rotation.y = service ? facilityFacing(tile, service) : tile.serviceFrontage ? tile.serviceFrontage.rotation : group.userData.originalStation ? Math.PI : tile.lot?.rotation || 0;
+      if (isPropertyTile(tile) && tile.lot?.position) group.rotation.y=facingRoad(tile)+Math.PI;
       group.userData.baseY = group.position.y;
       group.userData.phase = tile.id * 0.71;
       group.userData.tileType = tile.type;
@@ -885,7 +893,7 @@ export class BoardBuilder {
   createVacantLotMarker(tile) {
     const group = new THREE.Group();
     const accent = getTileVisualSpec(this.activeMapDefinition, tile).accent;
-    if (this.activeMapDefinition.id==='grand-bay' && tile.lot?.position) {
+    if (tile.lot?.position) {
       // A buildable courtyard has an open street entrance and no billboard.
       const slab=new THREE.Mesh(new THREE.BoxGeometry(3.35,.12,3.15),new THREE.MeshStandardMaterial({color:'#e6c69e'}));
       group.add(slab);

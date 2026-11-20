@@ -51,7 +51,7 @@ export class PawnManager {
       group.add(ring);
 
       // 头顶 3D 悬浮名字标牌
-      const namePlate = this.createNamePlate(harbor ? String(index + 1) : cfg.name || profile.name, profile.color, harbor);
+      const namePlate = this.createNamePlate(String(index + 1),profile.color,true);
       const labelHeight = characterMesh.cityRig ? 3 : 2.72;
       namePlate.position.y = labelHeight;
       group.add(namePlate);
@@ -469,7 +469,7 @@ export class PawnManager {
   }
 
   layoutHarborPawns() {
-    if (this.boardBuilder.activeMapDefinition?.id !== 'grand-bay') return;
+    if (!this.boardBuilder.activeMapDefinition) return;
     const right = new THREE.Vector3().setFromMatrixColumn(this.scene3D.camera.matrixWorld,0);
     right.y = 0; right.normalize();
     this.harborFacing = Math.atan2(-right.z,right.x);
@@ -485,7 +485,10 @@ export class PawnManager {
       const center = this.boardBuilder.tilePositions[tileId]; if (!center) continue;
       occupants.sort((a,b)=>a.id-b.id).forEach((pawn,rank)=>{
         const slot = occupants.length > 1 ? harborPawnSlot(rank,occupants.length,right) : {...this.getPawnOffset(pawn.id),scale:1.15};
-        const destination = center.clone().add(new THREE.Vector3(slot.x,.20,slot.z));
+        // Four silhouettes need extra shoulder room on the narrow viewport, especially hats.
+        // Only expand the camera-right component; keep the two depth rows on this road tile.
+        const spread=occupants.length===4?(slot.x*right.x+slot.z*right.z)*.26:0;
+        const destination=center.clone().add(new THREE.Vector3(slot.x+right.x*spread,.20,slot.z+right.z*spread));
         pawn.mesh.position.lerp(destination,reduced ? 1 : .22);
         pawn.characterMesh.scale.lerp(new THREE.Vector3(slot.scale,slot.scale,slot.scale),reduced ? 1 : .22);
         pawn.namePlate.position.y = (pawn.labelHeight || 2.72) * slot.scale / 1.15;
