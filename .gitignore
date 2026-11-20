@@ -26,3 +26,6 @@ qa/*.json
 !/scripts/inspect-shanhai-scene.mjs
 
 !/scripts/simulate-shanhai.mjs
+
+# Blender autosave backups
+*.blend[0-9]*

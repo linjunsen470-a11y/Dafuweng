@@ -44,7 +44,7 @@ export function surfaceTexture(id,kind){
     }
   }else if(kind==='pave' || kind==='road'){
     const road=kind==='road',setts=style.pave==='setts',metro=style.pave==='metro';
-    const h=metro?64:setts?32:32,w=metro?64:setts?32:64;
+    const h=metro?64:32,w=setts?32:64;
     for(let row=0;row<256/h;row++)for(let col=-1;col<=256/w;col++){
       const x=col*w+(metro?0:(row&1)*w/2),y=row*h,v=variation(row*9+(col+9)%8);
       wash(c,x+1,y+1,w-2,h-2,v>.43,.06+v*.12);

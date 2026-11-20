@@ -84,7 +84,6 @@ export class DialogUI {
     const titleEl = document.getElementById('land-modal-title');
     const badgeEl = document.getElementById('land-level-badge');
     const buildingArtEl = document.getElementById('land-building-art');
-    const nameEl = document.getElementById('land-name');
     const priceEl = document.getElementById('land-price');
     const tollEl = document.getElementById('land-toll');
     const nextTollEl = document.getElementById('land-next-toll');
@@ -101,7 +100,6 @@ export class DialogUI {
     buildingArtEl.style.setProperty('--district-color', model.districtColor);
     buildingArtEl.setAttribute('aria-label', `${model.buildingName} LV ${model.artLevel} 建筑预览`);
     buildingArtEl.setAttribute('role', 'img');
-    nameEl.textContent = tileData.name;
     priceEl.textContent = money(model.cost);
     tollEl.textContent = money(model.currentToll);
     nextTollEl.textContent = money(model.nextToll);
