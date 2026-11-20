@@ -1,6 +1,9 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { CARDS } from '../src/game/CardManager.js';
+import { ITEMS } from '../src/game/ContentRegistry.js';
+import { createItemPresentation } from '../src/game/CardPresentation.js';
 import { PLAYER_PROFILES } from '../src/game/BoardData.js';
 
 const restoredAssessmentAssets = [
@@ -55,13 +58,15 @@ describe('production visual asset contract', () => {
     expect(html).toContain('class="setup-map-showcase"');
   });
 
-  it('uses the original category atlas throughout the strategy card center', () => {
-    const css = readFileSync(resolve('src/css/style.css'), 'utf8');
-    const shopUI = readFileSync(resolve('src/ui/ShopUI.js'), 'utf8');
-    expect(css).toContain("url('/assets/strategy-card-category-atlas-v2.png')");
-    expect(shopUI).toContain('strategy-card-illustration');
-    expect(shopUI).toContain('card-detail-illustration');
-    expect(shopUI).toContain('card-acquisition');
+  it('ships an individual offline vector illustration for every card and item', () => {
+    const paths = [...CARDS, ...ITEMS.map(item => createItemPresentation(item))].map(entry => entry.cardImg);
+    const manifest = JSON.parse(readFileSync(resolve('public/offline-assets.json'), 'utf8'));
+    expect(new Set(paths).size).toBe(paths.length);
+    for (const path of paths) {
+      expect(path).toMatch(/^\/assets\/(card|item)_\w+\.svg$/);
+      expect(manifest.assets).toContain(path);
+      expect(readFileSync(resolve('public', path.slice(1)), 'utf8')).toContain('<svg');
+    }
   });
 
   it('gives every playable profile a unique production atlas portrait', () => {

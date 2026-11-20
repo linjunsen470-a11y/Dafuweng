@@ -49,6 +49,7 @@ export class AssetUI {
 
   renderRanking() {
     this.body.innerHTML = '';
+    const headings = this.body.closest('table').tHead.rows[0].cells;
     this.gameState.getRankings().forEach(({ player, assets }, index) => {
       const row = document.createElement('tr');
       row.className = player.isBankrupt ? 'bankrupt' : '';
@@ -58,6 +59,7 @@ export class AssetUI {
         <td>$${assets.landValue.toLocaleString()}</td><td>$${assets.buildingValue.toLocaleString()}</td>
         <td>$${assets.stockValue.toLocaleString()}</td><td>${assets.propertyCount}</td>
         <td><strong>$${assets.total.toLocaleString()}</strong></td>`;
+      Array.from(row.cells).forEach((cell, column) => { cell.dataset.label = headings[column].textContent; });
       this.body.appendChild(row);
     });
   }

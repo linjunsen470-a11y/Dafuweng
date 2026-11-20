@@ -39,7 +39,16 @@ try {
   await page.select('#player-count', '2');
   await page.click('#start-game-btn');
   await page.waitForSelector('#hud-layer:not(.hidden)', { timeout: 300000 });
+  const manifest = JSON.parse(fs.readFileSync('dist/offline-assets.json', 'utf8'));
+  const illustrations = manifest.assets.filter(path => /^\/assets\/(?:card|item)_.*\.svg$/.test(path));
+  await page.evaluate(paths => Promise.all(paths.map(async path => {
+    const image = new Image();
+    image.src = path;
+    await image.decode();
+  })), illustrations);
   console.log('PWA: offline game started; save slot 1.');
+  const mobileTools = await page.$('#btn-mobile-tools');
+  if (await mobileTools.isVisible()) await mobileTools.click();
   await page.click('#btn-pause-game');
   await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 30000 });
   const saveButton = await page.$('#save-slot-list .save-slot-row .slot-save');
@@ -54,7 +63,7 @@ try {
   await page.waitForSelector('#setup-screen', { timeout: 300000 });
   const persisted = await page.evaluate(() => Boolean(localStorage.getItem('fortune-empire:slot:v11:1')));
   const caches = await page.evaluate(() => window.caches.keys());
-  if (!persisted || !caches.includes('fortune-empire-v5')) throw new Error('Offline refresh did not retain cache/save data.');
+  if (!persisted || !caches.includes(`fortune-empire-v${manifest.version}`)) throw new Error('Offline refresh did not retain cache/save data.');
   if (failures.length) throw new Error(`PWA page errors: ${failures.join('; ')}`);
   console.log('PWA install, offline launch, offline new game, V11 save, and offline refresh passed.');
 } finally {

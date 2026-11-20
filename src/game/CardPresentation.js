@@ -20,17 +20,6 @@ export const CARD_TARGET_LABELS = {
   NONE: '立即生效', PLAYER: '选择玩家', TILE: '选择道路', PROPERTY: '选择地产', STOCK: '选择股票', VALUE: '选择数值'
 };
 
-export const CARD_ART_ATLAS = '/assets/strategy-card-category-atlas-v2.png';
-
-export const CARD_ART_SLOTS = Object.freeze({
-  MOVEMENT: { className: 'card-art-movement', position: '0% 0%' },
-  PROPERTY: { className: 'card-art-property', position: '50% 0%' },
-  ATTACK: { className: 'card-art-attack', position: '100% 0%' },
-  DEFENSE: { className: 'card-art-defense', position: '0% 100%' },
-  MARKET: { className: 'card-art-market', position: '50% 100%' },
-  SUPPORT: { className: 'card-art-support', position: '100% 100%' }
-});
-
 const CATEGORY_IDS = {
   MOVEMENT: ['SWAP_STOPS', 'REMOTE_DICE', 'TURN_AROUND', 'TELEPORT', 'TURTLE', 'CAR_CARD', 'SLEEPWALK'],
   PROPERTY: ['DEMOLISH', 'STEAL_LAND', 'LAND_BUY', 'SWAP_LAND', 'AUCTION_CARD'],
@@ -70,7 +59,6 @@ export function getCardRarity(card) {
 export function createCardPresentation(card, options = {}) {
   const category = getCardCategory(card.id);
   const rarity = getCardRarity(card);
-  const art = CARD_ART_SLOTS[category.id] || CARD_ART_SLOTS.SUPPORT;
   const action = options.action || null;
   const cost = options.cost ?? card.cost;
   const points = options.points ?? Number.POSITIVE_INFINITY;
@@ -80,9 +68,7 @@ export function createCardPresentation(card, options = {}) {
     cost,
     category,
     rarity,
-    artAtlas: CARD_ART_ATLAS,
-    artClass: art.className,
-    artPosition: art.position,
+    artClass: `card-art-${category.id.toLowerCase()}`,
     serial: `FE-${String(Math.abs([...card.id].reduce((sum, char) => sum + char.charCodeAt(0), 0)) % 100).padStart(2, '0')}`,
     rarityStars: '✦'.repeat(rarity.rank),
     targetLabel: CARD_TARGET_LABELS[card.targetType || 'NONE'] || '特殊目标',
@@ -100,12 +86,16 @@ export function createCardPresentation(card, options = {}) {
 export function createItemPresentation(item, options = {}) {
   const action = options.action || null;
   const cost = options.cost ?? item.cost;
+  const rarity = cost === null || cost >= 100 ? CARD_RARITIES.EPIC : cost >= 50 ? CARD_RARITIES.RARE : CARD_RARITIES.COMMON;
   return {
     ...item,
+    cardImg: `/assets/item_${item.id.toLowerCase()}.svg`,
+    artClass: 'card-art-item',
     desc: item.description,
     cost,
     category: CARD_CATEGORIES.ITEM,
-    rarity: cost === null || cost >= 100 ? CARD_RARITIES.EPIC : cost >= 50 ? CARD_RARITIES.RARE : CARD_RARITIES.COMMON,
+    rarity,
+    rarityStars: '✦'.repeat(rarity.rank),
     targetLabel: CARD_TARGET_LABELS[item.targetType || 'NONE'] || '特殊目标',
     timing: '掷骰前使用',
     tacticalNote: item.researchLevel ? `实验室科技道具 · 研究等级 ${item.researchLevel}` : '消耗型战术道具，不占用卡片栏位。',

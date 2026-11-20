@@ -1,0 +1,176 @@
+/* Paper sheets, section dividers and inset counters shared by the city venues. */
+:where(.modal, .news-flash-card) :is(
+  .modal-header, .auction-header, .debt-header, .economic-report-header, .magic-house-header,
+  .bank-center-header, .lottery-center-header, .research-lab-header, .mechanism-tower-header,
+  .route-choice-header, .news-flash-masthead
+) {
+  background: linear-gradient(100deg, var(--parchment), var(--paper));
+  border-bottom: 2px solid var(--rule);
+  color: var(--ink);
+}
+.modal:not(#modal-land) .modal-header { gap: 8px; padding: 8px 10px; border-radius: 12px 12px 4px 4px; }
+.rules-help-modal { z-index: 101; }
+.modal:not(#modal-land) .modal-header h2 { font-size: clamp(1.04rem, 2vw, 1.4rem); }
+.modal .close-modal { flex-shrink: 0; width: 36px; min-height: 36px; }
+:where(.modal) :is(
+  .bank-center-footer, .economic-report-footer, .magic-house-footer, .lottery-center-footer,
+  .research-lab-footer, .mechanism-tower-footer, .route-choice-footer
+) { background: var(--cream); border-top-color: var(--rule); }
+
+:where(.modal, .news-flash-card) :is(
+  .stock-detail-panel, .stock-list, .stock-item, .stock-chart-box, .trade-inputs, .holding-info,
+  .company-board-card, .company-board-intro, .company-finance-grid > div, .company-perk,
+  .save-slot-row, .speed-options, .volume-options, .user-points-badge, .rules-help-grid > *,
+  .market-offer-card, .market-asset-row, .market-history-row, .market-balance, .target-choice,
+  .property-portfolio-card, .property-summary > div, .district-card, .mode-rule-grid article,
+  .mode-round-card, .mode-standing-row, .winner-stats, .report-hero, .report-row, .report-pulse > *,
+  .bank-balance-card, .bank-total-card, .bank-forecast-panel, .bank-transfer-panel, .bank-forecast-grid > div,
+  .bank-direction-tabs, .bank-rate, .bank-amount-display, .auction-property-card, .auction-history,
+  .auction-bidder, .auction-property-stats > div, .auction-current-bid, .auction-ai-verdict, .auction-result,
+  .debt-summary, .debt-action, .debt-strategy-note, .debt-asset-card, .debt-demand-card,
+  .economic-report-hero, .economic-panel, .economic-company-card, .economic-stock-row, .economic-round-news,
+  .economic-lottery-panel, .magic-formula, .magic-rune-section, .magic-preview-panel, .magic-rune-button,
+  .magic-target-chip, .news-history-item, .news-impact, .lottery-intel, .lottery-board, .lottery-preview,
+  .research-tree-panel, .research-dossier, .research-tactical, .research-queue-banner,
+  .mechanism-plans-panel, .mechanism-map-panel, .mechanism-branch, .mechanism-impact-preview,
+  .route-plan, .route-path, .minigame-briefing-stats span, .minigame-session-stats span
+) {
+  background: var(--paper);
+  border-color: var(--rule);
+  color: var(--ink);
+  box-shadow: 0 1px 3px #84512e18;
+}
+
+:where(.modal) :is(.asset-table thead, .stock-list, .trade-inputs, .company-perk, .save-slot-row,
+  .bank-direction-tabs, .magic-formula, .route-path, .report-pulse > *) {
+  background: var(--parchment);
+}
+:where(.modal) :is(.bank-risk, .company-active-policy, .auction-bidder.is-leading,
+  .debt-solvency.is-solvent, .debt-action.tone-recommended, .economic-player-row.is-leader) {
+  background: var(--mint); color: var(--positive-ink);
+}
+:where(.modal) :is(.minigame-timer, .auction-round, .company-board-cycle, .news-category, .market-balance) {
+  background: var(--sky); color: #28596b;
+}
+:where(.modal) :is(.bank-yield-orbit, .auction-property-icon, .research-dossier-art, .route-plan-destination > i) {
+  background: radial-gradient(circle at 40% 32%, var(--paper), var(--honey));
+  color: var(--ink);
+}
+.magic-orb, .magic-rune-button > span {
+  background: radial-gradient(circle at 35% 30%, #fff9ed, var(--violet) 55%, #bd97d0);
+  color: #603575;
+}
+:where(.modal) :is(.stock-item.active, .lottery-number-button.selected, .magic-target-chip.selected,
+  .magic-rune-button.selected, .mechanism-plan.selected, .research-project.selected) {
+  background: var(--honey); border-color: var(--caramel); color: var(--ink);
+}
+:where(.modal) :is(.mode-round-progress, .mode-asset-progress, .district-progress, .debt-coverage > div) {
+  background: var(--parchment);
+}
+:where(.modal) :is(.mode-round-progress i, .mode-asset-progress i, .debt-coverage > div > span) {
+  background: #68ae85;
+}
+
+#modal-stock .stock-item { text-align: left; }
+.stock-item .price-up, .stock-item .price-down {
+  border-radius: 6px; padding-inline: 5px; font-variant-numeric: tabular-nums;
+}
+.stock-item .price-up { color: #9d302e; background: #ffddd1; }
+.stock-item .price-down { color: var(--positive-ink); background: var(--mint); }
+.stock-shortcuts [data-stock-order="buy"] { background: var(--honey); }
+.stock-shortcuts [data-stock-order="sell"] { background: var(--mint); }
+#stock-chart { display: block; width: 100%; max-width: 100%; height: auto; }
+#stock-chart-mode { background: var(--paper); color: var(--ink); }
+#stock-chart-mode[aria-pressed="true"] { background: var(--honey); }
+#stock-trade-guidance { color: var(--muted-ink); }
+.asset-table thead { color: var(--ink); }
+.asset-table-wrap { max-width: 100%; }
+.asset-table { color: var(--ink); font-variant-numeric: tabular-nums; }
+.asset-table th, .asset-table td { border-color: var(--rule); }
+.asset-table tbody tr:first-child { background: #ffebbc; }
+:where(.modal) .gain { color: var(--positive-ink); }
+:where(.modal) .loss { color: var(--warning-ink); }
+
+.news-flash-card { overflow: hidden; }
+.news-auto-progress { background: var(--honey); }
+.news-flash-card .news-flash-masthead { color: var(--warning-ink); }
+.news-history-summary, .news-category-icon, .auction-lot-number { background: var(--honey); color: var(--ink); }
+.economic-report-header::before, .magic-house-header::after { opacity: .16; }
+
+.minigame-briefing, .minigame-countdown, .minigame-result-stage, .minigame-result-card {
+  background: var(--panel-paint); color: var(--ink);
+}
+.minigame-briefing-icon, .minigame-start kbd, .minigame-result-rank, .minigame-result-numbers span {
+  background: var(--parchment); color: var(--ink);
+}
+.harbor-sort-stage { background: linear-gradient(#bfe6e7, #ffedc3 70%, #dbb178); }
+.harbor-conveyor { background: repeating-linear-gradient(120deg, #c7a67e 0 12px, #e6c79e 12px 24px); }
+.harbor-cargo, .harbor-bins button { background: var(--cream); color: var(--ink); }
+.route-memory-stage { background: radial-gradient(ellipse, #d4f0d8, #91c9bd); }
+.route-radar { background: repeating-radial-gradient(circle, #badac7 0 12px, #8cb9a4 13px 14px); }
+.route-radar span, .route-beacons button { background: var(--paper); color: var(--ink); }
+.route-beacons button:is(.is-lit, .is-correct) { background: var(--honey); outline: 3px solid var(--caramel); }
+.minigame-feedback { color: var(--ink); background: var(--paper); }
+.minigame-feedback.is-correct { color: var(--positive-ink); }
+.minigame-feedback.is-wrong, .minigame-timer.is-urgent { color: var(--warning-ink); }
+
+.presentation-toast, .presentation-arrival, .presentation-move-progress, .chance-player-result {
+  background: var(--panel-paint); color: var(--ink); border-color: var(--caramel); box-shadow: var(--panel-shadow);
+}
+.presentation-toast.tone-success { border-left-color: #418b61; }
+.presentation-toast.tone-danger { border-left-color: #cb5649; }
+.presentation-toast.tone-accent { border-left-color: #9962ad; }
+.presentation-toast.tone-gold { border-left-color: #d69433; }
+.presentation-toast strong, .presentation-arrival-copy strong { color: var(--ink); }
+.presentation-toast > div > span, .presentation-arrival-copy span, .character-reaction-name { color: var(--muted-ink); }
+.presentation-toast-icon, .presentation-arrival-icon { background: var(--parchment); }
+.presentation-cash-burst strong { background: var(--paper); color: var(--positive-ink); }
+.presentation-cash-burst.is-loss strong { color: var(--warning-ink); }
+.chance-reveal-overlay { background: var(--modal-scrim); }
+.chance-card-back, .chance-card-front, .chance-card-art, .chance-card-outcome { background: var(--panel-paint); }
+.chance-stage :is(h2, p, small, strong, span, em, b) { color: var(--ink); text-shadow: none; }
+
+@media (max-width: 720px) {
+  .modal:not(#modal-land) { padding: 8px; }
+  .modal:not(#modal-land) > .modal-box { max-width: 100%; max-height: calc(100dvh - 20px); }
+  .stock-shortcuts button { flex: 1 1 40%; }
+  .asset-table th, .asset-table td { padding: 9px 6px; }
+}
+
+.stock-content { background: transparent; }
+.stock-list { padding: 4px; }
+.stock-item { padding: 9px 10px; }
+.stock-item-top, .stock-item-bot { gap: 8px; }
+:where(.modal) :is(.bank-risk.risk-watch, .auction-status-line.is-error, .bank-risk.risk-critical,
+  .debt-solvency.is-insolvent, .debt-action.tone-danger.is-armed, .debt-amounts .is-gap,
+  .route-beacons button.is-wrong) {
+  background: #ffdfca; color: var(--warning-ink);
+}
+:where(.modal) :is(.debt-action-icon, .debt-amounts > div, .debt-case-number, .bank-section-title > span,
+  .research-project > i, .research-project > span, .mechanism-line > b, .route-path b, .magic-formula span,
+  .magic-section-title > b, .mode-rule-grid article > span, .lottery-number-button > span) {
+  background: var(--parchment); color: var(--ink); border-color: var(--caramel);
+}
+:where(.modal) :is(.economic-player-avatar, .debt-player-portrait, .auction-bidder-avatar, .magic-target-avatar) {
+  background-color: var(--parchment);
+}
+.map-inspector, .map-inspector header, .map-inspector button, .map-inspector select {
+  color: var(--ink); background: var(--paper); border-color: var(--caramel);
+}
+.map-inspector :is(label, h3, .inspection-path-note) { color: var(--muted-ink); }
+
+@media (max-width: 620px) {
+  .asset-table thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%);
+  }
+  .asset-table tbody { display: grid; gap: 8px; }
+  .asset-table tr {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start;
+    border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); padding: 8px;
+  }
+  .asset-table td { text-align: left; padding: 3px 5px; border: 0; white-space: normal; overflow-wrap: anywhere; }
+  .asset-table td:last-child { grid-column: 3; grid-row: 1; }
+  .asset-table td::before {
+    display: block; content: attr(data-label); font-size: 11px; color: var(--muted-ink);
+  }
+}

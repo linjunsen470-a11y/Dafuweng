@@ -1,3 +1,4 @@
+import { createItemPresentation } from './game/CardPresentation.js';
 import {quayRoutes} from './game/QuayRoutes.js';
 import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
 import { bindBoardHover } from './ui/BoardHover.js';
@@ -174,6 +175,7 @@ class GameController {
   }
 
   applyDomainEvent(event) {
+    document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
     this.pawnManager.reactToEvent(event);
     if(event.type==='CLINIC_PICKUP' && !this.skipAIAnimations) {
       this.audioManager.playBoardCue('clinic');
@@ -598,7 +600,10 @@ class GameController {
         document.querySelectorAll('.speed-btn').forEach(item => item.classList.toggle('active', item === button));
       };
     });
-    document.querySelector('#ai-pace').onchange = e => { this.aiPace = e.target.value; };
+    document.querySelector('#ai-pace').onchange = e => {
+      this.aiPace = e.target.value;
+      document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
+    };
     const musicVolume = document.getElementById('music-volume');
     const sfxVolume = document.getElementById('sfx-volume');
     try {
@@ -853,7 +858,7 @@ class GameController {
   }
 
   async runAITurn(aiPlayer) {
-    if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL) return;
+    if (this.gameState.phase !== GamePhase.WAITING_FOR_ROLL || this.gameState.getCurrentPlayer() !== aiPlayer) return;
 
     if (aiPlayer.isSleepwalkingThisTurn) {
       await this.doRollDice();
@@ -961,6 +966,7 @@ class GameController {
 
     this.dice3D.speed = this.actionSpeed;
     if (!this.skipAIAnimations) await this.dice3D.roll(dice[0], pawnPos.clone().add(new THREE.Vector3(0, 4, 0)), dice);
+    if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     if (!this.skipAIAnimations) {
       // The corner receipt remains readable as the pawn starts walking.
       const receipt = this.presentationUI.showDice({
@@ -969,6 +975,7 @@ class GameController {
       if (this.presentationUI.isReducedMotion()) await receipt;
     }
 
+    if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     const diceDetail = dice.length > 1 ? `（${dice.join(' + ')}）` : '';
     this.gameState.addLog(`🎲 ${curPlayer.name} 掷出了 ${diceVal} 点${diceDetail}！`, 'gold');
 
@@ -1009,6 +1016,7 @@ class GameController {
                 return {id:plan.optionId,label:street.name,color:street.color,detail:`${plan.destinationName} · ${outcome}`};
               }),
               false,this.boardBuilder.tilePositions[curPlayer.currentTile]);
+        if (this.gameState.getCurrentPlayer() !== curPlayer) return;
         result = this.gameEngine.execute({
           type: 'ADVANCE_MOVE',
           playerId: curPlayer.id,
@@ -1019,6 +1027,7 @@ class GameController {
       }
       if (!result.success) break;
       await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
+      if (this.gameState.getCurrentPlayer() !== curPlayer) return;
       completedSteps++;
       if(!this.skipAIAnimations) this.audioManager.playBoardCue(curPlayer.vehicle==='WALK'?'step':'motor');
       if (!this.skipAIAnimations) this.presentationUI.showMoveProgress({
@@ -1052,6 +1061,7 @@ class GameController {
     const opensLandDecision = !curPlayer.isAI && ['PURCHASE', 'UPGRADE'].includes(landing.kind);
     if (!opensLandDecision && !this.skipAIAnimations) {
       await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
+      if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     }
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
@@ -1322,21 +1332,6 @@ class GameController {
     return result;
   }
 
-  triggerCardVFX(cardId) {
-    const card = this.gameState.getCardById ? this.gameState.getCardById(cardId) : null;
-    const cardImg = card?.cardImg || `/assets/card_${cardId.toLowerCase()}.svg`;
-    const cardName = card?.name || cardId;
-
-    const overlay = document.createElement('div');
-    overlay.className = 'vfx-card-overlay';
-    overlay.innerHTML = `
-      <img src="${cardImg}" class="vfx-card-img" alt="${cardName}">
-      <div class="vfx-spell-title">✨ 【${cardName}】 发动！</div>
-    `;
-    document.body.appendChild(overlay);
-    setTimeout(() => overlay.remove(), 1300);
-  }
-
   triggerExplosionVFX() {
     const flash = document.createElement('div');
     flash.className = 'vfx-explosion-flash';
@@ -1369,6 +1364,9 @@ class GameController {
       this.uiRenderer.renderHUD();
       return result;
     }
+    const item = this.gameState.inventoryManager.getDefinition(itemId);
+    void this.presentationUI.showImpact({ title: item.name, icon: item.icon, eyebrow: '道具发动',
+      detail: player.name, artClass: 'card-art-item', cardImg: createItemPresentation(item).cardImg });
     if (itemId === 'ROBOT_DOLL') this.boardBuilder.showClearingRobot(Number(targetId));
     this.audioManager.playCardSpell();
     this.syncBoardAssets(true);
@@ -1404,7 +1402,6 @@ class GameController {
     }
 
     const activate = async (value = null) => {
-      this.triggerCardVFX(cardId);
       if (['MISSILE', 'NUKES', 'MINE', 'DEMOLISH'].includes(cardId)) {
         this.triggerExplosionVFX();
       }
@@ -1464,8 +1461,9 @@ class GameController {
       return;
     }
 
+    const previousPlayer = this.gameState.getCurrentPlayer();
     setTimeout(async () => {
-      const previousPlayer = this.gameState.getCurrentPlayer();
+      if (this.gameState.getCurrentPlayer() !== previousPlayer) return;
       const transition = this.gameEngine.execute({
         type: 'END_TURN',
         playerId: this.gameState.currentPlayerIndex

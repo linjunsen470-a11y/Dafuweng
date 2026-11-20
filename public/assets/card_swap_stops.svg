@@ -1,1 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200"><rect width="160" height="200" rx="18" fill="#f7efdb"/><path d="M44 27 65 57 44 87 23 57Z" fill="#e9876c"/><path d="m116 65 21 30-21 30-21-30Z" fill="#49a89a"/><g fill="none" stroke="#466b5b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M44 87q-14 30 10 38t0 30M116 125q14 20-10 30M63 38h64l-12-12m12 12-12 12M97 168H33l12-12m-12 12 12 12"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" role="img">
+  <title>换站风筝</title>
+  <rect x="2" y="2" width="116" height="156" rx="14" fill="#9ae0ed" stroke="#367d96" stroke-width="4"/>
+  <rect x="7" y="7" width="106" height="146" rx="10" fill="#fff6da"/>
+  <path d="M8 73q48-80 104-24v58q-48 24-104 0z" fill="#9ae0ed" opacity=".55"/>
+  <circle cx="61" cy="73" r="36" fill="#fffdf0"/>
+  <path d="m10 8h33l-5 13H10z" fill="#367d96"/>
+  <text x="24" y="17" text-anchor="middle" fill="white" font-size="8" font-weight="bold" font-family="sans-serif">行动</text>
+  <path d="m95 23 2-5 2 5 5 2-5 2-2 5-2-5-5-2zM15 97l2-5 2 5 5 2-5 2-2 5-2-5-5-2z" fill="#367d96"/>
+  <g transform="translate(12 25) rotate(-6 50 50)" stroke="#69462f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 14h7v72h-7z" fill="#b48156"/><path d="M16 20h54l16 12-16 12H16z" fill="#96d8cf"/><path d="M79 47H32L16 59l16 12h47z" fill="#ffc270"/>
+  </g>
+  <circle cx="94" cy="106" r="10" fill="#fff3b6" stroke="#367d96" stroke-width="2"/>
+  <text x="94" y="110" text-anchor="middle" fill="#73472c" font-size="11" font-family="sans-serif">站</text>
+  <path d="M15 122h90" stroke="#367d96" stroke-dasharray="2 3"/>
+  <text x="60" y="141" text-anchor="middle" fill="#583827" font-size="12" font-weight="bold" font-family="sans-serif">换站风筝</text>
+</svg>
