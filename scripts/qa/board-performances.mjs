@@ -40,7 +40,13 @@ try {
     assert.ok(await page.evaluate(() => window.modelProgress), 'model progress reported');
     await press('#btn-toggle-audio');
     assert.equal(await page.evaluate(()=>localStorage.getItem('fortune-empire:audio-muted')),'1');
+    await page.reload();
+    await page.waitForFunction(()=>window.gameQA?.audioManager.muted === true);
+    await press('#start-game-btn');
+    await page.waitForFunction(()=>gameQA.pawnManager.pawns.length > 0 &&
+      gameQA.pawnManager.pawns.every(p=>p.skin) && document.getElementById('model-loading').hidden);
     await press('#btn-toggle-audio');
+    assert.equal(await page.evaluate(()=>gameQA.audioManager.muted), false);
     await page.evaluate(()=>{
       const g=window.gameQA;
       window.opening=g.gameState.createSnapshot();
@@ -161,9 +167,6 @@ try {
     for(const name of ['rent-flight','cartoon-blast','property-celebration','barrier-brake','direction-arrow']) assert.ok(result.names.includes(name),name);
     assert.deepEqual(result.leaked,[]);
     assert.equal(result.overflow,0);
-    await press('#btn-toggle-audio');
-    await page.reload();
-    await page.waitForFunction(()=>window.gameQA?.audioManager.muted === true);
     assert.deepEqual(errors,[]);
     console.log(width+'×'+height,JSON.stringify(result));
     await context.close();
