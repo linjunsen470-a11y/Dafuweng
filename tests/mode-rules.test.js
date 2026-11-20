@@ -20,6 +20,31 @@ function crossStart(state, engine, player) {
 }
 
 describe('distinct game mode rules', () => {
+  it('defaults standard play to elimination and preserves timed and custom round limits', () => {
+    const state = new GameState({ seed: 12 });
+    const configs = [{ profileIndex: 5 }, { profileIndex: 1 }];
+    state.setupGame(configs);
+    expect(state).toMatchObject({ winRule: 'ELIMINATION', maxRounds: 120 });
+    state.round = 40;
+    state.currentPlayerIndex = 1;
+    expect(state.nextTurn().gameOver).toBe(false);
+    expect(state.round).toBe(41);
+    state.players[0].isBankrupt = true;
+    expect(state.nextTurn().gameOver).toBe(true);
+    expect(state).toMatchObject({ winReason: 'LAST_PLAYER', winner: { id: 1 } });
+
+    for (const [winRule, maxRounds, reason] of [['ROUNDS', 40, 'NET_WORTH'], ['ELIMINATION', 120, 'SAFETY_LIMIT']]) {
+      state.setupGame(configs, 20000, { winRule });
+      state.round = maxRounds;
+      expect(state.nextTurn().gameOver).toBe(false);
+      state.players[1].cash = 90000;
+      expect(state.nextTurn().gameOver).toBe(true);
+      expect(state).toMatchObject({ round: maxRounds, winReason: reason, winner: { id: 1 } });
+    }
+    state.setupGame(configs, undefined, { winRule: 'ROUNDS', maxRounds: 12 });
+    expect(state.matchConfig.options).toMatchObject({ winRule: 'ROUNDS', maxRounds: 12 });
+  });
+
   it('makes quick mode a high-income 24-round economy instead of only shortening the clock', () => {
     const { state, engine, player } = setup('QUICK');
     expect(state.maxRounds).toBe(24);

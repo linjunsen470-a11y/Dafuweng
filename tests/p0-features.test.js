@@ -19,11 +19,11 @@ describe('P0 Features Validation', () => {
     state.round = 1;
     expect(state.priceIndex).toBe(1.0);
     state.round = 6;
-    expect(state.priceIndex).toBe(1.2);
+    expect(state.priceIndex).toBe(1);
     state.round = 11;
-    expect(state.priceIndex).toBe(1.4);
+    expect(state.priceIndex).toBe(1.5);
     state.round = 21;
-    expect(state.priceIndex).toBe(1.8);
+    expect(state.priceIndex).toBe(2.2);
   });
 
   it('supports five built levels above a vacant lot', () => {

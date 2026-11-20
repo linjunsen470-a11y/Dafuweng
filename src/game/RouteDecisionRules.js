@@ -1,4 +1,6 @@
-import {companyVisitFee} from './CompanyRules.js';
+import { propertyActionCost } from './EconomyCycleRules.js';
+import { getTileDescription } from './ModeRules.js';
+import { companyVisitFee } from './CompanyRules.js';
 import { propertyLimit } from './GameRules.js';
 import { isPropertyTile } from './BoardData.js';
 
@@ -114,7 +116,7 @@ function analyzePath(state, player, path) {
   let outcomeIcon = destination?.icon || '📍';
   if (isPropertyTile(destination)) {
     if (property?.owner === null) {
-      purchasePrice = Number(destination.price || 0);
+      purchasePrice = propertyActionCost(state, player, destinationId);
       const groupOwned = state.mapDefinition.tiles.filter(tile => tile.group === destination.group && state.propertyManager.getProperty(tile.id)?.owner === player.id).length;
       const affordable = player.cash >= purchasePrice;
       score += affordable ? 90 + groupOwned * 28 : 16;
@@ -136,7 +138,7 @@ function analyzePath(state, player, path) {
     }
   } else {
     score += FACILITY_VALUES[destination?.type] || 0;
-    outcome = destination?.desc || destination?.name || '平稳落地';
+    outcome = getTileDescription(state, player, destination) || destination?.name || '平稳落地';
     const company = destination?.companyId && state.companyManager?.get(destination.companyId);
     if (company) {
       const fee = companyVisitFee(company, player, state.priceIndex);

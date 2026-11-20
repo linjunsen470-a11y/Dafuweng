@@ -1,5 +1,6 @@
 import { cityPortrait } from './CityPortrait.js';
 import { getGodRule } from '../game/GodRules.js';
+import { formatGameDate } from '../game/EconomyCycleRules.js';
 
 export class UIRenderer {
   constructor(gameState) {
@@ -10,6 +11,7 @@ export class UIRenderer {
   initDOMReferences() {
     this.hudLayer = document.getElementById('hud-layer');
     this.setupScreen = document.getElementById('setup-screen');
+    this.economyStatus = document.getElementById('economy-status');
     this.roundCount = document.getElementById('round-count');
     this.mapNameLabel = document.getElementById('map-name-label');
     this.newsTickerText = document.getElementById('news-ticker-text');
@@ -35,6 +37,7 @@ export class UIRenderer {
     this.hudLayer.classList.remove('hidden');
 
     this.roundCount.textContent = this.gameState.round;
+    this.economyStatus.textContent = `${formatGameDate(this.gameState.round, this.gameState.calendar.startDate)} · 物价 ${this.gameState.priceIndex.toFixed(1)}x`;
     if (this.mapNameLabel) this.mapNameLabel.textContent = this.gameState.mapDefinition?.name || '财富地图';
     if (this.newsTickerText) {
       const latestNews = this.gameState.newsHistory?.[0];

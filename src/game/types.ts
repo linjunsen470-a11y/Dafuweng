@@ -109,11 +109,14 @@ export interface CharacterDefinition {
   color: string;
 }
 
+export type WinRule = 'ELIMINATION' | 'ROUNDS';
+
 export interface GameModeDefinition {
   id: 'STANDARD' | 'QUICK' | 'TEAM' | 'CHALLENGE' | 'HEAT';
   name: string;
   maxRounds: number;
   teams?: boolean;
+  winRule?: WinRule;
   description: string;
 }
 
@@ -217,7 +220,7 @@ export interface GameSnapshotV1 {
 export interface GameSnapshotV2 extends Omit<GameSnapshotV1, 'version'> {
   version: 2;
   winnerId: PlayerId | null;
-  winReason: 'LAST_PLAYER' | 'NET_WORTH' | 'LAST_TEAM' | 'TEAM_NET_WORTH' | 'LORD_DEFEATED' | 'LORD_VICTORY' | null;
+  winReason: 'LAST_PLAYER' | 'SAFETY_LIMIT' | 'NET_WORTH' | 'LAST_TEAM' | 'TEAM_NET_WORTH' | 'LORD_DEFEATED' | 'LORD_VICTORY' | null;
 }
 
 export interface GameSnapshotV3 extends Omit<GameSnapshotV2, 'version'> {
@@ -282,6 +285,8 @@ export interface GameSnapshotV10 extends Omit<GameSnapshotV9, 'version'> {
 
 export interface GameSnapshotV11 extends Omit<GameSnapshotV10, 'version'> {
   version: 11;
+  winRule?: WinRule;
+  calendar?: { startDate: string };
   matchStatistics: Record<string, unknown>;
   matchConfig: Record<string, unknown> | null;
 }

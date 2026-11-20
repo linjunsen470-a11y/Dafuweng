@@ -11,7 +11,7 @@ describe('GameState rules', () => {
 
   beforeEach(() => {
     state = new GameState({ seed: 1234, maxRounds: 2 });
-    state.setupGame(configs, 10000);
+    state.setupGame(configs, 10000, { winRule: 'ROUNDS' });
   });
 
   it('purchases an owned empty lot at level zero', () => {

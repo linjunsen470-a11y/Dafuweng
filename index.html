@@ -70,7 +70,7 @@
         <h3><span class="icon">💰</span> 初始对局资金</h3>
         <div class="cash-options">
           <button class="cash-btn" data-cash="10000">$10,000 (快速对局)</button>
-          <button class="cash-btn active" data-cash="20000">$20,000 (经典对局)</button>
+          <button class="cash-btn active" data-cash="15000">$15,000 (经典对局)</button>
           <button class="cash-btn" data-cash="50000">$50,000 (富豪大决战)</button>
         </div>
       </div>
@@ -85,7 +85,8 @@
         </label>
         <label>对局模式
           <select id="game-mode">
-            <option value="STANDARD" selected>标准局 · 40 轮</option>
+            <option value="STANDARD" selected>标准局 · 经典淘汰制</option>
+            <option value="STANDARD_ROUNDS" data-mode="STANDARD" data-win-rule="ROUNDS">标准局 · 限时 40 轮</option>
             <option value="QUICK">快速局 · 24 轮</option>
             <option value="TEAM">组队战 · 2 对 2</option>
             <option value="CHALLENGE">领主挑战 · 3 对 1</option>
@@ -136,7 +137,7 @@
         <span class="brand-seal" aria-hidden="true">富</span>
         <div class="world-status-copy">
           <strong id="map-name-label">山海都市岛</strong>
-          <span>财富竞逐进行中</span>
+          <small id="economy-status"></small>
         </div>
         <div class="round-badge">
           <span class="label">回合</span>

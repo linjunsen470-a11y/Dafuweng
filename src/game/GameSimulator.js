@@ -12,7 +12,8 @@ export class GameSimulator {
   constructor({
     seed = 1,
     mapId = 'city-loop',
-    maxRounds = 40,
+    maxRounds,
+    winRule,
     profileIndices = [0, 1, 2, 3],
     aiDifficulty = 'HARD',
     mode = 'STANDARD'
@@ -24,7 +25,7 @@ export class GameSimulator {
       isAI: true,
       aiDifficulty,
       aiStrategy: ['ECONOMY', 'PROPERTY', 'CARD', 'ATTACK'][index % 4]
-    })), 20000, { mapId, maxRounds, mode, teams: mode === 'TEAM' });
+    })), undefined, { mapId, maxRounds, winRule, mode, teams: mode === 'TEAM' });
     this.engine = new GameEngine(this.state);
   }
 
@@ -38,7 +39,7 @@ export class GameSimulator {
       }
       turns++;
     }
-    if (this.state.phase !== 'GAME_OVER') this.state.checkWinCondition(true);
+    if (this.state.phase !== 'GAME_OVER') throw new Error(`Simulation stalled at round ${this.state.round} in ${this.state.phase}`);
     return {
       turns,
       round: this.state.round,

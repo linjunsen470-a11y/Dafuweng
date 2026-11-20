@@ -1,7 +1,8 @@
 import { CARD_CAPACITY } from './InventoryManager.js';
+import { GAME_MODES } from './ContentRegistry.js';
 
 export const MODE_PROFILES = {
-  STANDARD: { id: 'STANDARD', name: '标准局', icon: '🏙️', summary: '完整财富经营对局', rules: ['40 轮标准赛程', '地产、股票、公司与市场全部开放', '最后存活或总资产最高者获胜'] },
+  STANDARD: { id: 'STANDARD', name: '标准局', icon: '🏙️', summary: '经典淘汰制', rules: ['最后一名未破产玩家获胜', '每 10 天物价跃升一档', '到安全上限时按总资产结算'] },
   QUICK: { id: 'QUICK', name: '快速局', icon: '⚡', summary: '高周转短赛程竞速', rules: ['24 轮决胜', '经过起点收入提高 50%', '购地与建造费用降低 10%', '每 4 轮进行经济结算'] },
   TEAM: { id: 'TEAM', name: '组队战', icon: '🤝', summary: '2 对 2 协作经营', rules: ['队友地产免租并可协助升级', '经过起点时队友获得 25% 团队分红', '按队伍总资产和存活情况决胜'] },
   CHALLENGE: { id: 'CHALLENGE', name: '领主挑战', icon: '👑', summary: '三名挑战者对抗强化领主', rules: ['领主拥有强化资金与卡片', '领主经过起点额外获得 25%', '每个经济周期领主获得增援', '击败领主或比较双方总资产'] },
@@ -16,15 +17,24 @@ export function getModeCycleRounds(mode) {
   return mode === 'QUICK' ? 4 : 5;
 }
 
-export function getModeStartBonus(state, player, baseAmount) {
+export function getModeStartBonus(state, player, baseAmount = state.mapDefinition.passBonus ?? 2000) {
+  if (state.gameMode === 'STANDARD') return Math.round(baseAmount * 0.65);
   if (state.gameMode === 'QUICK') return Math.round(baseAmount * 1.5);
   if (state.gameMode === 'HEAT') return Math.round(baseAmount * 0.5);
   if (state.gameMode === 'CHALLENGE' && player.isLord) return Math.round(baseAmount * 1.25);
   return baseAmount;
 }
 
-export function getModePropertyCostMultiplier(mode) {
-  return mode === 'QUICK' ? 0.9 : 1;
+export function getTileDescription(state, player, tile) {
+  if (tile?.type === 'START') return `经过起点领取 $${getModeStartBonus(state, player).toLocaleString()} 补贴`;
+  return tile?.desc;
+}
+
+export function getMatchRules(mode, winRule, maxRounds) {
+  const definition = GAME_MODES.find(item => item.id === mode) || GAME_MODES[0];
+  const rule = winRule === 'ROUNDS' ? 'ROUNDS' : definition.winRule ?? 'ROUNDS';
+  const limit = mode === 'STANDARD' && rule === 'ROUNDS' ? 40 : definition.maxRounds;
+  return { winRule: rule, maxRounds: Number.isSafeInteger(maxRounds) && maxRounds > 0 ? maxRounds : limit };
 }
 
 export function applyModeCycleEffects(state) {
@@ -46,7 +56,10 @@ export function applyModeCycleEffects(state) {
 }
 
 export function getModeOverview(state) {
-  const profile = getModeProfile(state.gameMode);
+  let profile = getModeProfile(state.gameMode);
+  if (state.gameMode === 'STANDARD' && state.winRule === 'ROUNDS') {
+    profile = { ...profile, summary: '限时标准局', rules: [`第 ${state.maxRounds} 轮结束按总资产决胜`, '仅剩一人时提前获胜'] };
+  }
   let standings;
   if (state.gameMode === 'TEAM') {
     const teams = new Map();

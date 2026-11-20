@@ -1,6 +1,7 @@
 const money = value => Math.round(Number(value) || 0);
 
 export const WIN_REASON_LABELS = {
+  SAFETY_LIMIT: '达到淘汰赛安全上限，按总资产决胜',
   LAST_PLAYER: '其他对手均已破产', NET_WORTH: '达到轮次上限，按总资产决胜',
   LAST_TEAM: '其他队伍均已退出竞争', TEAM_NET_WORTH: '达到轮次上限，按队伍总资产决胜',
   LORD_DEFEATED: '领主破产，挑战者联盟获胜', LORD_VICTORY: '领主击败全部挑战者'

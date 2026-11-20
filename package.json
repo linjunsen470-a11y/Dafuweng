@@ -20,8 +20,7 @@
   },
   "dependencies": {
     "canvas-confetti": "^1.9.2",
-    "three": "^0.160.1",
-    "three-modern": "npm:three@^0.187.0"
+    "three": "^0.160.1"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",

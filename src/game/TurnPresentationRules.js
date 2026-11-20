@@ -1,3 +1,5 @@
+import { getTileDescription } from './ModeRules.js';
+import { propertyActionCost } from './EconomyCycleRules.js';
 import { isPropertyTile } from './BoardData.js';
 
 const money = value => `$${Math.max(0, Math.round(Number(value) || 0)).toLocaleString()}`;
@@ -39,11 +41,11 @@ export function getArrivalBrief(state, player, tileId, landing = null) {
     icon: tile?.icon || (isPropertyTile(tile) ? '🏙️' : '📍'),
     eyebrow: 'DESTINATION REACHED',
     title: '抵达目的地',
-    detail: tile?.desc || '本次移动已经完成',
+    detail: getTileDescription(state, player, tile) || '本次移动已经完成',
     tone: 'neutral',
     badge: tile?.type || 'ROAD'
   };
-  if (kind === 'PURCHASE') return { ...base, icon: '🏡', title: '发现可投资地产', detail: `${money(tile?.price)} · ${tile?.group || '城市地块'} · 等待投资决策`, tone: 'opportunity', badge: 'LAND FOR SALE' };
+  if (kind === 'PURCHASE') return { ...base, icon: '🏡', title: '发现可投资地产', detail: `${money(propertyActionCost(state, player, tileId))} · ${tile?.group || '城市地块'} · 等待投资决策`, tone: 'opportunity', badge: 'LAND FOR SALE' };
   if (kind === 'UPGRADE') return { ...base, icon: '🏗️', title: '返回自有地产', detail: `${base.tileName} · 当前 LV ${property?.level || 0} · 可继续升级`, tone: 'owned', badge: 'YOUR PROPERTY' };
   if (kind === 'OWN_MAX') return { ...base, icon: '🏙️', title: '视察顶级资产', detail: `${base.tileName} · 建筑已达最高等级`, tone: 'owned', badge: 'MAX LEVEL' };
   if (kind === 'LAB') return { ...base, icon: '🧪', title: '抵达未来研究所', detail: '选择一项科技道具展开研发', tone: 'special', badge: 'RESEARCH LAB' };

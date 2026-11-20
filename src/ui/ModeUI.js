@@ -1,3 +1,4 @@
+import { daysUntilSettlement } from '../game/EconomyCycleRules.js';
 import { getModeOverview } from '../game/ModeRules.js';
 
 const escapeHTML = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
@@ -32,6 +33,6 @@ export class ModeUI {
         <div class="mode-standing-list">${overview.standings.map((entry, index) => `<article class="mode-standing-row ${index === 0 ? 'leader' : ''}">
           <b>${index + 1}</b><div><strong>${escapeHTML(entry.name)}</strong><small>${escapeHTML(entry.members.join('、'))} · ${entry.active} 名存活</small>
             <div class="mode-asset-progress"><i style="width:${Math.round(entry.assets / maxAssets * 100)}%"></i></div></div><span>$${entry.assets.toLocaleString()}</span></article>`).join('')}</div></section>
-      <footer class="mode-cycle-note">经济周期：每 ${this.state.economicCycle.roundsPerPeriod} 轮结算 · 下一次结算还剩 ${this.state.economicCycle.roundsPerPeriod - ((this.state.round - 1) % this.state.economicCycle.roundsPerPeriod)} 轮</footer>`;
+      <footer class="mode-cycle-note">经济周期：每 ${this.state.economicCycle.roundsPerPeriod} 轮结算 · 下一次结算还剩 ${daysUntilSettlement(this.state.round, this.state.economicCycle.roundsPerPeriod)} 轮</footer>`;
   }
 }

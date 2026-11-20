@@ -10,13 +10,14 @@ import { InventoryManager } from './InventoryManager.js';
 import { GODS, ITEMS } from './ContentRegistry.js';
 import { normalizeAuctionState } from './AuctionRules.js';
 import { expireMarketOffers, normalizeMarketOffer } from './MarketRules.js';
-import { applyModeCycleEffects, getModeCycleRounds } from './ModeRules.js';
+import { applyModeCycleEffects, getMatchRules, getModeCycleRounds } from './ModeRules.js';
 import { processQuestDeadlines } from './QuestRules.js';
 import { attachGod, tickGodAtTurnStart } from './GodRules.js';
 import { normalizeMatchStatistics } from './MatchStatistics.js';
 import { createMatchReport } from './MatchReportRules.js';
 import { createEconomicCycleReport } from './EconomicReportRules.js';
 import { BANK_INTEREST_RATE } from './BankRules.js';
+import { CALENDAR_START, DEFAULT_INITIAL_CASH, calculatePriceIndex } from './EconomyCycleRules.js';
 
 export const GamePhase = {
   SETUP: 'SETUP',
@@ -37,10 +38,12 @@ export const GamePhase = {
 };
 
 export class GameState {
-  constructor({ seed = Date.now(), maxRounds = 40 } = {}) {
+  constructor({ seed = Date.now(), maxRounds } = {}) {
     this.phase = GamePhase.SETUP;
     this.round = 1;
-    this.maxRounds = maxRounds;
+    this.configuredMaxRounds = maxRounds;
+    Object.assign(this, getMatchRules('STANDARD', undefined, maxRounds));
+    this.calendar = { startDate: CALENDAR_START };
     this.currentPlayerIndex = 0;
     this.players = [];
     this.propertyManager = new PropertyManager();
@@ -96,9 +99,9 @@ export class GameState {
     return this.mapRuntime.getTile(tileId);
   }
 
-  setupGame(playerConfigs, initialCash = 20000, options = {}) {
+  setupGame(playerConfigs, initialCash = DEFAULT_INITIAL_CASH, options = {}) {
     this.round = 1;
-    this.maxRounds = options.maxRounds || this.maxRounds || 40;
+    this.calendar = { startDate: CALENDAR_START };
     this.currentPlayerIndex = 0;
     this.phase = GamePhase.PRE_ROLL_ACTION;
     this.setMap(options.mapId || this.mapId || 'city-loop');
@@ -114,6 +117,7 @@ export class GameState {
     this.pendingDebt = null;
     this.phaseBeforePause = null;
     this.gameMode = options.mode || 'STANDARD';
+    Object.assign(this, getMatchRules(this.gameMode, options.winRule, options.maxRounds ?? this.configuredMaxRounds));
     this.lottery = { pot: 2000, tickets: [], lastNumber: null };
     this.mechanismState = { activeRoute: 0, locked: false };
     this.roadEntities = [];
@@ -198,7 +202,7 @@ export class GameState {
       };
     });
 
-    this.matchConfig = structuredClone({ playerConfigs, initialCash, options: { ...options, mapId: this.mapId, mode: this.gameMode, maxRounds: this.maxRounds } });
+    this.matchConfig = structuredClone({ playerConfigs, initialCash, options: { ...options, mapId: this.mapId, mode: this.gameMode, winRule: this.winRule, maxRounds: this.maxRounds } });
     this.matchStatistics = normalizeMatchStatistics(null, this.players);
 
     if (this.gameMode === 'CHALLENGE' && this.players.length > 1) {
@@ -302,10 +306,9 @@ export class GameState {
 
   nextTurn() {
     this.phase = GamePhase.TURN_END;
-    let attempts = 0;
-    // A simultaneous hospital/hibernate wave is not a victory condition. Allow
-    // enough full table rotations for the longest production status to expire.
-    while (attempts < this.players.length * 12) {
+    if (this.checkWinCondition()) return { gameOver: true, skipped: [] };
+    // Skipped turns still advance the calendar and the match limit.
+    while (true) {
       const previous = this.currentPlayerIndex;
       let nextIdx = (previous + 1) % this.players.length;
       while (this.players[nextIdx].isBankrupt && nextIdx !== previous) {
@@ -324,37 +327,33 @@ export class GameState {
 
       const cur = this.getCurrentPlayer();
       this.tickPlayerStatuses(cur);
+      if (this.phase === GamePhase.GAME_OVER) return { gameOver: true, skipped: [] };
+      if (cur.isBankrupt) continue;
 
       if (cur.jailTurns > 0) {
         cur.jailTurns--;
         this.addLog(`🚔 ${cur.name} 在监狱服刑，剩余 ${cur.jailTurns} 回合，本回合跳过。`, 'danger');
-        attempts++;
         continue;
       }
       if (cur.hospitalTurns > 0) {
         cur.hospitalTurns--;
         this.addLog(`🏥 ${cur.name} 在医院疗养，剩余 ${cur.hospitalTurns} 回合，本回合跳过。`, 'danger');
-        attempts++;
         continue;
       }
       if (cur.hotelTurns > 0) {
         cur.hotelTurns--;
         this.addLog(`🏨 ${cur.name} 正在旅馆入住，剩余 ${cur.hotelTurns} 回合，本回合跳过。`, 'accent');
-        attempts++;
         continue;
       }
       if (cur.hibernateTurns > 0) {
         cur.hibernateTurns--;
         this.addLog(`❄️ ${cur.name} 仍在冬眠，剩余 ${cur.hibernateTurns} 回合，本回合跳过。`, 'danger');
-        attempts++;
         continue;
       }
       this.phase = GamePhase.PRE_ROLL_ACTION;
       this.captureTurnCheckpoint();
       return { gameOver: false, currentPlayer: cur };
     }
-    this.checkWinCondition(true);
-    return { gameOver: this.phase === GamePhase.GAME_OVER };
   }
 
   tickPlayerStatuses(cur) {
@@ -393,7 +392,7 @@ export class GameState {
   }
 
   get priceIndex() {
-    return Number((1.0 + Math.floor((this.round - 1) / 5) * 0.2).toFixed(1));
+    return calculatePriceIndex(this.round, this.gameMode);
   }
 
   onRoundEnd() {
@@ -728,8 +727,10 @@ export class GameState {
     if (activePlayers.length === 1 || force || this.round > this.maxRounds) {
       this.phase = GamePhase.GAME_OVER;
       this.winner = [...activePlayers].sort((a, b) => this.calculateNetWorth(b) - this.calculateNetWorth(a) || b.cash - a.cash || a.id - b.id)[0];
-      this.winReason = activePlayers.length === 1 ? 'LAST_PLAYER' : 'NET_WORTH';
-      this.addLog(`👑 ${this.winner.name} 以总资产 $${this.calculateNetWorth(this.winner).toLocaleString()} 获得胜利！`, 'gold');
+      this.winReason = activePlayers.length === 1 ? 'LAST_PLAYER'
+        : this.winRule === 'ELIMINATION' ? 'SAFETY_LIMIT' : 'NET_WORTH';
+      if (this.winReason === 'LAST_PLAYER') this.addLog(`👑 ${this.winner.name} 成为最后一名未破产玩家，获得胜利！`, 'gold');
+      else this.addLog(`👑 ${this.winner.name} 以总资产 $${this.calculateNetWorth(this.winner).toLocaleString()} 获得胜利！`, 'gold');
       return true;
     }
     return false;
@@ -747,6 +748,8 @@ export class GameState {
       round: this.round,
       maxRounds: this.maxRounds,
       gameMode: this.gameMode,
+      winRule: this.winRule,
+      calendar: { ...this.calendar },
       mapId: this.mapId,
       currentPlayerIndex: this.currentPlayerIndex,
       players: structuredClone(this.players),
@@ -788,8 +791,9 @@ export class GameState {
     this.pendingDomainEvents = [];
     this.phase = snapshot.phase;
     this.round = snapshot.round;
-    this.maxRounds = snapshot.maxRounds;
     this.gameMode = snapshot.gameMode || 'STANDARD';
+    Object.assign(this, getMatchRules(this.gameMode, snapshot.winRule ?? 'ROUNDS', snapshot.maxRounds));
+    this.calendar = { startDate: CALENDAR_START, ...snapshot.calendar };
     this.setMap(snapshot.mapId || 'city-loop');
     this.currentPlayerIndex = snapshot.currentPlayerIndex;
     this.players = structuredClone(snapshot.players).map(player => ({
@@ -833,7 +837,7 @@ export class GameState {
     this.phaseBeforePause = snapshot.phaseBeforePause || null;
     this.lottery = structuredClone(snapshot.lottery || { pot: 2000, tickets: [], lastNumber: null });
     this.boardGods = structuredClone(snapshot.boardGods || []);
-    if (!this.boardGods.length) this.initializeBoardGods();
+    if (!snapshot.boardGods) this.initializeBoardGods();
     this.mechanismState = structuredClone(snapshot.mechanismState || { activeRoute: 0, locked: false });
     this.mechanismState.locked ??= Boolean(this.mechanismState.activeRoute);
     this.winningTeamId = snapshot.winningTeamId ?? null;
@@ -862,6 +866,7 @@ export class GameState {
       initialCash: 20000,
       options: { maxRounds: this.maxRounds, mapId: this.mapId, mode: this.gameMode, teams: this.gameMode === 'TEAM', initialDeposit: 0 }
     });
+    this.matchConfig.options.winRule = this.winRule;
     if (this.mechanismState.locked) {
       this.mapDefinition.tiles.filter(tile => (tile.next || []).length > 1).forEach(tile => {
         this.mapRuntime.setNextOptions(tile.id, [tile.next[this.mechanismState.activeRoute % tile.next.length]]);

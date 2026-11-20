@@ -3,7 +3,7 @@
 /** Central, data-driven catalogue for all production game content. */
 
 export const GAME_MODES = [
-  { id: 'STANDARD', name: '标准局', maxRounds: 40, description: '完整经济与策略规则' },
+  { id: 'STANDARD', name: '标准局', winRule: 'ELIMINATION', maxRounds: 120, description: '经典淘汰制，最后存活者胜' },
   { id: 'QUICK', name: '快速局', maxRounds: 24, description: '更高收入与更短轮次' },
   { id: 'TEAM', name: '组队战', maxRounds: 40, teams: true, description: '2 对 2 共享胜利目标' },
   { id: 'CHALLENGE', name: '领主挑战', maxRounds: 40, description: '挑战强化领主' },

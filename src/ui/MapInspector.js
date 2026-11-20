@@ -1,3 +1,4 @@
+import { getTileDescription } from '../game/ModeRules.js';
 import * as THREE from 'three';
 import {isPropertyTile} from '../game/BoardData.js';
 import {rentAbility} from './CharacterAbilityFeedback.js';
@@ -27,7 +28,7 @@ export function describeMapTile(state, engine, id) {
       }
       lines.push(owner.id===player.id?'自己停留不付租金':'牌价含地产及地主加成；最终按落地时的免租、神明、技能与保险结算。');
     }else lines.push(`当前默认购价 ${money(engine.getPropertyActionCost(player,id,'BUY'))}`);
-  }else lines.push(tile.desc||tile.name);
+  }else lines.push(getTileDescription(state, player, tile) || tile.name);
   const road=state.roadEntities?.find(e=>e.tileId===id && e.data?.attachedPlayerId == null);
   if(property?.hasObstacle||road?.type==='BARRIER')lines.push('🚧 路障：进入即截停，自己也会触发');
   if(property?.hasMine||road?.type==='MINE')lines.push('💥 地雷：进入有住院风险');

@@ -25,6 +25,11 @@ for (const [mapIndex, map] of MAP_DEFINITIONS.entries()) {
         throw new Error(`${map.id}/${mode.id}/seed ${seed} did not finish`);
       }
 
+      for (const { player, assets } of result.rankings) {
+        if (Object.values(assets).some(value => !Number.isFinite(value))) {
+          throw new Error(`${map.id}/${mode.id}/seed ${seed} produced a non-finite asset for P${player.id}`);
+        }
+      }
       const players = result.snapshot.players;
       let activeSurvivors = 0;
       for (const player of players) {
@@ -38,6 +43,9 @@ for (const [mapIndex, map] of MAP_DEFINITIONS.entries()) {
         netWorthSum += Math.max(0, player.cash) + Math.max(0, player.deposit);
       }
 
+      if (mode.id === 'STANDARD' && (result.snapshot.winReason === 'LAST_PLAYER') !== (activeSurvivors === 1)) {
+        throw new Error(`${map.id}/seed ${seed} reported an inconsistent elimination result`);
+      }
       if (activeSurvivors <= 1 || result.round < mode.maxRounds) {
         eliminationWins++;
       }

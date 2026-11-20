@@ -1,3 +1,4 @@
+import { propertyActionCost } from './EconomyCycleRules.js';
 import { CardRules } from './CardRules.js';
 import { SaveManager } from './SaveManager.js';
 import { TileType, isPropertyTile } from './BoardData.js';
@@ -15,7 +16,7 @@ import { createAuctionState, getMinimumAuctionBid, normalizeAuctionState } from 
 import { estimateStockSaleRevenue, getSuggestedStockShares } from './DebtRules.js';
 import { MARKET_MAX_RATE, MARKET_MIN_RATE, MARKET_OFFER_DURATION, MARKET_OFFER_LIMIT, canReceiveMarketAsset, getMarketAsset, normalizeMarketOffer, recordMarketHistory, validateMarketOffer } from './MarketRules.js';
 import { companyVisitFee, hasChairmanPerk } from './CompanyRules.js';
-import { getModePropertyCostMultiplier, getModeStartBonus } from './ModeRules.js';
+import { getModeStartBonus } from './ModeRules.js';
 import { getCardShopOffer, isOfferedAtShop } from './ShopRules.js';
 import { applyCommercialFacilityVisit } from './CommercialFacilityRules.js';
 import { advanceQuestsForEvent, startQuest } from './QuestRules.js';
@@ -379,7 +380,7 @@ export class GameEngine {
     const events = [{ type: 'PLAYER_STEPPED', playerId: player.id, tileId: selected, remainingSteps: pending.remainingSteps }];
 
     if (selected === this.state.mapDefinition.spawnTile) {
-      const amount = getModeStartBonus(this.state, player, this.state.mapDefinition.passBonus ?? 2000);
+      const amount = getModeStartBonus(this.state, player);
       player.cash += amount;
       events.push({ type: 'START_BONUS_GRANTED', playerId: player.id, amount });
       if (this.state.gameMode === 'TEAM') {
@@ -640,18 +641,7 @@ export class GameEngine {
   }
 
   getPropertyActionCost(player, tileId, action = 'BUY') {
-    const tile = this.state.getTile(tileId);
-    if (!tile || !player) return 0;
-    const property = this.state.propertyManager.getProperty(tileId);
-    const building = BUILDINGS.find(definition => definition.id === property?.buildingType);
-    let cost = action === 'UPGRADE'
-      ? Math.round((tile.buildCost || 0) * (building?.buildMultiplier || 1) * getModePropertyCostMultiplier(this.state.gameMode))
-      : Math.round((tile.price || 0) * getModePropertyCostMultiplier(this.state.gameMode));
-    if (player.godType === 'LUCK') return 0;
-    if (player.skillName === '商业奇才') cost = Math.round(cost * 0.85);
-    else if (action === 'UPGRADE' && player.skillName === '商业神童') cost = Math.round(cost * 0.75);
-    if (hasChairmanPerk(this.state, player.id, 'BUILD')) cost = Math.round(cost * 0.85);
-    return cost;
+    return propertyActionCost(this.state, player, tileId, action);
   }
 
   settleRent(player, tileId) {

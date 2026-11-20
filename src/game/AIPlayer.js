@@ -2,31 +2,33 @@ import { cardManager } from './CardManager.js';
 import { getMagicPreview } from './MagicRules.js';
 import { residentialRent, propertyLimit } from './GameRules.js';
 import { chooseRouteByPlan } from './RouteDecisionRules.js';
+import { propertyActionCost } from './EconomyCycleRules.js';
 
 export class AIPlayer {
   static evaluateLandPurchase(aiPlayer, landData, gameState = null) {
     const reserveByDifficulty = { EASY: 2500, NORMAL: 1200, HARD: 500 };
     const safetyReserve = reserveByDifficulty[aiPlayer.aiDifficulty] ?? 1200;
     const strategyReserve = aiPlayer.aiStrategy === 'PROPERTY' ? Math.round(safetyReserve * 0.5) : safetyReserve;
-    if (aiPlayer.cash - landData.price < strategyReserve) return false;
+    const price = gameState ? propertyActionCost(gameState, aiPlayer, landData.id) : landData.price;
+    if (aiPlayer.cash - price < strategyReserve) return false;
     if (!gameState) return true;
     const groupTiles = gameState.mapDefinition.tiles.filter(tile => tile.group && tile.group === landData.group);
     const ownedInGroup = groupTiles.filter(tile => gameState.propertyManager.getProperty(tile.id)?.owner === aiPlayer.id).length;
     const groupPressure = groupTiles.length ? ownedInGroup / groupTiles.length : 0;
     const baseRent = landData.tolls?.[0] || 0;
-    const valueScore = baseRent / Math.max(1, landData.price);
-    return landData.large || groupPressure >= 0.34 || valueScore >= 0.13 || aiPlayer.cash > landData.price * 2.2;
+    const valueScore = baseRent * gameState.priceIndex / Math.max(1, price);
+    return landData.large || groupPressure >= 0.34 || valueScore >= 0.13 || aiPlayer.cash > price * 2.2;
   }
 
   static evaluateLandUpgrade(aiPlayer, landData, currentLevel, gameState = null) {
     if (currentLevel >= propertyLimit(gameState?.propertyManager?.getProperty(landData.id)?.buildingType, gameState?.mapId)) return false;
-    const upgradeCost = landData.buildCost || 600;
+    const upgradeCost = gameState ? propertyActionCost(gameState, aiPlayer, landData.id, 'UPGRADE') : landData.buildCost || 600;
     const reserveByDifficulty = { EASY: 3000, NORMAL: 1800, HARD: 800 };
     const safetyReserve = reserveByDifficulty[aiPlayer.aiDifficulty] ?? 1800;
     if (aiPlayer.cash - upgradeCost < safetyReserve) return false;
     const currentRent = residentialRent(landData, currentLevel);
     const nextRent = residentialRent(landData, currentLevel + 1);
-    const roi = (nextRent - currentRent) / Math.max(1, upgradeCost);
+    const roi = (nextRent - currentRent) * (gameState?.priceIndex ?? 1) / Math.max(1, upgradeCost);
     const opponents = gameState?.players?.filter(player => !player.isBankrupt && player.id !== aiPlayer.id).length || 1;
     return landData.large || (aiPlayer.aiStrategy === 'PROPERTY' && roi * opponents >= 0.22) || roi * opponents >= 0.45 || aiPlayer.cash > upgradeCost * 3;
   }

@@ -101,7 +101,7 @@ class GameController {
     this.researchLabUI = new ResearchLabUI(this.audioManager);
     this.mechanismUI = new MechanismUI(this.audioManager);
 
-    this.selectedInitialCash = 20000;
+    this.selectedInitialCash = Number(document.querySelector('.cash-btn.active').dataset.cash);
     this.isProcessingAction = false;
     this.syncedAssetRevision = -1;
     this.humanSpeed = 1;
@@ -429,11 +429,12 @@ class GameController {
       });
     });
 
-    const mode = document.getElementById('game-mode').value;
+    const [selection] = document.getElementById('game-mode').selectedOptions;
+    const mode = selection.dataset.mode || selection.value;
     this.gameState.setupGame(playerConfigs, this.selectedInitialCash, {
-      maxRounds: mode === 'QUICK' ? 24 : mode === 'HEAT' ? 30 : 40,
       mapId: document.getElementById('map-select').value,
       mode,
+      winRule: selection.dataset.winRule,
       teams: mode === 'TEAM',
       initialDeposit: Number(document.getElementById('initial-deposit').value || 0)
     });
