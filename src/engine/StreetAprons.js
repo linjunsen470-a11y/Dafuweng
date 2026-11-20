@@ -19,7 +19,7 @@ export function createStreetAprons(map){
     const shore=new THREE.Shape();shore.moveTo(-35,-7);
     shore.bezierCurveTo(-39,-18,-25,-24,-17,-24);shore.bezierCurveTo(-7,-23,-2,-33,11,-29);
     shore.bezierCurveTo(21,-26,35,-21,36,-11);shore.bezierCurveTo(35,-3,42,4,37,12);
-    shore.bezierCurveTo(34,19,23,22,18,25);shore.bezierCurveTo(11,32,-1,27,-7,27);
+    shore.bezierCurveTo(34,16,28,14,23,17.2);shore.bezierCurveTo(14,23.5,3,25.7,-7,24.3);
     shore.bezierCurveTo(-17,29,-27,22,-30,15);shore.bezierCurveTo(-34,9,-39,1,-35,-7);
     coastPoints=shore.getPoints(12);
     const coast=new Path2D();

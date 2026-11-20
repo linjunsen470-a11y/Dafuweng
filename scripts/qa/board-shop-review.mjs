@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import {createServer} from 'vite';
 
@@ -24,14 +25,32 @@ try{
     await press('#start-game-btn');
     await page.waitForFunction(()=>boardQA.pawnManager.pawns.length===4 && boardQA.pawnManager.pawns.every(p=>p.skin));
     await page.screenshot({path:'/tmp/door-'+phase+'-'+map+'.jpg'});
-    await page.evaluate(()=>boardQA.showPlayerStreet(2));
-    await page.screenshot({path:'/tmp/door-'+phase+'-'+map+'-shop.jpg'});
-    await page.evaluate(()=>boardQA.showPlayerStreet(0));
+    if (phase!=='district') {
+      await page.evaluate(()=>boardQA.showPlayerStreet(2));
+      await page.screenshot({path:'/tmp/door-'+phase+'-'+map+'-shop.jpg'});
+      await page.evaluate(()=>boardQA.showPlayerStreet(0));
+    }
     const record=phase==='after' && mobile?await page.screencast({path:'/tmp/door-transaction.webm',fps:12}):null;
     try{
+      if(phase==='district')await page.evaluate(()=>{
+        const renderer=boardQA.scene3D.renderer, render=renderer.render;
+        renderer.render=function(...args){
+          render.apply(this,args);
+          const pawn=boardQA.pawnManager.pawns[0];
+          if(pawn.currentTile===2 && pawn.mesh.userData.isMoving){
+            window.districtStepFrame=this.domElement.toDataURL('image/jpeg',.89);
+            this.render=render;
+          }
+        };
+      });
       await press('#btn-roll');
       await page.waitForSelector('#btn-land-buy',{visible:true,timeout:90000});
       const read=()=>page.evaluate(()=>{const s=boardQA.gameState,p=s.players[0];return {id:p.currentTile,cash:p.cash,owner:s.propertyManager.getProperty(p.currentTile)?.owner};});
+      if(phase==='district'){
+        const frame=await page.evaluate(()=>window.districtStepFrame);
+        assert.ok(frame,'Expected a rendered WebGL frame while the pawn was walking');
+        await writeFile('/tmp/door-'+phase+'-'+map+'-walk.jpg',Buffer.from(frame.split(',')[1],'base64'));
+      }
       const before=await read();
       await press('#btn-land-buy');
       await page.waitForFunction(id=>boardQA.gameState.propertyManager.getProperty(id)?.owner===0,{},before.id);

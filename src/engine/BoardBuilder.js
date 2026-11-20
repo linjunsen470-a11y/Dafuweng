@@ -1,3 +1,4 @@
+import {createMarketDistrict} from './MarketDistrict.js';
 import {createCardHouse, addServiceThreshold} from './CardHouses.js';
 import {createStreetAprons} from './StreetAprons.js';
 import {hasClassicFrontages,planClassicFrontages} from './ClassicFrontages.js';
@@ -454,6 +455,8 @@ export class BoardBuilder {
     const group = new THREE.Group();
     group.name = `environment-${mapDefinition.id}`;
     group.add(createTownCourts(mapDefinition));
+    const marketDistrict=createMarketDistrict(mapDefinition);
+    if(marketDistrict)group.add(marketDistrict);
     if(hasClassicFrontages(mapDefinition))group.add(createStreetAprons(mapDefinition));
     this.harborWaves = [];
     this.harborFerries = [];

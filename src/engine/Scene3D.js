@@ -394,6 +394,7 @@ export class Scene3D {
 
   followObject(object, offset = null) {
     this.followedObject = object || null;
+    this.lastFollowTime = performance.now();
     if (offset) this.followOffset.copy(offset);
     else this.followOffset.set(0, this.mapCamera?.followHeight || 14, Math.max(13, (this.mapCamera?.followDistance || 18) * 0.82));
     const oriented = oldTownOffset(this.activeMapId,object?.position,this.followOffset);
@@ -545,8 +546,12 @@ export class Scene3D {
     if (this.followedObject?.position) {
       const target = this.followedObject.position.clone();
       const desired = target.clone().add(this.followOffset);
-      this.controls.target.lerp(target, 0.14);
-      this.camera.position.lerp(desired, 0.11);
+      // The pawn advances in real time, so follow in real time even on slow GPUs.
+      const now = performance.now();
+      const seconds = Math.min(.5, (now - this.lastFollowTime) / 1000);
+      this.lastFollowTime = now;
+      this.controls.target.lerp(target, 1 - Math.exp(-9 * seconds));
+      this.camera.position.lerp(desired, 1 - Math.exp(-7 * seconds));
     }
 
     // 更新可动画物体

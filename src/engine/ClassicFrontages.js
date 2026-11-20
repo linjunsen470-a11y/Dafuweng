@@ -36,9 +36,9 @@ export function planClassicFrontages(map){
 export function classicStreetRows(map){
   if(!hasClassicFrontages(map))return [];
   const starts={
-    'taiwan-loop':[1,4,7,12,15,22,25,32,35],
+    'taiwan-loop':[12,15,22,25,32,35],
     'city-loop':[1,4,10,13,18,22,26,29],
-    'island-fork':[1,4,13,16,20,24,28],
+    'island-fork':[13,16,20,24,28],
     'fortune-crossroads':[1,9,17,25]
   };
   const rows=[];
