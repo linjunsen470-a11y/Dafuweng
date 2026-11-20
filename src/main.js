@@ -99,11 +99,7 @@ class GameController {
       cash: value => { this.selectedInitialCash = value; }
     });
     this.guide = new OnboardingGuide();
-    this.passingBankPill = new PassingBankPill(() => {
-      const player = this.gameState.getCurrentPlayer();
-      if (!player || player.isAI || player.isBankrupt) return;
-      void this.handleBankVisit(player, player.currentTile, true);
-    });
+    this.passingBankPill = new PassingBankPill();
     this.handTray = new HandTrayUI(this.gameEngine, () => this.canOpenPlayerAction() && !this.modalCoordinator.active && !this.boardPicker.cancel,
       entry => entry.kind === 'ITEM' ? this.handleItemUsage(entry.definition.id) : this.handleCardUsage(entry.definition.id, entry.index));
     this.uiRenderer.bindActions(id => {
@@ -353,6 +349,8 @@ class GameController {
   restartMatch() {
     const config = structuredClone(this.gameState.matchConfig);
     if (!config?.playerConfigs?.length) return this.returnToMenu();
+    this.passingBankPill.hide();
+    this.bankUI.close();
     this.isProcessingAction = false;
     this.presentationUI.clear();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
@@ -631,6 +629,7 @@ class GameController {
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
     this.boardEffects.clear();
     this.passingBankPill.hide();
+    this.bankUI.close();
     this.guide.close();
     this.audioManager.stopMusic();
     this.presentationUI.clear();
@@ -657,6 +656,8 @@ class GameController {
   }
 
   restoreGame(snapshot) {
+    this.passingBankPill.hide();
+    this.bankUI.close();
     this.presentationUI.clear();
     this.boardEffects.clear();
     this.gameEngine.restore(snapshot);
@@ -936,6 +937,9 @@ class GameController {
         this.minimapUI.setRouteChoices();
       }
       if (!result.success) break;
+      if (!curPlayer.isAI && result.remainingSteps > 0 && this.gameState.getTile(result.tileId)?.type === TileType.BANK) {
+        this.passingBankPill.show(curPlayer.name, () => this.handleBankVisit(curPlayer, result.tileId, true));
+      }
       await this.pawnManager.animatePlayerStep(curPlayer.id, result.tileId, this.skipAIAnimations ? 0 : Math.round(220 / this.actionSpeed));
       if (this.gameState.getCurrentPlayer() !== curPlayer) return;
       completedSteps++;
@@ -947,8 +951,9 @@ class GameController {
         tile: this.gameState.getTile(result.tileId)
       });
       if (result.events.some(event => event.type === 'START_BONUS_GRANTED')) this.audioManager.playCoinSound();
-      if (!curPlayer.isAI && result.remainingSteps > 0 && this.gameState.getTile(result.tileId)?.type === TileType.BANK) {
-        this.passingBankPill.show(curPlayer.name);
+      if (this.passingBankPill.pending) {
+        await this.passingBankPill.pending;
+        if (this.gameState.getCurrentPlayer() !== curPlayer) return;
       }
     }
 
@@ -976,6 +981,11 @@ class GameController {
       await this.presentationUI.showArrival({ state: this.gameState, player: curPlayer, tileId: tileIndex, landing, speed: this.actionSpeed });
       if (this.gameState.getCurrentPlayer() !== curPlayer) return;
     }
+    if (!opensLandDecision) this.passingBankPill.hide();
+    if (this.passingBankPill.pending) {
+      await this.passingBankPill.pending;
+      if (this.gameState.getCurrentPlayer() !== curPlayer) return;
+    }
     if (landing.kind === 'PURCHASE') {
       if (curPlayer.isAI) {
         const buildingType = landing.tile.type === TileType.BIG_PROPERTY ? AIPlayer.chooseCommercialBuilding(curPlayer, this.gameState) : null;
@@ -989,9 +999,11 @@ class GameController {
           title: '选择商业设施类型',
           options: BUILDINGS.map(building => ({ id: building.id, label: `${building.icon} ${building.name}`, description: building.description }))
         });
+        if (this.gameState.getCurrentPlayer() !== curPlayer) return;
         if (buildingType === null) return this.finishTurn();
       }
       return this.dialogUI.showLandPurchase({
+        passingBank: this.passingBankPill,
         tileData: landing.tile,
         currentLevel: 0,
         player: curPlayer,
@@ -1008,6 +1020,7 @@ class GameController {
         return this.finishTurn();
       }
       return this.dialogUI.showLandPurchase({
+        passingBank: this.passingBankPill,
         tileData: landing.tile,
         currentLevel: landing.property.level,
         player: curPlayer,
@@ -1074,7 +1087,7 @@ class GameController {
     if (result.type === 'MINIGAME_OFFER') {
       await this.handleMinigameVisit(curPlayer, tileIndex, result);
     }
-    this.finishTurn();
+    if (this.gameState.getCurrentPlayer() === curPlayer) this.finishTurn();
   }
 
   async handleCardShopVisit(player, tileId, offer) {
@@ -1102,6 +1115,7 @@ class GameController {
   }
 
   async handleBankVisit(player, tileId, passing = false) {
+    if (this.gameState.getCurrentPlayer() !== player || player.isBankrupt) return;
     if (player.isAI) {
       const decision = chooseAIBankTransfer(this.gameState, player);
       if (decision) this.gameEngine.execute({
@@ -1111,7 +1125,7 @@ class GameController {
       return;
     }
     const decision = await this.bankUI.choose({ player, state: this.gameState, passing });
-    if (!decision) return;
+    if (!decision || this.gameState.getCurrentPlayer() !== player) return;
     const result = this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, passing, ...decision } });
     if (result?.success) this.audioManager.playCoinSound();
     this.uiRenderer.renderHUD();
@@ -1361,6 +1375,7 @@ class GameController {
   }
 
   async finishTurn() {
+    this.passingBankPill.hide();
     if (this.pendingPickup) {
       const player = this.gameState.getCurrentPlayer();
       await this.pendingPickup;

@@ -122,7 +122,7 @@ export class PropertyManager {
   }
 
   // 计算当前格子的最终过路费 (带物价指数)
-  calculateToll(tileIndex, newsEffect = null, priceIndex = 1.0, visitor = null) {
+  calculateToll(tileIndex, newsEffect = null, priceIndex = 1.0, visitor = null, previewLevel = null) {
     const tileData = this.tiles.get(tileIndex);
     const prop = this.properties.get(tileIndex);
 
@@ -130,7 +130,7 @@ export class PropertyManager {
       return 0;
     }
 
-    let baseToll = residentialRent(tileData, prop.level);
+    let baseToll = residentialRent(tileData, previewLevel ?? prop.level);
 
     const building = BUILDINGS.find(definition => definition.id === prop.buildingType);
     if (building) {

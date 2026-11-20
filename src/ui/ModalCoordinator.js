@@ -24,6 +24,7 @@ export class ModalCoordinator {
       }
     }
     const top = this.active;
+    document.getElementById('game-container')?.toggleAttribute('data-static-backdrop', Boolean(top?.matches('.minigame-modal')));
     for (const modal of this.root.querySelectorAll('.modal')) {
       const foreground = modal === top;
       modal.inert = !foreground;
@@ -62,7 +63,7 @@ export class ModalCoordinator {
     if (!top) return;
     if (event.key === 'Escape') {
       // Mandatory choices are never silently dismissed or resolved.
-      const close = top.querySelector('.close-modal, #btn-resume-game');
+      const close = top.querySelector('.close-modal, #btn-resume-game, .minigame-skip');
       if (close && !close.disabled) close.click();
       event.preventDefault();
       event.stopImmediatePropagation();

@@ -3,26 +3,29 @@ import { mkdir } from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import { createServer } from 'vite';
 import { boardHudFraction } from './board-clearance.mjs';
+import { executablePath } from './browser-path.mjs';
 
 const output = '/tmp/dafuweng-qa';
 await mkdir(output, { recursive: true });
+process.env.TMPDIR = output;
 const server = await createServer({
-  cacheDir:'node_modules/.vite-hand-qa',
+  cacheDir:output + '/vite-hand-tray',
   plugins: [{ name:'observe-pawn-focus', transform(code, id) {
     if (id.endsWith('/src/main.js')) return code.replace('new GameController();', 'window.gameQA = new GameController();');
   } }],
-  server: { host:'127.0.0.1', port:5274, hmr:false }
+  server: { host:'127.0.0.1', port:5274, hmr:false, watch:null }
 });
 await server.listen();
 let browser;
 try {
-  browser = await puppeteer.launch({executablePath:process.env.CHROME_PATH || '/usr/bin/chromium',
+  browser = await puppeteer.launch({executablePath,
     args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   for (const [width, height] of [[1440,900],[390,844]]) {
     if (process.env.QA_WIDTH && width !== Number(process.env.QA_WIDTH)) continue;
     const mobile = width === 390;
     const context = await browser.createBrowserContext();
     const page = await context.newPage();
+    page.setDefaultTimeout(120000);
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
@@ -32,6 +35,21 @@ try {
     await page.waitForSelector('[data-profile="0"]');
     const checkWidth = async () => assert.equal(await page.evaluate(() => Math.max(innerWidth, document.documentElement.scrollWidth)), width);
     await checkWidth();
+    const portraits = await page.$$eval('#character-roster i, #character-preview i', async nodes => {
+      await Promise.all(nodes.map(async node => {
+        const picture = new Image();
+        picture.src = /^url\("(.*)"\)$/.exec(getComputedStyle(node).backgroundImage)?.[1] ?? '';
+        await picture.decode();
+      }));
+      return nodes.length;
+    });
+    assert.equal(portraits, await page.$$eval('#character-roster button', buttons => buttons.length + 1));
+    const titleLines = await page.$eval('#setup-game-title', el => {
+      const range = document.createRange();
+      range.selectNodeContents(el.firstChild);
+      return range.getClientRects().length;
+    });
+    assert.equal(titleLines, 1, 'lobby title wraps into the map preview');
     await page.screenshot({path:output + '/lobby-' + width + '.png'});
     await press('[data-profile="1"]');
     assert.deepEqual(await page.$$eval('.player-profile-select', controls => controls.map(s => s.value)), ['1','0','2','3']);
@@ -42,14 +60,29 @@ try {
     else { await press('[data-next]'); await press('[data-next]'); await press('[data-next]'); }
     await page.waitForSelector('.onboarding-guide', {hidden:true});
     await checkWidth();
-    const hud = await page.evaluate(boardHudFraction);
-    console.log(width, 'HUD', (100*hud).toFixed(2) + '%');
-    assert.ok(hud <= (mobile ? .23 : .17), 'HUD area exceeds limit');
+    const measureTray = async state => {
+      const hud = await page.evaluate(boardHudFraction);
+      const tray = await page.$eval('.hand-tray', el => {
+        const rect = el.getBoundingClientRect();
+        return rect.width * rect.height / (innerWidth * innerHeight);
+      });
+      console.log(width, state, 'tray', (100 * tray).toFixed(2) + '%', 'HUD', (100 * hud).toFixed(2) + '%');
+      assert.ok(hud <= (mobile ? .23 : .17), 'HUD area exceeds limit');
+      return tray;
+    };
+    const expanded = await measureTray('expanded');
+    const images = await page.$$eval('#tray-cards img, #players-list .player-avatar-img', async nodes => {
+      await Promise.all(nodes.map(image => image.decode()));
+      return nodes.length;
+    });
+    assert.equal(images, await page.$$eval('#tray-cards button, #players-list .player-card', buttons => buttons.length));
+    console.log(width, 'decoded lobby portraits', portraits, 'and HUD images', images);
     assert.equal(await page.$$eval('.quick-tools button', b => b.length), 5);
     const visibleCards = await page.$$eval('#tray-cards button', cards => cards.filter(c => c.offsetWidth > 0).length);
     assert.ok(mobile ? visibleCards > 6 : visibleCards === 6);
     await press('#tray-toggle');
     assert.equal(await page.$eval('#tray-cards', el => el.hidden), true);
+    assert.ok(await measureTray('collapsed') < expanded);
     await press('#tray-toggle');
     await press('#btn-ai-pace');
     assert.equal(await page.$eval('#ai-pace', el => el.value), '2');
@@ -83,6 +116,12 @@ try {
     } else {
       await page.hover(remote);
       await page.waitForSelector('#tray-hint:not([hidden])', {visible:true});
+      const fits = await page.$eval(remote, async button => {
+        await Promise.all(button.getAnimations().map(animation => animation.finished));
+        const card = button.getBoundingClientRect(), tray = button.parentElement.getBoundingClientRect();
+        return card.top >= tray.top && card.bottom <= tray.bottom;
+      });
+      assert.ok(fits, 'hovered card clipped by the scrolling tray');
       await press(remote);
     }
     await page.waitForSelector('#modal-remote-dice:not(.hidden)');

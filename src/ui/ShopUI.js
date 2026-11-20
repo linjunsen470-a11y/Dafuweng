@@ -170,7 +170,8 @@ export class ShopUI {
       <div class="card-acquisition-copy"><small>${view.rarity.label} · ${view.category.label}</small><strong>${view.name}</strong><span>已加入卡片包</span></div>
     `;
     document.body.appendChild(flash);
-    requestAnimationFrame(() => flash.classList.add('is-visible'));
+    void flash.offsetWidth;
+    flash.classList.add('is-visible');
     setTimeout(() => {
       flash.classList.remove('is-visible');
       setTimeout(() => flash.remove(), 240);

@@ -1,9 +1,11 @@
+import { quietMotion } from '../engine/EffectTimeline.js';
 import { SKY_OBJECTS, scoreSkyObject } from '../game/MinigameRules.js';
 
 // Real-time Richman-4 "Catch Coins" arcade stage with smooth mouse/touch/keyboard basket
 // plus accessible clickable falling coins for full keyboard & test compatibility.
 export function launchSkyCoinsArcade(session, audioManager) {
   const stage = session.stage;
+  const motionPreference = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
   stage.classList.add('sky-coins-stage', 'is-arcade-canvas');
   stage.innerHTML = `
     <canvas class="sky-arcade-canvas" width="560" height="270" aria-hidden="true"></canvas>
@@ -19,7 +21,6 @@ export function launchSkyCoinsArcade(session, audioManager) {
 
   let basketX = 50; // percentage 8..92
   let basketActive = false;
-  let keys = { left: false, right: false };
   let spawnIndex = 0;
   const activeDrops = [];
   const particles = [];
@@ -44,11 +45,11 @@ export function launchSkyCoinsArcade(session, audioManager) {
 
   session.onKey(event => {
     if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
-      keys.left = true;
+      event.preventDefault();
       setBasket(basketX - 7, true);
     }
     if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
-      keys.right = true;
+      event.preventDefault();
       setBasket(basketX + 7, true);
     }
   });
@@ -68,7 +69,7 @@ export function launchSkyCoinsArcade(session, audioManager) {
     feedback.className = `minigame-feedback ${good ? 'is-correct' : 'is-wrong'}`;
     if (good) audioManager?.playCoinSound?.();
     else audioManager?.playSceneSound?.('mine');
-    spawnBurst(drop.x, drop.y, good ? `+${pts}` : `${pts}`, good);
+    if (!quietMotion(motionPreference)) spawnBurst(drop.x, drop.y, good ? `+${pts}` : `${pts}`, good);
     basket.classList.toggle('is-hit', !good);
     basket.classList.toggle('is-catch', good);
     session.later(() => basket.classList.remove('is-hit', 'is-catch'), 180);
@@ -89,7 +90,7 @@ export function launchSkyCoinsArcade(session, audioManager) {
     el.setAttribute('aria-label', def.kind === 'BOMB' ? '炸弹，不要点击' : `${def.kind === 'STAR' ? '星星' : '金币'}，点击收集`);
     const drop = { def, x, y: 8, vy: def.kind === 'STAR' ? 1.55 : 1.25 + (spawnIndex % 3) * 0.2, el, done: false };
     el.onpointerdown = event => {
-      if (event.pointerType === 'touch' && event.isPrimary) {
+      if (event.isPrimary && event.button === 0) {
         event.preventDefault();
         collect(drop, false);
       }
@@ -102,14 +103,21 @@ export function launchSkyCoinsArcade(session, audioManager) {
 
   // Physics & animated sky backdrop tick (30fps interval cleaned automatically by session.every)
   let cloudOffset = 0;
+  let lastTick = performance.now();
   session.every(() => {
-    cloudOffset = (cloudOffset + 0.6) % 560;
+    const now = performance.now();
+    // Keep the visible target reachable after a stalled frame; the session clock
+    // still ends the round on wall time.
+    const frames = Math.min(2, (now - lastTick) / 33);
+    lastTick = now;
+    if (!quietMotion(motionPreference)) cloudOffset = (cloudOffset + 0.6 * frames) % 560;
     for (let i = activeDrops.length - 1; i >= 0; i--) {
       const d = activeDrops[i];
       if (d.done) { activeDrops.splice(i, 1); continue; }
-      d.y += d.vy * 1.45;
+      const previousY = d.y;
+      d.y += d.vy * 1.45 * frames;
       d.el.style.top = `${d.y}%`;
-      if (basketActive && d.y >= 74 && d.y <= 92 && Math.abs(d.x - basketX) <= 13) {
+      if (basketActive && d.y >= 74 && previousY <= 92 && Math.abs(d.x - basketX) <= 13) {
         collect(d, true);
         activeDrops.splice(i, 1);
       } else if (d.y > 96) {
@@ -142,8 +150,8 @@ export function launchSkyCoinsArcade(session, audioManager) {
     // Floating score popups
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
-      p.y -= 1.4;
-      p.life -= 0.06;
+      p.y -= 1.4 * frames;
+      p.life -= 0.06 * frames;
       if (p.life <= 0) { particles.splice(i, 1); continue; }
       ctx.save();
       ctx.globalAlpha = Math.max(0, p.life);

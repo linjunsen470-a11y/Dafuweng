@@ -20,10 +20,10 @@ export function playEffect(duration, frame, finish, skip = () => false) {
   return stop;
 }
 
-export function quietMotion() {
+export function quietMotion(mediaQuery) {
   const html = globalThis.document?.documentElement;
   return html?.classList.contains('reduce-motion') || html?.classList.contains('skip-ai-motion')
-    || globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    || (mediaQuery ?? globalThis.matchMedia?.('(prefers-reduced-motion: reduce)'))?.matches;
 }
 
 export function releaseEffect(group) {

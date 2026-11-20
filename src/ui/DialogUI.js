@@ -20,7 +20,8 @@ export class DialogUI {
     document.getElementById('land-modal-close').addEventListener('click', () => document.getElementById('btn-land-pass')?.click());
   }
 
-  showLandPurchase({ tileData, currentLevel, player, gameState = null, quote = null, buildingType = null, onBuy, onUpgrade, onPass }) {
+  showLandPurchase(options) {
+    const { tileData, currentLevel, player, gameState = null, quote = null, buildingType = null, onBuy, onUpgrade, onPass } = options;
     this.landModal.classList.remove('hidden');
 
     const titleEl = document.getElementById('land-modal-title');
@@ -101,6 +102,9 @@ export class DialogUI {
       if (onPass) onPass();
     };
     actionsEl.appendChild(btnPass);
+    options.passingBank?.dockInLandDialog(actionsEl, () => {
+      if (!this.landModal.classList.contains('hidden') && gameState.getCurrentPlayer() === player) this.showLandPurchase(options);
+    });
   }
 
   hideLandModal() {

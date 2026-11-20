@@ -81,7 +81,9 @@ export function showClinicPickup(view, pawn, points, handBack) {
         pawn.mesh.visible=wasVisible;
         van.removeFromParent();
         mixer?.stopAllAction();mixer?.uncacheRoot(rider);
-        cube.dispose(); wheel.dispose(); paints.forEach(material => material.dispose()); sirenGlow.material.dispose();
+        cube.dispose(); wheel.dispose(); paints.forEach(material => material.dispose());
+        sirenGlow.geometry.dispose();
+        sirenGlow.material.dispose();
         rider.traverse(node => { if (node.isSkinnedMesh) node.skeleton.dispose(); });
         if (ownsCamera && pawn.mesh.parent) handBack();
         resolve();
