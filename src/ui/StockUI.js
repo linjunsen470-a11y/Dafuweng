@@ -104,7 +104,9 @@ export class StockUI {
     this.stockListContainer.innerHTML = '';
     stocks.forEach(s => {
       const isSelected = s.id === this.selectedStockId;
-      const item = document.createElement('div');
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.setAttribute('aria-pressed', String(isSelected));
       item.className = `stock-item ${isSelected ? 'active' : ''}`;
 
       const changeClass = s.change >= 0 ? 'price-up' : 'price-down';
@@ -211,13 +213,12 @@ export class StockUI {
     ctx.clearRect(0, 0, w, h);
 
     const history = stock.history || [stock.price];
-    if (history.length < 2) return;
 
     const min = Math.min(...history) * 0.9;
     const max = Math.max(...history) * 1.1;
 
     // 背景网格
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = '#dcc9a5';
     ctx.lineWidth = 1;
     for (let i = 0; i < 4; i++) {
       const y = (h / 4) * i;
@@ -227,6 +228,16 @@ export class StockUI {
       ctx.stroke();
     }
 
+    if (history.length < 2) {
+      // The opening quote is a single observation in either chart mode.
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#8b572f';
+      ctx.fill();
+      ctx.fillText(`$${stock.price}`, w / 2 + 10, h / 2 + 4);
+      return;
+    }
+
     if (this.showCandles) {
       const width = w / Math.ceil(history.length / 4);
       const y = price => h * (max - price) / (max - min);
@@ -234,7 +245,7 @@ export class StockUI {
         const ticks = history.slice(i, i + 4);
         const open = ticks[0], close = ticks[ticks.length - 1];
         const x = (i / 4 + 0.5) * width;
-        ctx.fillStyle = ctx.strokeStyle = close >= open ? '#ff4757' : '#2ed573';
+        ctx.fillStyle = ctx.strokeStyle = close >= open ? '#b63d38' : '#197051';
         ctx.beginPath();
         ctx.moveTo(x, y(Math.max(...ticks)));
         ctx.lineTo(x, y(Math.min(...ticks)));
@@ -245,7 +256,7 @@ export class StockUI {
     }
     // 绘制趋势折线
     const isUp = history[history.length - 1] >= history[0];
-    const lineColor = isUp ? '#ff4757' : '#2ed573';
+    const lineColor = isUp ? '#b63d38' : '#197051';
 
     ctx.strokeStyle = lineColor;
     ctx.lineWidth = 3;

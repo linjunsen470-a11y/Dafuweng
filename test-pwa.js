@@ -54,7 +54,8 @@ try {
   await page.waitForSelector('#setup-screen', { timeout: 300000 });
   const persisted = await page.evaluate(() => Boolean(localStorage.getItem('fortune-empire:slot:v11:1')));
   const caches = await page.evaluate(() => window.caches.keys());
-  if (!persisted || !caches.includes('fortune-empire-v5')) throw new Error('Offline refresh did not retain cache/save data.');
+  const { version } = JSON.parse(fs.readFileSync('dist/offline-assets.json', 'utf8'));
+  if (!persisted || !caches.includes(`fortune-empire-v${version}`)) throw new Error('Offline refresh did not retain cache/save data.');
   if (failures.length) throw new Error(`PWA page errors: ${failures.join('; ')}`);
   console.log('PWA install, offline launch, offline new game, V11 save, and offline refresh passed.');
 } finally {

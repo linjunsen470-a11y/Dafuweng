@@ -1,0 +1,77 @@
+.card-art-movement { --card-art-accent: #67b8ce; }
+.card-art-property { --card-art-accent: #eca654; }
+.card-art-attack { --card-art-accent: #e88c76; }
+.card-art-defense { --card-art-accent: #7bc49a; }
+.card-art-market { --card-art-accent: #e5b241; }
+.card-art-support { --card-art-accent: #b992d0; }
+.card-art-item { --card-art-accent: #67b9aa; }
+
+.rarity-common { --rarity: #e6d4b4; }
+.rarity-rare { --rarity: var(--sky); }
+.rarity-epic { --rarity: var(--violet); }
+.rarity-legendary { --rarity: var(--honey); }
+
+.strategy-card, .card-detail-panel {
+  border: 1px solid var(--rule);
+  background: linear-gradient(135deg, #fffdf3, #fff4d9);
+  color: var(--ink);
+  box-shadow: 0 3px 0 #dcc49e;
+}
+.strategy-card.selected { border-color: var(--caramel); box-shadow: inset 0 0 0 1px var(--caramel), 0 3px 0 #c79964; }
+.strategy-card-art img, .card-detail-art img, .card-acquisition-art, .presentation-impact-card {
+  display: block;
+  object-fit: contain;
+  border: 0;
+  box-shadow: 0 3px 6px #76543838;
+}
+.strategy-card-art::after {
+  pointer-events: none;
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(115deg, transparent 20%, #fff7 22%, transparent 29%);
+}
+.strategy-rarity, .card-detail-art > span {
+  background: var(--rarity);
+  color: var(--ink);
+  border: 1px solid #9f7b53;
+  box-shadow: 0 1px 2px #7d58302a;
+}
+.strategy-rarity { left: -3px; bottom: -5px; z-index: 1; padding: 2px 5px; }
+.strategy-count, .user-points-badge, .strategy-card-actions > strong {
+  background: var(--honey); color: var(--ink);
+}
+.strategy-card-actions > strong { border-radius: 20px; padding: 3px 8px; }
+.card-tactical-note, .card-detail-meta span { background: var(--parchment); color: var(--ink); }
+.card-detail-meta b, .strategy-card-kicker span { color: var(--muted-ink); }
+.strategy-card p, .card-detail-heading p { font-size: 12px; }
+.card-center-tabs button.active { background: var(--honey); }
+.card-acquisition { background: radial-gradient(ellipse, #ffe7a787, transparent 72%); }
+.card-acquisition-copy, .presentation-impact-title {
+  border: 2px solid var(--caramel);
+  border-radius: 16px;
+  background: var(--panel-paint);
+  color: var(--ink);
+  box-shadow: var(--panel-shadow);
+  text-shadow: none;
+}
+.card-acquisition-copy :is(small, strong, span), .presentation-impact-title strong {
+  color: var(--ink); text-shadow: none;
+}
+.presentation-impact-eyebrow, .presentation-impact > small {
+  background: var(--parchment); color: var(--ink); padding: 3px 10px; border-radius: 8px; text-shadow: none;
+}
+.presentation-impact::before, .presentation-impact::after { background: var(--honey); box-shadow: none; }
+.presentation-impact-title b { filter: none; }
+
+.card-center-layout :is(.shop-card-grid, .inventory-card-grid) {
+  max-height: none;
+  grid-auto-rows: max-content;
+  scrollbar-color: var(--caramel) var(--parchment);
+}
+.strategy-card-actions button { min-height: 36px; font-size: 12px; }
+.strategy-card-kicker, .card-detail-meta span { font-size: 11px; }
+@media (pointer: coarse) {
+  .strategy-card-actions button, .card-center-tabs button { min-height: 44px; }
+}

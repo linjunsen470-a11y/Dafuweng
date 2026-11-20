@@ -31,7 +31,7 @@ describe('presentation event descriptions', () => {
     delete state.getCardById;
     expect(describeImpactEvent({ type: 'CARD_USED', playerId: 0, cardId: 'REMOTE_DICE' }, state))
       .toMatchObject({
-        icon: '🎯', title: '遥控骰子', artClass: 'card-art-movement', serial: 'FE-32'
+        icon: '🎯', title: '遥控骰子', artClass: 'card-art-movement', cardImg: '/assets/card_remote_dice.svg'
       });
   });
 

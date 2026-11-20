@@ -234,7 +234,7 @@ export function describeImpactEvent(event, state) {
       tone: 'accent', eyebrow: `STRATEGY CARD · ${cardView?.rarity.label || '战术'}`,
       icon: cardView?.icon || '🃏', title: cardView?.name || '策略发动',
       detail: `${current?.name || '玩家'} · ${cardView?.category.label || '策略'}效果生效`,
-      artClass: cardView?.artClass || 'card-art-support', serial: cardView?.serial || 'FE-00'
+      cardImg: cardView?.cardImg, artClass: cardView?.artClass || 'card-art-support', serial: cardView?.serial || 'FE-00'
     },
     MAGIC_CAST: { tone: 'accent', eyebrow: 'FORTUNE SHIFT', icon: '🔮', title: event.effectLabel || '命运改写', detail: event.targetNames?.length ? `${event.targetNames.join('、')} · ${event.outcome || '效果生效'}` : event.effectId || event.magicId || '魔法效果生效' },
     QUEST_COMPLETED: { tone: 'success', eyebrow: 'MISSION COMPLETE', icon: '🏆', title: '城市委托完成', detail: event.title || '奖励已经到账' },
@@ -470,12 +470,19 @@ export class PresentationUI {
   }
 
   async showImpact(cue) {
-    if (!this.impactHost || !cue) return;
+    if (!this.impactHost || !cue || document.documentElement.classList.contains('skip-ai-motion')) return;
     const token = ++this.impactToken;
     this.impactHost.replaceChildren();
     const impact = document.createElement('div');
     impact.className = `presentation-impact tone-${cue.tone || 'accent'} ${cue.artClass || ''}`;
-    impact.innerHTML = `${cue.artClass ? `<div class="presentation-impact-card"><span>${cue.icon || '🃏'}</span><i>${cue.serial || 'FE-00'}</i></div>` : ''}<div class="presentation-impact-lines"></div><span class="presentation-impact-eyebrow"></span><div class="presentation-impact-title"><b></b><strong></strong></div><small></small>`;
+    impact.innerHTML = `<div class="presentation-impact-lines"></div><span class="presentation-impact-eyebrow"></span><div class="presentation-impact-title"><b></b><strong></strong></div><small></small>`;
+    if (cue.cardImg) {
+      const art = document.createElement('img');
+      art.className = 'presentation-impact-card';
+      art.src = cue.cardImg;
+      art.alt = '';
+      impact.prepend(art);
+    }
     impact.querySelector('.presentation-impact-eyebrow').textContent = cue.eyebrow || 'CITY EVENT';
     impact.querySelector('.presentation-impact-title b').textContent = cue.icon || '◆';
     impact.querySelector('.presentation-impact-title strong').textContent = cue.title || '关键事件';

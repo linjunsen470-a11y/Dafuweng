@@ -1,0 +1,116 @@
+@import url('./style.css') layer(base);
+@import url('./modals-cartoon.css');
+@import url('./card-album.css');
+
+:root {
+  --cream: #fff1cf;
+  --paper: #fffbeb;
+  --parchment: #f9e4b5;
+  --caramel: #b37c47;
+  --rule: #dfbd8b;
+  --ink: #4f3426;
+  --muted-ink: #72553e;
+  --honey: #ffd578;
+  --mint: #c7edcf;
+  --coral: #ffc3a9;
+  --sky: #c7e9f2;
+  --violet: #e2cdf5;
+  --positive-ink: #226445;
+  --warning-ink: #97392c;
+  --panel-paint: linear-gradient(155deg, var(--paper), var(--cream) 74%, #ffe4ac);
+  --panel-shadow: inset 0 0 0 3px #fff9e5, 0 4px 0 #98623b, 0 14px 36px #55351e40;
+  --modal-scrim: rgb(73 46 29 / 45%);
+}
+
+@keyframes paper-pop {
+  from { scale: .96; }
+  70% { scale: 1.012; }
+  to { scale: 1; }
+}
+
+:where(.modal:not(#modal-land), .news-flash-overlay) {
+  color-scheme: light;
+  color: var(--ink);
+  background: var(--modal-scrim);
+  backdrop-filter: blur(4px);
+}
+
+:where(.modal:not(#modal-land) > .modal-box, .modal > [role="dialog"], .news-flash-card) {
+  border: 2px solid var(--caramel);
+  background: var(--panel-paint);
+  color: var(--ink);
+  box-shadow: var(--panel-shadow);
+  scrollbar-color: var(--rule) var(--paper);
+}
+
+:where(.modal:not(#modal-land), .news-flash-card) :where(
+  div, section, header, footer, h2, h3, h4, p, span, strong, small, b, em, label, li, td, th, output, i, kbd
+) {
+  color: inherit;
+  text-shadow: none;
+}
+
+:where(.modal:not(#modal-land), .news-flash-card) :where(small, p, em) { color: var(--muted-ink); }
+
+:where(.modal:not(#modal-land), .news-flash-card, .chance-stage) :where(button, select, input:not([type="range"])) {
+  color: var(--ink);
+  border: 1px solid var(--caramel);
+  border-radius: 10px;
+  background: var(--paper);
+  text-shadow: none;
+}
+:where(.modal:not(#modal-land), .news-flash-card, .chance-stage) button {
+  cursor: pointer;
+  box-shadow: 0 2px 0 #b48859;
+}
+:where(.modal:not(#modal-land), .news-flash-card, .chance-stage) button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+:where(.modal, .news-flash-card, .chance-stage) :focus-visible {
+  outline: 3px solid #27738c;
+  outline-offset: 2px;
+}
+:where(.modal:not(#modal-land), .news-flash-card, .chance-stage) :where(
+  .btn-primary, .active, button.selected, [aria-pressed="true"], .is-primary, .news-dismiss, .chance-accept
+) {
+  background: linear-gradient(var(--honey), #ffb952);
+  border-color: #ab7036;
+  color: var(--ink);
+}
+:where(.modal) :where(.btn-danger, .loss, .blocked, .is-urgent) { color: var(--warning-ink); }
+:where(.modal) .btn-danger { background: var(--coral); }
+:where(.modal) :where(.gain, .ready, .is-solvent) { color: var(--positive-ink); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion, .skip-ai-motion) :where(.modal:not(#modal-land) > .modal-box, .modal > [role="dialog"]) {
+    animation: paper-pop 260ms ease-out;
+  }
+  html:not(.reduce-motion, .skip-ai-motion) :where(.modal, .news-flash-card) button {
+    transition: translate 120ms ease, box-shadow 120ms ease, background-color 160ms ease;
+  }
+  @media (hover: hover) {
+    html:not(.reduce-motion, .skip-ai-motion) :where(.modal, .news-flash-card) button:enabled:hover {
+      translate: 0 -1px;
+    }
+  }
+  html:not(.reduce-motion, .skip-ai-motion) :where(.modal, .news-flash-card) button:enabled:active {
+    translate: 0 2px;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.modal, .news-flash-overlay, .card-acquisition, .presentation-impact),
+  :where(.modal, .news-flash-overlay, .card-acquisition, .presentation-impact) * {
+    animation-duration: .01ms;
+    transition-duration: .01ms;
+  }
+}
+:is(.reduce-motion, .skip-ai-motion) :where(.modal, .news-flash-overlay, .card-acquisition, .presentation-impact) *,
+:is(.reduce-motion, .skip-ai-motion) :where(.card-acquisition, .presentation-impact) {
+  animation-duration: .01ms;
+  transition-duration: .01ms;
+  animation-iteration-count: 1;
+}

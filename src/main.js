@@ -1,3 +1,4 @@
+import { createItemPresentation } from './game/CardPresentation.js';
 import {quayRoutes} from './game/QuayRoutes.js';
 import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
 import { bindBoardHover } from './ui/BoardHover.js';
@@ -174,6 +175,7 @@ class GameController {
   }
 
   applyDomainEvent(event) {
+    document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
     this.pawnManager.reactToEvent(event);
     if(event.type==='CLINIC_PICKUP' && !this.skipAIAnimations) {
       this.audioManager.playBoardCue('clinic');
@@ -598,7 +600,10 @@ class GameController {
         document.querySelectorAll('.speed-btn').forEach(item => item.classList.toggle('active', item === button));
       };
     });
-    document.querySelector('#ai-pace').onchange = e => { this.aiPace = e.target.value; };
+    document.querySelector('#ai-pace').onchange = e => {
+      this.aiPace = e.target.value;
+      document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
+    };
     const musicVolume = document.getElementById('music-volume');
     const sfxVolume = document.getElementById('sfx-volume');
     try {
@@ -1322,21 +1327,6 @@ class GameController {
     return result;
   }
 
-  triggerCardVFX(cardId) {
-    const card = this.gameState.getCardById ? this.gameState.getCardById(cardId) : null;
-    const cardImg = card?.cardImg || `/assets/card_${cardId.toLowerCase()}.svg`;
-    const cardName = card?.name || cardId;
-
-    const overlay = document.createElement('div');
-    overlay.className = 'vfx-card-overlay';
-    overlay.innerHTML = `
-      <img src="${cardImg}" class="vfx-card-img" alt="${cardName}">
-      <div class="vfx-spell-title">✨ 【${cardName}】 发动！</div>
-    `;
-    document.body.appendChild(overlay);
-    setTimeout(() => overlay.remove(), 1300);
-  }
-
   triggerExplosionVFX() {
     const flash = document.createElement('div');
     flash.className = 'vfx-explosion-flash';
@@ -1369,6 +1359,9 @@ class GameController {
       this.uiRenderer.renderHUD();
       return result;
     }
+    const item = this.gameState.inventoryManager.getDefinition(itemId);
+    void this.presentationUI.showImpact({ title: item.name, icon: item.icon, eyebrow: '道具发动',
+      detail: player.name, artClass: 'card-art-item', cardImg: createItemPresentation(item).cardImg });
     if (itemId === 'ROBOT_DOLL') this.boardBuilder.showClearingRobot(Number(targetId));
     this.audioManager.playCardSpell();
     this.syncBoardAssets(true);
@@ -1404,7 +1397,6 @@ class GameController {
     }
 
     const activate = async (value = null) => {
-      this.triggerCardVFX(cardId);
       if (['MISSILE', 'NUKES', 'MINE', 'DEMOLISH'].includes(cardId)) {
         this.triggerExplosionVFX();
       }

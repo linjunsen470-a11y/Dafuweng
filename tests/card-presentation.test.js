@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import { ITEMS } from '../src/game/ContentRegistry.js';
 import { CARDS } from '../src/game/CardManager.js';
 import {
   CARD_CATEGORIES,
-  CARD_ART_ATLAS,
-  CARD_ART_SLOTS,
   CARD_RARITIES,
   CARD_TARGET_LABELS,
   createCardPresentation,
+  createItemPresentation,
   filterCardPresentations,
   getCardCategory,
   getCardRarity
@@ -22,18 +22,19 @@ describe('card presentation catalogue', () => {
       expect(view.targetLabel).toBe(CARD_TARGET_LABELS[card.targetType]);
       expect(view.tacticalNote.length).toBeGreaterThan(12);
       expect(view.sellPrice).toBe(Math.round(card.cost * 0.5));
-      expect(view.artAtlas).toBe(CARD_ART_ATLAS);
-      expect(view.artClass).toBe(CARD_ART_SLOTS[view.category.id].className);
+      expect(view.cardImg).toBe(card.cardImg);
+      expect(view.artClass).toBe(`card-art-${view.category.id.toLowerCase()}`);
       expect(view.serial).toMatch(/^FE-\d{2}$/);
       expect(view.rarityStars).toHaveLength(view.rarity.rank);
     });
   });
 
-  it('maps the six strategic categories to distinct atlas panels', () => {
-    const strategicSlots = Object.values(CARD_ART_SLOTS);
-    expect(strategicSlots).toHaveLength(6);
-    expect(new Set(strategicSlots.map(slot => slot.position)).size).toBe(6);
-    expect(new Set(strategicSlots.map(slot => slot.className)).size).toBe(6);
+  it('gives every tool an album illustration and a printable rarity ribbon', () => {
+    for (const item of ITEMS) {
+      const view = createItemPresentation(item);
+      expect(view.cardImg).toBe(`/assets/item_${item.id.toLowerCase()}.svg`);
+      expect(view.rarityStars).toBe('✦'.repeat(view.rarity.rank));
+    }
   });
 
   it('reserves legendary presentation for match-changing cards', () => {

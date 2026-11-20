@@ -52,7 +52,7 @@ export class ShopUI {
     this.shopTitle.textContent = offer ? `🏬 ${offer.tileName}` : '🏬 策略卡片中心';
     this.shopSubtitle.textContent = offer
       ? `第 ${offer.round} 轮限定货架 · 到店专享 ${Math.round(offer.discountRate * 100)}% 折扣`
-      : '30 张策略卡 · 稀有度、目标与战术情报一览';
+      : `${cardManager.getAllCards().length} 张策略卡 · 稀有度、目标与战术情报一览`;
     this.shopVisitBanner.classList.toggle('hidden', !offer);
     this.shopVisitBanner.innerHTML = offer ? `
       <strong>✨ 到店会员价已生效</strong>
@@ -159,15 +159,14 @@ export class ShopUI {
   }
 
   showAcquisition(entry) {
-    if (entry.kind !== 'CARD') return;
     const view = entry.presentation;
     const flash = document.createElement('div');
     flash.className = `card-acquisition rarity-${view.rarity.id.toLowerCase()} ${view.artClass}`;
     flash.setAttribute('aria-live', 'polite');
     flash.innerHTML = `
       <div class="card-acquisition-rays"></div>
-      <div class="card-acquisition-art"><span>${view.icon}</span><i>${view.serial}</i></div>
-      <div class="card-acquisition-copy"><small>CARD ACQUIRED · ${view.rarityStars}</small><strong>${view.name}</strong><span>${view.category.label}策略已加入卡片栏</span></div>
+      <img class="card-acquisition-art" src="${view.cardImg}" alt="">
+      <div class="card-acquisition-copy"><small>${view.rarity.label} · ${view.category.label}</small><strong>${view.name}</strong><span>已加入卡片包</span></div>
     `;
     document.body.appendChild(flash);
     requestAnimationFrame(() => flash.classList.add('is-visible'));
@@ -236,11 +235,9 @@ export class ShopUI {
     const article = document.createElement('article');
     article.className = `strategy-card rarity-${view.rarity.id.toLowerCase()} ${options.selected ? 'selected' : ''} ${!view.enabled ? 'is-disabled' : ''}`;
     article.dataset.entryKey = entry.key;
-    const art = entry.kind === 'CARD'
-      ? `<div class="strategy-card-illustration ${view.artClass}" role="img" aria-label="${view.name}插画"><span>${view.icon}</span><i>${view.serial}</i></div>`
-      : `<div class="strategy-item-icon">${view.icon}</div>`;
+
     article.innerHTML = `
-      <div class="strategy-card-art">${art}<span class="strategy-rarity">${view.rarityStars} ${view.rarity.label}</span>${view.ownedCount > 1 ? `<b class="strategy-count">×${view.ownedCount}</b>` : ''}</div>
+      <div class="strategy-card-art"><img class="strategy-card-illustration ${view.artClass}" src="${view.cardImg}" alt="${view.name}"><span class="strategy-rarity">${view.rarityStars} ${view.rarity.label}</span>${view.ownedCount > 1 ? `<b class="strategy-count">×${view.ownedCount}</b>` : ''}</div>
       <div class="strategy-card-copy">
         <div class="strategy-card-kicker"><span>${view.category.icon} ${view.category.label}</span><span>${view.targetLabel}</span></div>
         <h3>${view.name}</h3>
@@ -248,7 +245,7 @@ export class ShopUI {
         <small class="${view.enabled ? 'ready' : 'blocked'}">${options.capacityText}</small>
       </div>
       <div class="strategy-card-actions">
-        ${view.cost !== null && view.cost !== undefined ? `<strong>${view.cost} <small>PTS</small>${view.cost !== view.cost ? '' : ''}</strong>` : '<strong>科技限定</strong>'}
+        ${view.cost !== null && view.cost !== undefined ? `<strong>${view.cost} <small>PTS</small></strong>` : '<strong>科技限定</strong>'}
         <button type="button" class="btn-primary btn-sm strategy-primary" ${options.primaryDisabled ? 'disabled' : ''}>${options.primaryLabel}</button>
         ${options.secondaryLabel ? `<button type="button" class="btn-secondary btn-sm strategy-secondary">${options.secondaryLabel}</button>` : ''}
       </div>
@@ -265,15 +262,13 @@ export class ShopUI {
       return;
     }
     const view = entry.presentation;
-    const art = entry.kind === 'CARD'
-      ? `<div class="card-detail-illustration ${view.artClass}" role="img" aria-label="${view.name}大图预览"><span>${view.icon}</span><i>${view.serial}</i></div>`
-      : `<div class="card-detail-item-icon">${view.icon}</div>`;
+
     const status = mode === 'SHOP'
       ? (view.affordable ? '点数充足，可以兑换' : `还差 ${Math.max(0, view.cost - Number(this.gameState.getCurrentPlayer().cardPoints || 0))} PTS`)
       : (view.enabled ? (view.targetCount ? `当前检测到 ${view.targetCount} 个合法目标` : '当前回合可以立即使用') : view.disabledReason);
     container.className = `card-detail-panel rarity-${view.rarity.id.toLowerCase()}`;
     container.innerHTML = `
-      <div class="card-detail-art">${art}<span>${view.rarity.label} · ${view.category.label}</span></div>
+      <div class="card-detail-art"><img class="card-detail-illustration ${view.artClass}" src="${view.cardImg}" alt="${view.name}"><span>${view.rarity.label} · ${view.category.label}</span></div>
       <div class="card-detail-heading"><small>TACTICAL DOSSIER</small><h3>${view.name}</h3><p>${view.desc}</p></div>
       <div class="card-detail-meta"><span><b>目标</b>${view.targetLabel}</span><span><b>时机</b>${view.timing}</span><span><b>类型</b>${view.category.icon} ${view.category.label}</span></div>
       <div class="card-tactical-note"><b>战术参谋</b><p>${view.tacticalNote}</p></div>
