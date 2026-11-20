@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fortune-empire-v6';
+const CACHE_NAME = 'fortune-empire-v7';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
 
 async function cacheModuleGraph(url, cache, visited = new Set()) {

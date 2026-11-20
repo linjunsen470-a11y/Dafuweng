@@ -36,7 +36,7 @@ async function runTest() {
   console.log('🚀 Starting Detailed Puppeteer Automated Test for 3D Monopoly...');
 
   const viteServer = await createServer({
-    server: { host: '127.0.0.1', port: 5173, strictPort: true }
+    server: { host: '127.0.0.1', port: 5173, strictPort: true, hmr: false, watch: null }
   });
   await viteServer.listen();
 
@@ -54,6 +54,10 @@ async function runTest() {
   });
 
   const page = await browser.newPage();
+  const clickTool = async selector => {
+    await page.click('#btn-mobile-tools');
+    await page.click(selector);
+  };
   await page.setViewport({ width: 1280, height: 800 });
 
   await page.evaluateOnNewDocument(() => {
@@ -165,7 +169,7 @@ async function runTest() {
     console.log('✅ Game HUD successfully entered.');
 
     console.log('\n--- Step 3-Mode: Testing mode objective center ---');
-    await page.click('#btn-mode-status');
+    await clickTool('#btn-mode-status');
     await page.waitForSelector('#modal-mode-status:not(.hidden)', { timeout: 3000 });
     const modeRuleCount = await page.$$eval('.mode-rule-grid article', elements => elements.length);
     const modeStandingCount = await page.$$eval('.mode-standing-row', elements => elements.length);
@@ -311,8 +315,8 @@ async function runTest() {
       throw new Error(`Flagship map telemetry mismatch: ${JSON.stringify(mapTelemetry)}`);
     }
     await page.click('#btn-map-overview');
-    await page.click('#btn-rotate-left');
-    await page.click('#btn-rotate-right');
+    await clickTool('#btn-rotate-left');
+    await clickTool('#btn-rotate-right');
     await new Promise(resolve => setTimeout(resolve, 2500));
     const minimapPainted = await page.evaluate(() => {
       const canvas = document.getElementById('minimap-canvas');
@@ -321,14 +325,14 @@ async function runTest() {
     });
     if (!minimapPainted) throw new Error('Minimap canvas is blank');
     await page.screenshot({ path: artifact('test_step_visual_overview.png') });
-    await page.click('#btn-follow-view');
+    await clickTool('#btn-follow-view');
     console.log('✅ 120 road nodes, 52 lots, overview, rotation, follow camera, and minimap rendered.');
 
     console.log('\n--- Step 3b: Testing weather, night lighting, and extended character models ---');
-    await page.click('#btn-weather');
-    await page.click('#btn-weather');
-    await page.click('#btn-time-of-day');
-    await page.click('#btn-time-of-day');
+    await clickTool('#btn-weather');
+    await clickTool('#btn-weather');
+    await clickTool('#btn-time-of-day');
+    await clickTool('#btn-time-of-day');
     const atmosphere = await page.evaluate(() => ({
       weather: document.getElementById('btn-weather')?.textContent,
       time: document.getElementById('btn-time-of-day')?.textContent
@@ -587,7 +591,7 @@ async function runTest() {
     console.log('✅ Inventory modal closed.');
 
     console.log('\n--- Step 6b: Testing Asset and Property Management Center ---');
-    await page.click('#btn-assets');
+    await clickTool('#btn-assets');
     await page.waitForSelector('#modal-assets:not(.hidden)', { timeout: 3000 });
     const assetRows = await page.$$('#asset-ranking-body tr');
     if (assetRows.length !== 4) throw new Error(`Expected 4 asset rows, got ${assetRows.length}`);
@@ -620,7 +624,7 @@ async function runTest() {
     console.log('✅ Asset ranking, property controls, rent/value cards, and monopoly district overview rendered.');
 
     console.log('\n--- Step 6c: Testing Player Asset Market ---');
-    await page.click('#btn-market');
+    await clickTool('#btn-market');
     await page.waitForSelector('#modal-market:not(.hidden)', { timeout: 3000 });
     await page.click('[data-market-tab="ASSETS"]');
     await page.waitForSelector('.market-asset-row', { timeout: 3000 });
@@ -635,7 +639,7 @@ async function runTest() {
     console.log('✅ Market hall listed an asset and rendered valuation, expiry, and seller controls.');
 
     console.log('\n--- Step 6d: Testing Pause, Speed, and V11 Save Slot ---');
-    await page.click('#btn-pause-game');
+    await clickTool('#btn-pause-game');
     await page.waitForSelector('#modal-pause:not(.hidden)', { timeout: 3000 });
     await page.click('.speed-btn[data-speed=\"2\"]');
     const slotRows = await page.$$('#save-slot-list .save-slot-row');
@@ -783,7 +787,7 @@ async function runTest() {
     console.log('\n--- Step 8: Audio & View reset button tests ---');
     await page.click('#btn-toggle-audio');
     console.log('✅ Mute/Unmute button toggled.');
-    await page.click('#btn-reset-view');
+    await clickTool('#btn-reset-view');
     console.log('✅ Reset 3D camera view button clicked.');
 
     console.log('\n--- Step 9: Returning to setup without page reload ---');

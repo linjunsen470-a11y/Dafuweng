@@ -5,7 +5,9 @@ import { bindBoardHover } from './ui/BoardHover.js';
 import { cardManager } from './game/CardManager.js';
 import { BoardTargetPicker } from './ui/BoardTargetPicker.js';
 import { ModalCoordinator } from './ui/ModalCoordinator.js';
-import { cityPortrait } from './ui/CityPortrait.js';
+import { SetupScreenUI } from './ui/SetupScreenUI.js';
+import { HandTrayUI } from './ui/HandTrayUI.js';
+import { OnboardingGuide } from './ui/OnboardingGuide.js';
 import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
 import { Scene3D } from './engine/Scene3D.js';
@@ -45,29 +47,6 @@ import { chooseAIResearchProject } from './game/ResearchRules.js';
 import { MechanismUI } from './ui/MechanismUI.js';
 import { chooseAIMechanismRoute } from './game/MechanismRules.js';
 import { getRouteChoicePlans } from './game/RouteDecisionRules.js';
-
-const SETUP_MAP_PRESENTATION = {
-  'grand-bay': {
-    icon: '🌊', name: '山海都市岛', description: '穿越蓝湾、榕城、星河与云顶，争夺旗舰群岛的财富王冠。',
-    stats: [['120', '格棋盘'], ['4', '大区域'], ['旗舰', '难度']]
-  },
-  'fortune-crossroads': {
-    icon: '🍀', name: '福星岔路岛', description: '在多条财富捷径之间权衡风险，用路线选择扭转每一轮局势。',
-    stats: [['32', '格棋盘'], ['多线', '岔路'], ['经典', '难度']]
-  },
-  'city-loop': {
-    icon: '🌃', name: '霓虹财富城', description: '环绕不夜金融城高速周转，让地产连锁与股市波动彼此放大。',
-    stats: [['32', '格棋盘'], ['都市', '环线'], ['激进', '节奏']]
-  },
-  'island-fork': {
-    icon: '🏝️', name: '潮汐宝藏岛', description: '沿双岔海岸搜寻机会，在潮汐般变化的路线中抢占黄金地段。',
-    stats: [['32', '格棋盘'], ['双岔', '路线'], ['探索', '节奏']]
-  },
-  'taiwan-loop': {
-    icon: '🚂', name: '宝岛环岛图', description: '乘环岛路线串联城市与港湾，以稳定经营完成一场长线财富旅行。',
-    stats: [['32', '格棋盘'], ['环岛', '路线'], ['均衡', '难度']]
-  }
-};
 
 class GameController {
   constructor() {
@@ -109,15 +88,25 @@ class GameController {
     this.aiPace = '1';
     this.gameEngine.subscribe(event => this.applyDomainEvent(event));
 
-    this.renderSetupScreen();
+    this.setupScreen = new SetupScreenUI(this.gameEngine.saves, {
+      start: () => { this.audioManager.playClick(); this.startGame(); },
+      restore: snapshot => this.restoreGame(snapshot),
+      cash: value => { this.selectedInitialCash = value; }
+    });
+    this.guide = new OnboardingGuide();
+    this.handTray = new HandTrayUI(this.gameEngine, () => this.canOpenPlayerAction() && !this.modalCoordinator.active && !this.boardPicker.cancel,
+      entry => entry.kind === 'ITEM' ? this.handleItemUsage(entry.definition.id) : this.handleCardUsage(entry.definition.id, entry.index));
+    this.uiRenderer.bindActions(id => {
+      const pawn = this.pawnManager.getPawnMesh(id);
+      if (!pawn || this.boardPicker.cancel || this.modalCoordinator.active) return;
+      this.scene3D.stopFollowing({ settle: false });
+      this.scene3D.focusOnPosition(pawn.position);
+    });
+    this.uiRenderer.onHandChange = player => this.handTray.render(player);
+    this.setupScreen.render();
     this.bindHUDButtons();
     bindMobileHUD();
     this.bindKeyboardAndCanvasClick();
-    setTimeout(() => {
-      try {
-        if (!localStorage.getItem('fortune-empire:tutorial-seen')) this.dialogUI.showHelp(true);
-      } catch {}
-    }, 250);
   }
 
   async getStockUI() {
@@ -280,126 +269,6 @@ class GameController {
     this.syncedAssetRevision = this.gameState.assetRevision;
   }
 
-  renderSetupScreen() {
-    const configList = document.getElementById('player-config-list');
-    configList.innerHTML = '';
-
-    const defaultProfiles = [0, 1, 2, 3];
-    const defaultTypes = ['HUMAN', 'AI', 'AI', 'AI'];
-
-    const playerCount = parseInt(document.getElementById('player-count')?.value || '4', 10);
-    for (let i = 0; i < playerCount; i++) {
-      const item = document.createElement('div');
-      item.className = 'player-config-item';
-
-      let optionsHtml = '';
-      PLAYER_PROFILES.forEach((prof) => {
-        optionsHtml += `<option value="${prof.id}" ${prof.id === defaultProfiles[i] ? 'selected' : ''}>${prof.avatar} ${prof.name} (${prof.skillName})</option>`;
-      });
-
-      item.innerHTML = `
-        <div class="player-info-meta">
-          <span class="setup-character-portrait" role="img" aria-label="角色肖像"></span>
-          <div class="setup-character-copy">
-            <select class="player-profile-select" name="player-profile-${i}" data-index="${i}" aria-label="选择玩家${i + 1}角色">
-              ${optionsHtml}
-            </select>
-            <span class="setup-character-skill"></span>
-          </div>
-        </div>
-        <select class="player-type-select" name="player-type-${i}" data-index="${i}" aria-label="选择玩家${i + 1}类型">
-          <option value="HUMAN" ${defaultTypes[i] === 'HUMAN' ? 'selected' : ''}>👤 人类玩家</option>
-          <option value="AI" ${defaultTypes[i] === 'AI' ? 'selected' : ''}>🤖 电脑 AI</option>
-        </select>
-      `;
-      configList.appendChild(item);
-    }
-
-    // 绑定角色重复选择校验机制 (自动互换，防冲突)
-    const profSelects = document.querySelectorAll('.player-profile-select');
-    let previousSelections = Array.from(profSelects).map(s => parseInt(s.value, 10));
-    const updateSetupPortraits = () => {
-      profSelects.forEach((profileSelect) => {
-        const profile = PLAYER_PROFILES.find(item => item.id === Number(profileSelect.value));
-        const configItem = profileSelect.closest('.player-config-item');
-        const portrait = configItem?.querySelector('.setup-character-portrait');
-        const skill = configItem?.querySelector('.setup-character-skill');
-        if (!profile || !portrait || !skill) return;
-        const modelPortrait = cityPortrait({ profileId: profile.id }, document.getElementById('map-select')?.value);
-        portrait.style.backgroundImage = modelPortrait ? `url('${modelPortrait}')` : profile.avatarAtlas
-          ? `url('${profile.avatarAtlas}')`
-          : profile.avatarImg ? `url('${profile.avatarImg}')` : 'none';
-        portrait.style.backgroundPosition = modelPortrait ? 'center' : profile.avatarPosition || 'center';
-        portrait.style.backgroundSize = modelPortrait ? 'cover' : profile.avatarAtlas ? '400% 300%' : 'cover';
-        portrait.style.setProperty('--profile-color', profile.color);
-        portrait.textContent = profile.avatarAtlas || profile.avatarImg ? '' : profile.avatar;
-        portrait.setAttribute('aria-label', `${profile.name}角色肖像`);
-        skill.textContent = `⚡ ${profile.skillName} · ${profile.skillDesc}`;
-        configItem.style.setProperty('--profile-color', profile.color);
-      });
-    };
-
-    profSelects.forEach((sel, changedIdx) => {
-      sel.addEventListener('change', (e) => {
-        const newValue = parseInt(e.target.value, 10);
-        // 检查是否有其他下拉框占用了该角色
-        profSelects.forEach((otherSel, otherIdx) => {
-          if (changedIdx !== otherIdx && parseInt(otherSel.value, 10) === newValue) {
-            // 将被冲突的下拉框值调整为改动前的值 (互换)
-            otherSel.value = previousSelections[changedIdx];
-          }
-        });
-        previousSelections = Array.from(profSelects).map(s => parseInt(s.value, 10));
-        updateSetupPortraits();
-      });
-    });
-    updateSetupPortraits();
-
-    const cashBtns = document.querySelectorAll('.cash-btn');
-    cashBtns.forEach(btn => {
-      btn.onclick = () => {
-        cashBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.selectedInitialCash = parseInt(btn.dataset.cash, 10);
-      };
-    });
-
-    document.getElementById('start-game-btn').onclick = () => {
-      this.audioManager.playClick();
-      this.startGame();
-    };
-
-    document.getElementById('player-count').onchange = () => this.renderSetupScreen();
-
-    const mapSelect = document.getElementById('map-select');
-    const updateMapShowcase = () => {
-      const mapIds = Object.keys(SETUP_MAP_PRESENTATION);
-      const mapId = mapSelect?.value || mapIds[0];
-      const presentation = SETUP_MAP_PRESENTATION[mapId] || SETUP_MAP_PRESENTATION[mapIds[0]];
-      const icon = document.getElementById('setup-map-icon');
-      const name = document.getElementById('setup-map-name');
-      const description = document.getElementById('setup-map-description');
-      const index = document.getElementById('setup-map-index');
-      const stats = document.getElementById('setup-map-stats');
-      if (icon) icon.textContent = presentation.icon;
-      if (name) name.textContent = presentation.name;
-      if (description) description.textContent = presentation.description;
-      if (index) index.textContent = `${String(mapIds.indexOf(mapId) + 1).padStart(2, '0')} / ${String(mapIds.length).padStart(2, '0')}`;
-      if (stats) stats.innerHTML = presentation.stats.map(([value, label]) => `<span><b>${value}</b> ${label}</span>`).join('');
-    };
-    if (mapSelect) mapSelect.onchange = () => { updateMapShowcase(); updateSetupPortraits(); };
-    updateMapShowcase();
-
-    const autoSave = this.gameEngine.saves.loadAuto();
-    const manualSave = this.gameEngine.saves.loadManual();
-    const autoButton = document.getElementById('load-auto-save-btn');
-    const manualButton = document.getElementById('load-manual-save-btn');
-    autoButton.classList.toggle('hidden', !autoSave.success);
-    manualButton.classList.toggle('hidden', !manualSave.success);
-    autoButton.onclick = () => autoSave.success && this.restoreGame(autoSave.snapshot);
-    manualButton.onclick = () => manualSave.success && this.restoreGame(manualSave.snapshot);
-  }
-
   startGame() {
     const setupScreen = document.getElementById('setup-screen');
     if (setupScreen.contains(document.activeElement)) {
@@ -452,6 +321,7 @@ class GameController {
     this.presentationUI.scheduleTurn(this.gameState.getCurrentPlayer(), this.gameState.round, 220, this.gameState);
 
     this.checkAITurn();
+    this.guide.start();
   }
 
   restartMatch() {
@@ -602,6 +472,7 @@ class GameController {
     });
     document.querySelector('#ai-pace').onchange = e => {
       this.aiPace = e.target.value;
+      document.getElementById('btn-ai-pace').textContent = this.aiPace === 'skip' ? 'AI 快进' : 'AI ×' + this.aiPace;
       document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
     };
     const musicVolume = document.getElementById('music-volume');
@@ -728,6 +599,7 @@ class GameController {
   returnToMenu() {
     if (this.gameState.players.length && this.gameState.phase !== GamePhase.GAME_OVER
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
+    this.guide.close();
     this.audioManager.stopMusic();
     this.presentationUI.clear();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
@@ -749,7 +621,7 @@ class GameController {
     setup.classList.add('active');
     setup.setAttribute('aria-hidden', 'false');
     document.getElementById('hud-layer').classList.add('hidden');
-    this.renderSetupScreen();
+    this.setupScreen.render();
   }
 
   restoreGame(snapshot) {

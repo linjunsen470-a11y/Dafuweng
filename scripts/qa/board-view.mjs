@@ -14,7 +14,7 @@ const results = {};
 let browser;
 try {
   browser = await puppeteer.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-  await mkdir('qa/review',{recursive:true});
+  await mkdir('/tmp/dafuweng-qa',{recursive:true});
   for(const [size,width,height] of [['desktop',1440,900],['mobile',390,844]]) {
     const page = await browser.newPage();
     const errors = [];
@@ -30,7 +30,7 @@ try {
     await page.evaluate(snapshot=>window.boardQA.restoreGame(snapshot),state.createSnapshot());
     await page.waitForFunction(()=>document.querySelector('#game-container').dataset.harborArt==='ready');
     await new Promise(resolve=>setTimeout(resolve,2500));
-    await page.screenshot({path:`qa/review/${label}-${size}.png`});
+    await page.screenshot({path:`/tmp/dafuweng-qa/${label}-${size}.png`});
     if (label !== 'before') {
       const press = async selector => {
         await page.waitForSelector(selector,{visible:true});
@@ -41,7 +41,6 @@ try {
       const centralClearFraction = await page.evaluate(boardClearance);
       results[size]={hudFraction:area,centralClearFraction};
       if(size==='mobile'){
-        await press('#btn-mobile-tools');
         await press('#btn-map-overview');
         await press('#btn-mobile-tools');
         await press('#btn-follow-view');
@@ -54,7 +53,7 @@ try {
       await press('#btn-use-card');
       await press('[data-entry-key="ITEM:BARRIER"] .strategy-primary');
       await page.waitForSelector('.board-target-bar');
-      await page.screenshot({path:`qa/review/target-${size}.png`});
+      await page.screenshot({path:`/tmp/dafuweng-qa/target-${size}.png`});
       const point = await page.evaluate(()=>{
         const game = window.boardQA;
         const p = game.boardBuilder.tilePositions[1].clone().project(game.scene3D.camera);
@@ -85,7 +84,7 @@ try {
       for(const [open,close] of [['#btn-stock-market','#stock-modal-close'],['#btn-card-shop','#shop-modal-close']]){
         await press(open);
         await page.waitForSelector(close,{visible:true});
-        await page.screenshot({path:`qa/review/${open.slice(5)}-${size}.png`});
+        await page.screenshot({path:`/tmp/dafuweng-qa/${open.slice(5)}-${size}.png`});
         await press(close);
       }
       const snapshot = await page.evaluate(()=>{
@@ -105,5 +104,5 @@ try {
     }
     await page.close();
   }
-  if(label!=='before') await writeFile('qa/review/board-checks.json',JSON.stringify(results,null,2)+'\n');
+  if(label!=='before') await writeFile('/tmp/dafuweng-qa/board-checks.json',JSON.stringify(results,null,2)+'\n');
 } finally {await browser?.close();await server.close();}

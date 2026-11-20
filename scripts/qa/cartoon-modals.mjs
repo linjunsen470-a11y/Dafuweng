@@ -34,8 +34,8 @@ try {
       else await page.click(selector);
     };
     await page.goto(server.resolvedUrls.local[0]);
-    await press('.rules-help-ready');
     await press('#start-game-btn');
+    await press('.onboarding-guide [data-skip]');
     await page.waitForSelector('#btn-roll:enabled', { visible: true });
     for (const [name, open, close] of [
       ['stock', '#btn-stock-market', '#stock-modal-close'],
@@ -44,7 +44,7 @@ try {
       ['assets', '#btn-assets', '#asset-modal-close'],
       ['pause', '#btn-pause-game', '#btn-resume-game']
     ]) {
-      if (mobile && ['assets', 'pause'].includes(name)) await press('#btn-mobile-tools');
+      if (['assets', 'pause'].includes(name)) await press('#btn-mobile-tools');
       await press(open);
       const modal = '#modal-' + name;
       await page.waitForSelector(modal + ':not(.hidden)');
@@ -102,6 +102,11 @@ try {
     await page.waitForSelector('.presentation-impact-card[src="/assets/item_motor.svg"]');
     await page.waitForSelector('.presentation-impact-card', { hidden: true });
     assert.equal(await page.$eval('#dice-count-select', select => select.value), '2');
+    await press('[data-dice="1"]');
+    assert.equal(await page.$eval('#dice-count-select', select => select.value), '1');
+    await press('[data-dice="2"]');
+    assert.equal(await page.$eval('[data-dice="2"]', button => button.getAttribute('aria-pressed')), 'true');
+    assert.equal(await page.$eval('[data-dice="3"]', button => button.disabled), true);
     assert.deepEqual(errors, []);
     await context.close();
   }

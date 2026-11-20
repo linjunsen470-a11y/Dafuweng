@@ -1,6 +1,8 @@
 @import url('./style.css') layer(base);
 @import url('./modals-cartoon.css');
 @import url('./card-album.css');
+@import url('./setup-lobby.css');
+@import url('./hud-layout.css');
 
 :root {
   --cream: #fff1cf;

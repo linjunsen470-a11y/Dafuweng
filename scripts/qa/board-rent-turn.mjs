@@ -1,16 +1,17 @@
 import assert from 'node:assert/strict';
-import {readFile,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import {createServer} from 'vite';
 import {GameState} from '../../src/game/GameState.js';
 
+await mkdir('/tmp/dafuweng-qa',{recursive:true});
 const server=await createServer({plugins:[{name:'qa-controller',transform(code,id){
   if(id.endsWith('/src/main.js')) return code.replace('new GameController();','window.boardQA = new GameController();');
 }}],server:{host:'127.0.0.1',port:5199,strictPort:true,hmr:false,watch:null}});
 await server.listen();
 let browser;
 const mobileOnly=process.argv.includes('--mobile');
-const results=mobileOnly?JSON.parse(await readFile('qa/review/m5-rent-turn-checks.json','utf8')):{};
+const results=mobileOnly?JSON.parse(await readFile('/tmp/dafuweng-qa/m5-rent-turn-checks.json','utf8')):{};
 try {
   browser=await puppeteer.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   for(const [size,width,height] of [['desktop',1440,900],['mobile',390,844]]){
@@ -29,7 +30,7 @@ try {
     await page.evaluate(s=>boardQA.restoreGame(s),state.createSnapshot());
     await page.waitForFunction(()=>document.querySelector('#game-container').dataset.harborArt==='ready');
     const press=sel=>size==='mobile'?page.tap(sel):page.click(sel);
-    if(size==='mobile')await press('#btn-mobile-tools');
+    await press('#btn-mobile-tools');
     await press('#btn-pause-game');
     await page.select('#ai-pace','skip');await press('#btn-resume-game');
     await page.evaluate(()=>{
@@ -51,10 +52,10 @@ try {
     if(size==='desktop') {
       await page.waitForFunction(()=>window.diceFrame);
       const data=await page.evaluate(()=>window.diceFrame.split(',')[1]);
-      await writeFile('qa/review/m5-three-dice.png',Buffer.from(data,'base64'));
+      await writeFile('/tmp/dafuweng-qa/m5-three-dice.png',Buffer.from(data,'base64'));
     }
     await page.waitForFunction(()=>rentEvents.some(e=>e.type==='RENT_PAID'),{timeout:90000});
-    if(size==='mobile') await page.screenshot({path:'qa/review/m5-rent-turn-mobile.png'});
+    if(size==='mobile') await page.screenshot({path:'/tmp/dafuweng-qa/m5-rent-turn-mobile.png'});
     await page.waitForFunction(()=>boardQA.gameState.round>=2 && boardQA.gameState.currentPlayerIndex===0,{timeout:90000});
     const info=await page.evaluate(()=>({rent:rentEvents.find(e=>e.type==='RENT_PAID'),round:boardQA.gameState.round,
       humanSpeed:boardQA.actionSpeed,aiPace:boardQA.aiPace,bands:boardQA.boardBuilder.streetBands.children.length}));
@@ -66,5 +67,5 @@ try {
     results[size]={...info,errors};
     await page.close();
   }
-  await writeFile('qa/review/m5-rent-turn-checks.json',JSON.stringify(results,null,2)+'\n');
+  await writeFile('/tmp/dafuweng-qa/m5-rent-turn-checks.json',JSON.stringify(results,null,2)+'\n');
 } finally {await browser?.close();await server.close();}

@@ -1,0 +1,69 @@
+#setup-screen { background:var(--cream); color:var(--ink); }
+#setup-screen::before { animation:none; }
+#setup-screen::after { background:linear-gradient(0deg,#70533166,transparent 60%); box-shadow:none; }
+#setup-screen .setup-atmosphere { display:none; }
+#setup-screen .setup-title-stage,.setup-box { animation:none; }
+#setup-screen .setup-map-showcase,#setup-screen .setup-box {
+  border:2px solid var(--caramel); background:var(--panel-paint); box-shadow:var(--panel-shadow); backdrop-filter:none;
+}
+.setup-map-showcase :is(h2,p,span,b),#setup-screen .setup-section :is(h3,label) { color:var(--ink); }
+.setup-map-stats { background:#f5dfa9; }
+#setup-screen .setup-box {
+  display:flex; flex-direction:column; gap:14px; padding:20px; max-height:calc(100dvh - 42px);
+  scrollbar-color:var(--caramel) var(--cream); color:var(--ink); text-align:left;
+}
+#setup-screen h2,#setup-screen h3 { margin:0; }
+#roster-title { font-size:1.5rem; }
+#setup-screen .lobby-maps h3 { font-size:1rem; margin-bottom:6px; }
+#setup-screen button,#setup-screen select,#setup-screen summary { cursor:pointer; }
+#setup-screen .hidden,#setup-screen [hidden] { display:none; }
+#player-config-list,#map-cards,#character-roster { display:grid; gap:6px; }
+#player-config-list { grid-template-columns:repeat(4,minmax(0,1fr)); margin:8px 0; }
+.lobby-seat { display:flex; flex-wrap:wrap; border:1px solid var(--rule); border-radius:8px; background:var(--paper); overflow:hidden; }
+.lobby-seat:has([aria-pressed=true]) { border-color:#a85c27; background:var(--honey); }
+.lobby-seat button,.lobby-seat select { border:0; background:transparent; color:var(--ink); font:inherit; }
+.lobby-seat button { flex:auto; padding:4px; }
+.lobby-seat small { font-weight:bold; margin-right:4px; }
+#setup-screen .lobby-seat select { width:auto; font-size:11px; padding:2px; }
+#character-preview { display:flex; align-items:center; gap:14px; margin-bottom:10px; background:linear-gradient(105deg,color-mix(in srgb,var(--portrait-color) 32%,var(--paper)),var(--paper)); border-radius:14px; overflow:hidden; }
+#character-preview i { width:100px; aspect-ratio:1; flex:none; border-right:3px solid var(--portrait-color); }
+#character-preview > div { padding:6px 8px 6px 0; font-size:12px; }
+#character-preview h3 { font-size:22px; line-height:1.25; }
+#character-preview p { margin:3px 0 5px; }
+#character-preview strong { color:#795222; background:#ffe8ab; padding:1px 5px; border-radius:4px; }
+#character-roster { grid-template-columns:repeat(8,minmax(0,1fr)); }
+#character-roster button,#map-cards button {
+  display:grid; justify-items:center; gap:3px; padding:4px; min-width:0;
+  background:var(--paper); color:var(--ink); border:1px solid var(--rule); border-radius:9px; font:600 12px/1.4 system-ui;
+}
+#character-roster i { width:100%; aspect-ratio:1.2; border-radius:6px; background-color:var(--portrait-color); }
+#character-roster [aria-pressed=true],#map-cards [aria-pressed=true] { background:var(--honey); outline:2px solid #a85c27; outline-offset:-2px; }
+#map-cards { grid-template-columns:repeat(5,minmax(0,1fr)); }
+#map-cards i { font:normal 21px/1.1 sans-serif; }
+#map-cards small { color:var(--muted-ink); }
+.lobby-advanced { border-top:1px solid var(--rule); }
+.lobby-advanced summary { padding:8px 0; font-weight:bold; }
+#setup-screen .setup-section { background:var(--paper); border:1px solid var(--rule); padding:8px; }
+#setup-screen .setup-section select,#setup-screen .cash-btn { color:var(--ink); background:var(--cream); border:1px solid var(--rule); }
+#setup-screen .cash-btn.active { background:var(--honey); border-color:var(--caramel); }
+#setup-screen .setup-actions { flex:none; margin:0; padding:0; }
+@media(max-width:900px) {
+  #setup-screen { display:block; padding:12px 10px 85px; }
+  #setup-screen::before { height:260px; }
+  #setup-screen::after { height:260px; background:linear-gradient(0deg,var(--cream),transparent 80%); }
+  #setup-screen .setup-title-stage { min-height:0; padding:8px 6px 14px; gap:10px; }
+  #setup-screen .logo-area h1 { font-size:40px; }
+  #setup-screen .setup-map-showcase { width:100%; max-width:650px; }
+  #setup-screen .setup-map-copy { padding:6px 12px; }
+  #setup-screen .setup-map-stats { display:none; }
+  #setup-screen .setup-box { max-height:none; overflow:visible; padding:12px; gap:10px; transform:none; animation:none; }
+  #setup-screen .setup-actions { position:fixed; bottom:0; left:0; right:0; padding:6px 12px max(6px,env(safe-area-inset-bottom)); z-index:4; background:var(--cream); }
+  #setup-screen .setup-actions button { min-height:38px; }
+  #character-roster { grid-template-columns:repeat(8,minmax(0,1fr)); gap:3px; }
+  #character-roster button { font-size:10px; padding:2px; }
+  #character-preview i { width:76px; }
+  #player-config-list { gap:3px; }
+  .lobby-seat select { margin:auto; }
+  #map-cards { gap:3px; }
+  #map-cards button { font-size:11px; }
+}

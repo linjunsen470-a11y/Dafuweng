@@ -16,5 +16,5 @@ async function walk(directory) {
 }
 
 const assets = (await walk(publicRoot)).sort();
-await fs.writeFile(output, `${JSON.stringify({ version: 6, assets }, null, 2)}\n`, 'utf8');
+await fs.writeFile(output, `${JSON.stringify({ version: 7, assets }, null, 2)}\n`, 'utf8');
 console.log(`Generated offline manifest with ${assets.length} assets.`);

@@ -1,3 +1,4 @@
+import { inventoryEntries } from './InventoryEntries.js';
 import { cardManager } from '../game/CardManager.js';
 import { ITEMS } from '../game/ContentRegistry.js';
 import { CARD_CAPACITY, ITEM_CAPACITY } from '../game/InventoryManager.js';
@@ -176,26 +177,9 @@ export class ShopUI {
     }, 1900);
   }
 
-  getInventoryEntries(player) {
-    const group = (ids = []) => [...new Set(ids)].map(id => ({ id, count: ids.filter(value => value === id).length, index: ids.indexOf(id) }));
-    const cards = group(player.cards).map(({ id, count, index }) => {
-      const card = cardManager.getCardById(id);
-      if (!card) return null;
-      const action = this.gameEngine?.getCardAction(player, id);
-      return { key: `CARD:${id}`, kind: 'CARD', definition: card, index, presentation: createCardPresentation(card, { action, ownedCount: count }) };
-    }).filter(Boolean);
-    const tools = group(player.items).map(({ id, count, index }) => {
-      const tool = ITEMS.find(item => item.id === id);
-      if (!tool) return null;
-      const action = this.gameEngine?.getItemAction(player, id);
-      return { key: `ITEM:${id}`, kind: 'ITEM', definition: tool, index, presentation: createItemPresentation(tool, { action, ownedCount: count }) };
-    }).filter(Boolean);
-    return [...cards, ...tools];
-  }
-
   renderInventory() {
     const player = this.gameState.getCurrentPlayer();
-    const entries = this.getInventoryEntries(player);
+    const entries = inventoryEntries(player, this.gameEngine);
     this.inventorySubtitle.textContent = `策略卡 ${player.cards?.length || 0}/${CARD_CAPACITY} · 科技道具 ${player.items?.length || 0}/${ITEM_CAPACITY} · 掷骰前使用`;
     this.renderTabs(this.inventoryTabs, entries, this.inventoryFilter, filter => {
       this.inventoryFilter = filter;
