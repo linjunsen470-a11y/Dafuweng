@@ -55,11 +55,11 @@ export const ISLAND_FORK_MAP = {
     if (index === 7) next = [8, 10];
     if (index === 9 || index === 11) next = [12];
     const forkPositions = {
-      8: { x: -25, z: 4 },
-      9: { x: -21, z: -1 },
-      10: { x: -14, z: 7 },
-      11: { x: -10, z: 2 },
-      12: { x: -17, z: -7 }
+      8: { x: 25, z: -2 },
+      9: { x: 24, z: -8 },
+      10: { x: 18, z: 1 },
+      11: { x: 15, z: -5 },
+      12: { x: 18, z: -11 }
     };
     return {
       ...tile,

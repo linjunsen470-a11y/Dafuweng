@@ -1,3 +1,4 @@
+import {createTownCourts} from './TownCourts.js';
 import {createQuayStreet,quayLot} from './QuayStreet.js';
 import { createHarborPromenade, createHarborGulls, updateHarborGulls } from './HarborPromenade.js';
 import { animateBuildingChange } from './BuildingChange.js';
@@ -63,8 +64,7 @@ export class BoardBuilder {
       shop: this.createAssetTexture('/assets/tile_shop_rich.jpg', '#be185d', '#fce7f3'),
       mapBg: this.createAssetTexture('/assets/map_bg_texture.jpg', '#172554', '#0f766e'),
       grass: this.createAssetTexture('/assets/grass_ground.jpg', '#3f6212', '#84cc16'),
-      parkV2: this.createAssetTexture('/assets/park_ground_v2.webp', '#166534', '#86efac'),
-      worldGround: this.createAssetTexture('/assets/world-ground-v2.webp', '#0f172a', '#164e63')
+      parkV2: this.createAssetTexture('/assets/park_ground_v2.webp', '#166534', '#86efac')
     };
 
     Object.values(this.textures).forEach(texture => {
@@ -116,8 +116,26 @@ export class BoardBuilder {
 
   createWorldGround() {
     const geometry = new THREE.PlaneGeometry(108, 108);
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=768;
+    const ctx=canvas.getContext('2d');
+    const field=ctx.createLinearGradient(0,0,768,768);
+    field.addColorStop(0,'#92b98e');field.addColorStop(.48,'#c7cd98');field.addColorStop(1,'#88b998');
+    ctx.fillStyle=field;ctx.fillRect(0,0,768,768);
+    // Distant contours keep their low contrast even where a camera reaches the board edge.
+    for(let row=0;row<12;row++)for(let column=0;column<12;column++){
+      const x=column*70+Math.sin(row+column*4)*23,y=row*68+Math.cos(column+row*2)*18;
+      const shade=ctx.createRadialGradient(x,y,3,x,y,53);
+      shade.addColorStop(0,(row+column)%3?'rgba(74,125,86,.30)':'rgba(246,220,154,.43)');
+      shade.addColorStop(1,'rgba(174,186,140,0)');ctx.fillStyle=shade;ctx.fillRect(x-54,y-54,108,108);
+    }
+    for(const [width,color] of [[30,'#c9c99e'],[22,'#6eaaa1'],[14,'#86bcad']]){
+      ctx.lineWidth=width;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(-43,140);
+      ctx.bezierCurveTo(179,28,249,245,450,111);ctx.bezierCurveTo(610,4,641,105,802,29);ctx.stroke();
+    }
+    const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
+
     const material = new THREE.MeshStandardMaterial({
-      map: this.textures.worldGround,
+      map: texture,
       roughness: 0.92,
       metalness: 0,
       color: '#ffffff'
@@ -160,6 +178,20 @@ export class BoardBuilder {
       roughness: 0.3,
       metalness: 0.5
     });
+    const paving=document.createElement('canvas');
+    paving.width=paving.height=256;
+    const ctx=paving.getContext('2d');
+    ctx.fillStyle='#a39678';ctx.fillRect(0,0,256,256);
+    const stones=['#e5dac0','#e9ddbd','#dfcfad','#ecdfc1'];
+    for(let row=0;row<8;row++)for(let column=-1;column<4;column++){
+      const x=column*64+(row%2)*32;
+      ctx.fillStyle=stones[(row*7+column+5)%4];
+      ctx.fillRect(x+1,row*32+1,62,30);
+    }
+    const pavingTexture=new THREE.CanvasTexture(paving);
+    pavingTexture.wrapS=pavingTexture.wrapT=THREE.RepeatWrapping;
+    pavingTexture.repeat.set(7,7);pavingTexture.colorSpace=THREE.SRGBColorSpace;
+    baseMat.map=pavingTexture;baseMat.roughness=.91;baseMat.metalness=.03;
     const baseMesh = new THREE.Mesh(baseGeo, baseMat);
     baseMesh.position.set(0, -0.35, 0);
     baseMesh.receiveShadow = true;
@@ -174,7 +206,7 @@ export class BoardBuilder {
       roughness: 0.1
     });
     const borderMesh = new THREE.Mesh(borderGeo, borderMat);
-    borderMesh.position.set(0, -0.05, 0);
+    borderMesh.position.set(0, -0.46, 0);
     this.scene3D.scene.add(borderMesh);
     this.borderMesh = borderMesh;
   }
@@ -271,7 +303,7 @@ export class BoardBuilder {
     const grand = mapDefinition.theme === 'GRAND_BAY';
     this.baseMesh.visible = !crossroads && !grand;
     this.borderMesh.visible = !crossroads && !grand;
-    if (this.centralDecorationGroup) this.centralDecorationGroup.visible = !crossroads && !grand;
+    if (this.centralDecorationGroup) this.centralDecorationGroup.visible = !crossroads && !grand && !island && mapDefinition.id !== 'taiwan-loop';
     if (this.surroundingRoad) this.surroundingRoad.visible = !grand;
     this.cars?.forEach(car => { car.mesh.visible = !grand; });
     this.streetLights?.forEach(({ light, bulb, pole }) => {
@@ -283,7 +315,7 @@ export class BoardBuilder {
       this.worldGround.visible = !grand;
       this.worldGround.scale.setScalar(1);
     }
-    this.baseMesh?.material.color.set(island ? '#123c4a' : '#1e272e');
+    this.baseMesh?.material.color.set(island ? '#a4d7c2' : '#ffe6b6');
     this.borderMesh?.material.color.set(island ? '#00d2d3' : '#ffaa00');
     this.scene3D.configureForMap?.(mapDefinition);
   }
@@ -411,6 +443,7 @@ export class BoardBuilder {
   createMapEnvironment(mapDefinition) {
     const group = new THREE.Group();
     group.name = `environment-${mapDefinition.id}`;
+    group.add(createTownCourts(mapDefinition));
     this.harborWaves = [];
     this.harborFerries = [];
     this.harborGulls = null;
@@ -612,12 +645,27 @@ export class BoardBuilder {
       const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
       const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = spec.background; ctx.fillRect(0,0,256,256);
-      ctx.strokeStyle = '#d1c5a5'; ctx.lineWidth = 8; ctx.strokeRect(4,4,248,248);
-      ctx.fillStyle = visual.accent; ctx.fillRect(10,10,236,22);
-      ctx.fillStyle = spec.ink; ctx.textAlign = 'center';
-      ctx.font = 'bold 60px sans-serif'; ctx.fillText(spec.label,128,143);
-      ctx.font = 'bold 35px sans-serif'; ctx.fillText(`${tileData.id}${spec.fork ? ' · 分岔' : spec.district ? ` · ${spec.district}` : ''}`,128,218);
+      const property=isPropertyTile(tileData),road=tileData.type==='ROAD';
+      ctx.fillStyle=road?'#859391':property?'#d6c8a8':'#d5bf9a';ctx.fillRect(0,0,256,256);
+      for(let row=0;row<8;row++)for(let col=-1;col<4;col++){
+        ctx.fillStyle=(row+col+2)%3?'rgba(255,249,219,.18)':'rgba(67,71,65,.09)';
+        ctx.fillRect(col*64+row%2*32+2,row*32+2,60,28);
+      }
+      const accent=tileData.group && COLOR_GROUPS[tileData.group]?.color || visual.accent;
+      ctx.beginPath();ctx.arc(128,124,84,0,2*Math.PI);ctx.fillStyle='#746955';ctx.fill();
+      ctx.beginPath();ctx.arc(128,118,81,0,2*Math.PI);ctx.fillStyle=road?'#687c78':accent;ctx.fill();
+      ctx.strokeStyle='#fff1c8';ctx.lineWidth=7;ctx.stroke();
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      if(property || road){
+        const points=road?[[94,103],[127,123],[162,103],[162,125],[127,148],[94,125]]:
+          [[77,117],[128,73],[179,117],[166,117],[166,154],[140,154],[140,126],[118,126],[118,154],[91,154],[91,117]];
+        ctx.beginPath();points.forEach(([x,y],n)=>n?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
+        ctx.fillStyle='#fff0c9';ctx.fill();ctx.strokeStyle='#684e34';ctx.lineWidth=4;ctx.stroke();
+      }else{
+        ctx.font='bold 58px sans-serif';ctx.lineWidth=5;ctx.strokeStyle='#594735';ctx.strokeText(spec.label,128,118);
+        ctx.fillStyle='#fff2c9';ctx.fillText(spec.label,128,118);
+      }
+      ctx.font='bold 30px sans-serif';ctx.fillStyle='#443e33';ctx.fillText(String(tileData.id),128,226);
       const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = Math.min(8,this.scene3D.renderer.capabilities.getMaxAnisotropy());
       tileMesh.material[2].dispose();
@@ -800,8 +848,9 @@ export class BoardBuilder {
       const anchor = service || (isPropertyTile(tile) && tile.lot?.position
         ? tile.lot.position
         : this.getRoadsideAnchor(tile, position));
-      group.position.set(anchor.x, service || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
+      group.position.set(anchor.x, service || (isPropertyTile(tile) && tile.lot?.position) || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
       group.rotation.y = service ? facilityFacing(tile, service) : group.userData.originalStation ? Math.PI : tile.lot?.rotation || 0;
+      if (mapDefinition.id==='grand-bay' && isPropertyTile(tile) && tile.lot?.position) group.rotation.y=facingRoad(tile)+Math.PI;
       group.userData.baseY = group.position.y;
       group.userData.phase = tile.id * 0.71;
       group.userData.tileType = tile.type;
@@ -836,7 +885,7 @@ export class BoardBuilder {
   createVacantLotMarker(tile) {
     const group = new THREE.Group();
     const accent = getTileVisualSpec(this.activeMapDefinition, tile).accent;
-    if (this.activeMapDefinition.id==='grand-bay' && quayLot(tile.id)) {
+    if (this.activeMapDefinition.id==='grand-bay' && tile.lot?.position) {
       // A buildable courtyard has an open street entrance and no billboard.
       const slab=new THREE.Mesh(new THREE.BoxGeometry(3.35,.12,3.15),new THREE.MeshStandardMaterial({color:'#e6c69e'}));
       group.add(slab);
@@ -853,6 +902,16 @@ export class BoardBuilder {
       planter.position.set(0,.16,1.36);group.add(planter);
       const hedge=new THREE.Mesh(new THREE.BoxGeometry(3.10,.31,.36),new THREE.MeshStandardMaterial({color:'#649159'}));
       hedge.position.set(0,.45,1.36);group.add(hedge);
+      // A gravel path and a survey pennant identify buildable land from the street.
+      const lawn=new THREE.Mesh(new THREE.BoxGeometry(2.95,.05,2.48),new THREE.MeshStandardMaterial({color:tile.id%2?'#a1bb68':'#9bb574'}));
+      lawn.position.set(0,.085,-.06);group.add(lawn);
+      const path=new THREE.Mesh(new THREE.BoxGeometry(.73,.06,2.12),new THREE.MeshStandardMaterial({color:'#f1d59c'}));
+      path.position.set(0,.12,-.41);group.add(path);
+      const pole=new THREE.Mesh(new THREE.CylinderGeometry(.04,.055,1.03,8),edging);
+      pole.position.set(.97,.64,.6);group.add(pole);
+      const flag=new THREE.Shape();flag.moveTo(0,0);flag.lineTo(.69,-.14);flag.lineTo(0,-.36);flag.closePath();
+      const pennant=new THREE.Mesh(new THREE.ShapeGeometry(flag),new THREE.MeshStandardMaterial({color:COLOR_GROUPS[tile.group]?.color || accent,side:THREE.DoubleSide}));
+      pennant.position.set(.97,1.14,.60);group.add(pennant);
       return group;
     }
     const pad = new THREE.Mesh(
@@ -1332,7 +1391,7 @@ export class BoardBuilder {
 
   createSurroundingCityEnvironment() {
     const roadGeo = new THREE.RingGeometry(this.halfBoard * 1.15, this.halfBoard * 1.45, 64);
-    const roadMat = new THREE.MeshStandardMaterial({ color: '#2f3542', roughness: 0.9, side: THREE.DoubleSide });
+    const roadMat = new THREE.MeshStandardMaterial({ color: '#738781', roughness: 0.9, side: THREE.DoubleSide });
     const road = new THREE.Mesh(roadGeo, roadMat);
     road.rotation.x = Math.PI / 2;
     road.position.y = -0.55;

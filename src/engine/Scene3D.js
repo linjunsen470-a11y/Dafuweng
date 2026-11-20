@@ -98,7 +98,7 @@ export class Scene3D {
   setupLighting() {
     // 太阳光（主平行光，带软阴影）
     const sunLight = new THREE.DirectionalLight('#fff8e7', 1.8);
-    sunLight.position.set(25, 45, 20);
+    sunLight.position.set(-32, 56, 30);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -313,6 +313,10 @@ export class Scene3D {
     };
     this.controls.minDistance = mapDefinition?.theme === 'GRAND_BAY' ? 11 : 15;
     this.controls.maxDistance = Math.max(75, this.mapCamera.overviewDistance * 1.25);
+    const shadowRadius=mapDefinition?.theme==='GRAND_BAY'?76:40;
+    const shadowCamera=this.sunLight.shadow.camera;
+    Object.assign(shadowCamera,{left:-shadowRadius,right:shadowRadius,top:shadowRadius,bottom:-shadowRadius,far:195});
+    shadowCamera.updateProjectionMatrix();
     this.mapFogScale = mapDefinition?.theme === 'GRAND_BAY' ? 0.25 : 1;
     this.scene.fog.density = 0.008 * this.mapFogScale;
     this.camera.far = Math.max(1000, this.mapCamera.overviewDistance * 8);
@@ -340,8 +344,12 @@ export class Scene3D {
     const compact = this.container.clientWidth < 680;
     // Keep the neighboring supply-shop sign in view on the narrow mountain frontage.
     const supplyCorner = compact && this.activeMapId === 'grand-bay' && position.z === -16 && position.x >= 26 && position.x <= 30;
-    const target = position.clone().add(oldTown ? new THREE.Vector3(-1,0,-3) : new THREE.Vector3(supplyCorner ? -1 : 4,0,3));
-    const offset = oldTownOffset(this.activeMapId,position,this.activeMapId === 'grand-bay' && position.z >= 25 ? {x:compact?7:12,y:compact?26:20,z:compact?25:19} : {x:5,y:compact?28:22,z:compact?32:28});
+    const preserveStreet = this.activeMapId==='grand-bay' && (oldTown || position.z<=-16);
+    const lead = preserveStreet ? new THREE.Vector3(supplyCorner?-1:4,0,3) : new THREE.Vector3(compact?.8:2,0,-.65);
+    const target = position.clone().add(oldTown ? new THREE.Vector3(-1,0,-3) : lead);
+    const offset = oldTownOffset(this.activeMapId,position,preserveStreet ? {x:5,y:compact?28:22,z:compact?32:28}
+      : this.activeMapId==='grand-bay' && position.z>=25 ? {x:compact?6:8,y:compact?21:14,z:compact?21:14}
+      : {x:compact?5:8,y:compact?23:16,z:compact?23:19});
     const cameraPosition = target.clone().add(new THREE.Vector3(offset.x,offset.y,offset.z));
     if (compact && tallLot && position.distanceToSquared(tallLot) > 1) {
       // Frame the owner and tower side by side from the road side of the plot.

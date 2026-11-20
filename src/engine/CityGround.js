@@ -16,6 +16,13 @@ export function createCityGround(map) {
     ctx.beginPath(); points.forEach(([x,z],i)=>i?ctx.lineTo(x,z):ctx.moveTo(x,z));ctx.closePath();
     ctx.fillStyle=fill;ctx.fill();if(edge){ctx.strokeStyle=edge;ctx.lineWidth=1.2;ctx.lineJoin='round';ctx.stroke();}
   };
+  // Large meadows have patches of clover, sunlit banks and darker soil at their edges.
+  for(let row=0;row<10;row++)for(let col=0;col<15;col++){
+    const x=-71+col*10+Math.sin(row*3+col)*3,z=-49+row*10+Math.cos(row+col*4)*3;
+    const glow=ctx.createRadialGradient(x,z,.4,x,z,7.2);
+    glow.addColorStop(0,(col+row)%3?'rgba(73,130,66,.49)':'rgba(225,202,108,.54)');
+    glow.addColorStop(1,'rgba(146,177,99,0)');ctx.fillStyle=glow;ctx.fillRect(x-8,z-8,16,16);
+  }
   // Broad green contours connect existing hill models rather than introducing more peaks.
   polygon([[-50,-32],[-34,-34],[-20,-26],[-18,-9],[-23,7],[-35,14],[-49,8]],'#9db28f');
   polygon([[-45,-27],[-33,-29],[-24,-22],[-23,-10],[-28,4],[-38,7],[-45,1]],'#90a889');
@@ -73,10 +80,10 @@ export function createCityGround(map) {
   }
   // Subtle deterministic grain is baked once, independent of the game's random state.
   let seed=173;
-  for(let i=0;i<4500;i++){
+  for(let i=0;i<26500;i++){
     seed=(Math.imul(seed,1664525)+1013904223)>>>0;const x=-71+seed/4294967296*142;
     seed=(Math.imul(seed,1664525)+1013904223)>>>0;const z=-49+seed/4294967296*92;
-    ctx.fillStyle=i%2?'rgba(255,255,235,.035)':'rgba(53,73,52,.025)';ctx.fillRect(x,z,.17,.12);
+    ctx.fillStyle=i%2?'rgba(255,250,208,.25)':'rgba(56,85,44,.17)';ctx.fillRect(x,z,.24,.13);
   }
   const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
   const material=new THREE.MeshStandardMaterial({map:texture,roughness:1,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});

@@ -1,0 +1,22 @@
+{
+  "receipt": {
+    "tile": 6,
+    "name": "蓝湾码头 3号",
+    "cashBefore": 20000,
+    "cashAfter": 18878
+  },
+  "timesMs": {
+    "DICE_ROLLED": 1408,
+    "MOVE_STARTED": 3414,
+    "PLAYER_STEPPED": 3415,
+    "diceLabel": 3417,
+    "MOVEMENT_FINISHED": 11089,
+    "offer": 12069,
+    "PROPERTY_PURCHASED": 22433
+  },
+  "errors": [],
+  "mobileFork": [
+    "沿港置业街\n珊瑚海岸 4号 · 可购 $1,479",
+    "金帆内街\n云端计算 · 预计服务费 $390"
+  ]
+}

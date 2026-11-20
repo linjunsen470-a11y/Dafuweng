@@ -4203,3 +4203,28 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
 .route-target-bar label[hidden] {display:none;}
 .route-target-bar button.quay-route-choice {display:grid; gap:2px; text-align:left; max-width:240px; min-height:44px; padding:5px 9px; background:#fff3d5;color:#50381f;border:0;border-left:5px solid var(--street-color);border-radius:6px;}
 .quay-route-choice span {font-size:11px;line-height:1.25;}
+
+/* The deed stays beside the board so the buyer can see the parcel being priced. */
+#modal-land {background:linear-gradient(90deg,transparent 25%,rgba(44,41,27,.19));backdrop-filter:none;align-items:center;justify-content:flex-end;padding:12px;}
+#modal-land .land-modal-box {width:min(480px,100%);padding:16px;background:#fff0cf;color:#513b2c;border:3px solid #b77749;border-radius:21px;box-shadow:0 8px 22px #52372152,inset 0 0 0 3px #fff9eb;}
+#modal-land .modal-header {border-color:#d7ad7a;}
+#modal-land .modal-header h2,#modal-land .land-name,#modal-land .stat-row strong,#modal-land .land-section-heading span {color:#493726;}
+#modal-land .modal-header small,#modal-land .land-building-description,#modal-land .stat-row span,#modal-land .land-cash-flow span,#modal-land .land-rent-bar small {color:#6d5640;}
+#modal-land .land-details {grid-template-columns:1fr;gap:8px;}
+#modal-land .land-preview {min-height:0;display:grid;grid-template-columns:96px 1fr;align-items:center;align-content:center;gap:4px 12px;padding:9px;background:#f2d7a6;border:1px solid #ccab7f;}
+#modal-land .land-building-art {grid-column:1;grid-row:1 / span 4;width:94px;height:94px;min-height:0;margin:0;border-radius:12px;box-shadow:0 2px 5px #85593440;}
+#modal-land .land-preview > :not(.land-building-art) {grid-column:2;margin:0;justify-self:start;text-align:left;}
+#modal-land .land-district-chip,#modal-land .land-level-badge {width:fit-content;background:#fff1cd;color:#654627;border-color:#cba879;}
+#modal-land .land-stats {background:#fff9e9;border-color:#d9bd91;gap:6px;padding:8px;}
+#modal-land .stat-row {min-height:42px;padding:4px 9px;background:#f6e8cc;border-color:#e4caa4;}
+#modal-land .land-rent-projection,#modal-land .land-cash-flow {background:#f3e4c8;border-color:#dfbe91;}
+#modal-land .land-rent-chart {height:65px;}
+#modal-land .land-rent-bar b,#modal-land .land-section-heading small,#modal-land .land-cash-flow strong {color:#714a30;}
+#modal-land .land-cash-result {background:#d9ead0;}
+#modal-land .modal-actions {background:transparent;}
+#modal-land .modal-actions .btn-secondary,#modal-land .close-modal {background:#f0dbb3;color:#4d392a;}
+@media(max-width:680px){
+  #modal-land {align-items:flex-end;padding:4px;}
+  #modal-land .land-modal-box {height:auto;max-height:75dvh;padding:10px;}
+  #modal-land .land-details {overflow:auto;}
+}
