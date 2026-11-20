@@ -424,20 +424,25 @@ export class PresentationUI {
     if (!panel) {
       panel = document.createElement('div');
       panel.className = 'presentation-move-progress';
-      panel.innerHTML = '<span class="move-progress-label">MOVE</span><strong></strong><div class="move-progress-track"><i></i></div><small></small>';
+      this.diceHost?.replaceChildren();
+      panel.innerHTML = '<strong></strong><div><span class="move-progress-label"></span><small></small></div><div class="move-progress-track"><i></i></div>';
       this.moveHost.replaceChildren(panel);
       void panel.offsetWidth;
       panel.classList.add('is-visible');
     }
     panel.style.setProperty('--player-color', player.color || '#67e8f9');
-    panel.querySelector('strong').textContent = `${current} / ${total}`;
+    const left=Math.max(0,total-current);
+    panel.querySelector('strong').textContent=String(left);
+    panel.querySelector('.move-progress-label').textContent=left?'剩余步数':'到达';
     panel.querySelector('i').style.width = `${Math.min(100, Math.max(0, current / Math.max(1, total) * 100))}%`;
-    panel.querySelector('small').textContent = tile?.name ? `途经 · ${tile.name}` : `${player.name} 正在移动`;
+    panel.querySelector('small').textContent = tile?.name ? `${tile.name}` : `${player.name} 正在移动`;
   }
 
   endMove() {
     const panel = this.moveHost?.querySelector('.presentation-move-progress');
     if (!panel) return;
+    panel.querySelector('.move-progress-label').textContent='到达';
+    panel.querySelector('strong').textContent='✓';
     panel.classList.add('is-complete');
     setTimeout(() => {
       panel.classList.remove('is-visible');

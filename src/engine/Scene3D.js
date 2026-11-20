@@ -433,17 +433,34 @@ export class Scene3D {
     frame(start);
   }
 
-  createMovementTrail(from, to, color = 0xffd166) {
-    const direction = to.clone().sub(from);
-    const length = direction.length();
-    if (!length) return;
-    const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.62, depthWrite: false, blending: THREE.AdditiveBlending });
-    const trail = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.18, length, 8), material);
-    trail.position.copy(from).lerp(to, 0.5);
-    trail.position.y += 0.2;
-    trail.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+  createMovementTrail(from,to,color=0xffd166,riding=false) {
+    const dx=to.x-from.x,dz=to.z-from.z,length=Math.hypot(dx,dz);
+    if(length<.4)return;
+    const forwardX=dx/length,forwardZ=dz/length,vertices=[];
+    const add=(along,side)=>{
+      vertices.push(from.x+forwardX*along+forwardZ*side,.49,from.z+forwardZ*along-forwardX*side);
+    };
+    // A single flat mesh holds all impressions from this step.
+    const sole=[[.19,0],[.13,.105],[-.06,.095],[-.12,.035],[-.105,-.065],[.09,-.105]];
+    const tread=[[.13,.08],[.07,.14],[-.12,-.07],[-.08,-.14]];
+    const count=Math.min(6,Math.max(2,Math.round(length/.8)));
+    for(let i=0;i<count;i++){
+      const along=length*(i+.4)/count;
+      for(const offset of riding?[-.34,.34]:[i%2?.18:-.18]){
+        const outline=riding?tread:sole;
+        for(let j=0;j<outline.length;j++){
+          add(along,offset);
+          for(const [a,b] of [outline[j],outline[(j+1)%outline.length]])add(along+a,offset+b);
+        }
+      }
+    }
+    const geometry=new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+    const trail=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({
+      color:new THREE.Color(color).lerp(new THREE.Color('#59432e'),.55),side:THREE.DoubleSide,transparent:true,opacity:.62,depthWrite:false
+    }));
     this.scene.add(trail);
-    this.cinematicEffects.push({ kind: 'trail', mesh: trail, life: 1, decay: 0.045 });
+    this.cinematicEffects.push({kind:'trail',mesh:trail,life:1,decay:.045});
   }
 
   createLandingPulse(position, color = 0xffd166, intensity = 1) {
@@ -569,10 +586,6 @@ export class Scene3D {
         const scale = 0.7 + (1 - effect.life) * (2.8 + effect.intensity * 0.65);
         effect.mesh.scale.setScalar(scale);
         effect.mesh.rotation.y += 0.025;
-      } else {
-        effect.mesh.position.y += 0.012;
-        effect.mesh.scale.x *= 0.985;
-        effect.mesh.scale.z *= 0.985;
       }
       if (effect.life <= 0) {
         this.scene.remove(effect.mesh);

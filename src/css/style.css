@@ -4228,3 +4228,30 @@ body:has(.modal:not(.hidden)) :is(.presentation-layer,.vfx-card-overlay,.vfx-exp
   #modal-land .land-modal-box {height:auto;max-height:75dvh;padding:10px;}
   #modal-land .land-details {overflow:auto;}
 }
+
+.presentation-layer .presentation-move-progress {
+  left:auto;right:14px;top:auto;bottom:calc(var(--action-dock-clearance,70px) + 50px);
+  width:max-content;max-width:180px;grid-template-columns:30px minmax(0,1fr);gap:1px 8px;
+  padding:6px 10px 6px 6px;border:2px solid #b98148;border-radius:13px;
+  background:#fff0ce;color:#543d28;box-shadow:0 3px 0 #885d3680;transform:translateY(3px);
+}
+.presentation-layer .presentation-move-progress.is-visible {transform:none;}
+.presentation-layer .presentation-move-progress strong {grid-row:1/3;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#fde1a1;border:2px solid var(--player-color);color:#563c27;font:900 18px/1 sans-serif;}
+.presentation-layer .move-progress-label {display:block;letter-spacing:.04em;font-size:10px;color:#785331;}
+.presentation-layer .presentation-move-progress small {display:block;color:#483523;font-size:12px;font-weight:750;text-align:left;}
+.presentation-layer .move-progress-track {grid-column:2;height:3px;background:#ddc39b;}
+@media(max-width:680px){
+  .presentation-layer .presentation-move-progress {right:7px;top:calc(env(safe-area-inset-top) + 55px);bottom:auto;max-width:145px;}
+}
+.presentation-layer .presentation-toast {
+  grid-template-columns:27px minmax(0,1fr);gap:8px;padding:6px 9px;
+  background:#fff4d7;border:1px solid #be925c;border-left:4px solid #708f8a;
+  border-radius:10px;box-shadow:0 2px 0 #805e394d;
+}
+.presentation-layer .presentation-toast.tone-gold {border-left-color:#cb8729;}
+.presentation-layer .presentation-toast.tone-success {border-left-color:#528451;}
+.presentation-layer .presentation-toast.tone-danger {border-left-color:#bd604e;}
+.presentation-layer .presentation-toast.tone-accent {border-left-color:#8b6998;}
+.presentation-layer .presentation-toast-icon {width:27px;height:27px;background:#f3dca4;border:1px solid #d1ab6c;color:#65472c;}
+.presentation-layer .presentation-toast strong {color:#4c3926;}
+.presentation-layer .presentation-toast > div > span {color:#70573f;}

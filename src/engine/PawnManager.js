@@ -601,12 +601,12 @@ export class PawnManager {
     const reducedMotion = document.documentElement.classList.contains('reduce-motion')
       || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const color = pawn.ring?.material?.color?.getHex?.() ?? 0xffd166;
-    if (!reducedMotion) this.scene3D.createMovementTrail?.(pawn.mesh.position.clone(), target, color);
+    const previousFootfall=reducedMotion?null:pawn.mesh.position.clone();
     const original = this.animateHopDuration;
     this.animateHopDuration = duration;
     await this.animateHop(pawn.mesh, target);
     this.animateHopDuration = original;
-    if (!reducedMotion) this.scene3D.createSparkles?.(target, color, 5);
+    if (previousFootfall) this.scene3D.createMovementTrail?.(previousFootfall,target,color,Boolean(pawn.ride));
   }
 
   getPawnMesh(playerIndex) {

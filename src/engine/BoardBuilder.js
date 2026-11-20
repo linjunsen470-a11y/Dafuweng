@@ -1,3 +1,4 @@
+import {createStreetAprons} from './StreetAprons.js';
 import {hasClassicFrontages,planClassicFrontages} from './ClassicFrontages.js';
 import {createTownCourts} from './TownCourts.js';
 import {createQuayStreet,quayLot} from './QuayStreet.js';
@@ -304,11 +305,11 @@ export class BoardBuilder {
     const island = mapDefinition.theme === 'ISLAND';
     const crossroads = mapDefinition.theme === 'CROSSROADS';
     const grand = mapDefinition.theme === 'GRAND_BAY';
-    this.baseMesh.visible = !crossroads && !grand;
-    this.borderMesh.visible = !crossroads && !grand;
+    this.baseMesh.visible = !crossroads && !grand && !island;
+    this.borderMesh.visible = !crossroads && !grand && !island;
     if (this.centralDecorationGroup) this.centralDecorationGroup.visible = !crossroads && !grand && !island && mapDefinition.id !== 'taiwan-loop';
-    if (this.surroundingRoad) this.surroundingRoad.visible = !grand;
-    this.cars?.forEach(car => { car.mesh.visible = !grand; });
+    if (this.surroundingRoad) this.surroundingRoad.visible = !grand && !island;
+    this.cars?.forEach(car => { car.mesh.visible = !grand && !island; });
     this.streetLights?.forEach(({ light, bulb, pole }) => {
       light.visible = !grand;
       bulb.visible = !grand;
@@ -452,6 +453,7 @@ export class BoardBuilder {
     const group = new THREE.Group();
     group.name = `environment-${mapDefinition.id}`;
     group.add(createTownCourts(mapDefinition));
+    if(hasClassicFrontages(mapDefinition))group.add(createStreetAprons(mapDefinition));
     this.harborWaves = [];
     this.harborFerries = [];
     this.harborGulls = null;
@@ -894,27 +896,32 @@ export class BoardBuilder {
     const group = new THREE.Group();
     const accent = getTileVisualSpec(this.activeMapDefinition, tile).accent;
     if (tile.lot?.position) {
-      // A buildable courtyard has an open street entrance and no billboard.
-      const slab=new THREE.Mesh(new THREE.BoxGeometry(3.35,.12,3.15),new THREE.MeshStandardMaterial({color:'#e6c69e'}));
+      const map=this.activeMapDefinition.id;
+      const dock=(map==='island-fork' && (tile.id<=12 || tile.id>=26)) || (map==='grand-bay' && quayLot(tile.id));
+      const arcade=map==='city-loop' || tile.large;
+      const tea=map==='taiwan-loop' || (map==='island-fork' && tile.id>=16 && tile.id<=22);
+      const edging=new THREE.MeshStandardMaterial({color:dock?'#886345':arcade?'#97795d':'#ac8b63'});
+      const surface=new THREE.MeshStandardMaterial({color:dock?'#c08c54':arcade?'#c5baba':tea?'#afbc82':'#a2b87a'});
+      const slab=new THREE.Mesh(new THREE.BoxGeometry(3.30,.11,3.05),surface);
       group.add(slab);
-      const edging=new THREE.MeshStandardMaterial({color:'#ad8966'});
-      for(const side of [-1,1]){
-        const wall=new THREE.Mesh(new THREE.BoxGeometry(.14,.30,3.20),edging);
-        wall.position.set(1.65*side,.15,0);group.add(wall);
+      const detail=(x,y,z,w,h,d,material)=>{
+        const part=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);part.position.set(x,y,z);group.add(part);
+      };
+      if(dock){
+        for(let board=-3;board<=3;board++)detail(0,.068,board*.40,3.26,.02,.035,edging);
+        for(const x of [-1.38,1.38])detail(x,.30,1.24,.21,.64,.21,edging);
+        detail(0,.43,1.24,2.82,.14,.12,edging);
+      }else if(arcade){
+        for(const side of [-1,1])detail(side*1.21,.13,.26,.52,.16,2.45,edging);
+        for(const z of [-.96,-.13,.70])detail(0,.09,z,1.45,.065,.11,edging);
+      }else{
+        const hedge=new THREE.MeshStandardMaterial({color:tea?'#708c47':'#649159'});
+        for(const side of [-1,1]){
+          detail(side*1.05,.20,tea?.50:.28,.60,.28,tea?1.68:2.02,hedge);
+          detail(side*1.39,.13,.15,.11,.22,2.40,edging);
+        }
+        detail(0,.09,-.28,.78,.075,2.27,new THREE.MeshStandardMaterial({color:'#e9c99a'}));
       }
-      for(const x of [-1.17,1.17]){
-        const sill=new THREE.Mesh(new THREE.BoxGeometry(.99,.24,.17),edging);
-        sill.position.set(x,.12,-1.54);group.add(sill);
-      }
-      const planter=new THREE.Mesh(new THREE.BoxGeometry(3.35,.34,.42),edging);
-      planter.position.set(0,.16,1.36);group.add(planter);
-      const hedge=new THREE.Mesh(new THREE.BoxGeometry(3.10,.31,.36),new THREE.MeshStandardMaterial({color:'#649159'}));
-      hedge.position.set(0,.45,1.36);group.add(hedge);
-      // A gravel path and a survey pennant identify buildable land from the street.
-      const lawn=new THREE.Mesh(new THREE.BoxGeometry(2.95,.05,2.48),new THREE.MeshStandardMaterial({color:tile.id%2?'#a1bb68':'#9bb574'}));
-      lawn.position.set(0,.085,-.06);group.add(lawn);
-      const path=new THREE.Mesh(new THREE.BoxGeometry(.73,.06,2.12),new THREE.MeshStandardMaterial({color:'#f1d59c'}));
-      path.position.set(0,.12,-.41);group.add(path);
       const pole=new THREE.Mesh(new THREE.CylinderGeometry(.04,.055,1.03,8),edging);
       pole.position.set(.97,.64,.6);group.add(pole);
       const flag=new THREE.Shape();flag.moveTo(0,0);flag.lineTo(.69,-.14);flag.lineTo(0,-.36);flag.closePath();
