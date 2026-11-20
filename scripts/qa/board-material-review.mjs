@@ -31,8 +31,23 @@ try{
     await page.evaluate(snapshot=>boardQA.restoreGame(snapshot),state.createSnapshot());
     await page.waitForFunction(()=>boardQA.pawnManager.pawns.every(p=>p.skin) && document.querySelector('#game-container').dataset.harborArt==='ready');
     await page.screenshot({path:'/tmp/material-'+phase+'-'+map+'.jpg'});
+    if(process.argv.includes('--tour')){
+      await page.click('#btn-map-overview');
+      await page.screenshot({path:'/tmp/tour-'+map+'.jpg'});
+      const xy=await page.evaluate(()=>{
+        const m=boardQA.minimapUI,r=m.canvas.getBoundingClientRect(),p=m.project(m.mapDefinition.tiles[16].position);
+        return [r.left+p.x*r.width/m.canvas.width,r.top+p.y*r.height/m.canvas.height];
+      });
+      await page.mouse.click(...xy);
+      await page.waitForFunction(()=>{const a=boardQA.scene3D,b=boardQA.boardBuilder.tilePositions[16];
+        const p=a.targetLookAt || a.controls.target;return Math.hypot(p.x-b.x,p.z-b.z)<1.5;});
+      await page.click('#btn-follow-view');
+      await page.waitForFunction(()=>{const a=boardQA.scene3D,b=boardQA.boardBuilder.tilePositions[boardQA.gameState.getCurrentPlayer().currentTile];
+        const p=a.targetLookAt || a.controls.target;return Math.hypot(p.x-b.x,p.z-b.z)<.5;});
+      console.log(map,'overview, navigation to 16, return to pawn');
+    }
   }
-  if(!baseline){
+  if(!baseline && !process.argv.includes('--maps-only')){
     if(!touchOnly){
       const point=await page.evaluate(()=>{
         const m=boardQA.minimapUI, r=m.canvas.getBoundingClientRect();

@@ -1,3 +1,4 @@
+import {connectingStreet} from './ConnectingStreets.js';
 import {finishRoofs,surfaceTexture} from './BoardSurfaceArt.js';
 import {regionalDistrict} from './RegionalDistricts.js';
 import {createMarketDistrict} from './MarketDistrict.js';
@@ -474,6 +475,11 @@ export class BoardBuilder {
     if(marketDistrict){
       group.add(finishRoofs(marketDistrict,mapDefinition.id));
       group.streetOccluders=marketDistrict.children.filter(child=>child.userData.streetOccluder);
+    }
+    const connection=connectingStreet(mapDefinition.id);
+    if(connection){
+      group.add(finishRoofs(connection,mapDefinition.id));
+      group.streetOccluders=(group.streetOccluders || []).concat(connection.children.filter(child=>child.userData.streetOccluder));
     }
     if(hasClassicFrontages(mapDefinition))group.add(createStreetAprons(mapDefinition));
     this.harborWaves = [];
