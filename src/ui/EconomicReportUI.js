@@ -35,7 +35,7 @@ export class EconomicReportUI {
     overlay.innerHTML = `
       <section class="economic-report" role="dialog" aria-modal="true" aria-labelledby="economic-report-title">
         <header class="economic-report-header">
-          <div><span>FORTUNE CITY · PERIOD ${report.period}</span><h2 id="economic-report-title">🧾 城市经济周期财报</h2><p>第 ${report.round} 轮结算 · 物价指数 ${Number(report.priceIndex || 1).toFixed(1)}x</p></div>
+          <div><span>富翁帝国 · 第 ${report.period} 期结账</span><h2 id="economic-report-title">🧾 城市经济周期财报</h2><p>第 ${report.round} 轮结算 · 物价指数 ${Number(report.priceIndex || 1).toFixed(1)}x</p></div>
           <button type="button" class="close-modal economic-report-close" aria-label="关闭周期财报">×</button>
         </header>
         <div class="economic-report-body">
@@ -46,7 +46,7 @@ export class EconomicReportUI {
           </section>
           <div class="economic-report-grid">
             <section class="economic-panel economic-player-panel">
-              <div class="economic-panel-title"><div><span>PLAYER INCOME</span><h3>玩家周期收益榜</h3></div><em>利息 ${money(report.totals.interest)} · 分红池 ${money(report.totals.dividends)}</em></div>
+              <div class="economic-panel-title"><div><span>周期收益榜</span><h3>玩家周期收益榜</h3></div><em>利息 ${money(report.totals.interest)} · 分红池 ${money(report.totals.dividends)}</em></div>
               <div class="economic-player-list"></div>
             </section>
             <div class="economic-side-column">
@@ -55,13 +55,13 @@ export class EconomicReportUI {
                 <div><span>🎰 城市乐透</span><h3>${lottery.rollover ? '本期无人命中' : `${lottery.winnerNames?.join('、')} 喜提大奖`}</h3><p>${lottery.rollover ? `奖池累积至 ${money(lottery.potAfter)}` : `每位赢家获得 ${money(lottery.prize)}`}</p></div>
               </section>
               <section class="economic-panel economic-market-panel">
-                <div class="economic-panel-title"><div><span>MARKET PULSE</span><h3>市场脉搏</h3></div></div>
+                <div class="economic-panel-title"><div><span>股市快报</span><h3>市场脉搏</h3></div></div>
                 <div class="economic-stock-list"></div>
               </section>
             </div>
           </div>
           <section class="economic-panel economic-company-panel">
-            <div class="economic-panel-title"><div><span>CORPORATE RESULTS</span><h3>公司经营与股东回报</h3></div><em>按分红规模排序</em></div>
+            <div class="economic-panel-title"><div><span>企业财报</span><h3>公司经营与股东回报</h3></div><em>按分红规模排序</em></div>
             <div class="economic-company-list"></div>
           </section>
         </div>

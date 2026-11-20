@@ -21,16 +21,16 @@ export class MagicHouseUI {
       overlay.innerHTML = `
         <section class="magic-house" role="dialog" aria-modal="true" aria-labelledby="magic-house-title">
           <header class="magic-house-header">
-            <div><span>ARCANE FORTUNE LAB</span><h2 id="magic-house-title">🔮 星辉魔法屋</h2><p>组合目标符文与效果符文，确认本次命运改写</p></div>
+            <div><span>大富翁神奇魔法屋</span><h2 id="magic-house-title">🔮 奇迹魔法屋</h2><p>选一个倒霉蛋（或自己）＋选一道整蛊魔法，立刻改写命运！</p></div>
             <button type="button" class="close-modal magic-house-close" aria-label="离开魔法屋">×</button>
           </header>
           <div class="magic-house-body">
-            <section class="magic-rune-section magic-condition-section"><div class="magic-section-title"><b>01</b><div><span>TARGET RUNE</span><h3>选择目标条件</h3></div></div><div class="magic-rune-grid magic-condition-grid"></div></section>
-            <div class="magic-orb-column"><div class="magic-orb"><i></i><span>✦</span><b>命运回路</b></div><div class="magic-formula"><span class="magic-formula-condition"></span><i>＋</i><span class="magic-formula-effect"></span></div></div>
-            <section class="magic-rune-section magic-effect-section"><div class="magic-section-title"><b>02</b><div><span>EFFECT RUNE</span><h3>选择施法结果</h3></div></div><div class="magic-rune-grid magic-effect-grid"></div></section>
+            <section class="magic-rune-section magic-condition-section"><div class="magic-section-title"><b>1</b><div><span>第一步</span><h3>挑谁中招？</h3></div></div><div class="magic-rune-grid magic-condition-grid"></div></section>
+            <div class="magic-orb-column"><div class="magic-orb"><i></i><span>✦</span><b>魔法阵</b></div><div class="magic-formula"><span class="magic-formula-condition"></span><i>＋</i><span class="magic-formula-effect"></span></div></div>
+            <section class="magic-rune-section magic-effect-section"><div class="magic-section-title"><b>2</b><div><span>第二步</span><h3>施加什么魔法？</h3></div></div><div class="magic-rune-grid magic-effect-grid"></div></section>
           </div>
           <section class="magic-preview-panel" aria-live="polite">
-            <div class="magic-preview-copy"><span>CAST PREVIEW</span><h3></h3><p></p></div>
+            <div class="magic-preview-copy"><span>施法预告</span><h3></h3><p></p></div>
             <div class="magic-preview-targets"></div>
             <div class="magic-preview-verdict"><span></span><strong></strong></div>
           </section>

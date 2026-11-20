@@ -26,11 +26,11 @@ export class ChanceRevealUI {
       <div class="chance-stage" role="dialog" aria-modal="true" aria-labelledby="chance-card-title">
         <div class="chance-rays" aria-hidden="true"></div>
         <article class="chance-card rarity-${presentation.rarity.id.toLowerCase()}">
-          <div class="chance-card-back"><span>?</span><strong>FORTUNE</strong><small>DESTINY CARD</small></div>
+          <div class="chance-card-back"><span>?</span><strong>命运卡</strong><small>好坏全凭手气</small></div>
           <div class="chance-card-front">
             <header><span>${presentation.category.label}</span><em>${presentation.rarity.label} · ${presentation.stars}</em></header>
-            <div class="chance-card-art"><i></i><span>${presentation.icon}</span><b>${presentation.tone === 'gain' ? 'LUCKY' : presentation.tone === 'blocked' ? 'GUARDED' : 'TWIST'}</b></div>
-            <div class="chance-card-copy"><small>NO. ${String(Math.abs([...presentation.title].reduce((sum, char) => sum + char.charCodeAt(0), 0)) % 100).padStart(2, '0')}</small><h2 id="chance-card-title">${presentation.title}</h2><p>${presentation.description}</p></div>
+            <div class="chance-card-art"><i></i><span>${presentation.icon}</span><b>${presentation.tone === 'gain' ? '鸿运当头' : presentation.tone === 'blocked' ? '化险为夷' : '突发插曲'}</b></div>
+            <div class="chance-card-copy"><small>第 ${String(Math.abs([...presentation.title].reduce((sum, char) => sum + char.charCodeAt(0), 0)) % 100).padStart(2, '0')} 号签</small><h2 id="chance-card-title">${presentation.title}</h2><p>${presentation.description}</p></div>
             <div class="chance-card-outcome"><span>实际结算</span><strong>${presentation.outcome}</strong></div>
           </div>
         </article>

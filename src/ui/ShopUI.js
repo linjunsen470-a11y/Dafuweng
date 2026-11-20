@@ -58,7 +58,7 @@ export class ShopUI {
     this.shopVisitBanner.innerHTML = offer ? `
       <strong>✨ 到店会员价已生效</strong>
       <span>到店获赠 ${offer.bonusPoints || 0} PTS；本轮供应 ${offer.cardIds.length} 张卡片与 ${offer.itemIds.length} 件道具，下一轮自动更新。</span>
-      <em>${offer.premium ? 'PREMIUM STORE' : 'ROUND SPECIAL'}</em>
+      <em>${offer.premium ? '旗舰特供' : '本轮精选'}</em>
     ` : '';
     this.shopModal.classList.remove('hidden');
     this.renderShop();
@@ -253,7 +253,7 @@ export class ShopUI {
     container.className = `card-detail-panel rarity-${view.rarity.id.toLowerCase()}`;
     container.innerHTML = `
       <div class="card-detail-art"><img class="card-detail-illustration ${view.artClass}" src="${view.cardImg}" alt="${view.name}"><span>${view.rarity.label} · ${view.category.label}</span></div>
-      <div class="card-detail-heading"><small>TACTICAL DOSSIER</small><h3>${view.name}</h3><p>${view.desc}</p></div>
+      <div class="card-detail-heading"><small>卡片妙用</small><h3>${view.name}</h3><p>${view.desc}</p></div>
       <div class="card-detail-meta"><span><b>目标</b>${view.targetLabel}</span><span><b>时机</b>${view.timing}</span><span><b>类型</b>${view.category.icon} ${view.category.label}</span></div>
       <div class="card-tactical-note"><b>战术参谋</b><p>${view.tacticalNote}</p></div>
       <div class="card-detail-status ${mode === 'INVENTORY' && !view.enabled || mode === 'SHOP' && !view.affordable ? 'blocked' : 'ready'}"><i></i>${status}</div>

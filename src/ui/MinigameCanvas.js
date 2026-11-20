@@ -18,20 +18,26 @@ export function launchSkyCoinsArcade(session, audioManager) {
   const feedback = stage.querySelector('.minigame-feedback');
 
   let basketX = 50; // percentage 8..92
+  let basketActive = false;
   let keys = { left: false, right: false };
   let spawnIndex = 0;
   const activeDrops = [];
   const particles = [];
 
-  const setBasket = pct => {
+  const setBasket = (pct, activate = false) => {
+    if (activate) {
+      basketActive = true;
+      basket.classList.add('is-active');
+    }
     basketX = Math.max(10, Math.min(90, pct));
     basket.style.left = `${basketX}%`;
   };
-  setBasket(50);
+  setBasket(50, false);
 
   const onMove = event => {
+    if (event.type === 'pointerdown' && event.target?.closest?.('.sky-object')) return;
     const rect = stage.getBoundingClientRect();
-    if (rect.width > 0) setBasket(((event.clientX - rect.left) / rect.width) * 100);
+    if (rect.width > 0) setBasket(((event.clientX - rect.left) / rect.width) * 100, true);
   };
   stage.addEventListener('pointermove', onMove);
   stage.addEventListener('pointerdown', onMove);
@@ -39,11 +45,11 @@ export function launchSkyCoinsArcade(session, audioManager) {
   session.onKey(event => {
     if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
       keys.left = true;
-      setBasket(basketX - 7);
+      setBasket(basketX - 7, true);
     }
     if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
       keys.right = true;
-      setBasket(basketX + 7);
+      setBasket(basketX + 7, true);
     }
   });
 
@@ -103,7 +109,7 @@ export function launchSkyCoinsArcade(session, audioManager) {
       if (d.done) { activeDrops.splice(i, 1); continue; }
       d.y += d.vy * 1.45;
       d.el.style.top = `${d.y}%`;
-      if (d.y >= 74 && d.y <= 92 && Math.abs(d.x - basketX) <= 13) {
+      if (basketActive && d.y >= 74 && d.y <= 92 && Math.abs(d.x - basketX) <= 13) {
         collect(d, true);
         activeDrops.splice(i, 1);
       } else if (d.y > 96) {

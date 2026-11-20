@@ -19,17 +19,22 @@ describe('Richman 4 visual, audio & playability upgrades', () => {
     const player = state.players[0];
     const startWorth = state.calculateNetWorth(player);
 
+    const bankTile = state.mapDefinition.tiles.find(t => t.type === 'BANK') || state.mapDefinition.tiles[0];
+    player.currentTile = bankTile.id;
+    state.phase = 'LANDING_ACTION';
+
     const preview = getBankTransferPreview(state, player, 'LOAN', 4000);
     expect(preview).toMatchObject({ enabled: true, cashAfter: 14000, loanAfter: 4000, loanCap: BANK_LOAN_CAP });
 
-    const loaned = engine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { direction: 'LOAN', amount: 4000 } });
+    const loaned = engine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId: bankTile.id, direction: 'LOAN', amount: 4000 } });
     expect(loaned).toMatchObject({ success: true, cash: 14000, loan: 4000 });
     expect(state.calculateNetWorth(player)).toBe(startWorth);
 
-    const overCap = engine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { direction: 'LOAN', amount: BANK_LOAN_CAP } });
+    const overCap = engine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId: bankTile.id, direction: 'LOAN', amount: BANK_LOAN_CAP } });
     expect(overCap.success).toBe(false);
 
-    const repaid = engine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { direction: 'REPAY_LOAN', amount: 2500 } });
+    state.phase = 'MOVING';
+    const repaid = engine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId: bankTile.id, passing: true, direction: 'REPAY_LOAN', amount: 2500 } });
     expect(repaid).toMatchObject({ success: true, cash: 11500, loan: 1500 });
     expect(state.calculateNetWorth(player)).toBe(startWorth);
   });

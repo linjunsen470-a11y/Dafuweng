@@ -24,7 +24,7 @@ export class AuctionUI {
     overlay.innerHTML = `
       <div class="auction-hall" role="dialog" aria-modal="true" aria-labelledby="auction-title">
         <header class="auction-header">
-          <div><span class="auction-kicker">FORTUNE ESTATE AUCTION</span><h2 id="auction-title">🔨 城市地产拍卖会</h2></div>
+          <div><span class="auction-kicker">大富翁黄金拍卖行</span><h2 id="auction-title">🔨 城市地产拍卖会</h2></div>
           <div class="auction-round"><span>竞价轮次</span><strong></strong></div>
         </header>
         <div class="auction-main">
@@ -51,9 +51,9 @@ export class AuctionUI {
       </div>
     `;
     overlay.querySelector('.auction-round strong').textContent = String(auction.biddingRound || 1);
-    overlay.querySelector('.auction-lot-number').textContent = `LOT ${String(auction.tileId).padStart(3, '0')}`;
+    overlay.querySelector('.auction-lot-number').textContent = `拍品 ${String(auction.tileId).padStart(3, '0')} 号`;
     overlay.querySelector('.auction-property-icon').textContent = tile.icon || (property?.buildingType === 'HOTEL' ? '🏨' : '🏙️');
-    overlay.querySelector('.auction-property-zone').textContent = tile.group ? `${tile.group} DISTRICT` : 'CITY PROPERTY';
+    overlay.querySelector('.auction-property-zone').textContent = tile.group ? `热门商圈 · ${tile.group}` : '城市黄金地段';
     overlay.querySelector('.auction-property-card h3').textContent = tile.name;
     overlay.querySelector('.auction-property-description').textContent = tile.desc || '城市核心资产，竞得后立即完成产权交割。';
     overlay.querySelector('.auction-base-price').textContent = money(tile.price);

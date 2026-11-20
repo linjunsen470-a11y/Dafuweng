@@ -12,7 +12,6 @@ const LANDING_COMMANDS = new Set([
   'UPGRADE_PROPERTY',
   'SETTLE_RENT',
   'RESOLVE_LANDING',
-  'BANK_TRANSFER',
   'BUY_LOTTERY',
   'CAST_MAGIC',
   'RESOLVE_MAGIC',
@@ -55,6 +54,17 @@ export function validateCommand(state, player, command) {
       && state.getTile?.(shopTileId)?.type === 'CARD_SHOP';
     if (state.phase !== 'PRE_ROLL_ACTION' && !landingShop) {
       return { success: false, reason: '只能在掷骰前或到访卡片屋时购买' };
+    }
+    return null;
+  }
+
+  if (type === 'BANK_TRANSFER') {
+    const isPassingCounter = Boolean(command.payload?.passing)
+      && ['MOVING', 'LANDING_ACTION', 'PRE_ROLL_ACTION'].includes(state.phase);
+    const isLandingBank = state.phase === 'LANDING_ACTION'
+      && Number(command.payload?.tileId) === player.currentTile;
+    if (!isPassingCounter && !isLandingBank) {
+      return { success: false, reason: '只能在到访或路过银行时办理业务' };
     }
     return null;
   }

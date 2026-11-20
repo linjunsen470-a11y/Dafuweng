@@ -39,7 +39,7 @@ export class DebtUI {
     overlay.innerHTML = `
       <div class="debt-center" role="dialog" aria-modal="true" aria-labelledby="debt-title">
         <header class="debt-header">
-          <div class="debt-title-group"><span class="debt-alert-pulse">!</span><div><span class="debt-kicker">FINANCIAL SETTLEMENT CENTER</span><h2 id="debt-title">财务危机处理中心</h2></div></div>
+          <div class="debt-title-group"><span class="debt-alert-pulse">!</span><div><span class="debt-kicker">大富翁应急筹款处</span><h2 id="debt-title">财务危机处理中心</h2></div></div>
           <div class="debt-case-number"><span>CASE</span><strong></strong></div>
         </header>
         <div class="debt-main">
@@ -58,7 +58,7 @@ export class DebtUI {
             <div class="debt-solvency"></div>
           </aside>
           <section class="debt-workspace">
-            <div class="debt-assets-title"><div><span class="debt-kicker">LIQUIDITY OVERVIEW</span><h3>可变现资产</h3></div><strong class="debt-liquid-total"></strong></div>
+            <div class="debt-assets-title"><div><span class="debt-kicker">可用变现清单</span><h3>可变现资产</h3></div><strong class="debt-liquid-total"></strong></div>
             <div class="debt-asset-grid"></div>
             <div class="debt-strategy-note"><strong>自动处置顺序</strong><span>存款 → 低收益股票 → 低租金建筑 → 空地抵押；达到欠款金额后立即停止。</span></div>
             <div class="debt-actions-title"><strong>选择本次处理方式</strong><span>你可以分步处置，界面会实时重新计算缺口</span></div>
@@ -204,7 +204,7 @@ export class DebtUI {
     overlay.innerHTML = `
       <div class="debt-outcome" role="dialog" aria-modal="true">
         <span class="debt-outcome-icon"></span>
-        <span class="debt-kicker">SETTLEMENT RESULT</span>
+        <span class="debt-kicker">财务清算结果</span>
         <h2></h2><p></p><strong></strong>
         <button type="button" class="btn-primary">继续</button>
       </div>

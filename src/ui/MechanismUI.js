@@ -15,20 +15,20 @@ export class MechanismUI {
       overlay.innerHTML = `
         <section class="mechanism-tower" role="dialog" aria-modal="true" aria-labelledby="mechanism-tower-title">
           <header class="mechanism-tower-header">
-            <div><span>TIDAL TRANSIT CONTROL</span><h2 id="mechanism-tower-title">⚙️ 潮汐交通控制塔</h2><p>锁定全岛三处岔路，改变所有玩家后续通行方案</p></div>
+            <div><span>岛屿机关总控台</span><h2 id="mechanism-tower-title">⚙️ 潮汐交通控制塔</h2><p>拨动全岛三处岔路开关，让对手走上你安排的路！</p></div>
             <div class="mechanism-current"><small>当前路网状态</small><strong></strong><em></em></div>
             <button type="button" class="close-modal mechanism-close" aria-label="离开控制塔">×</button>
           </header>
           <div class="mechanism-tower-body">
             <section class="mechanism-plans-panel">
-              <div class="mechanism-section-title"><span>01</span><div><small>NETWORK MODE</small><h3>选择全岛路线方案</h3></div></div>
+              <div class="mechanism-section-title"><span>01</span><div><small>交通方案</small><h3>选择全岛路线方案</h3></div></div>
               <div class="mechanism-plan-list"></div>
             </section>
             <section class="mechanism-map-panel">
-              <div class="mechanism-section-title"><span>02</span><div><small>ROUTE SCHEMATIC</small><h3>三处分岔态势</h3></div></div>
+              <div class="mechanism-section-title"><span>02</span><div><small>岔路示意图</small><h3>三处分岔态势</h3></div></div>
               <div class="mechanism-schematic"></div>
               <div class="mechanism-route-metrics"></div>
-              <div class="mechanism-player-flow"><span>ROUTE OCCUPANCY</span><div></div></div>
+              <div class="mechanism-player-flow"><span>当前路况</span><div></div></div>
             </section>
           </div>
           <section class="mechanism-impact-preview"><div><span>个人租金风险</span><strong class="mechanism-risk"></strong></div><div><span>自有地产潜在通行费</span><strong class="mechanism-potential"></strong></div><div><span>战略判断</span><strong class="mechanism-verdict"></strong></div></section>

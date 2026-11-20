@@ -17,19 +17,19 @@ export class LotteryUI {
       overlay.innerHTML = `
         <section class="lottery-center" role="dialog" aria-modal="true" aria-labelledby="lottery-center-title">
           <header class="lottery-center-header">
-            <div><span>FORTUNE CITY LOTTERY</span><h2 id="lottery-center-title">🎰 山海城市乐透</h2><p>选择至多三组幸运号码，经济周期末统一开奖</p></div>
+            <div><span>大富翁幸运乐透</span><h2 id="lottery-center-title">🎰 城市幸运乐透站</h2><p>最多挑选三组幸运号码，发财就看这波开奖！</p></div>
             <div class="lottery-jackpot"><small>本期累积奖池</small><strong></strong><em></em></div>
             <button type="button" class="close-modal lottery-close" aria-label="离开乐透中心">×</button>
           </header>
           <div class="lottery-center-body">
             <aside class="lottery-intel">
-              <span>DRAW INTELLIGENCE</span><h3>本期投注情报</h3>
+              <span>开奖情报</span><h3>本期投注一览</h3>
               <div class="lottery-intel-grid"></div>
-              <div class="lottery-owned"><small>MY TICKETS</small><div></div></div>
-              <button type="button" class="btn-secondary lottery-recommend">✨ 智选冷门号码</button>
+              <div class="lottery-owned"><small>我已买的号码</small><div></div></div>
+              <button type="button" class="btn-secondary lottery-recommend">✨ 帮我挑冷门号</button>
             </aside>
             <section class="lottery-board">
-              <div class="lottery-board-title"><div><span>01</span><h3>选择幸运号码</h3></div><p>号码越拥挤，命中后需要与更多赢家平分奖池</p></div>
+              <div class="lottery-board-title"><div><span>选号</span><h3>选择幸运号码</h3></div><p>买的人越少，中大奖独吞奖池越爽！</p></div>
               <div class="lottery-number-grid"></div>
               <div class="lottery-legend"><span><i class="is-clear"></i>无人选择</span><span><i class="is-warm"></i>已有投注</span><span><i class="is-owned"></i>本期已持有</span></div>
             </section>
@@ -38,7 +38,7 @@ export class LotteryUI {
             <div><span>投注金额</span><strong class="lottery-preview-cost"></strong></div>
             <div><span>独立中奖概率</span><strong class="lottery-preview-chance"></strong></div>
             <div><span>理论期望回报</span><strong class="lottery-preview-ev"></strong></div>
-            <div class="lottery-preview-message"><span>SELECTION REVIEW</span><strong></strong></div>
+            <div class="lottery-preview-message"><span>选号小贴士</span><strong></strong></div>
           </section>
           <footer class="lottery-center-footer"><button type="button" class="btn-secondary lottery-cancel">放弃购买</button><button type="button" class="btn-primary lottery-buy"><span>确认购买乐透券</span><small></small></button></footer>
         </section>`;

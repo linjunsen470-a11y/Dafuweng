@@ -1112,7 +1112,8 @@ class GameController {
     }
     const decision = await this.bankUI.choose({ player, state: this.gameState, passing });
     if (!decision) return;
-    this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, ...decision } });
+    const result = this.gameEngine.execute({ type: 'BANK_TRANSFER', playerId: player.id, payload: { tileId, passing, ...decision } });
+    if (result?.success) this.audioManager.playCoinSound();
     this.uiRenderer.renderHUD();
   }
 
