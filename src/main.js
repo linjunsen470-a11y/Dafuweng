@@ -1,3 +1,5 @@
+import { bindModelLoading } from './ui/ModelLoadingUI.js';
+import { BoardEffects } from './engine/BoardEffects.js';
 import { createItemPresentation } from './game/CardPresentation.js';
 import {quayRoutes} from './game/QuayRoutes.js';
 import {clinicRoute,showClinicPickup} from './engine/ClinicPickup.js';
@@ -50,6 +52,7 @@ import { getRouteChoicePlans } from './game/RouteDecisionRules.js';
 
 class GameController {
   constructor() {
+    bindModelLoading();
     this.audioManager = audioManager;
     this.gameState = new GameState();
     this.gameEngine = new GameEngine(this.gameState);
@@ -57,6 +60,7 @@ class GameController {
     this.scene3D = new Scene3D('game-container');
     this.boardBuilder = new BoardBuilder(this.scene3D);
     this.pawnManager = new PawnManager(this.scene3D, this.boardBuilder);
+    this.boardEffects = new BoardEffects(this.scene3D, this.boardBuilder, this.pawnManager, this.gameState);
     this.dice3D = new Dice3D(this.scene3D);
 
     this.uiRenderer = new UIRenderer(this.gameState);
@@ -69,7 +73,7 @@ class GameController {
     this.minimapUI = new MinimapUI(this.scene3D, this.gameState);
     this.modalCoordinator = new ModalCoordinator();
     this.boardPicker = new BoardTargetPicker(this.scene3D, this.boardBuilder, this.pawnManager);
-    this.mapInspector = new MapInspector(this.scene3D, this.boardBuilder, this.gameState, this.gameEngine);
+    this.mapInspector = new MapInspector(this.scene3D, this.boardBuilder, this.gameState, this.gameEngine, this.pawnManager);
     bindBoardHover(this.scene3D, this.boardBuilder, this.pawnManager, this.gameState, this.gameEngine,
       () => this.mapInspector.canInspect() && !this.mapInspector.isOpen && !this.boardPicker.cancel && !this.modalCoordinator.active);
     this.presentationUI = new PresentationUI(this.audioManager);
@@ -165,7 +169,8 @@ class GameController {
 
   applyDomainEvent(event) {
     document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
-    this.pawnManager.reactToEvent(event);
+    this.boardEffects.present(event);
+    if (!this.skipAIAnimations && !this.presentationUI.isReducedMotion()) this.pawnManager.reactToEvent({ playerId:this.gameState.currentPlayerIndex, ...event });
     if(event.type==='CLINIC_PICKUP' && !this.skipAIAnimations) {
       this.audioManager.playBoardCue('clinic');
       if (!this.presentationUI.isReducedMotion()) {
@@ -179,7 +184,7 @@ class GameController {
         }
         const pawn = this.pawnManager.pawns[event.playerId];
         const pickup = Promise.resolve(this.pendingPickup).then(()=>
-          showClinicPickup(this.scene3D,pawn,points,()=>this.showPlayerStreet(this.gameState.getCurrentPlayer().currentTile,true)));
+          showClinicPickup(this.scene3D,pawn,points,()=>{ const current=this.gameState.getCurrentPlayer(); if (current) this.showPlayerStreet(current.currentTile,true); }));
         this.pendingPickup = pickup;
         pickup.finally(()=>{ if (this.pendingPickup===pickup) this.pendingPickup=null; });
       }
@@ -207,8 +212,9 @@ class GameController {
       for (const id of [event.fromPlayerId,event.toPlayerId]) this.pawnManager.updateGodAura(id,this.gameState.players[id]?.godType);
     } else if (event.type === 'GOD_DEPARTED') {
       this.pawnManager.updateGodAura(event.playerId,null);
-    } else if (event.type === 'STATUS_CHANGED') {
-      this.pawnManager.updateGodAura(event.playerId, event.status);
+    } else if (event.type === 'STATUS_CHANGED' || event.type === 'STATUS_APPLIED') {
+      const id = event.playerId ?? this.gameState.currentPlayerIndex;
+      this.pawnManager.updateGodAura(id, this.gameState.players[id]?.godType);
     } else if (event.type === 'BOARD_GOD_COLLECTED') {
       this.pawnManager.updateGodAura(event.playerId, event.godType);
       this.pawnManager.syncBoardGods(this.gameState.boardGods);
@@ -301,6 +307,7 @@ class GameController {
     });
 
     const mode = document.getElementById('game-mode').value;
+    this.boardEffects.clear();
     this.gameState.setupGame(playerConfigs, this.selectedInitialCash, {
       maxRounds: mode === 'QUICK' ? 24 : mode === 'HEAT' ? 30 : 40,
       mapId: document.getElementById('map-select').value,
@@ -331,6 +338,7 @@ class GameController {
     this.presentationUI.clear();
     document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
     this.pawnManager.clearPawns();
+    this.boardEffects.clear();
     this.gameState.setupGame(config.playerConfigs, config.initialCash, config.options);
     this.syncModeButton();
     document.getElementById('btn-economic-report')?.classList.add('hidden');
@@ -419,7 +427,7 @@ class GameController {
       const button = document.getElementById('btn-time-of-day');
       button.textContent = icon;
       button.title = `切换时间：${label}`;
-      this.boardBuilder.setNightMode(timeOfDay === 'NIGHT');
+      this.boardBuilder.setNightMode(timeOfDay !== 'DAY');
       this.audioManager.setAtmosphere({ weather: this.scene3D.weather, timeOfDay });
       this.audioManager.playConfirm();
       this.gameState.addLog(`${icon} 场景时间切换为${label}。`, 'accent');
@@ -475,6 +483,9 @@ class GameController {
       document.getElementById('btn-ai-pace').textContent = this.aiPace === 'skip' ? 'AI 快进' : 'AI ×' + this.aiPace;
       document.documentElement.classList.toggle('skip-ai-motion', Boolean(this.skipAIAnimations));
     };
+    const voiceToggle = document.getElementById('spoken-lines');
+    voiceToggle.checked = this.audioManager.voice.spoken;
+    voiceToggle.onchange = () => this.audioManager.voice.setSpoken(voiceToggle.checked);
     const musicVolume = document.getElementById('music-volume');
     const sfxVolume = document.getElementById('sfx-volume');
     try {
@@ -599,6 +610,7 @@ class GameController {
   returnToMenu() {
     if (this.gameState.players.length && this.gameState.phase !== GamePhase.GAME_OVER
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
+    this.boardEffects.clear();
     this.guide.close();
     this.audioManager.stopMusic();
     this.presentationUI.clear();
@@ -625,6 +637,8 @@ class GameController {
   }
 
   restoreGame(snapshot) {
+    this.presentationUI.clear();
+    this.boardEffects.clear();
     this.gameEngine.restore(snapshot);
     this.boardBuilder.applyMapDefinition(this.gameState.mapDefinition);
     this.minimapUI.setMap(this.gameState.mapDefinition);
@@ -999,9 +1013,6 @@ class GameController {
       const result = this.gameEngine.execute({ type: 'SETTLE_RENT', playerId: curPlayer.id, payload: { tileId: tileIndex } });
       if (result.amount > 0) {
         this.audioManager.playCoinSound();
-        if (result.chainSize > 1 && !this.skipAIAnimations && !this.presentationUI.isReducedMotion()) {
-          this.scene3D.showRentCoins(this.boardBuilder.tilePositions[tileIndex], result.chainSize);
-        }
       }
       if (result.type === 'DEBT_REQUIRED') await this.resolvePendingDebt(curPlayer);
       return this.finishTurn();
@@ -1010,8 +1021,10 @@ class GameController {
     const result = this.gameEngine.execute({ type: 'RESOLVE_LANDING', playerId: curPlayer.id, payload: { tileId: tileIndex } });
     if (['CARD_POINTS', 'COUPON_COLLECTED', 'CARD_GAINED'].includes(result.type)) this.audioManager.playCardSpell();
     if (result.type === 'CASH_GAINED' || result.type === 'CASH_LOST') this.audioManager.playCoinSound();
+    if (result.chance && !result.events.some(event => event.chance)) {
+      this.presentationUI.chanceRevealUI.show({event:result,player:curPlayer});
+    }
     if (result.type === 'MONSTER_ATTACK') this.triggerExplosionVFX();
-    if (result.type === 'STATUS_APPLIED') this.pawnManager.updateGodAura(curPlayer.id, result.status);
     if (result.type === 'OPEN_STOCK' && !curPlayer.isAI) {
       const stockUI = await this.getStockUI();
       await new Promise(resolve => stockUI.show(resolve));
@@ -1190,7 +1203,7 @@ class GameController {
     const result = this.gameEngine.execute({ type: 'PURCHASE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex, buildingType } });
     if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, 0, player.colorHex, result.buildingType, false, true);
-      this.audioManager.playBuildSound();
+      this.audioManager.playSceneSound('stamp');
     }
     return result;
   }
@@ -1199,7 +1212,7 @@ class GameController {
     const result = this.gameEngine.execute({ type: 'UPGRADE_PROPERTY', playerId: player.id, payload: { tileId: tileIndex } });
     if (result.success) {
       this.boardBuilder.updateBuildingMesh(tileIndex, result.level, player.colorHex, this.gameState.propertyManager.getProperty(tileIndex)?.buildingType);
-      this.audioManager.playBuildSound();
+      this.audioManager.playSceneSound('hammer');
     }
     return result;
   }
@@ -1229,12 +1242,15 @@ class GameController {
       value = await this.dialogUI.chooseDiceValue();
       if (value === null) return null;
     }
-    if (['MISSILE_ITEM', 'NUCLEAR_MISSILE', 'MINE_ITEM'].includes(itemId)) this.triggerExplosionVFX();
     const result = this.gameEngine.execute({ type: 'USE_ITEM', playerId: player.id, payload: { itemId, targetId, value } });
     if (!result.success) {
       this.gameState.addLog(`⚠️ 道具未发动：${result.reason}`, 'danger');
       this.uiRenderer.renderHUD();
       return result;
+    }
+    if (result.type === 'BLAST_RESOLVED' && !this.skipAIAnimations) {
+      this.boardEffects.blast(this.pawnManager.getPawnMesh(player.id)?.position, result.centerTileId, result.destructive);
+      this.audioManager.playSceneSound('missile');
     }
     const item = this.gameState.inventoryManager.getDefinition(itemId);
     void this.presentationUI.showImpact({ title: item.name, icon: item.icon, eyebrow: '道具发动',
@@ -1274,10 +1290,6 @@ class GameController {
     }
 
     const activate = async (value = null) => {
-      if (['MISSILE', 'NUKES', 'MINE', 'DEMOLISH'].includes(cardId)) {
-        this.triggerExplosionVFX();
-      }
-
       const result = this.gameEngine.execute({
         type: 'USE_CARD',
         playerId: curPlayer.id,

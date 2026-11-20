@@ -149,6 +149,8 @@ function finishMaterial(material,roof,terrain=false){
       'finishPosition=(modelMatrix*vec4(transformed,1.0)).xyz;finishNormal=normalize(mat3(modelMatrix)*objectNormal);\n#include <project_vertex>');
     const ground=`
       vec2 groundUV=finishPosition.xz/6.4;
+      float cloud = sin(groundUV.x*.61+tide*.09)+sin(groundUV.y*.55-tide*.07);
+      diffuseColor.rgb*=1.-.11*smoothstep(.55,1.7,cloud);
       float brush=texture2D(districtPaper,groundUV).g;
       float broad=texture2D(districtPaper,groundUV*.37+.27).g;
       diffuseColor.rgb*=mix(1.,.42+.77*brush+.24*broad,green);

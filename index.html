@@ -15,6 +15,9 @@
   <a class="skip-link" href="#hud-layer">跳到游戏操作</a>
   <!-- 3D Canvas 容器 -->
   <div id="game-container"></div>
+  <aside id="model-loading" hidden aria-label="棋盘载入进度">
+    <b>正在布置棋盘</b><progress aria-label="已载入素材"></progress><small>点玩家头像，就能找到棋子。</small>
+  </aside>
 
   <!-- 游戏启动与设置界面 -->
   <div id="setup-screen" class="overlay-screen active">
@@ -477,6 +480,7 @@
           <button class="speed-btn" data-speed="2">2×</button>
         </div>
         <div class="speed-options">
+          <label><input id="spoken-lines" type="checkbox"> 朗读角色台词（本机中文语音）</label>
           <label for="ai-pace">AI 回合速度</label>
           <select id="ai-pace"><option value="1">1×</option><option value="2">2×</option><option value="skip">极速 · 跳过动画</option></select>
         </div>

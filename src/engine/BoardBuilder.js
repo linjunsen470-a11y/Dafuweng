@@ -1,6 +1,8 @@
+import { WorldAmbience, arcadePinwheel } from './WorldAmbience.js';
+import { quietMotion } from './EffectTimeline.js';
 import {connectingStreet} from './ConnectingStreets.js';
 import {streetYard} from './VacantStreetYards.js';
-import {finishRoofs,finishLandscape,surfaceTime,surfaceTexture} from './BoardSurfaceArt.js';
+import {finishRoofs,finishLandscape,surfaceTexture} from './BoardSurfaceArt.js';
 import {regionalDistrict} from './RegionalDistricts.js';
 import {createMarketDistrict} from './MarketDistrict.js';
 import {createCardHouse, addServiceThreshold} from './CardHouses.js';
@@ -33,6 +35,7 @@ import { getBoardThemeProfile, getTileVisualSpec } from '../game/BoardVisualRule
 export class BoardBuilder {
   constructor(scene3D) {
     this.scene3D = scene3D;
+    this.ambience = new WorldAmbience(this);
     this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.tileMeshes = [];
     this.tilePositions = [];
@@ -337,6 +340,7 @@ export class BoardBuilder {
   }
 
   clearDynamicMap() {
+    this.ambience?.windows.clear();
     this.tileMeshes.forEach(mesh => {
       if (!mesh) return;
       this.scene3D.scene.remove(mesh);
@@ -936,6 +940,7 @@ export class BoardBuilder {
       group.add(this.createFacilityLandmark(tile));
       return group;
     }
+    if (tile.type === TileType.MINIGAME) arcadePinwheel(group,spec.height);
     if (tile.type === TileType.STOCK) {
       const crown = this.harborArt.clone('exchange_crown');
       if (crown) {
@@ -1313,7 +1318,8 @@ export class BoardBuilder {
   }
 
   animateMapLandmarks() {
-    surfaceTime.value=performance.now()/1000;
+    this.ambience.update();
+    if (quietMotion()) return;
     const time = performance.now() * 0.0018;
     this.specialTileMeshes.forEach(group => {
       if (isPropertyTile({ type: group.userData.tileType }) || group.userData.isStaticFacility) return;
@@ -1325,28 +1331,12 @@ export class BoardBuilder {
         if (child.userData?.isFacilityHalo) child.rotation.z = time * .32 + group.userData.phase;
       });
     });
-    for (const building of this.buildingMeshes.values()) {
-      const rotor = building.userData.rotor;
-      if (rotor && !this.motionPreference.matches) rotor.rotation.y = time;
-    }
     if (!this.motionPreference.matches) {
       for (const collection of [this.mineMeshes,this.roadEntityMeshes]) for (const mesh of collection.values()) {
         for (const lamp of mesh.userData.lamps || []) lamp.emissiveIntensity = .45+.55*Math.sin(time*4)**2;
       }
     }
-    if (this.harborGulls && !this.motionPreference.matches) updateHarborGulls(this.harborGulls,time);
-    if (this.waterTime) this.waterTime.value = time;
-    this.harborWaves?.forEach((wave, index) => {
-      wave.position.x = wave.userData.originX + Math.sin(time * wave.userData.speed + index) * 9;
-      wave.material.opacity = 0.22 + (Math.sin(time * 1.4 + index) + 1) * 0.09;
-    });
-    this.harborFerries?.forEach((ferry, index) => {
-      ferry.position.x += ferry.userData.speed * 0.04;
-      if (ferry.userData.speed > 0 && ferry.position.x > 78) ferry.position.x = -78;
-      if (ferry.userData.speed < 0 && ferry.position.x < -78) ferry.position.x = 78;
-      ferry.rotation.y = ferry.userData.speed < 0 ? Math.PI : 0;
-      ferry.position.y = COAST_WATER_Y - .22 + Math.sin(time * 1.8 + index) * 0.05;
-    });
+
   }
 
   createCentralDecoration() {
@@ -1437,11 +1427,9 @@ export class BoardBuilder {
 
     this.scene3D.addUpdatable({
       update: () => {
+        if (quietMotion()) return;
         if (this.centerCoinsGroup) {
           this.centerCoinsGroup.rotation.y += 0.012;
-        }
-        if (this.windmillBlades) {
-          this.windmillBlades.rotation.z += 0.03;
         }
         const time = performance.now() * 0.0022;
         this.fountainDrops?.forEach((drop, index) => {
@@ -1531,6 +1519,7 @@ export class BoardBuilder {
   }
 
   setNightMode(enabled) {
+    this.ambience?.windows.clear();
     if (this.worldGround) this.worldGround.material.color.set(enabled ? '#7886a6' : '#ffffff');
     this.streetLights?.forEach(({ light, bulb }) => {
       light.intensity = enabled ? 2.4 : 0.55;
@@ -1548,10 +1537,17 @@ export class BoardBuilder {
     });
     this.mapEnvironmentGroup?.traverse(child => {
       const materials=Array.isArray(child.material)?child.material:[child.material];
-      for(const material of materials) if(material?.userData.districtWindow) material.emissiveIntensity=enabled ? .75 : .10;
-      if (child.userData?.isPromenadeLamp) child.material.emissiveIntensity = enabled ? 1.4 : .1;
+      for(const material of materials) if(material?.userData.districtWindow) {
+        material.emissiveIntensity=enabled ? .75 : .10;
+        if (enabled) this.ambience?.windows.set(material, .75);
+      }
+      if (child.userData?.isPromenadeLamp) {
+        child.material.emissiveIntensity = enabled ? 1.4 : .1;
+        if (enabled) this.ambience?.windows.set(child.material, 1.4);
+      }
       if (child.userData?.isOriginalCityWindow && child.material?.emissive) {
         child.material.emissiveIntensity = enabled ? .5 : 0;
+        if (enabled) this.ambience?.windows.set(child.material, .5);
       }
     });
   }
@@ -1718,7 +1714,8 @@ export class BoardBuilder {
       if (buildingType === 'LAB') {
         const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2, 8), new THREE.MeshStandardMaterial({ color: '#e9d5ff' }));
         const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 10), new THREE.MeshBasicMaterial({ color: '#22d3ee' }));
-        antenna.position.y = height + 0.75; orb.position.y = height + 1.38; group.add(antenna, orb);
+        antenna.position.y = height + 0.75; orb.position.set(.18,.62,0); antenna.add(orb); group.add(antenna);
+        group.userData.rotor = antenna;
       }
     } else if (level === 0) {
       const pole = new THREE.Mesh(

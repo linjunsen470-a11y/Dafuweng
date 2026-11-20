@@ -1,3 +1,4 @@
+import { quietMotion } from '../engine/EffectTimeline.js';
 import { getChancePresentation } from '../game/ChancePresentation.js';
 
 function portraitMarkup(player) {
@@ -16,6 +17,8 @@ export class ChanceRevealUI {
     const presentation = getChancePresentation(event?.chance, event);
     if (!presentation || player?.isAI) return;
     this.close();
+    this.audioManager?.playSceneSound?.(presentation.tone === 'loss' ? 'sigh' : 'jackpot');
+    if (quietMotion()) return;
     const overlay = document.createElement('div');
     overlay.className = `chance-reveal-overlay tone-${presentation.tone}`;
     overlay.style.setProperty('--chance-accent', presentation.tone === 'loss' ? '#fb7185' : presentation.tone === 'blocked' ? '#4ade80' : presentation.category.accent);
@@ -39,7 +42,7 @@ export class ChanceRevealUI {
     overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
     document.body.appendChild(overlay);
     this.overlay = overlay;
-    this.audioManager?.playCardSpell?.();
+
     requestAnimationFrame(() => overlay.classList.add('is-revealed'));
     this.timer = setTimeout(close, 4200);
   }

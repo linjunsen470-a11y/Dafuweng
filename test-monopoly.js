@@ -328,6 +328,12 @@ async function runTest() {
     await clickTool('#btn-follow-view');
     console.log('✅ 120 road nodes, 52 lots, overview, rotation, follow camera, and minimap rendered.');
 
+    console.log('\n--- Step 3a (continued): Audio & View reset button tests ---');
+    await page.click('#btn-toggle-audio');
+    console.log('✅ Mute/Unmute button toggled.');
+    await clickTool('#btn-reset-view');
+    console.log('✅ Reset 3D camera view button clicked.');
+
     console.log('\n--- Step 3b: Testing weather, night lighting, and extended character models ---');
     await clickTool('#btn-weather');
     await clickTool('#btn-weather');
@@ -783,12 +789,6 @@ async function runTest() {
       }
     }
     await page.screenshot({ path: artifact('test_step_visual_gameplay.png') });
-
-    console.log('\n--- Step 8: Audio & View reset button tests ---');
-    await page.click('#btn-toggle-audio');
-    console.log('✅ Mute/Unmute button toggled.');
-    await clickTool('#btn-reset-view');
-    console.log('✅ Reset 3D camera view button clicked.');
 
     console.log('\n--- Step 9: Returning to setup without page reload ---');
     page.once('dialog', dialog => dialog.accept());
