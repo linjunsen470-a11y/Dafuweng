@@ -20,11 +20,13 @@ try{
   const page=await browser.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error' && /shader|WebGLProgram/i.test(m.text()))errors.push(m.text());});
-  await page.evaluateOnNewDocument(()=>localStorage.setItem('fortune-empire:tutorial-seen','1'));
+  await page.evaluateOnNewDocument(()=>{if(location.protocol==='http:')localStorage.setItem('fortune-empire:tutorial-seen','1');});
   await page.setViewport({width:1440,height:900});
   await page.goto(server.resolvedUrls.local[0]);
   await page.waitForFunction(()=>window.boardQA);
   if(!touchOnly)for(const [map,tile] of [['taiwan-loop',0],['fortune-crossroads',3],['city-loop',1],['island-fork',2],['grand-bay',12]]){
+    const selection=process.argv.find(arg=>arg.startsWith('--maps='));
+    if(selection && !selection.slice(7).split(',').includes(map))continue;
     const state=new GameState({seed:1});
     state.setupGame([0,1].map(profileIndex=>({name:['小满','田野'][profileIndex],profileIndex,isAI:false})),80000,{mapId:map});
     state.players[0].currentTile=tile;

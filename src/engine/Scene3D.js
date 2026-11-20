@@ -304,10 +304,11 @@ export class Scene3D {
       this.cloudBoardBounds.expandByVector(new THREE.Vector3(4,0,4));
     }
     const config = mapDefinition?.camera || {};
-    const center = config.center || { x: 0, z: 0 };
+    const outerDistrict=({'city-loop':{x:7,z:10,distance:88},'taiwan-loop':{x:2,z:1,distance:88}})[mapDefinition?.id];
+    const center = config.center || outerDistrict || { x: 0, z: 0 };
     this.mapCamera = {
       center: new THREE.Vector3(center.x || 0, 0, center.z || 0),
-      overviewDistance: config.overviewDistance || 62,
+      overviewDistance: config.overviewDistance || outerDistrict?.distance || 62,
       followHeight: config.followHeight || 14,
       followDistance: config.followDistance || 18
     };
@@ -317,7 +318,7 @@ export class Scene3D {
     const shadowCamera=this.sunLight.shadow.camera;
     Object.assign(shadowCamera,{left:-shadowRadius,right:shadowRadius,top:shadowRadius,bottom:-shadowRadius,far:195});
     shadowCamera.updateProjectionMatrix();
-    this.mapFogScale = mapDefinition?.theme === 'GRAND_BAY' ? 0.25 : 1;
+    this.mapFogScale = mapDefinition?.theme === 'GRAND_BAY' ? 0.25 : outerDistrict ? .56 : 1;
     this.scene.fog.density = 0.008 * this.mapFogScale;
     this.camera.far = Math.max(1000, this.mapCamera.overviewDistance * 8);
     this.camera.updateProjectionMatrix();

@@ -322,7 +322,7 @@ export class BoardBuilder {
     });
     if (this.worldGround) {
       this.worldGround.visible = !grand;
-      this.worldGround.scale.setScalar(1);
+      this.worldGround.scale.setScalar(['city-loop','taiwan-loop'].includes(mapDefinition.id)?2.4:1);
     }
     this.baseMesh?.material.color.set(island ? '#a4d7c2' : '#ffe6b6');
     this.borderMesh?.material.color.set(island ? '#00d2d3' : '#ffaa00');
@@ -936,13 +936,69 @@ export class BoardBuilder {
       const tea=map==='taiwan-loop' || (map==='island-fork' && tile.id>=16 && tile.id<=22);
       const edging=new THREE.MeshStandardMaterial({color:dock?'#886345':arcade?'#97795d':'#ac8b63'});
       const surface=new THREE.MeshStandardMaterial({color:dock?'#c08c54':arcade?'#c5baba':tea?'#afbc82':'#a2b87a'});
-      surface.map=surfaceTexture(map,'plot');
-      const slab=new THREE.Mesh(new THREE.BoxGeometry(3.30,.11,3.05),surface);
-      group.add(slab);
+      const quayUse=map==='grand-bay' && (tile.group?.startsWith('BAY_') || tile.id===15);
+      const tidalGarden=quayUse && (tile.group==='BAY_2' || tile.id===15);
+      surface.map=surfaceTexture(tidalGarden?'taiwan-loop':quayUse && tile.group==='BAY_3'?'city-loop':map,'plot');
+      let plotFloor;
+      if(tidalGarden){
+        const outline=new THREE.Shape();
+        outline.moveTo(-1.61,1.42);outline.lineTo(.41,1.42);
+        outline.quadraticCurveTo(1.72,1.37,1.70,.18);
+        outline.quadraticCurveTo(1.67,-1.50,-.06,-1.50);
+        outline.lineTo(-1.61,-1.50);outline.closePath();
+        plotFloor=new THREE.ExtrudeGeometry(outline,{depth:.13,bevelEnabled:false});
+        plotFloor.rotateX(-Math.PI/2);plotFloor.translate(0,-.08,0);
+      }else plotFloor=new THREE.BoxGeometry(3.30,.11,3.05);
+      group.add(new THREE.Mesh(plotFloor,surface));
       const detail=(x,y,z,w,h,d,material)=>{
         const part=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);part.position.set(x,y,z);group.add(part);
       };
-      if(dock){
+      if(quayUse){
+        const yard=new THREE.MeshStandardMaterial({color:'#477d79',roughness:.86});
+        const pale=new THREE.MeshStandardMaterial({color:'#f2d49c',roughness:.91});
+        const side=tile.id%2===0?-1:1;
+        if(tile.group==='BAY_1'){
+          // An open net-mending rack, with a free half-yard for the eventual home.
+          surface.color.set('#c29f73');
+          for(const z of [-.77,.71])detail(side*.85,.52,z,.13,.96,.14,edging);
+          detail(side*.85,.94,-.03,.13,.13,1.71,edging);
+          for(let k=0;k<5;k++)detail(side*.85,.64,-.61+k*.29,.08,.58,.045,yard);
+          for(const y of [.48,.67,.85])detail(side*.85,y,-.02,.085,.045,1.32,yard);
+          detail(-side*.81,.15,-.51,.76,.18,1.14,pale);
+        }else if(tile.id===13 || tile.id===18){
+          // Seaward reading terrace: three stone treads lead to a timber seat.
+          surface.color.set('#a4bd99');
+          for(let k=0;k<3;k++)detail(side*(.69-k*.31),.10+k*.046,-.21,.55,.11+k*.085,1.76,pale);
+          detail(-side*.84,.38,-.39,.48,.15,1.33,edging);
+          for(const z of [-.92,.15])detail(-side*.84,.20,z,.31,.34,.13,yard);
+          detail(-side*1.02,.57,-.39,.10,.41,1.34,yard);
+        }else if(tile.group==='BAY_3'){
+          surface.color.set('#b0aaa0');
+          for(const x of [-.75,.76])detail(x,.14,0,.14,.12,2.28,pale);
+          for(const [x,z] of [[-.75,-.65],[.12,-.48]]){
+            detail(side*x,.33,z,.78,.55,.74,edging);
+            detail(side*x,.62,z,.12,.05,.76,yard);
+          }
+        }else{
+          // Shell-shaped tidal garden, with a curved seat and fan of stepping stones.
+          surface.color.set('#d4c294');
+          const basin=new THREE.Mesh(new THREE.CylinderGeometry(.70,.80,.19,16),pale);
+          basin.scale.z=.73;basin.position.set(side*.52,.15,-.37);
+          group.add(basin);
+          const water=new THREE.Mesh(new THREE.CylinderGeometry(.58,.58,.035,16),yard);
+          water.scale.z=.73;water.position.copy(basin.position);
+          water.position.y+=.10;group.add(water);
+          for(let i=0;i<3;i++){
+            const reed=new THREE.Mesh(new THREE.ConeGeometry(.10,.54+i*.11,5),yard);
+            reed.position.set(side*(.78-i*.12),.47,-.54-i*.06);group.add(reed);
+          }
+          for(let k=0;k<5;k++){
+            const angle=k*.54-.95;
+            detail(side*.52+.96*Math.sin(angle),.18,-.37+.86*Math.cos(angle),.39,.21,.28,pale);
+          }
+          detail(-side*.88,.28,-.57,.40,.32,1.54,edging);
+        }
+      }else if(dock){
         for(let board=-3;board<=3;board++)detail(0,.068,board*.40,3.26,.02,.035,edging);
         for(const x of [-1.38,1.38])detail(x,.30,1.24,.21,.64,.21,edging);
         detail(0,.43,1.24,2.82,.14,.12,edging);
