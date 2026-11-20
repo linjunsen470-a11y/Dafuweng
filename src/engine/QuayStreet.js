@@ -130,6 +130,22 @@ export function createQuayStreet(map) {
     box(21,.32+i*.15,z,w,.22+i*.30,.70,'#b67858');
     box(21,.46+i*.30,z,w+.16,.12,.8,cream);
   }
+  // The observatory's stone compass brings the shape of the instrument into its forecourt.
+  cylinder(21,.294,13.8,2.21,2.21,.025,blue,32);
+  cylinder(21,.312,13.8,2.08,2.08,.025,cream,32);
+  for(let i=0;i<12;i++){
+    const theta=i*Math.PI/6;
+    box(21+Math.sin(theta)*1.71,.332,13.8+Math.cos(theta)*1.71,
+      i%3?.065:.14,.025,i%3?.32:.61,brass,theta);
+  }
+  for(const x of [17.75,24.25]){
+    box(x,.38,14.45,.89,.3,3.15,'#af8967');
+    for(let i=0;i<5;i++){
+      const g=new THREE.IcosahedronGeometry(1,1);
+      g.scale(.43,.37+(i%2)*.11,.50);
+      add(g,i%2?'#4f866c':'#79985a',x,.69,13.23+i*.61,i*.8);
+    }
+  }
   cylinder(21,.55,13.8,.68,.91,.72,blue);
   const dish=new THREE.LatheGeometry([
     new THREE.Vector2(0,.00),new THREE.Vector2(.48,.12),new THREE.Vector2(1.06,.42),
@@ -151,7 +167,7 @@ export function createQuayStreet(map) {
     for(let i=1;i<ids.length;i++){
       const a=map.tiles[ids[i-1]].position,b=map.tiles[ids[i]].position;
       const dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);
-      box((a.x+b.x)/2-dz/len*1.77,.265,(a.z+b.z)/2+dx/len*1.77,.43,.09,len,color,Math.atan2(dx,dz));
+      box((a.x+b.x)/2-dz/len*1.77,.238,(a.z+b.z)/2+dx/len*1.77,.18,.045,len,color,Math.atan2(dx,dz));
     }
   }
   for(const [color,parts] of batches){

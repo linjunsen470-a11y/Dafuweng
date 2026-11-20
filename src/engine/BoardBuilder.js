@@ -1,5 +1,6 @@
 import {connectingStreet} from './ConnectingStreets.js';
-import {finishRoofs,surfaceTexture} from './BoardSurfaceArt.js';
+import {streetYard} from './VacantStreetYards.js';
+import {finishRoofs,finishLandscape,surfaceTime,surfaceTexture} from './BoardSurfaceArt.js';
 import {regionalDistrict} from './RegionalDistricts.js';
 import {createMarketDistrict} from './MarketDistrict.js';
 import {createCardHouse, addServiceThreshold} from './CardHouses.js';
@@ -152,7 +153,7 @@ export class BoardBuilder {
     ground.position.y = -0.82;
     ground.receiveShadow = true;
     this.scene3D.scene.add(ground);
-    this.worldGround = ground;
+    this.worldGround = finishLandscape(ground);
   }
 
   calculateTilePosition(index) {
@@ -219,7 +220,8 @@ export class BoardBuilder {
   }
 
   createTiles(tileDefinitions = BOARD_TILES, tileSize = this.tileSize) {
-    const tileGeo = new THREE.BoxGeometry(tileSize - 0.3, 0.34, tileSize - 0.3);
+    const inset = this.activeMapDefinition?.id === 'grand-bay' || hasClassicFrontages(this.activeMapDefinition);
+    const tileGeo = new THREE.BoxGeometry(tileSize - .3, inset ? .035 : .34, tileSize - .3);
     const detailGroup = new THREE.Group();
     detailGroup.name = `tile-plinths-${this.activeMapDefinition?.id || 'classic'}`;
     this.scene3D.scene.add(detailGroup);
@@ -251,6 +253,10 @@ export class BoardBuilder {
 
       const tileMesh = new THREE.Mesh(tileGeo, materials);
       tileMesh.position.copy(pos);
+      if (inset) {
+        tileMesh.position.y = .245;
+        sideMat.visible = false;
+      }
       if (tileData.type === TileType.ROAD && tileData.position && this.activeMapDefinition?.id !== 'grand-bay') {
         const next = tileDefinitions.find(item => item.id === tileData.next?.[0]);
         if (next?.position) tileMesh.rotation.y = Math.atan2(next.position.x - tileData.position.x, next.position.z - tileData.position.z);
@@ -271,6 +277,7 @@ export class BoardBuilder {
       plinth.position.set(pos.x, pos.y - 0.2, pos.z);
       plinth.rotation.y = tileMesh.rotation.y;
       plinth.receiveShadow = true;
+      plinth.visible = !inset;
       plinth.userData.isTilePlinth = true;
       plinth.userData.districtId = visual.districtId;
       detailGroup.add(plinth);
@@ -498,7 +505,7 @@ export class BoardBuilder {
     this.harborGulls.frustumCulled = false;
     group.add(createHarborPromenade(),this.harborGulls);
     const districtGround = createCityGround(mapDefinition);
-    if (districtGround) group.add(districtGround, createTerraceOrchards());
+    if (districtGround) group.add(finishLandscape(districtGround), createTerraceOrchards());
 
     const ocean = new THREE.Mesh(
       new THREE.PlaneGeometry(600, 600),
@@ -684,15 +691,20 @@ export class BoardBuilder {
       const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256;
       const ctx = canvas.getContext('2d');
       const property=isPropertyTile(tileData),road=tileData.type==='ROAD';
-      ctx.fillStyle=road?'#859391':property?'#d6c8a8':'#d5bf9a';ctx.fillRect(0,0,256,256);
-      for(let row=0;row<8;row++)for(let col=-1;col<4;col++){
-        ctx.fillStyle=(row+col+2)%3?'rgba(255,249,219,.18)':'rgba(67,71,65,.09)';
-        ctx.fillRect(col*64+row%2*32+2,row*32+2,60,28);
-      }
+      // The outer square is transparent. The continuous carriageway supplies
+      // its own joints and shadows all the way to the edge of the enamel inlay.
       const accent=tileData.group && COLOR_GROUPS[tileData.group]?.color || visual.accent;
-      ctx.beginPath();ctx.arc(128,124,84,0,2*Math.PI);ctx.fillStyle='#746955';ctx.fill();
-      ctx.beginPath();ctx.arc(128,118,81,0,2*Math.PI);ctx.fillStyle=road?'#687c78':accent;ctx.fill();
-      ctx.strokeStyle='#fff1c8';ctx.lineWidth=7;ctx.stroke();
+      const disc=(r,fill)=>{
+        ctx.beginPath();ctx.arc(128,127,r,0,2*Math.PI);ctx.fillStyle=fill;ctx.fill();
+      };
+      const rim=ctx.createLinearGradient(75,48,164,204);
+      rim.addColorStop(0,'#ffe8a0');rim.addColorStop(.44,'#cead67');rim.addColorStop(.65,'#806942');rim.addColorStop(1,'#dab77a');
+      disc(road?66:101,'#514f48');disc(road?62:96,rim);
+      const enamel=ctx.createRadialGradient(98,93,5,133,138,97);
+      enamel.addColorStop(0,road?'#839593':accent);enamel.addColorStop(.68,road?'#57706e':accent);
+      enamel.addColorStop(1,road?'#3e5858':'#52665c');
+      disc(road?56:87,enamel);
+      ctx.save();ctx.beginPath();ctx.arc(128,127,road?50:80,3.61,5.35);ctx.strokeStyle='rgba(255,249,220,.68)';ctx.lineWidth=3;ctx.stroke();ctx.restore();
       ctx.textAlign='center';ctx.textBaseline='middle';
       if(property || road){
         const points=road?[[94,103],[127,123],[162,103],[162,125],[127,148],[94,125]]:
@@ -703,11 +715,14 @@ export class BoardBuilder {
         ctx.font='bold 58px sans-serif';ctx.lineWidth=5;ctx.strokeStyle='#594735';ctx.strokeText(spec.label,128,118);
         ctx.fillStyle='#fff2c9';ctx.fillText(spec.label,128,118);
       }
-      ctx.font='bold 30px sans-serif';ctx.fillStyle='#443e33';ctx.fillText(String(tileData.id),128,226);
+      ctx.font='bold '+(road?22:26)+'px sans-serif';ctx.fillStyle='#fff4ce';ctx.strokeStyle='#4d544b';ctx.lineWidth=4;
+      const numberY=road?163:178;
+      ctx.strokeText(String(tileData.id),128,numberY);ctx.fillText(String(tileData.id),128,numberY);
       const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = Math.min(8,this.scene3D.renderer.capabilities.getMaxAnisotropy());
       tileMesh.material[2].dispose();
-      tileMesh.material[2] = new THREE.MeshStandardMaterial({map:texture,roughness:1,metalness:0});
+      tileMesh.material[2] = new THREE.MeshStandardMaterial({map:texture,alphaTest:.45,roughness:.76,metalness:.06});
+      tileMesh.castShadow=false;
       tileMesh.userData.harborLabel = spec.label;
       return;
     }
@@ -870,7 +885,12 @@ export class BoardBuilder {
       if (service) group = this.createHarborFacility(tile, service);
       else if (tile.serviceFrontage) {
         const regionalShop = tile.type === TileType.CARD_SHOP && ['island-fork','taiwan-loop'].includes(mapDefinition.id);
-        group = regionalShop ? createCardHouse(mapDefinition.id === 'island-fork') : this.createFacilityLandmark(tile);
+        const building = regionalShop ? createCardHouse(mapDefinition.id === 'island-fork') : this.createFacilityLandmark(tile);
+        // Quantized GLBs keep their authored scale and origin on the root mesh.
+        // The pavement and roadside transform must remain in board units.
+        group = new THREE.Group();
+        Object.assign(group.userData, building.userData);
+        group.add(building);
         addServiceThreshold(group, tile, mapDefinition.roadWidth || Math.max(2.8,(mapDefinition.tileSize || 4.4)*.82));
       }
       else if (tile.type === TileType.CHANCE && this.harborArt?.prefabs) {
@@ -1013,6 +1033,7 @@ export class BoardBuilder {
         }
         detail(0,.09,-.28,.78,.075,2.27,new THREE.MeshStandardMaterial({color:'#e9c99a'}));
       }
+      if(!quayUse)group.add(streetYard(tile,dock?'dock':arcade?'station':'garden'));
       const pole=new THREE.Mesh(new THREE.CylinderGeometry(.04,.055,1.03,8),edging);
       pole.position.set(.97,.64,.6);group.add(pole);
       const flag=new THREE.Shape();flag.moveTo(0,0);flag.lineTo(.69,-.14);flag.lineTo(0,-.36);flag.closePath();
@@ -1292,6 +1313,7 @@ export class BoardBuilder {
   }
 
   animateMapLandmarks() {
+    surfaceTime.value=performance.now()/1000;
     const time = performance.now() * 0.0018;
     this.specialTileMeshes.forEach(group => {
       if (isPropertyTile({ type: group.userData.tileType }) || group.userData.isStaticFacility) return;

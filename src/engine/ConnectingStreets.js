@@ -168,6 +168,18 @@ export function connectingStreet(mapId){
     // not another playable street, give the station a visible city-side boundary.
     const main=path([[-20,.08,30],[-9,.08,28.8],[6,.08,27.9],[15,.08,26.7],
       [22,.08,23.8],[27.8,.08,18.7],[30.6,.08,11.4],[31,.08,-4],[31,.08,-18]]);
+    // A battered grass verge gives the rail bed a soft shoulder on the city approach.
+    const shoulder=t=>3.5+.48*Math.sin(t*Math.PI*7);
+    strip(main,2.82,shoulder,-.1,.095,'#869565');
+    for(const t of [.07,.11,.19,.25,.49,.53,.76,.78,.84,.88]){
+      const p=main.getPointAt(t),d=main.getTangentAt(t),offset=shoulder(t);
+      for(let i=0;i<3;i++){
+        const g=new THREE.IcosahedronGeometry(1,1);
+        g.scale(.46+i*.11,.22+i*.07,.63);g.rotateY(i+t*9);
+        g.translate(p.x-d.z*offset+d.x*i*.52,.26,p.z+d.x*offset+d.z*i*.52);
+        add(g,i%2?'#688358':'#859866');
+      }
+    }
     strip(main,-3.1,3.1,-.68,.11,'#aaa59a');
     for(const edge of [-1.8,-.94,.94,1.8])strip(main,edge-.065,edge+.065,.13,.23,iron);
     for(let n=0;n<72;n++){

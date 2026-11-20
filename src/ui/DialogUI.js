@@ -92,7 +92,8 @@ export class DialogUI {
     const action = onBuy ? 'BUY' : 'UPGRADE';
     const model = createLandDecisionModel({ tileData, currentLevel, player, state: gameState, action, quote, buildingType });
 
-    titleEl.textContent = action === 'BUY' ? `发现投资机会 · ${tileData.name}` : `地产升级规划 · ${tileData.name}`;
+    titleEl.textContent = `${action === 'BUY' ? '购地' : '升级'} · ${tileData.name}`;
+    document.getElementById('land-investment-details').open = false;
     document.getElementById('land-modal-subtitle').textContent = `${model.districtName} · ${model.buildingIcon} ${model.buildingName}`;
     badgeEl.textContent = action === 'BUY' ? 'LV 0 待开发地块' : `LV ${currentLevel} → LV ${model.targetLevel}`;
     buildingArtEl.classList.toggle('land-tower-preview', model.artLevel === 5);

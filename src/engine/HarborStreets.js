@@ -66,8 +66,11 @@ export class HarborStreets {
     for (const tile of map.tiles.filter(t => isHarborHome(map, t) || isOldTownHome(map,t) || isCivicHome(map,t))) {
       const a = tile.position, b = tile.lot.position;
       const length = Math.hypot(a.x - b.x, a.z - b.z);
-      const path = new THREE.Mesh(new THREE.BoxGeometry(.65, .08, length), stone);
-      path.position.set((a.x + b.x) / 2, .23, (a.z + b.z) / 2);
+      const curbDistance = (map.roadWidth || 3.6) / 2 + .12;
+      const span = Math.max(.12, length - curbDistance);
+      const ratio = span / (2 * length);
+      const path = new THREE.Mesh(new THREE.BoxGeometry(.65, .08, span), stone);
+      path.position.set(b.x + (a.x - b.x) * ratio, .23, b.z + (a.z - b.z) * ratio);
       path.rotation.y = facingRoad(tile);
       path.userData.frontageTile = tile.id;
       group.add(path);

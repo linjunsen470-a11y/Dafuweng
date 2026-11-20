@@ -113,6 +113,17 @@ export function createMarketDistrict(map) {
       box(x,.245,z,.51,.018,.048,'#a3c7ad');
       if(i%3===0)disc(x+.46,.251,z+.3,.21,.022,'#88a162');
     }
+    // Rushes root on the shallow, garden-side shelf. The centre channel stays clear.
+    for(const x of [-16,-9.4,-7,1.8,9.7,17]){
+      const rock=new THREE.IcosahedronGeometry(1,0);rock.scale(.62,.18,.33);
+      shape(rock,'#978d73',x,.28,1.56,x);
+      for(let j=0;j<8;j++){
+        const h=.46+((j*7)%5)*.11;
+        const blade=new THREE.ConeGeometry(.085,h,3);
+        blade.rotateZ(Math.sin(j*2.1)*.32);
+        shape(blade,j%2?'#6c874b':'#8d9e56',x+(j%4)*.18,.25+h/2,1.35+(j%3)*.13);
+      }
+    }
     for(let i=0;i<12;i++){
       const x=i*3.1-17.2;box(x,.25,3.65,2.86,.36,1.83,brick);
       for(const row of [-.46,0,.46])box(x,.52,3.65+row,2.64,.35,.29,i%3?'#729455':'#94a958');

@@ -7,7 +7,7 @@ import {GameState} from '../../src/game/GameState.js';
 
 const baseline=process.argv.includes('--before'), phase=baseline?'before':'after';
 const touchOnly=process.argv.includes('--touch-only');
-const server=await createServer({plugins:[{name:'material-review',enforce:'pre',transform(code,id){
+const server=await createServer({cacheDir:'node_modules/.vite-board-material-review',plugins:[{name:'material-review',enforce:'pre',transform(code,id){
   for(const file of ['src/engine/BoardBuilder.js','src/ui/MinimapUI.js']){
     if(baseline && id.endsWith('/'+file))return execFileSync('git',['show','0db51bc:'+file],{encoding:'utf8'});
   }
@@ -22,7 +22,7 @@ try{
   page.on('console',m=>{if(m.type()==='error' && /shader|WebGLProgram/i.test(m.text()))errors.push(m.text());});
   await page.evaluateOnNewDocument(()=>{if(location.protocol==='http:')localStorage.setItem('fortune-empire:tutorial-seen','1');});
   await page.setViewport({width:1440,height:900});
-  await page.goto(server.resolvedUrls.local[0]);
+  await page.goto(server.resolvedUrls.local[0],{waitUntil:'domcontentloaded',timeout:90000});
   await page.waitForFunction(()=>window.boardQA);
   if(!touchOnly)for(const [map,tile] of [['taiwan-loop',0],['fortune-crossroads',3],['city-loop',1],['island-fork',2],['grand-bay',12]]){
     const selection=process.argv.find(arg=>arg.startsWith('--maps='));
