@@ -302,6 +302,7 @@ export class GameState {
 
   nextTurn() {
     this.phase = GamePhase.TURN_END;
+    const skipped = [];
     let attempts = 0;
     // A simultaneous hospital/hibernate wave is not a victory condition. Allow
     // enough full table rotations for the longest production status to expire.
@@ -314,47 +315,51 @@ export class GameState {
       if (nextIdx <= previous) {
         if (this.round >= this.maxRounds) {
           this.checkWinCondition(true);
-          return { gameOver: true, skipped: [] };
+          return { gameOver: true, skipped };
         }
         this.round++;
         this.onRoundEnd();
       }
       this.currentPlayerIndex = nextIdx;
-      if (this.checkWinCondition()) return { gameOver: true, skipped: [] };
+      if (this.checkWinCondition()) return { gameOver: true, skipped };
 
       const cur = this.getCurrentPlayer();
       this.tickPlayerStatuses(cur);
 
       if (cur.jailTurns > 0) {
         cur.jailTurns--;
+        skipped.push({ playerId: cur.id, reason: 'JAIL', remaining: cur.jailTurns });
         this.addLog(`🚔 ${cur.name} 在监狱服刑，剩余 ${cur.jailTurns} 回合，本回合跳过。`, 'danger');
         attempts++;
         continue;
       }
       if (cur.hospitalTurns > 0) {
         cur.hospitalTurns--;
+        skipped.push({ playerId: cur.id, reason: 'HOSPITAL', remaining: cur.hospitalTurns });
         this.addLog(`🏥 ${cur.name} 在医院疗养，剩余 ${cur.hospitalTurns} 回合，本回合跳过。`, 'danger');
         attempts++;
         continue;
       }
       if (cur.hotelTurns > 0) {
         cur.hotelTurns--;
+        skipped.push({ playerId: cur.id, reason: 'HOTEL', remaining: cur.hotelTurns });
         this.addLog(`🏨 ${cur.name} 正在旅馆入住，剩余 ${cur.hotelTurns} 回合，本回合跳过。`, 'accent');
         attempts++;
         continue;
       }
       if (cur.hibernateTurns > 0) {
         cur.hibernateTurns--;
+        skipped.push({ playerId: cur.id, reason: 'HIBERNATE', remaining: cur.hibernateTurns });
         this.addLog(`❄️ ${cur.name} 仍在冬眠，剩余 ${cur.hibernateTurns} 回合，本回合跳过。`, 'danger');
         attempts++;
         continue;
       }
       this.phase = GamePhase.PRE_ROLL_ACTION;
       this.captureTurnCheckpoint();
-      return { gameOver: false, currentPlayer: cur };
+      return { gameOver: false, currentPlayer: cur, skipped };
     }
     this.checkWinCondition(true);
-    return { gameOver: this.phase === GamePhase.GAME_OVER };
+    return { gameOver: this.phase === GamePhase.GAME_OVER, skipped };
   }
 
   tickPlayerStatuses(cur) {

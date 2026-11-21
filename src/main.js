@@ -11,6 +11,7 @@ import { SetupScreenUI } from './ui/SetupScreenUI.js';
 import { HandTrayUI } from './ui/HandTrayUI.js';
 import { OnboardingGuide } from './ui/OnboardingGuide.js';
 import { PassingBankPill } from './ui/PassingBankPill.js';
+import { AISkipSpeechUI } from './ui/AISkipSpeechUI.js';
 import { bindMobileHUD } from './ui/MobileHUD.js';
 import * as THREE from 'three';
 import { Scene3D } from './engine/Scene3D.js';
@@ -100,6 +101,7 @@ class GameController {
     });
     this.guide = new OnboardingGuide();
     this.passingBankPill = new PassingBankPill();
+    this.aiSkipSpeechUI = new AISkipSpeechUI(this.audioManager);
     this.handTray = new HandTrayUI(this.gameEngine, () => this.canOpenPlayerAction() && !this.modalCoordinator.active && !this.boardPicker.cancel,
       entry => entry.kind === 'ITEM' ? this.handleItemUsage(entry.definition.id) : this.handleCardUsage(entry.definition.id, entry.index));
     this.uiRenderer.bindActions(id => {
@@ -350,6 +352,7 @@ class GameController {
     const config = structuredClone(this.gameState.matchConfig);
     if (!config?.playerConfigs?.length) return this.returnToMenu();
     this.passingBankPill.hide();
+    this.aiSkipSpeechUI.clear();
     this.bankUI.close();
     this.isProcessingAction = false;
     this.presentationUI.clear();
@@ -629,6 +632,7 @@ class GameController {
       && !window.confirm('当前对局会保留最近的自动存档，确定返回主菜单吗？')) return;
     this.boardEffects.clear();
     this.passingBankPill.hide();
+    this.aiSkipSpeechUI.clear();
     this.bankUI.close();
     this.guide.close();
     this.audioManager.stopMusic();
@@ -657,6 +661,7 @@ class GameController {
 
   restoreGame(snapshot) {
     this.passingBankPill.hide();
+    this.aiSkipSpeechUI.clear();
     this.bankUI.close();
     this.presentationUI.clear();
     this.boardEffects.clear();
@@ -1389,6 +1394,8 @@ class GameController {
     }
 
     const previousPlayer = this.gameState.getCurrentPlayer();
+    const wasFastAI = Boolean(previousPlayer?.isAI && this.skipAIAnimations);
+    if (wasFastAI) this.aiSkipSpeechUI.showFastNotice(previousPlayer, this.gameState.mapId);
     setTimeout(async () => {
       if (this.gameState.getCurrentPlayer() !== previousPlayer) return;
       const transition = this.gameEngine.execute({
@@ -1403,6 +1410,9 @@ class GameController {
       this.pawnManager.syncBoardGods(this.gameState.boardGods);
       this.gameEngine.autoSave();
       this.uiRenderer.renderHUD();
+      if (transition?.skipped?.length) {
+        await this.aiSkipSpeechUI.showSkippedTurns(transition.skipped, this.gameState, this.actionSpeed);
+      }
       if (transition?.gameOver && this.gameState.winner) {
         this.dialogUI.showVictory(this.gameState.winner, () => this.restartMatch(), this.gameState, () => this.returnToMenu());
       } else {

@@ -1,12 +1,13 @@
 import * as THREE from 'three';
+import { getRichmanTexture } from './RichmanTextures.js';
 
 // Each original 256px painted sample is reused across its whole district.
 const styles={
-  'grand-bay': {roof:'slate',pave:'setts',plot:'wharf',stone:'#d8cdb4',road:'#3c4752'},
-  'island-fork': {roof:'metal',pave:'coral',plot:'wharf',stone:'#dfd0b4',road:'#3a4d54'},
-  'taiwan-loop': {roof:'pan',pave:'brick',plot:'tea',stone:'#dcc7a8',road:'#474b52'},
-  'fortune-crossroads': {roof:'shake',pave:'setts',plot:'meadow',stone:'#d5cbb0',road:'#3e4c4a'},
-  'city-loop': {roof:'metal',pave:'metro',plot:'plaza',stone:'#d8d5cc',road:'#374350'}
+  'grand-bay': {roof:'slate',pave:'setts',plot:'wharf',stone:'#ecd9b8',road:'#e8cfa5'},
+  'island-fork': {roof:'metal',pave:'coral',plot:'wharf',stone:'#f0ddba',road:'#ebd3a8'},
+  'taiwan-loop': {roof:'pan',pave:'brick',plot:'tea',stone:'#ebd4b0',road:'#e7cda2'},
+  'fortune-crossroads': {roof:'shake',pave:'setts',plot:'meadow',stone:'#e8d6b4',road:'#e5cca0'},
+  'city-loop': {roof:'metal',pave:'metro',plot:'plaza',stone:'#ede0c8',road:'#e4cfa9'}
 };
 const textures=new Map();
 export const streetArt=id=>styles[id]||styles['grand-bay'];
@@ -22,9 +23,15 @@ function stroke(ctx,points,color,width){
 export function surfaceTexture(id,kind){
   const key=id+'/'+kind;
   if(textures.has(key))return textures.get(key);
+  if(kind==='road' || kind==='pave' || kind==='roof'){
+    const mapped = kind==='road' ? 'road' : kind==='pave' ? 'plaza' : 'roof';
+    const richTex = getRichmanTexture(mapped, 1, 1);
+    textures.set(key, richTex);
+    return richTex;
+  }
   const style=streetArt(id),canvas=document.createElement('canvas');canvas.width=canvas.height=256;
   const c=canvas.getContext('2d');
-  c.fillStyle=kind==='pave'?style.stone:kind==='road'?style.road:'#e5e1d5';c.fillRect(0,0,256,256);
+  c.fillStyle='#e5e1d5';c.fillRect(0,0,256,256);
   if(kind==='roof'){
     const metal=style.roof==='metal',pan=style.roof==='pan',shake=style.roof==='shake';
     const w=metal?64:32,h=metal?128:32;

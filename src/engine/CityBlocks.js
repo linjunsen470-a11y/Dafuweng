@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { getRichmanTexture } from './RichmanTextures.js';
 
 // Original background architecture. These seven existing sites are scenery,
 // not purchasable property, and have no ownership rings or interactive signs.
@@ -7,13 +8,14 @@ export const CITY_BLOCK_SITES = [
   {x:8,z:-14,height:5.6}, {x:14,z:-14,height:6.4},
   {x:2,z:-13,height:4.0}, {x:17,z:0,height:3.8}, {x:3,z:0,height:3.4}
 ];
+const TRIM_PALETTE = ['#e07a5f', '#e6a135', '#3da58a', '#4ea8de'];
 export function createCityBlock(height, variant=0) {
   const group=new THREE.Group();group.name=`civic-background-${variant}`;
   group.userData.harborOccluder='tower';group.userData.isOriginalCityBlock=true;
-  const stone=new THREE.MeshStandardMaterial({color:'#e4d8c1',roughness:.88});
-  const trim=new THREE.MeshStandardMaterial({color:'#526f69',roughness:.78});
-  const glass=new THREE.MeshStandardMaterial({color:'#456f78',emissive:'#e6be76',emissiveIntensity:0,roughness:.4});
-  const base=new THREE.MeshStandardMaterial({color:'#a4ada2',roughness:.95});
+  const stone=new THREE.MeshStandardMaterial({color:'#fff3d6',roughness:.76});
+  const trim=new THREE.MeshStandardMaterial({map:getRichmanTexture('roof',1.5,1),color:TRIM_PALETTE[variant%TRIM_PALETTE.length],roughness:.52});
+  const glass=new THREE.MeshStandardMaterial({map:getRichmanTexture('tower',1,.5),color:'#9ee5ff',emissive:'#ffca62',emissiveIntensity:0,roughness:.28});
+  const base=new THREE.MeshStandardMaterial({map:getRichmanTexture('plaza',1,1),color:'#f0dec0',roughness:.85});
   const box=(x,y,z,w,h,d,material)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;};
   const w=variant%2?3.4:3.1,d=3.0;
   box(0,.12,0,w+.3,.24,d+.3,base);
