@@ -20,15 +20,14 @@ import { CITY_BLOCK_SITES, createCityBlock } from './CityBlocks.js';
 import { createCrossroadsGarden } from './CrossroadsGarden.js';
 import { createCityGround, createTerraceOrchards } from './CityGround.js';
 import { createHospitalClinic } from './HospitalStreet.js';
-import { isOldTownHome } from './OldTownStreet.js';
-import { isCivicHome } from './CivicStreet.js';
 import { createRoadNetwork } from './RoadNetwork.js';
 import { createStreetLinkRibbon } from './BoardPathVisuals.js';
 import { createRichTileMaterial } from './BoardTileArt.js';
 import { createOwnerBasePlatform } from './PropertyBadges.js';
-import { buildRichVacantLot, buildRichPropertyStructure, decorateOriginalBuilding } from './PropertyBuildings.js';
+import { buildRichVacantLot, buildRichPropertyStructure } from './PropertyBuildings.js';
+import { getRichmanTexture } from './RichmanTextures.js';
 import { harborTileStyle } from './HarborBoardStyle.js';
-import { HarborStreets, isHarborHome, facingRoad } from './HarborStreets.js';
+import { HarborStreets, facingRoad } from './HarborStreets.js';
 import { harborFacility, facilityFacing } from './HarborFacilities.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -130,29 +129,11 @@ export class BoardBuilder {
 
   createWorldGround() {
     const geometry = new THREE.PlaneGeometry(108, 108);
-    const canvas=document.createElement('canvas');canvas.width=canvas.height=768;
-    const ctx=canvas.getContext('2d');
-    const field=ctx.createLinearGradient(0,0,768,768);
-    field.addColorStop(0,'#92b98e');field.addColorStop(.48,'#c7cd98');field.addColorStop(1,'#88b998');
-    ctx.fillStyle=field;ctx.fillRect(0,0,768,768);
-    // Distant contours keep their low contrast even where a camera reaches the board edge.
-    for(let row=0;row<12;row++)for(let column=0;column<12;column++){
-      const x=column*70+Math.sin(row+column*4)*23,y=row*68+Math.cos(column+row*2)*18;
-      const shade=ctx.createRadialGradient(x,y,3,x,y,53);
-      shade.addColorStop(0,(row+column)%3?'rgba(74,125,86,.30)':'rgba(246,220,154,.43)');
-      shade.addColorStop(1,'rgba(174,186,140,0)');ctx.fillStyle=shade;ctx.fillRect(x-54,y-54,108,108);
-    }
-    for(const [width,color] of [[30,'#c9c99e'],[22,'#6eaaa1'],[14,'#86bcad']]){
-      ctx.lineWidth=width;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(-43,140);
-      ctx.bezierCurveTo(179,28,249,245,450,111);ctx.bezierCurveTo(610,4,641,105,802,29);ctx.stroke();
-    }
-    const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
-
     const material = new THREE.MeshStandardMaterial({
-      map: texture,
-      roughness: 0.92,
+      map: getRichmanTexture('grass', 18, 18),
+      roughness: 0.9,
       metalness: 0,
-      color: '#ffffff'
+      color: '#e6f9cc'
     });
     const ground = new THREE.Mesh(geometry, material);
     ground.rotation.x = -Math.PI / 2;
@@ -185,27 +166,14 @@ export class BoardBuilder {
   }
 
   createBoardBase() {
-    // 豪华发光大理石棋盘底座
+    // 暖彩石板广场底座
     const baseGeo = new THREE.BoxGeometry(this.halfBoard * 2.15, 0.7, this.halfBoard * 2.15);
     const baseMat = new THREE.MeshStandardMaterial({
-      color: '#1e272e',
-      roughness: 0.3,
-      metalness: 0.5
+      map: getRichmanTexture('plaza', 7, 7),
+      color: '#fff5de',
+      roughness: 0.85,
+      metalness: 0.03
     });
-    const paving=document.createElement('canvas');
-    paving.width=paving.height=256;
-    const ctx=paving.getContext('2d');
-    ctx.fillStyle='#a39678';ctx.fillRect(0,0,256,256);
-    const stones=['#e5dac0','#e9ddbd','#dfcfad','#ecdfc1'];
-    for(let row=0;row<8;row++)for(let column=-1;column<4;column++){
-      const x=column*64+(row%2)*32;
-      ctx.fillStyle=stones[(row*7+column+5)%4];
-      ctx.fillRect(x+1,row*32+1,62,30);
-    }
-    const pavingTexture=new THREE.CanvasTexture(paving);
-    pavingTexture.wrapS=pavingTexture.wrapT=THREE.RepeatWrapping;
-    pavingTexture.repeat.set(7,7);pavingTexture.colorSpace=THREE.SRGBColorSpace;
-    baseMat.map=pavingTexture;baseMat.roughness=.91;baseMat.metalness=.03;
     const baseMesh = new THREE.Mesh(baseGeo, baseMat);
     baseMesh.position.set(0, -0.35, 0);
     baseMesh.receiveShadow = true;
@@ -227,7 +195,7 @@ export class BoardBuilder {
 
   createTiles(tileDefinitions = BOARD_TILES, tileSize = this.tileSize) {
     const inset = this.activeMapDefinition?.id === 'grand-bay' || hasClassicFrontages(this.activeMapDefinition);
-    const tileGeo = new THREE.BoxGeometry(tileSize - (inset ? .14 : .24), inset ? .04 : .34, tileSize - (inset ? .14 : .24));
+    const tileGeo = new THREE.BoxGeometry(tileSize - (inset ? 0.22 : 0.24), inset ? 0.14 : 0.34, tileSize - (inset ? 0.22 : 0.24));
     const detailGroup = new THREE.Group();
     detailGroup.name = `tile-plinths-${this.activeMapDefinition?.id || 'classic'}`;
     this.scene3D.scene.add(detailGroup);
@@ -250,7 +218,16 @@ export class BoardBuilder {
       else if (tileData.type === TileType.GOD_FORTUNE) tileColor = '#ffda79';
       else if (tileData.type === TileType.GOD_MISFORTUNE) tileColor = '#84817a';
 
-      const sideMat = new THREE.MeshStandardMaterial({ color: this.activeMapDefinition?.id === 'grand-bay' ? '#d9caa5' : visual.plinth, roughness: 0.68, metalness: 0.06 });
+      const ceramicSideColor = tileData.type === TileType.ROAD
+        ? '#dc7f38'
+        : isPropertyTile(tileData)
+          ? new THREE.Color(tileColor).lerp(new THREE.Color('#fff2cc'), 0.25)
+          : '#e5a438';
+      const sideMat = new THREE.MeshStandardMaterial({
+        color: ceramicSideColor,
+        roughness: 0.48,
+        metalness: 0.06
+      });
       const materials = [
         sideMat, sideMat,
         new THREE.MeshStandardMaterial({ color: tileColor, roughness: 0.3, metalness: 0.1 }),
@@ -260,8 +237,9 @@ export class BoardBuilder {
       const tileMesh = new THREE.Mesh(tileGeo, materials);
       tileMesh.position.copy(pos);
       if (inset) {
-        tileMesh.position.y = .248;
-        sideMat.visible = false;
+        tileMesh.position.y = 0.275;
+        // ROAD stepping-stone medallions use circular alphaTest top; hide square side walls on ROAD only
+        sideMat.visible = tileData.type !== TileType.ROAD;
       }
       if (tileData.type === TileType.ROAD && tileData.position) {
         const next = tileDefinitions.find(item => item.id === tileData.next?.[0]);
@@ -276,8 +254,8 @@ export class BoardBuilder {
       const plinth = new THREE.Mesh(
         new THREE.BoxGeometry(tileSize - 0.08, 0.1, tileSize - 0.08),
         new THREE.MeshStandardMaterial({
-          color: this.activeMapDefinition?.id === 'grand-bay' ? '#b6b59e' : visual.plinth, roughness: 0.8, metalness: 0.05,
-          emissive: visual.accent, emissiveIntensity: this.activeMapDefinition?.id === 'grand-bay' ? .03 : tileData.type === TileType.ROAD ? 0.16 : 0.34
+          color: this.activeMapDefinition?.id === 'grand-bay' ? '#f0dec0' : visual.plinth, roughness: 0.72, metalness: 0.05,
+          emissive: visual.accent, emissiveIntensity: this.activeMapDefinition?.id === 'grand-bay' ? 0.04 : tileData.type === TileType.ROAD ? 0.16 : 0.34
         })
       );
       plinth.position.set(pos.x, pos.y - 0.2, pos.z);
@@ -462,7 +440,7 @@ export class BoardBuilder {
       group.add(tree);
     });
 
-    const mountainMaterial = new THREE.MeshBasicMaterial({ color: '#668b6b' });
+    const mountainMaterial = new THREE.MeshStandardMaterial({ color: '#5eb64e', roughness: 0.86, flatShading: true });
     [[-36, -1, 5.2], [-27, -7, 6], [-40, -21, 3], [-35, -28, 3.2]].forEach(([x, z, radius], index) => {
       const mountain = new THREE.Mesh(new THREE.ConeGeometry(radius, radius * 0.75, 7), mountainMaterial);
       mountain.position.set(x, radius * 0.36 - 0.15, z);
@@ -591,6 +569,11 @@ export class BoardBuilder {
     const nextState = ownerColor ? `${ownerColor}|${level}` : 'vacant';
     if (tileMesh.userData.tileOwnerState === nextState) return;
     this.applyTileTextures(tileMesh, tileData, ownerColor, level);
+    const sideMat = tileMesh.material?.[0];
+    if (sideMat?.color) {
+      const districtColor = (tileData.group && COLOR_GROUPS[tileData.group]?.color) || '#e5a438';
+      sideMat.color.copy(ownerColor != null ? new THREE.Color(ownerColor) : new THREE.Color(districtColor).lerp(new THREE.Color('#fff2cc'), 0.25));
+    }
   }
 
   rebuildMapLandmarks(mapDefinition) {
@@ -1176,30 +1159,11 @@ export class BoardBuilder {
     group.rotation.y = tile?.lot?.position && tile.position ? facingRoad(tile) : (tile?.lot?.rotation || 0);
     group.userData.propertyVisual = [level, ownerColor, buildingType];
 
-    const originalDistrict = isCivicHome(this.activeMapDefinition, tile, buildingType) ? 'civic'
-      : isOldTownHome(this.activeMapDefinition, tile, buildingType) ? 'market'
-        : isHarborHome(this.activeMapDefinition, tile, buildingType) ? 'harbor' : null;
-    const district = originalDistrict || 'garden';
-    const shopModel = { MALL: `commerce_mall_${level}`, PARK: `commerce_park_${level}`, HOTEL: 'board_hotel', GAS_STATION: 'board_gas_station', LAB: 'board_lab' }[buildingType];
-    const originalHome = shopModel ? this.harborArt?.clone(shopModel)
-      : level > 0 && this.harborArt?.residence(level, district);
-
-    if (originalHome) {
-      group.add(finishRoofs(originalHome, this.activeMapDefinition.id));
-      group.userData.rotor = originalHome.getObjectByName('radar_rotor') || originalHome.getObjectByName('lobby_door');
-      if (buildingType === 'PARK') {
-        const fountain = this.harborArt.clone('board_fountain');
-        if (fountain) { fountain.position.set(.52, .22, .22); fountain.scale.setScalar(.78); group.add(fountain); }
-      }
-      decorateOriginalBuilding(group, originalHome, { level, ownerColor, buildingType, large: tile?.large });
-      this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
-      group.userData.originalModel = originalHome.name;
-    } else {
-      const structure = buildRichPropertyStructure({ level, ownerColor, buildingType, large: tile?.large });
-      if (structure.userData.rotor) group.userData.rotor = structure.userData.rotor;
-      group.add(structure);
-      this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
-    }
+    // Always build hand-painted Richman-4 residential & commercial architecture (replacing flat untextured GLB cubes).
+    const structure = buildRichPropertyStructure({ level, ownerColor, buildingType, large: tile?.large });
+    if (structure.userData.rotor) group.userData.rotor = structure.userData.rotor;
+    group.add(structure);
+    this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
 
     this.scene3D.scene.add(group);
     this.buildingMeshes.set(tileIndex, group);

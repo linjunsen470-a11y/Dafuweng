@@ -69,56 +69,72 @@ function drawHouseGlyph(ctx, cx, cy, scale, fill, stroke, isBig) {
 }
 
 function drawRoadMedallion(ctx, tileData) {
-  // Compact clean stepping-stone marker on dark warm asphalt so the path reads clearly.
+  // Sunny Richman-4 ceramic stepping stone with bold sunset-orange forward chevrons.
   ctx.save();
+  // Warm drop shadow
   ctx.beginPath();
-  ctx.arc(192, 192, 114, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(28, 35, 44, 0.55)';
+  ctx.arc(192, 198, 126, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(92, 54, 18, 0.34)';
   ctx.fill();
 
+  // Outer warm terracotta-gold rim
   ctx.beginPath();
-  ctx.arc(192, 186, 104, 0, Math.PI * 2);
-  ctx.fillStyle = '#fff5d6';
+  ctx.arc(192, 190, 122, 0, Math.PI * 2);
+  ctx.fillStyle = '#e07a32';
   ctx.fill();
   ctx.lineWidth = 10;
-  ctx.strokeStyle = '#d49d46';
+  ctx.strokeStyle = '#fff5d6';
   ctx.stroke();
 
+  // Inner sunlit ivory ceramic pad
   ctx.beginPath();
-  ctx.arc(192, 186, 84, 0, Math.PI * 2);
-  ctx.fillStyle = '#4e6273';
+  ctx.arc(192, 190, 102, 0, Math.PI * 2);
+  const padGrad = ctx.createRadialGradient(170, 152, 14, 192, 190, 106);
+  padGrad.addColorStop(0, '#fffef5');
+  padGrad.addColorStop(0.68, '#ffefc8');
+  padGrad.addColorStop(1, '#f0ce8c');
+  ctx.fillStyle = padGrad;
   ctx.fill();
 
-  // Crisp double forward arrow icon (canvas +Y maps to +Z forward on BoxGeometry top face)
-  ctx.fillStyle = '#fff4c8';
+  // Glossy specular crescent
+  ctx.save();
   ctx.beginPath();
-  ctx.moveTo(192, 246);
-  ctx.lineTo(240, 198);
-  ctx.lineTo(214, 198);
-  ctx.lineTo(192, 220);
-  ctx.lineTo(170, 198);
-  ctx.lineTo(144, 198);
-  ctx.closePath();
-  ctx.fill();
-
+  ctx.arc(192, 190, 96, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.52)';
   ctx.beginPath();
-  ctx.moveTo(192, 206);
-  ctx.lineTo(240, 158);
-  ctx.lineTo(214, 158);
-  ctx.lineTo(192, 180);
-  ctx.lineTo(170, 158);
-  ctx.lineTo(144, 158);
-  ctx.closePath();
+  ctx.ellipse(192, 118, 86, 36, 0, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
 
-  ctx.font = '900 32px "Outfit", sans-serif';
+  // Crisp double forward chevron (canvas +Y maps to +Z forward on BoxGeometry top face)
+  const drawChevron = (tipY) => {
+    ctx.beginPath();
+    ctx.moveTo(192, tipY);
+    ctx.lineTo(246, tipY - 48);
+    ctx.lineTo(218, tipY - 48);
+    ctx.lineTo(192, tipY - 24);
+    ctx.lineTo(166, tipY - 48);
+    ctx.lineTo(138, tipY - 48);
+    ctx.closePath();
+    ctx.lineWidth = 7;
+    ctx.strokeStyle = '#fff9e6';
+    ctx.stroke();
+    ctx.fillStyle = '#e65100';
+    ctx.fill();
+  };
+  drawChevron(264);
+  drawChevron(218);
+
+  // Tile number pill at top
+  drawRoundedRect(ctx, 144, 104, 96, 40, 20);
+  ctx.fillStyle = '#7c3f12';
+  ctx.fill();
+  ctx.font = '900 28px "Outfit", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.lineWidth = 7;
-  ctx.strokeStyle = '#25313d';
-  ctx.strokeText(String(tileData.id), 192, 130);
-  ctx.fillStyle = '#fff7da';
-  ctx.fillText(String(tileData.id), 192, 130);
+  ctx.fillStyle = '#fff8dc';
+  ctx.fillText(String(tileData.id), 192, 125);
   ctx.restore();
 }
 
@@ -135,36 +151,39 @@ function drawPropertyTile(ctx, tileData, districtColor, ownerColor, level) {
   const frameColor = ownerCss || districtCss;
   const size = 384;
 
-  // Soft drop shadow
-  drawRoundedRect(ctx, 22, 28, size - 44, size - 44, 52);
-  ctx.fillStyle = 'rgba(30, 22, 14, 0.36)';
-  ctx.fill();
+  // Solid outer ceramic bevel matching 3D block side walls (prevents hollow corners)
+  ctx.fillStyle = frameColor;
+  ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = 'rgba(255, 252, 236, 0.34)';
+  ctx.fillRect(0, 0, size, 16);
+  ctx.fillStyle = 'rgba(72, 38, 12, 0.22)';
+  ctx.fillRect(0, size - 16, size, 16);
 
-  // Outer crisp warm-white enamel bezel
-  drawRoundedRect(ctx, 20, 18, size - 40, size - 40, 50);
-  ctx.fillStyle = ownerCss || '#fff7e0';
+  // Outer thick glossy enamel bezel
+  drawRoundedRect(ctx, 14, 14, size - 28, size - 28, 44);
+  ctx.fillStyle = ownerCss || '#fff6d8';
   ctx.fill();
-  ctx.lineWidth = 14;
+  ctx.lineWidth = 12;
   ctx.strokeStyle = ownerCss ? '#fff9e6' : frameColor;
   ctx.stroke();
 
-  // Inner bright cream card face
-  drawRoundedRect(ctx, 38, 36, size - 76, size - 76, 36);
-  ctx.fillStyle = ownerCss ? '#fffdf3' : '#fff8e5';
+  // Inner bright sunlit cream card face
+  drawRoundedRect(ctx, 32, 32, size - 64, size - 64, 34);
+  const cardGrad = ctx.createLinearGradient(0, 32, 0, size - 36);
+  cardGrad.addColorStop(0, '#fffef7');
+  cardGrad.addColorStop(1, '#ffefd0');
+  ctx.fillStyle = cardGrad;
   ctx.fill();
 
   // Vibrant top color header bar (district or owner color)
   ctx.save();
-  drawRoundedRect(ctx, 38, 36, size - 76, size - 76, 36);
+  drawRoundedRect(ctx, 32, 32, size - 64, size - 64, 34);
   ctx.clip();
-  const headerGrad = ctx.createLinearGradient(0, 36, 0, 126);
-  headerGrad.addColorStop(0, frameColor);
-  headerGrad.addColorStop(1, frameColor);
-  ctx.fillStyle = headerGrad;
-  ctx.fillRect(38, 36, size - 76, 86);
-  // Specular highlight strip on header
-  ctx.fillStyle = 'rgba(255,255,255,0.28)';
-  ctx.fillRect(38, 36, size - 76, 26);
+  ctx.fillStyle = frameColor;
+  ctx.fillRect(32, 32, size - 64, 92);
+  // Glossy candy top sheen
+  ctx.fillStyle = 'rgba(255,255,255,0.34)';
+  ctx.fillRect(32, 32, size - 64, 30);
   ctx.restore();
 
   // Header badge text: stars if owned, or "商业地" / "#id" if vacant
@@ -172,25 +191,28 @@ function drawPropertyTile(ctx, tileData, districtColor, ownerColor, level) {
   ctx.textBaseline = 'middle';
   ctx.font = '900 36px "Noto Sans SC", sans-serif';
   ctx.lineWidth = 7;
-  ctx.strokeStyle = 'rgba(42, 24, 10, 0.72)';
+  ctx.strokeStyle = 'rgba(54, 28, 10, 0.78)';
   const headerText = ownerCss
     ? (level > 0 ? '★'.repeat(Math.min(5, level)) : '⚑ 已购')
     : (isBig ? '★ 商业地' : `#${tileData.id}`);
-  ctx.strokeText(headerText, 192, 82);
+  ctx.strokeText(headerText, 192, 80);
   ctx.fillStyle = ownerCss && level > 0 ? '#ffe45e' : '#ffffff';
-  ctx.fillText(headerText, 192, 82);
+  ctx.fillText(headerText, 192, 80);
 
   // Center house / commercial building glyph
-  drawHouseGlyph(ctx, 192, 202, 1.18, frameColor, '#4d2e14', isBig);
+  drawHouseGlyph(ctx, 192, 200, 1.2, frameColor, '#5a3312', isBig);
 
   // Bottom crisp price or street name pill
   const footerText = tileData.price ? `$${tileData.price.toLocaleString()}` : tileData.name.slice(0, 4);
-  drawRoundedRect(ctx, 72, 278, 240, 52, 24);
-  ctx.fillStyle = ownerCss ? frameColor : '#5b391a';
+  drawRoundedRect(ctx, 64, 274, 256, 56, 26);
+  ctx.fillStyle = ownerCss ? frameColor : '#6e3c14';
   ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = 'rgba(255, 249, 224, 0.85)';
+  ctx.stroke();
   ctx.font = '900 30px "Outfit", "Noto Sans SC", sans-serif';
   ctx.fillStyle = '#fff9df';
-  ctx.fillText(footerText, 192, 305);
+  ctx.fillText(footerText, 192, 303);
 }
 
 function drawSpecialTile(ctx, tileData, specLabel) {
@@ -198,25 +220,25 @@ function drawSpecialTile(ctx, tileData, specLabel) {
   const label = tileData.id === 30 && specLabel === '老城' ? '老城' : theme.label;
   const size = 384;
 
-  // Drop shadow
-  drawRoundedRect(ctx, 20, 26, size - 40, size - 40, 54);
-  ctx.fillStyle = 'rgba(28, 20, 14, 0.42)';
-  ctx.fill();
+  // Solid warm gold ceramic bevel matching 3D block side walls
+  ctx.fillStyle = '#e5a438';
+  ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = 'rgba(255, 252, 232, 0.4)';
+  ctx.fillRect(0, 0, size, 16);
+  ctx.fillStyle = 'rgba(84, 46, 12, 0.24)';
+  ctx.fillRect(0, size - 16, size, 16);
 
   // Outer thick gold/cream frame
-  drawRoundedRect(ctx, 18, 16, size - 36, size - 36, 52);
+  drawRoundedRect(ctx, 14, 14, size - 28, size - 28, 46);
   ctx.fillStyle = theme.band;
   ctx.fill();
-  ctx.lineWidth = 14;
+  ctx.lineWidth = 12;
   ctx.strokeStyle = '#6c4119';
   ctx.stroke();
 
   // Inner vivid candy surface
-  drawRoundedRect(ctx, 36, 34, size - 72, size - 72, 38);
-  const grad = ctx.createLinearGradient(0, 34, 0, size - 38);
-  grad.addColorStop(0, theme.bg);
-  grad.addColorStop(1, theme.bg);
-  ctx.fillStyle = grad;
+  drawRoundedRect(ctx, 32, 32, size - 64, size - 64, 34);
+  ctx.fillStyle = theme.bg;
   ctx.fill();
 
   // Glossy top crescent

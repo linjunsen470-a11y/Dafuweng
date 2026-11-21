@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { getRichmanTexture } from './RichmanTextures.js';
 
 const badgeTextureCache = new Map();
 const signTextureCache = new Map();
@@ -179,7 +180,8 @@ export function createOwnerBasePlatform(ownerColor, large = false) {
   const plinth = new THREE.Mesh(
     new THREE.BoxGeometry(sizeX, 0.14, sizeZ),
     new THREE.MeshStandardMaterial({
-      color: '#f5e7c4',
+      map: getRichmanTexture('plaza', 1.6, 1.6),
+      color: '#fff6de',
       roughness: 0.62,
       metalness: 0.04,
       emissive: accent,

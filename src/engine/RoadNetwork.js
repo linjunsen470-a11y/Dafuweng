@@ -9,17 +9,16 @@ import { addPathFlowGuides } from './BoardPathVisuals.js';
 const BLOCK_SIZE = 24;
 
 function roadLayers(map, width) {
-  const profile = getBoardThemeProfile(map.theme);
   const layers = [{
     name: 'road-surface', width, height: .16, overlap: .22, elevation: .12, uvSpan: 4,
-    material: new THREE.MeshStandardMaterial({ map: surfaceTexture(map.id, 'road'), roughness: .82, metalness: .04 })
+    material: new THREE.MeshStandardMaterial({ map: surfaceTexture(map.id, 'road'), color: '#fff8ec', roughness: .78, metalness: .02 })
   }, {
-    name: 'road-shoulder', width: width + .82, height: .14, overlap: .38, elevation: .04,
-    material: new THREE.MeshStandardMaterial({ color: '#f3e3bc', roughness: .62, metalness: .04 })
+    name: 'road-shoulder', width: width + .96, height: .18, overlap: .42, elevation: .045,
+    material: new THREE.MeshStandardMaterial({ color: '#c8723d', roughness: .68, metalness: .04 })
   }];
   if (hasClassicFrontages(map)) layers.push({
     name: 'road-pavement', width: width + 4.4, height: .2, overlap: .45, elevation: -.035, uvSpan: 4.6,
-    material: new THREE.MeshStandardMaterial({ map: surfaceTexture(map.id, 'pave'), roughness: .96 })
+    material: new THREE.MeshStandardMaterial({ map: surfaceTexture(map.id, 'pave'), color: '#fff7e8', roughness: .9 })
   });
   return layers;
 }
@@ -41,11 +40,11 @@ function forkArrow(direction) {
   const { x, z, dx, dz } = direction;
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute([
-    x + dx * .52, .258, z + dz * .52,
-    x - dx * .34 + dz * .36, .258, z - dz * .34 - dx * .36,
-    x - dx * .34 - dz * .36, .258, z - dz * .34 + dx * .36
+    x + dx * .58, .268, z + dz * .58,
+    x - dx * .36 + dz * .40, .268, z - dz * .36 - dx * .40,
+    x - dx * .36 - dz * .40, .268, z - dz * .36 + dx * .40
   ], 3));
-  const arrow = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: '#ffd447', side: THREE.DoubleSide }));
+  const arrow = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: '#e64917', side: THREE.DoubleSide }));
   arrow.userData.forkDirection = direction;
   return arrow;
 }

@@ -43,13 +43,13 @@ export function addPathFlowGuides(group, map, width) {
 
   if (!directedEdges.length) return;
 
-  // 1. Crisp double warm-white roadside curb stripes along both edges of every segment.
-  const stripeGeo = new THREE.BoxGeometry(0.14, 0.025, 1);
-  const stripeMat = new THREE.MeshBasicMaterial({ color: '#fff6da' });
+  // 1. Crisp warm-cream inner curb highlight stripes along both sides of the cobblestone boulevard.
+  const stripeGeo = new THREE.BoxGeometry(0.16, 0.03, 1);
+  const stripeMat = new THREE.MeshBasicMaterial({ color: '#fff8e2' });
   const stripes = new THREE.InstancedMesh(stripeGeo, stripeMat, undirectedEdges.length * 2);
   stripes.name = 'road-edge-stripes';
   const dummy = new THREE.Object3D();
-  const halfOffset = Math.max(0.9, width * 0.44);
+  const halfOffset = Math.max(0.9, width * 0.46);
   let idx = 0;
   for (const edge of undirectedEdges) {
     const cx = edge.from.position.x + edge.dx * 0.5;
@@ -57,9 +57,9 @@ export function addPathFlowGuides(group, map, width) {
     const nx = -edge.dz / edge.length;
     const nz = edge.dx / edge.length;
     for (const side of [-1, 1]) {
-      dummy.position.set(cx + nx * halfOffset * side, 0.208, cz + nz * halfOffset * side);
+      dummy.position.set(cx + nx * halfOffset * side, 0.212, cz + nz * halfOffset * side);
       dummy.rotation.set(0, edge.angle, 0);
-      dummy.scale.set(1, 1, edge.length + 0.16);
+      dummy.scale.set(1, 1, edge.length + 0.18);
       dummy.updateMatrix();
       stripes.setMatrixAt(idx++, dummy.matrix);
     }
@@ -67,7 +67,7 @@ export function addPathFlowGuides(group, map, width) {
   stripes.instanceMatrix.needsUpdate = true;
   group.add(stripes);
 
-  // 2. Forward-pointing directional chevrons so players read route flow at a glance.
+  // 2. Bold sunset-amber directional chevrons so route flow pops clearly on bright warm cobblestones.
   const chevronPositions = [];
   for (const edge of directedEdges) {
     const isFork = (edge.from.next || []).length > 1;
@@ -77,7 +77,7 @@ export function addPathFlowGuides(group, map, width) {
         x: edge.from.position.x + edge.dx * t,
         z: edge.from.position.z + edge.dz * t,
         angle: edge.angle,
-        scale: isFork ? 0.96 : 0.72,
+        scale: isFork ? 1.04 : 0.78,
         isFork
       });
     }
@@ -88,10 +88,10 @@ export function addPathFlowGuides(group, map, width) {
     const chevronMat = new THREE.MeshBasicMaterial({ color: '#ffffff', side: THREE.DoubleSide });
     const chevrons = new THREE.InstancedMesh(chevronGeo, chevronMat, chevronPositions.length);
     chevrons.name = 'road-flow-chevrons';
-    const normalTint = new THREE.Color('#fff1bd');
-    const forkTint = new THREE.Color('#ffcf33');
+    const normalTint = new THREE.Color('#d95f18');
+    const forkTint = new THREE.Color('#e63946');
     chevronPositions.forEach((item, i) => {
-      dummy.position.set(item.x, 0.232, item.z);
+      dummy.position.set(item.x, 0.236, item.z);
       dummy.rotation.set(0, item.angle, 0);
       dummy.scale.setScalar(item.scale);
       dummy.updateMatrix();
@@ -103,16 +103,16 @@ export function addPathFlowGuides(group, map, width) {
     group.add(chevrons);
   }
 
-  // 3. Prominent gold junction rings at every fork node to spotlight route branches.
+  // 3. Prominent sunset-gold junction rings at every fork node to spotlight route branches.
   const forks = map.tiles.filter(tile => tile.position && (tile.next || []).length > 1);
   if (forks.length) {
-    const ringGeo = new THREE.RingGeometry(width * 0.44, width * 0.56, 28);
+    const ringGeo = new THREE.RingGeometry(width * 0.45, width * 0.59, 28);
     ringGeo.rotateX(-Math.PI / 2);
-    const ringMat = new THREE.MeshBasicMaterial({ color: '#ffd447', side: THREE.DoubleSide });
+    const ringMat = new THREE.MeshBasicMaterial({ color: '#ff6b1a', side: THREE.DoubleSide });
     const rings = new THREE.InstancedMesh(ringGeo, ringMat, forks.length);
     rings.name = 'road-fork-rings';
     forks.forEach((tile, i) => {
-      dummy.position.set(tile.position.x, 0.238, tile.position.z);
+      dummy.position.set(tile.position.x, 0.242, tile.position.z);
       dummy.rotation.set(0, 0, 0);
       dummy.scale.setScalar(1);
       dummy.updateMatrix();
@@ -121,6 +121,41 @@ export function addPathFlowGuides(group, map, width) {
     rings.instanceMatrix.needsUpdate = true;
     group.add(rings);
   }
+
+  // 4. Classic Richman-4 celebratory golden archway spanning the START tile.
+  const startTile = map.tiles.find(t => t.type === 'START' && t.position);
+  const nextStart = startTile && tiles.get(startTile.next?.[0]);
+  if (startTile?.position && nextStart?.position) {
+    const arch = createStartArchway(width);
+    arch.position.set(startTile.position.x, 0.2, startTile.position.z);
+    arch.rotation.y = Math.atan2(nextStart.position.x - startTile.position.x, nextStart.position.z - startTile.position.z);
+    group.add(arch);
+  }
+}
+
+function createStartArchway(roadWidth) {
+  const group = new THREE.Group();
+  group.name = 'road-start-arch';
+  const span = roadWidth * 0.58;
+  const redMat = new THREE.MeshStandardMaterial({ color: '#e53935', roughness: 0.35, metalness: 0.08 });
+  const goldMat = new THREE.MeshStandardMaterial({ color: '#ffca28', roughness: 0.26, metalness: 0.55 });
+  const creamMat = new THREE.MeshStandardMaterial({ color: '#fff8e1', roughness: 0.42 });
+
+  for (const side of [-1, 1]) {
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.38, 0.45, 10), creamMat);
+    base.position.set(side * span, 0.22, 0);
+    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.2, 2.7, 10), redMat);
+    pillar.position.set(side * span, 1.7, 0);
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8), goldMat);
+    cap.position.set(side * span, 3.12, 0);
+    group.add(base, pillar, cap);
+  }
+  const archBar = new THREE.Mesh(new THREE.TorusGeometry(span, 0.16, 10, 24, Math.PI), goldMat);
+  archBar.position.set(0, 3.05, 0);
+  const crest = new THREE.Mesh(new THREE.OctahedronGeometry(0.42, 0), redMat);
+  crest.position.set(0, 3.05 + span + 0.28, 0);
+  group.add(archBar, crest);
+  return group;
 }
 
 // Builds a vivid Richman-4 style linked street ribbon connecting adjacent owned lots.
@@ -131,15 +166,15 @@ export function createStreetLinkRibbon(a, b, ownerColor) {
   const mid = a.clone().lerp(b, 0.5);
 
   const backing = new THREE.Mesh(
-    new THREE.BoxGeometry(0.46, 0.055, dist),
-    new THREE.MeshBasicMaterial({ color: '#fff3c4', transparent: true, opacity: 0.92 })
+    new THREE.BoxGeometry(0.52, 0.06, dist),
+    new THREE.MeshBasicMaterial({ color: '#fff6d1', transparent: true, opacity: 0.94 })
   );
   backing.position.set(mid.x, mid.y + 0.09, mid.z);
   backing.rotation.y = angle;
 
   const core = new THREE.Mesh(
-    new THREE.BoxGeometry(0.28, 0.07, dist),
-    new THREE.MeshBasicMaterial({ color: ownerColor, transparent: true, opacity: 0.95 })
+    new THREE.BoxGeometry(0.32, 0.08, dist),
+    new THREE.MeshBasicMaterial({ color: ownerColor, transparent: true, opacity: 0.96 })
   );
   core.position.set(mid.x, mid.y + 0.11, mid.z);
   core.rotation.y = angle;
