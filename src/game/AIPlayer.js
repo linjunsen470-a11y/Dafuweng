@@ -78,6 +78,42 @@ export class AIPlayer {
     }) || null;
   }
 
+  static getForwardTiles(gameState, startTileId, direction = 1, maxSteps = 6) {
+    const visited = new Set();
+    let frontier = [startTileId];
+    for (let step = 0; step < maxSteps; step++) {
+      const next = [];
+      for (const tileId of frontier) {
+        const options = gameState.mapRuntime?.getNextOptions?.(tileId, direction) || [];
+        for (const opt of options) {
+          if (visited.has(opt)) continue;
+          visited.add(opt);
+          next.push(opt);
+        }
+      }
+      frontier = next;
+      if (!frontier.length) break;
+    }
+    return visited;
+  }
+
+  static pickSafeTrapTarget(aiPlayer, targets, gameState) {
+    if (!targets?.length) return null;
+    const maxSelfSteps = aiPlayer.vehicle === 'CAR' || aiPlayer.vehicle === 'ENGINEER' ? 12 : aiPlayer.vehicle === 'MOTOR' ? 9 : 6;
+    const ownPath = this.getForwardTiles(gameState, aiPlayer.currentTile, aiPlayer.direction || 1, maxSelfSteps);
+    const opponentPaths = new Set();
+    for (const other of gameState.players) {
+      if (other.id === aiPlayer.id || other.isBankrupt || other.hospitalTurns > 0 || other.jailTurns > 0) continue;
+      for (const tileId of this.getForwardTiles(gameState, other.currentTile, other.direction || 1, 6)) {
+        opponentPaths.add(tileId);
+      }
+    }
+    const safeTargets = targets.filter(t => !ownPath.has(Number(t.id)));
+    if (!safeTargets.length) return null;
+    const best = safeTargets.find(t => opponentPaths.has(Number(t.id)));
+    return best || null;
+  }
+
   static decideItemUsage(aiPlayer, gameState, gameEngine) {
     const has = itemId => aiPlayer.items?.includes(itemId) && gameEngine.getItemAction(aiPlayer, itemId).enabled;
     if (has('CAR') && aiPlayer.vehicle !== 'CAR') return { itemId: 'CAR' };
@@ -95,7 +131,9 @@ export class AIPlayer {
         })[0];
         return { itemId, targetId: target.id };
       }
-      return { itemId, targetId: targets.at(-1).id };
+      const safeTarget = this.pickSafeTrapTarget(aiPlayer, targets, gameState);
+      if (!safeTarget) continue;
+      return { itemId, targetId: safeTarget.id };
     }
     return null;
   }
@@ -132,6 +170,11 @@ export class AIPlayer {
       const targets = action?.targets || [];
       if (!targets.length) continue;
       let target = targets[0];
+      if (['OBSTACLE', 'MINE'].includes(cardId)) {
+        const safeTarget = this.pickSafeTrapTarget(aiPlayer, targets, gameState);
+        if (!safeTarget) continue;
+        target = safeTarget;
+      }
       if (['CASH_TAX', 'TURTLE', 'TURN_AROUND'].includes(cardId)) {
         target = [...targets].sort((a, b) =>
           (gameState.players[Number(b.id)]?.cash || 0) - (gameState.players[Number(a.id)]?.cash || 0))[0];

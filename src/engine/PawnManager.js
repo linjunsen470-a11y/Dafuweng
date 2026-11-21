@@ -138,6 +138,17 @@ export class PawnManager {
 
   syncVehicles(players) {
     for (const pawn of this.pawns) syncBoardRide(pawn,players[pawn.id]?.vehicle);
+    this.syncConfinementVisibility(players);
+  }
+
+  syncConfinementVisibility(players) {
+    for (const pawn of this.pawns) {
+      const player = players?.[pawn.id];
+      if (!player) continue;
+      const confined = !player.isBankrupt && ((player.hospitalTurns || 0) > 0 || (player.jailTurns || 0) > 0);
+      pawn.mesh.userData.isConfined = confined;
+      pawn.mesh.visible = !confined && !player.isBankrupt;
+    }
   }
 
   clearPawns() {

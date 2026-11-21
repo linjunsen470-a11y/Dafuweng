@@ -777,9 +777,6 @@ class GameController {
       return;
     }
 
-    const vehicleLimit = aiPlayer.vehicle === 'MOTOR' ? 2 : ['CAR', 'ENGINEER'].includes(aiPlayer.vehicle) ? 3 : 1;
-    this.gameEngine.execute({ type: 'SELECT_DICE_COUNT', playerId: aiPlayer.id, payload: { count: vehicleLimit } });
-
     const itemPurchase = AIPlayer.decideItemPurchase(aiPlayer, this.gameEngine);
     if (itemPurchase) this.gameEngine.execute({ type: 'BUY_ITEM', playerId: aiPlayer.id, payload: { itemId: itemPurchase } });
 
@@ -847,6 +844,9 @@ class GameController {
     if (companyDecision) {
       this.gameEngine.execute({ type: 'SET_COMPANY_POLICY', playerId: aiPlayer.id, payload: companyDecision });
     }
+
+    const vehicleLimit = aiPlayer.vehicle === 'MOTOR' ? 2 : ['CAR', 'ENGINEER'].includes(aiPlayer.vehicle) ? 3 : 1;
+    this.gameEngine.execute({ type: 'SELECT_DICE_COUNT', playerId: aiPlayer.id, payload: { count: vehicleLimit } });
 
     await this.doRollDice();
   }

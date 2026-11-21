@@ -92,4 +92,19 @@ describe('AI skip-turn reporting and comic speech bubble', () => {
     await pending;
     expect(document.querySelector('.ai-skip-speech')).toBeNull();
   });
+
+  it('AI does not place MINE_ITEM or OBSTACLE on its own forward path on Round 1', async () => {
+    const { GameEngine } = await import('../src/game/GameEngine.js');
+    const { AIPlayer } = await import('../src/game/AIPlayer.js');
+    const state = new GameState({ seed: 2026, maxRounds: 10 });
+    state.setupGame(configs, 20000);
+    const engine = new GameEngine(state);
+
+    const ai = state.players[1];
+    const itemDecision = AIPlayer.decideItemUsage(ai, state, engine);
+    expect(['MINE_ITEM', 'BARRIER']).not.toContain(itemDecision?.itemId);
+
+    const cardDecision = AIPlayer.decideCardUsage(ai, state, engine);
+    expect(['OBSTACLE', 'MINE']).not.toContain(cardDecision?.cardId);
+  });
 });
