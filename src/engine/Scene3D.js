@@ -262,7 +262,7 @@ export class Scene3D {
     this.scene.background.set(sky);
     this.scene.fog.color.set(fog);
     const fogScale = this.mapFogScale || 1;
-    this.scene.fog.density = (this.weather === 'STORM' ? 0.018 : this.weather === 'RAIN' ? 0.013 : 0.008) * fogScale;
+    this.scene.fog.density = (this.weather === 'STORM' ? 0.016 : this.weather === 'RAIN' ? 0.011 : 0.0042) * fogScale;
     this.sunLight.color.set(preset.sun);
     this.sunLight.intensity = stormy ? preset.sunPower * 0.55 : preset.sunPower;
     this.ambientLight.color.set(preset.ambient);
@@ -350,7 +350,7 @@ export class Scene3D {
     Object.assign(shadowCamera,{left:-shadowRadius,right:shadowRadius,top:shadowRadius,bottom:-shadowRadius,far:195});
     shadowCamera.updateProjectionMatrix();
     this.mapFogScale = mapDefinition?.theme === 'GRAND_BAY' ? 0.25 : outerDistrict ? .56 : 1;
-    this.scene.fog.density = 0.008 * this.mapFogScale;
+    this.scene.fog.density = 0.0042 * this.mapFogScale;
     this.camera.far = Math.max(1000, this.mapCamera.overviewDistance * 8);
     this.camera.updateProjectionMatrix();
     this.showOverview();

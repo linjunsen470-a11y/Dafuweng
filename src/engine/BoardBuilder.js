@@ -1,14 +1,13 @@
 import { WorldAmbience, arcadePinwheel } from './WorldAmbience.js';
 import {connectingStreet} from './ConnectingStreets.js';
-import {streetYard} from './VacantStreetYards.js';
-import {finishRoofs,finishLandscape,surfaceTexture} from './BoardSurfaceArt.js';
+import {finishRoofs,finishLandscape} from './BoardSurfaceArt.js';
 import {regionalDistrict} from './RegionalDistricts.js';
 import {createMarketDistrict} from './MarketDistrict.js';
 import {createCardHouse, addServiceThreshold} from './CardHouses.js';
 import {createStreetAprons} from './StreetAprons.js';
 import {hasClassicFrontages,planClassicFrontages} from './ClassicFrontages.js';
 import {createTownCourts} from './TownCourts.js';
-import {createQuayStreet,quayLot} from './QuayStreet.js';
+import {createQuayStreet} from './QuayStreet.js';
 import { createHarborPromenade, createHarborGulls, updateHarborGulls } from './HarborPromenade.js';
 import { animateBuildingChange, markPurchase } from './BuildingChange.js';
 import { createHarborWorkingYard } from './HarborWorkingYard.js';
@@ -24,6 +23,10 @@ import { createHospitalClinic } from './HospitalStreet.js';
 import { isOldTownHome } from './OldTownStreet.js';
 import { isCivicHome } from './CivicStreet.js';
 import { createRoadNetwork } from './RoadNetwork.js';
+import { createStreetLinkRibbon } from './BoardPathVisuals.js';
+import { createRichTileMaterial } from './BoardTileArt.js';
+import { createOwnerBasePlatform } from './PropertyBadges.js';
+import { buildRichVacantLot, buildRichPropertyStructure, decorateOriginalBuilding } from './PropertyBuildings.js';
 import { harborTileStyle } from './HarborBoardStyle.js';
 import { HarborStreets, isHarborHome, facingRoad } from './HarborStreets.js';
 import { harborFacility, facilityFacing } from './HarborFacilities.js';
@@ -224,7 +227,7 @@ export class BoardBuilder {
 
   createTiles(tileDefinitions = BOARD_TILES, tileSize = this.tileSize) {
     const inset = this.activeMapDefinition?.id === 'grand-bay' || hasClassicFrontages(this.activeMapDefinition);
-    const tileGeo = new THREE.BoxGeometry(tileSize - .3, inset ? .035 : .34, tileSize - .3);
+    const tileGeo = new THREE.BoxGeometry(tileSize - (inset ? .14 : .24), inset ? .04 : .34, tileSize - (inset ? .14 : .24));
     const detailGroup = new THREE.Group();
     detailGroup.name = `tile-plinths-${this.activeMapDefinition?.id || 'classic'}`;
     this.scene3D.scene.add(detailGroup);
@@ -247,7 +250,7 @@ export class BoardBuilder {
       else if (tileData.type === TileType.GOD_FORTUNE) tileColor = '#ffda79';
       else if (tileData.type === TileType.GOD_MISFORTUNE) tileColor = '#84817a';
 
-      const sideMat = new THREE.MeshStandardMaterial({ color: this.activeMapDefinition?.id === 'grand-bay' ? '#b6b59e' : visual.plinth, roughness: 0.7, metalness: 0.08 });
+      const sideMat = new THREE.MeshStandardMaterial({ color: this.activeMapDefinition?.id === 'grand-bay' ? '#d9caa5' : visual.plinth, roughness: 0.68, metalness: 0.06 });
       const materials = [
         sideMat, sideMat,
         new THREE.MeshStandardMaterial({ color: tileColor, roughness: 0.3, metalness: 0.1 }),
@@ -257,10 +260,10 @@ export class BoardBuilder {
       const tileMesh = new THREE.Mesh(tileGeo, materials);
       tileMesh.position.copy(pos);
       if (inset) {
-        tileMesh.position.y = .245;
+        tileMesh.position.y = .248;
         sideMat.visible = false;
       }
-      if (tileData.type === TileType.ROAD && tileData.position && this.activeMapDefinition?.id !== 'grand-bay') {
+      if (tileData.type === TileType.ROAD && tileData.position) {
         const next = tileDefinitions.find(item => item.id === tileData.next?.[0]);
         if (next?.position) tileMesh.rotation.y = Math.atan2(next.position.x - tileData.position.x, next.position.z - tileData.position.z);
       }
@@ -567,192 +570,27 @@ export class BoardBuilder {
     });
   }
 
-  applyTileTextures(tileMesh, tileData) {
-    if (this.activeMapDefinition?.id === 'grand-bay' || hasClassicFrontages(this.activeMapDefinition)) {
-      const spec = harborTileStyle(tileData);
-      const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
-      const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256;
-      const ctx = canvas.getContext('2d');
-      const property=isPropertyTile(tileData),road=tileData.type==='ROAD';
-      // The outer square is transparent. The continuous carriageway supplies
-      // its own joints and shadows all the way to the edge of the enamel inlay.
-      const accent=tileData.group && COLOR_GROUPS[tileData.group]?.color || visual.accent;
-      const disc=(r,fill)=>{
-        ctx.beginPath();ctx.arc(128,127,r,0,2*Math.PI);ctx.fillStyle=fill;ctx.fill();
-      };
-      const rim=ctx.createLinearGradient(75,48,164,204);
-      rim.addColorStop(0,'#ffe8a0');rim.addColorStop(.44,'#cead67');rim.addColorStop(.65,'#806942');rim.addColorStop(1,'#dab77a');
-      disc(road?66:101,'#514f48');disc(road?62:96,rim);
-      const enamel=ctx.createRadialGradient(98,93,5,133,138,97);
-      enamel.addColorStop(0,road?'#839593':accent);enamel.addColorStop(.68,road?'#57706e':accent);
-      enamel.addColorStop(1,road?'#3e5858':'#52665c');
-      disc(road?56:87,enamel);
-      ctx.save();ctx.beginPath();ctx.arc(128,127,road?50:80,3.61,5.35);ctx.strokeStyle='rgba(255,249,220,.68)';ctx.lineWidth=3;ctx.stroke();ctx.restore();
-      ctx.textAlign='center';ctx.textBaseline='middle';
-      if(property || road){
-        const points=road?[[94,103],[127,123],[162,103],[162,125],[127,148],[94,125]]:
-          [[77,117],[128,73],[179,117],[166,117],[166,154],[140,154],[140,126],[118,126],[118,154],[91,154],[91,117]];
-        ctx.beginPath();points.forEach(([x,y],n)=>n?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
-        ctx.fillStyle='#fff0c9';ctx.fill();ctx.strokeStyle='#684e34';ctx.lineWidth=4;ctx.stroke();
-      }else{
-        ctx.font='bold 58px sans-serif';ctx.lineWidth=5;ctx.strokeStyle='#594735';ctx.strokeText(spec.label,128,118);
-        ctx.fillStyle='#fff2c9';ctx.fillText(spec.label,128,118);
-      }
-      ctx.font='bold '+(road?22:26)+'px sans-serif';ctx.fillStyle='#fff4ce';ctx.strokeStyle='#4d544b';ctx.lineWidth=4;
-      const numberY=road?163:178;
-      ctx.strokeText(String(tileData.id),128,numberY);ctx.fillText(String(tileData.id),128,numberY);
-      const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
-      texture.anisotropy = Math.min(8,this.scene3D.renderer.capabilities.getMaxAnisotropy());
-      tileMesh.material[2].dispose();
-      tileMesh.material[2] = new THREE.MeshStandardMaterial({map:texture,alphaTest:.45,roughness:.76,metalness:.06});
-      tileMesh.castShadow=false;
-      tileMesh.userData.harborLabel = spec.label;
-      return;
+  applyTileTextures(tileMesh, tileData, ownerColor = null, level = 0) {
+    const spec = harborTileStyle(tileData);
+    const anisotropy = Math.min(8, this.scene3D?.renderer?.capabilities?.getMaxAnisotropy?.() || 4);
+    const oldTop = tileMesh.material?.[2];
+    if (oldTop) {
+      if (oldTop.map?.isCanvasTexture && !oldTop.map.userData?.sharedBoardTexture) oldTop.map.dispose();
+      oldTop.dispose?.();
     }
-    let customTex = null;
-    if (tileData.type === TileType.ROAD) {
-      const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
-      tileMesh.material[2] = new THREE.MeshStandardMaterial({
-        map: this.createRoadTileTexture(visual), color: '#ffffff', roughness: 0.86, metalness: 0.04,
-        emissive: visual.accent, emissiveIntensity: 0.06
-      });
-      return;
-    }
-    if (tileData.type === TileType.START) customTex = this.textures.start;
-    else if (tileData.type === TileType.BANK) customTex = this.textures.bank;
-    else if (tileData.type === TileType.STOCK) customTex = this.textures.stock;
-    else if (tileData.type === TileType.CARD_SHOP) customTex = this.textures.shop;
-
-    if (customTex) {
-      tileMesh.material[2] = new THREE.MeshStandardMaterial({ map: customTex, roughness: 0.3 });
-    } else {
-      this.createTileLabelCanvas(tileMesh, tileData);
-    }
+    tileMesh.material[2] = createRichTileMaterial(tileData, this.activeMapDefinition, { ownerColor, level, anisotropy });
+    tileMesh.castShadow = false;
+    tileMesh.userData.harborLabel = spec.label;
+    tileMesh.userData.tileOwnerState = ownerColor ? `${ownerColor}|${level}` : 'vacant';
   }
 
-  createRoadTileTexture(visual) {
-    const key = `${visual.asphalt}:${visual.lane}`;
-    if (this.roadTileTextures.has(key)) return this.roadTileTextures.get(key);
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = visual.asphalt;
-    ctx.fillRect(0, 0, 256, 256);
-    const asphalt = ctx.createLinearGradient(0, 0, 256, 256);
-    asphalt.addColorStop(0, 'rgba(255,255,255,.07)');
-    asphalt.addColorStop(.45, 'rgba(255,255,255,0)');
-    asphalt.addColorStop(1, 'rgba(0,0,0,.14)');
-    ctx.fillStyle = asphalt;
-    ctx.fillRect(0, 0, 256, 256);
-    ctx.strokeStyle = visual.lane;
-    ctx.globalAlpha = 0.72;
-    ctx.lineWidth = 9;
-    ctx.setLineDash([34, 28]);
-    ctx.beginPath();
-    ctx.moveTo(128, -10);
-    ctx.lineTo(128, 266);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.globalAlpha = 0.24;
-    ctx.lineWidth = 5;
-    ctx.strokeRect(10, 10, 236, 236);
-    ctx.globalAlpha = 0.52;
-    ctx.fillStyle = visual.lane;
-    ctx.beginPath();
-    ctx.moveTo(128, 48);
-    ctx.lineTo(105, 82);
-    ctx.lineTo(119, 82);
-    ctx.lineTo(119, 108);
-    ctx.lineTo(137, 108);
-    ctx.lineTo(137, 82);
-    ctx.lineTo(151, 82);
-    ctx.closePath();
-    ctx.fill();
-    ctx.globalAlpha = 1;
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = Math.min(8, this.scene3D.renderer.capabilities.getMaxAnisotropy());
-    texture.userData.sharedBoardTexture = true;
-    this.roadTileTextures.set(key, texture);
-    return texture;
-  }
-
-  createTileLabelCanvas(tileMesh, tileData) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-
-    const visual = getTileVisualSpec(this.activeMapDefinition, tileData);
-    let colorHex = visual.accent;
-    if (tileData.group && COLOR_GROUPS[tileData.group]) colorHex = COLOR_GROUPS[tileData.group].color;
-    else if (tileData.type === TileType.COUPON) colorHex = '#ffca3a';
-    else if (tileData.type === TileType.MONSTER) colorHex = '#8b5cf6';
-    else if (tileData.type === TileType.TREASURE) colorHex = '#f97316';
-    else if (tileData.type === TileType.GOD_FORTUNE) colorHex = '#ffe66d';
-    else if (tileData.type === TileType.CHANCE) colorHex = '#22d3ee';
-    ctx.fillStyle = '#0b2030';
-    ctx.fillRect(0, 0, 512, 512);
-    const backdrop = ctx.createLinearGradient(0, 0, 512, 512);
-    backdrop.addColorStop(0, 'rgba(255,255,255,.10)');
-    backdrop.addColorStop(.5, 'rgba(255,255,255,0)');
-    backdrop.addColorStop(1, 'rgba(0,0,0,.22)');
-    ctx.fillStyle = backdrop;
-    ctx.beginPath();
-    ctx.roundRect(18, 18, 476, 476, 38);
-    ctx.fill();
-    ctx.strokeStyle = colorHex;
-    ctx.globalAlpha = 0.72;
-    ctx.lineWidth = 15;
-    ctx.stroke();
-    ctx.globalAlpha = 0.1;
-    ctx.lineWidth = 2;
-    for (let offset = -512; offset < 512; offset += 54) {
-      ctx.beginPath();
-      ctx.moveTo(offset, 512);
-      ctx.lineTo(offset + 512, 0);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = colorHex;
-    ctx.beginPath();
-    ctx.roundRect(18, 18, 476, 92, [38, 38, 8, 8]);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(2,12,25,.55)';
-    ctx.fillRect(18, 93, 476, 17);
-
-    ctx.fillStyle = '#f4fbff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    const icon = tileData.icon || '🏠';
-    ctx.font = 'bold 118px sans-serif';
-    ctx.shadowColor = colorHex;
-    ctx.shadowBlur = 28;
-    ctx.fillText(icon, 256, 232);
-    ctx.shadowBlur = 0;
-
-    ctx.font = '900 42px "Noto Sans SC", sans-serif';
-    const displayName = tileData.name.length > 8 ? `${tileData.name.slice(0, 8)}…` : tileData.name;
-    ctx.fillText(displayName, 256, 354);
-
-    ctx.fillStyle = 'rgba(190,222,232,.8)';
-    ctx.font = '800 24px "Outfit", sans-serif';
-    ctx.fillText(visual.districtName || tileData.type.replaceAll('_', ' '), 256, 403);
-
-    if (tileData.price) {
-      ctx.fillStyle = '#ffd166';
-      ctx.font = 'bold 38px "Outfit", sans-serif';
-      ctx.fillText(`$${tileData.price.toLocaleString()}`, 256, 456);
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.anisotropy = 8;
-    tileMesh.material[2] = new THREE.MeshStandardMaterial({
-      map: texture, roughness: 0.38, metalness: 0.08,
-      emissive: colorHex, emissiveIntensity: 0.08
-    });
+  refreshTileOwnership(tileIndex, ownerColor = null, level = 0) {
+    const tileMesh = this.tileMeshes?.[tileIndex];
+    const tileData = tileMesh?.userData?.tileData;
+    if (!tileMesh?.material?.[2] || !tileData || !isPropertyTile(tileData)) return;
+    const nextState = ownerColor ? `${ownerColor}|${level}` : 'vacant';
+    if (tileMesh.userData.tileOwnerState === nextState) return;
+    this.applyTileTextures(tileMesh, tileData, ownerColor, level);
   }
 
   rebuildMapLandmarks(mapDefinition) {
@@ -796,7 +634,7 @@ export class BoardBuilder {
         : this.getRoadsideAnchor(tile, position));
       group.position.set(anchor.x, service || tile.serviceFrontage || (isPropertyTile(tile) && tile.lot?.position) || group.userData.originalHospital || group.userData.originalMagic || group.userData.originalStation ? .22 : position.y + 0.35, anchor.z);
       group.rotation.y = service ? facilityFacing(tile, service) : tile.serviceFrontage ? tile.serviceFrontage.rotation : group.userData.originalStation ? Math.PI : tile.lot?.rotation || 0;
-      if (isPropertyTile(tile) && tile.lot?.position) group.rotation.y=facingRoad(tile)+Math.PI;
+      if (isPropertyTile(tile) && tile.lot?.position) group.rotation.y = facingRoad(tile);
       if (tile.serviceFrontage && !service) group.position.y = .075;
       group.userData.baseY = group.position.y;
       group.userData.phase = tile.id * 0.71;
@@ -831,132 +669,9 @@ export class BoardBuilder {
   }
 
   createVacantLotMarker(tile) {
-    const group = new THREE.Group();
-    const accent = getTileVisualSpec(this.activeMapDefinition, tile).accent;
-    if (tile.lot?.position) {
-      const map=this.activeMapDefinition.id;
-      const dock=(map==='island-fork' && (tile.id<=12 || tile.id>=26)) || (map==='grand-bay' && quayLot(tile.id));
-      const arcade=map==='city-loop' || tile.large;
-      const tea=map==='taiwan-loop' || (map==='island-fork' && tile.id>=16 && tile.id<=22);
-      const edging=new THREE.MeshStandardMaterial({color:dock?'#886345':arcade?'#97795d':'#ac8b63'});
-      const surface=new THREE.MeshStandardMaterial({color:dock?'#c08c54':arcade?'#c5baba':tea?'#afbc82':'#a2b87a'});
-      const quayUse=map==='grand-bay' && (tile.group?.startsWith('BAY_') || tile.id===15);
-      const tidalGarden=quayUse && (tile.group==='BAY_2' || tile.id===15);
-      surface.map=surfaceTexture(tidalGarden?'taiwan-loop':quayUse && tile.group==='BAY_3'?'city-loop':map,'plot');
-      let plotFloor;
-      if(tidalGarden){
-        const outline=new THREE.Shape();
-        outline.moveTo(-1.61,1.42);outline.lineTo(.41,1.42);
-        outline.quadraticCurveTo(1.72,1.37,1.70,.18);
-        outline.quadraticCurveTo(1.67,-1.50,-.06,-1.50);
-        outline.lineTo(-1.61,-1.50);outline.closePath();
-        plotFloor=new THREE.ExtrudeGeometry(outline,{depth:.13,bevelEnabled:false});
-        plotFloor.rotateX(-Math.PI/2);plotFloor.translate(0,-.08,0);
-      }else plotFloor=new THREE.BoxGeometry(3.30,.11,3.05);
-      group.add(new THREE.Mesh(plotFloor,surface));
-      const detail=(x,y,z,w,h,d,material)=>{
-        const part=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);part.position.set(x,y,z);group.add(part);
-      };
-      if(quayUse){
-        const yard=new THREE.MeshStandardMaterial({color:'#477d79',roughness:.86});
-        const pale=new THREE.MeshStandardMaterial({color:'#f2d49c',roughness:.91});
-        const side=tile.id%2===0?-1:1;
-        if(tile.group==='BAY_1'){
-          // An open net-mending rack, with a free half-yard for the eventual home.
-          surface.color.set('#c29f73');
-          for(const z of [-.77,.71])detail(side*.85,.52,z,.13,.96,.14,edging);
-          detail(side*.85,.94,-.03,.13,.13,1.71,edging);
-          for(let k=0;k<5;k++)detail(side*.85,.64,-.61+k*.29,.08,.58,.045,yard);
-          for(const y of [.48,.67,.85])detail(side*.85,y,-.02,.085,.045,1.32,yard);
-          detail(-side*.81,.15,-.51,.76,.18,1.14,pale);
-        }else if(tile.id===13 || tile.id===18){
-          // Seaward reading terrace: three stone treads lead to a timber seat.
-          surface.color.set('#a4bd99');
-          for(let k=0;k<3;k++)detail(side*(.69-k*.31),.10+k*.046,-.21,.55,.11+k*.085,1.76,pale);
-          detail(-side*.84,.38,-.39,.48,.15,1.33,edging);
-          for(const z of [-.92,.15])detail(-side*.84,.20,z,.31,.34,.13,yard);
-          detail(-side*1.02,.57,-.39,.10,.41,1.34,yard);
-        }else if(tile.group==='BAY_3'){
-          surface.color.set('#b0aaa0');
-          for(const x of [-.75,.76])detail(x,.14,0,.14,.12,2.28,pale);
-          for(const [x,z] of [[-.75,-.65],[.12,-.48]]){
-            detail(side*x,.33,z,.78,.55,.74,edging);
-            detail(side*x,.62,z,.12,.05,.76,yard);
-          }
-        }else{
-          // Shell-shaped tidal garden, with a curved seat and fan of stepping stones.
-          surface.color.set('#d4c294');
-          const basin=new THREE.Mesh(new THREE.CylinderGeometry(.70,.80,.19,16),pale);
-          basin.scale.z=.73;basin.position.set(side*.52,.15,-.37);
-          group.add(basin);
-          const water=new THREE.Mesh(new THREE.CylinderGeometry(.58,.58,.035,16),yard);
-          water.scale.z=.73;water.position.copy(basin.position);
-          water.position.y+=.10;group.add(water);
-          for(let i=0;i<3;i++){
-            const reed=new THREE.Mesh(new THREE.ConeGeometry(.10,.54+i*.11,5),yard);
-            reed.position.set(side*(.78-i*.12),.47,-.54-i*.06);group.add(reed);
-          }
-          for(let k=0;k<5;k++){
-            const angle=k*.54-.95;
-            detail(side*.52+.96*Math.sin(angle),.18,-.37+.86*Math.cos(angle),.39,.21,.28,pale);
-          }
-          detail(-side*.88,.28,-.57,.40,.32,1.54,edging);
-        }
-      }else if(dock){
-        for(let board=-3;board<=3;board++)detail(0,.068,board*.40,3.26,.02,.035,edging);
-        for(const x of [-1.38,1.38])detail(x,.30,1.24,.21,.64,.21,edging);
-        detail(0,.43,1.24,2.82,.14,.12,edging);
-      }else if(arcade){
-        for(const side of [-1,1])detail(side*1.21,.13,.26,.52,.16,2.45,edging);
-        for(const z of [-.96,-.13,.70])detail(0,.09,z,1.45,.065,.11,edging);
-      }else{
-        const hedge=new THREE.MeshStandardMaterial({color:tea?'#708c47':'#649159'});
-        for(const side of [-1,1]){
-          detail(side*1.05,.20,tea?.50:.28,.60,.28,tea?1.68:2.02,hedge);
-          detail(side*1.39,.13,.15,.11,.22,2.40,edging);
-        }
-        detail(0,.09,-.28,.78,.075,2.27,new THREE.MeshStandardMaterial({color:'#e9c99a'}));
-      }
-      if(!quayUse)group.add(streetYard(tile,dock?'dock':arcade?'station':'garden'));
-      const pole=new THREE.Mesh(new THREE.CylinderGeometry(.04,.055,1.03,8),edging);
-      pole.position.set(.97,.64,.6);group.add(pole);
-      const flag=new THREE.Shape();flag.moveTo(0,0);flag.lineTo(.69,-.14);flag.lineTo(0,-.36);flag.closePath();
-      const pennant=new THREE.Mesh(new THREE.ShapeGeometry(flag),new THREE.MeshStandardMaterial({color:COLOR_GROUPS[tile.group]?.color || accent,side:THREE.DoubleSide}));
-      pennant.position.set(.97,1.14,.60);group.add(pennant);
-      return group;
-    }
-    const pad = new THREE.Mesh(
-      new THREE.BoxGeometry(2.72, 0.14, 2.72),
-      new THREE.MeshStandardMaterial({ color: '#17372f', roughness: 0.76, emissive: accent, emissiveIntensity: 0.12 })
-    );
-    pad.position.y = 0.08;
-    group.add(pad);
-    const edgeMaterial = new THREE.MeshStandardMaterial({ color: accent, roughness: 0.3, metalness: 0.34, emissive: accent, emissiveIntensity: 0.28 });
-    [[0, 1.36, 2.72, .09], [0, -1.36, 2.72, .09], [1.36, 0, .09, 2.72], [-1.36, 0, .09, 2.72]].forEach(([x, z, width, depth]) => {
-      const edge = new THREE.Mesh(new THREE.BoxGeometry(width, .1, depth), edgeMaterial);
-      edge.position.set(x, .17, z);
-      group.add(edge);
-    });
-    const postMaterial = new THREE.MeshStandardMaterial({ color: '#f6e6b7', roughness: .56 });
-    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([x, z]) => {
-      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.65, 8), postMaterial);
-      post.position.set(x, 0.38, z);
-      group.add(post);
-    });
-    const sign = new THREE.Mesh(
-      new THREE.BoxGeometry(1.55, 0.65, 0.1),
-      new THREE.MeshBasicMaterial({ color: '#fff7d6' })
-    );
-    sign.position.set(0, 0.72, 0.9);
-    sign.rotation.x = -0.16;
-    group.add(sign);
-    const badge = new THREE.Mesh(
-      new THREE.CircleGeometry(0.2, 16),
-      new THREE.MeshBasicMaterial({ color: accent })
-    );
-    badge.position.set(0, 0.72, 0.956);
-    group.add(badge);
-    return group;
+    const visual = getTileVisualSpec(this.activeMapDefinition, tile);
+    const accent = (tile.group && COLOR_GROUPS[tile.group]?.color) || visual.accent;
+    return buildRichVacantLot(tile, accent);
   }
 
   getRoadsideAnchor(tile, position) {
@@ -997,7 +712,7 @@ export class BoardBuilder {
     if (!clinic && !magic && !station) {
       const plinth = new THREE.Mesh(
         new THREE.CylinderGeometry(1.82, 1.92, .24, 16),
-        new THREE.MeshStandardMaterial({ color: '#0b2234', roughness: .34, metalness: .4, emissive: roofColor, emissiveIntensity: .3 })
+        new THREE.MeshStandardMaterial({ color: '#efe0bd', roughness: .54, metalness: .06, emissive: roofColor, emissiveIntensity: .18 })
       );
       plinth.position.y = .12;
       const base = new THREE.Mesh(new THREE.BoxGeometry(2.5, 1.7, 2.2), new THREE.MeshStandardMaterial({ color: wallColor, roughness: .48, metalness: .06 }));
@@ -1382,8 +1097,8 @@ export class BoardBuilder {
     this.buildingMeshes.forEach(group => {
       group.traverse(child => {
         if (child.userData?.isWindow) child.material.emissiveIntensity = enabled ? 1.6 : 0.35;
-        if (child.userData?.isOwnerLight) child.material.emissiveIntensity = enabled ? 1.25 : 0.5;
-        if (child.userData?.isOwnerBeacon) child.material.opacity = enabled ? 1 : .78;
+        if (child.userData?.isOwnerLight) child.material.emissiveIntensity = enabled ? 0.85 : 0.16;
+        if (child.userData?.isOwnerBeacon && !child.userData?.isPropertyBadge) child.material.opacity = enabled ? 1 : .86;
         if (child.userData?.isBuildingStandee) child.material.color.set(enabled ? '#9aa8c8' : '#ffffff');
       });
     });
@@ -1449,6 +1164,7 @@ export class BoardBuilder {
       this.buildingMeshes.delete(tileIndex);
     }
 
+    this.refreshTileOwnership(tileIndex, ownerColor, level);
     if (level === 0 && ownerColor === null) return;
 
     const tilePos = this.tilePositions[tileIndex];
@@ -1456,264 +1172,44 @@ export class BoardBuilder {
     const tile = this.activeMapDefinition?.tiles.find(item => item.id === tileIndex);
     const buildingAnchor = tile?.lot?.position || tilePos;
     const group = new THREE.Group();
-    group.position.set(buildingAnchor.x, tilePos.y + 0.25, buildingAnchor.z);
-    group.rotation.y = tile?.lot?.rotation || 0;
-    if (this.activeMapDefinition?.id==='grand-bay' && quayLot(tileIndex) && ownerColor!=null) {
-      // In local space +Z faces the road after the residence is oriented.
-      group.rotation.y=facingRoad(tile);
-      const doorstep=new THREE.Mesh(new THREE.BoxGeometry(2.85,.13,.49),new THREE.MeshStandardMaterial({color:ownerColor}));
-      doorstep.position.set(0,.16,1.65);group.add(doorstep);
-      for(const side of [-1,1]){
-        const gate=new THREE.Mesh(new THREE.BoxGeometry(.27,.75,.27),doorstep.material);
-        gate.position.set(side*1.26,.42,1.65);group.add(gate);
-      }
-    }
+    group.position.set(buildingAnchor.x, tilePos.y + 0.16, buildingAnchor.z);
+    group.rotation.y = tile?.lot?.position && tile.position ? facingRoad(tile) : (tile?.lot?.rotation || 0);
     group.userData.propertyVisual = [level, ownerColor, buildingType];
-    if(tile?.lot?.position && ownerColor!=null){
-      const trim=new THREE.MeshStandardMaterial({color:ownerColor,roughness:.78});
-      const marker=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),trim,4);
-      const stamp=new THREE.Object3D();
-      for(const [i,[x,z,w,d]] of [[-1.36,1.56,.56,.21],[1.36,1.56,.56,.21],[-1.55,.92,.18,1.36],[1.55,.92,.18,1.36]].entries()){
-        stamp.position.set(x,-.11,z);stamp.scale.set(w,.25,d);stamp.updateMatrix();marker.setMatrixAt(i,stamp.matrix);
-      }
-      marker.userData.isOwnerBeacon=true;
-      group.add(marker);
-    }
-    const originalDistrict = isCivicHome(this.activeMapDefinition,tile,buildingType) ? 'civic'
-      : isOldTownHome(this.activeMapDefinition,tile,buildingType) ? 'market'
-        : isHarborHome(this.activeMapDefinition,tile,buildingType) ? 'harbor' : null;
-    const district = originalDistrict || 'garden';
-    const shopModel = {MALL: `commerce_mall_${level}`, PARK: `commerce_park_${level}`, HOTEL:'board_hotel', GAS_STATION:'board_gas_station', LAB:'board_lab'}[buildingType];
-    const originalHome = shopModel ? this.harborArt?.clone(shopModel)
-      : level > 0 && this.harborArt?.residence(level,district);
-    if (originalHome) {
-      if (tile?.lot?.position && tile.position) group.rotation.y = facingRoad(tile);
-      group.add(finishRoofs(originalHome,this.activeMapDefinition.id));
-      group.userData.rotor = originalHome.getObjectByName('radar_rotor') || originalHome.getObjectByName('lobby_door');
 
+    const originalDistrict = isCivicHome(this.activeMapDefinition, tile, buildingType) ? 'civic'
+      : isOldTownHome(this.activeMapDefinition, tile, buildingType) ? 'market'
+        : isHarborHome(this.activeMapDefinition, tile, buildingType) ? 'harbor' : null;
+    const district = originalDistrict || 'garden';
+    const shopModel = { MALL: `commerce_mall_${level}`, PARK: `commerce_park_${level}`, HOTEL: 'board_hotel', GAS_STATION: 'board_gas_station', LAB: 'board_lab' }[buildingType];
+    const originalHome = shopModel ? this.harborArt?.clone(shopModel)
+      : level > 0 && this.harborArt?.residence(level, district);
+
+    if (originalHome) {
+      group.add(finishRoofs(originalHome, this.activeMapDefinition.id));
+      group.userData.rotor = originalHome.getObjectByName('radar_rotor') || originalHome.getObjectByName('lobby_door');
       if (buildingType === 'PARK') {
         const fountain = this.harborArt.clone('board_fountain');
-        if (fountain) { fountain.position.set(.52,.22,.22); fountain.scale.setScalar(.78); group.add(fountain); }
+        if (fountain) { fountain.position.set(.52, .22, .22); fountain.scale.setScalar(.78); group.add(fountain); }
       }
+      decorateOriginalBuilding(group, originalHome, { level, ownerColor, buildingType, large: tile?.large });
       this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
       group.userData.originalModel = originalHome.name;
-      this.scene3D.scene.add(group);
-      this.buildingMeshes.set(tileIndex, group);
-      if (purchased) markPurchase(this.scene3D.scene,tilePos,group,ownerColor);
-      if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group,previous?.[0] ?? -1,level,this.scene3D);
-      return;
-    }
-
-    const roofMat = new THREE.MeshStandardMaterial({ color: ownerColor ?? 0xffaa00, roughness: 0.3 });
-    const wallMat = new THREE.MeshStandardMaterial({ color: '#f8f9fa', roughness: 0.4 });
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: '#39d6e4',
-      roughness: 0.08,
-      metalness: 0.15,
-      clearcoat: 0.85,
-      emissive: '#063f52',
-      emissiveIntensity: 0.35
-    });
-
-    if (tile?.large && ownerColor !== null && buildingType === 'PARK') {
-      const lawn = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 1.9, 0.16, 20), new THREE.MeshStandardMaterial({ color: '#22c55e' }));
-      lawn.position.y = 0.08;
-      group.add(lawn);
-      [[-0.9, -0.5], [0.85, -0.45], [0, 0.75]].forEach(([x, z]) => {
-        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 0.75, 8), new THREE.MeshStandardMaterial({ color: '#92400e' }));
-        const crown = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.1, 10), new THREE.MeshStandardMaterial({ color: '#15803d' }));
-        trunk.position.set(x, 0.4, z); crown.position.set(x, 1.15, z); group.add(trunk, crown);
-      });
-    } else if (tile?.large && ownerColor !== null && buildingType === 'GAS_STATION') {
-      const canopy = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.28, 2.7), roofMat);
-      canopy.position.y = 1.8;
-      group.add(canopy);
-      [-1.25, 1.25].forEach(x => {
-        const pump = new THREE.Mesh(new THREE.BoxGeometry(0.48, 1.1, 0.55), new THREE.MeshStandardMaterial({ color: '#f8fafc' }));
-        pump.position.set(x, 0.55, 0); group.add(pump);
-      });
-    } else if (tile?.large && ownerColor !== null) {
-      const visual = {
-        MALL: { color: '#38bdf8', height: 1 }, HOTEL: { color: '#f472b6', height: 1.55 }, LAB: { color: '#a78bfa', height: 1.25 }
-      }[buildingType] || { color: '#38bdf8', height: 1 };
-      glassMat.color.set(visual.color);
-      const height = (1.2 + Math.max(1, level) * 0.75) * visual.height;
-      const mall = new THREE.Mesh(new THREE.BoxGeometry(3.8, height, 2.8), wallMat);
-      mall.position.y = height / 2;
-      mall.castShadow = true;
-      const facade = new THREE.Mesh(new THREE.BoxGeometry(3.5, Math.max(0.7, height - 0.45), 0.14), glassMat);
-      facade.position.set(0, height / 2, 1.46);
-      const roof = new THREE.Mesh(new THREE.BoxGeometry(4.05, 0.28, 3.05), roofMat);
-      roof.position.y = height + 0.14;
-      group.add(mall, facade, roof);
-      [-1.25, -0.4, 0.4, 1.25].forEach((x, index) => {
-        const logo = new THREE.Mesh(
-          new THREE.BoxGeometry(0.55, 0.38, 0.12),
-          new THREE.MeshBasicMaterial({ color: [0xff7675, 0x74b9ff, 0x55efc4, 0xfdcb6e][index] })
-        );
-        logo.position.set(x, Math.min(height - 0.35, 1.1), 1.56);
-        group.add(logo);
-      });
-      if (buildingType === 'LAB') {
-        const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2, 8), new THREE.MeshStandardMaterial({ color: '#e9d5ff' }));
-        const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 10), new THREE.MeshBasicMaterial({ color: '#22d3ee' }));
-        antenna.position.y = height + 0.75; orb.position.set(.18,.62,0); antenna.add(orb); group.add(antenna);
-        group.userData.rotor = antenna;
-      }
-    } else if (level === 0) {
-      const pole = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.06, 0.06, 1.2, 8),
-        new THREE.MeshStandardMaterial({ color: '#f5f6fa' })
-      );
-      pole.position.y = 0.6;
-      const flag = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.7, 0.4),
-        new THREE.MeshBasicMaterial({ color: ownerColor, side: THREE.DoubleSide })
-      );
-      flag.position.set(0.35, 1, 0);
-      group.add(pole, flag);
-      for (const side of [-1,1]) {
-        for (const z of [-1.15,0,1.15]) {
-          const post = new THREE.Mesh(new THREE.BoxGeometry(.12,.48,.12),roofMat);
-          post.position.set(side*1.3,.24,z); group.add(post);
-        }
-        const rail = new THREE.Mesh(new THREE.BoxGeometry(.08,.10,2.4),roofMat);
-        rail.position.set(side*1.3,.32,0); group.add(rail);
-      }
-    } else if (level === 1) {
-      const wall = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.3, 2.0), wallMat);
-      wall.position.y = 0.65;
-      wall.castShadow = true;
-      group.add(wall);
-
-      const roof = new THREE.Mesh(new THREE.ConeGeometry(1.6, 1.0, 4), roofMat);
-      roof.position.y = 1.8;
-      roof.rotation.y = Math.PI / 4;
-      roof.castShadow = true;
-      group.add(roof);
-
-      const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.6, 0.3), new THREE.MeshStandardMaterial({ color: '#e74c3c' }));
-      chimney.position.set(0.6, 1.9, 0.4);
-      group.add(chimney);
-    } else if (level === 2) {
-      const wall1 = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 2.2), wallMat);
-      wall1.position.y = 0.65;
-      wall1.castShadow = true;
-      group.add(wall1);
-
-      const wall2 = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.1, 1.8), wallMat);
-      wall2.position.y = 1.85;
-      wall2.castShadow = true;
-      group.add(wall2);
-
-      const glassPatio = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.6, 1.2), glassMat);
-      glassPatio.position.set(0, 1.85, 0.4);
-      group.add(glassPatio);
-
-      const roof = new THREE.Mesh(new THREE.ConeGeometry(1.5, 1.0, 4), roofMat);
-      roof.position.y = 2.9;
-      roof.rotation.y = Math.PI / 4;
-      roof.castShadow = true;
-      group.add(roof);
-    } else if (level === 3) {
-      const towerBase = new THREE.Mesh(new THREE.BoxGeometry(2.4, 3.8, 2.4), wallMat);
-      towerBase.position.y = 1.9;
-      towerBase.castShadow = true;
-      group.add(towerBase);
-
-      const glassTower = new THREE.Mesh(new THREE.BoxGeometry(2.45, 3.4, 1.8), glassMat);
-      glassTower.position.y = 1.9;
-      group.add(glassTower);
-
-      const crown = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.7, 1.8), roofMat);
-      crown.position.y = 4.15;
-      crown.castShadow = true;
-      group.add(crown);
-
-      const helipad = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.1, 16), new THREE.MeshStandardMaterial({ color: '#f1c40f' }));
-      helipad.position.y = 4.55;
-      group.add(helipad);
-    } else if (level >= 4) {
-      // Level 4: 摩天大楼 (Skyscraper with antenna, glass facade & gold crown)
-      const megaBase = new THREE.Mesh(new THREE.BoxGeometry(2.6, 5.2, 2.6), wallMat);
-      megaBase.position.y = 2.6;
-      megaBase.castShadow = true;
-      group.add(megaBase);
-
-      const megaGlass = new THREE.Mesh(new THREE.BoxGeometry(2.65, 4.8, 2.0), glassMat);
-      megaGlass.position.y = 2.6;
-      group.add(megaGlass);
-
-      const crown = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.0, 2.0), roofMat);
-      crown.position.y = 5.7;
-      crown.castShadow = true;
-      group.add(crown);
-
-      const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.8, 8), new THREE.MeshStandardMaterial({ color: '#ffaa00', metalness: 0.9 }));
-      antenna.position.y = 7.1;
-      group.add(antenna);
-
-      const lightPulse = new THREE.Mesh(new THREE.SphereGeometry(0.25, 12, 12), new THREE.MeshBasicMaterial({ color: '#ff4757' }));
-      lightPulse.position.y = 8.0;
-      lightPulse.userData.isBeacon = true;
-      group.add(lightPulse);
-    }
-
-    if (level > 0) {
+    } else {
+      const structure = buildRichPropertyStructure({ level, ownerColor, buildingType, large: tile?.large });
+      if (structure.userData.rotor) group.userData.rotor = structure.userData.rotor;
+      group.add(structure);
       this.addBuildingOwnerLighting(group, ownerColor, tile?.large);
-      this.addBuildingWindows(group, level);
-
     }
 
     this.scene3D.scene.add(group);
     this.buildingMeshes.set(tileIndex, group);
-    if (purchased) markPurchase(this.scene3D.scene,tilePos,group,ownerColor);
-
+    if (purchased) markPurchase(this.scene3D.scene, tilePos, group, ownerColor);
     group.scale.setScalar(1);
-    if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group,previous?.[0] ?? -1,level,this.scene3D);
+    if (purchased || (!refresh && previous && previous[0] !== level)) animateBuildingChange(group, previous?.[0] ?? -1, level, this.scene3D);
   }
 
   addBuildingOwnerLighting(group, ownerColor, large = false) {
-    const accent = new THREE.Color(ownerColor ?? 0xffaa00);
-    const sizeX = large ? 4.45 : 3.05;
-    const sizeZ = large ? 3.5 : 3.05;
-    const foundation = new THREE.Mesh(
-      new THREE.BoxGeometry(sizeX, .14, sizeZ),
-      new THREE.MeshStandardMaterial({
-        color: '#0a1a28', roughness: .34, metalness: .42,
-        emissive: accent, emissiveIntensity: .5
-      })
-    );
-    foundation.position.y = .07;
-    foundation.userData.isOwnerLight = true;
-    group.add(foundation);
-    const beaconMaterial = new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: .8 });
-    [[-sizeX * .43, -sizeZ * .43], [sizeX * .43, -sizeZ * .43], [-sizeX * .43, sizeZ * .43], [sizeX * .43, sizeZ * .43]].forEach(([x, z]) => {
-      const beacon = new THREE.Mesh(new THREE.CylinderGeometry(.035, .035, .72, 6), beaconMaterial);
-      beacon.position.set(x, .42, z);
-      beacon.userData.isOwnerBeacon = true;
-      group.add(beacon);
-    });
-  }
-
-  addBuildingWindows(group, level) {
-    const floors = [0, 1, 2, 4, 6][Math.min(level, 4)];
-    const maxHeight = [0, 1.2, 2.5, 3.7, 5.1][Math.min(level, 4)];
-    const facadeZ = level <= 2 ? 1.03 : 1.34;
-    const windowMat = new THREE.MeshStandardMaterial({
-      color: '#ffeaa7',
-      emissive: '#ffb142',
-      emissiveIntensity: 0.35,
-      roughness: 0.25
-    });
-    for (let floor = 0; floor < floors; floor++) {
-      for (const x of [-0.55, 0, 0.55]) {
-        const windowMesh = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.24, 0.04), windowMat.clone());
-        windowMesh.position.set(x, 0.55 + floor * (maxHeight / Math.max(1, floors)), facadeZ);
-        windowMesh.userData.isWindow = true;
-        group.add(windowMesh);
-      }
-    }
+    group.add(createOwnerBasePlatform(ownerColor, large));
   }
 
   syncStreetLinks(state) {
@@ -1722,23 +1218,21 @@ export class BoardBuilder {
       this.disposeObject(this.streetBands);
     }
     const group = new THREE.Group();
-    const manager=state.propertyManager;
-    for(const [id, others] of manager.streetLinks) {
-      const lot=manager.getProperty(id);
-      if(lot?.owner==null || lot.isMortgaged) continue;
-      for(const other of others) {
-        const neighbor=manager.getProperty(other);
-        if(other<=id || neighbor?.owner!==lot.owner || neighbor.isMortgaged) continue;
-        const a=this.buildingMeshes.get(id)?.position,b=this.buildingMeshes.get(other)?.position;
-        if(!a || !b) continue;
-        const color=state.players[lot.owner].colorHex;
-        const band=new THREE.Mesh(new THREE.BoxGeometry(.22,.06,a.distanceTo(b)),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.8}));
-        band.position.copy(a).lerp(b,.5);band.position.y+=.12;
-        band.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);
-        group.add(band);
+    const manager = state.propertyManager;
+    for (const [id, others] of manager.streetLinks) {
+      const lot = manager.getProperty(id);
+      if (lot?.owner == null || lot.isMortgaged) continue;
+      for (const other of others) {
+        const neighbor = manager.getProperty(other);
+        if (other <= id || neighbor?.owner !== lot.owner || neighbor.isMortgaged) continue;
+        const a = this.buildingMeshes.get(id)?.position;
+        const b = this.buildingMeshes.get(other)?.position;
+        if (!a || !b) continue;
+        const color = state.players[lot.owner].colorHex;
+        group.add(createStreetLinkRibbon(a, b, color));
       }
     }
-    this.streetBands=group;
+    this.streetBands = group;
     this.scene3D.scene.add(group);
   }
 
