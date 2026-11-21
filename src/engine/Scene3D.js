@@ -7,6 +7,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 export class Scene3D {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
+    this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.scene = new THREE.Scene();
     
     // 渐变天空与雾气（Q版温和色彩）
@@ -287,7 +288,12 @@ export class Scene3D {
     }
   }
 
-  updateWeather() {
+  updateWeather(reducedMotion) {
+    if (reducedMotion) {
+      this.lightningFlash = 0;
+      this.ambientLight.intensity = this.baseAmbientIntensity;
+      return;
+    }
     this.weatherElapsed += 0.016;
     if (this.precipitation) {
       this.precipitation.position.set(this.controls.target.x,0,this.controls.target.z);
@@ -535,6 +541,7 @@ export class Scene3D {
   }
 
   onWindowResize() {
+    this.backdropPainted = false;
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -544,15 +551,16 @@ export class Scene3D {
     requestAnimationFrame(() => this.animate());
 
     // 旋转云朵
-    if (this.clouds && !quietMotion()) {
+    const reducedMotion = quietMotion(this.motionPreference);
+    if (this.clouds && !reducedMotion) {
       this.clouds.rotation.y += 0.0003;
     }
-    this.updateWeather();
+    this.updateWeather(reducedMotion);
 
     const frameTime = performance.now();
     const elapsed = (frameTime - (this.cameraFrame ?? frameTime - 16)) / 1000;
     this.cameraFrame = frameTime;
-    const blend = quietMotion() ? 1 : 1 - Math.exp(-5 * elapsed);
+    const blend = reducedMotion ? 1 : 1 - Math.exp(-5 * elapsed);
     for (const [key, point] of [['targetCameraPos',this.camera.position],['targetLookAt',this.controls.target]]) {
       const goal = this[key];
       if (!goal) continue;
@@ -631,8 +639,14 @@ export class Scene3D {
         this.camera.position.add(shakeOffset);
       }
     }
-    this.updateCloudVisibility();
-    this.renderer.render(this.scene, this.camera);
+    // The timed arcade owns the foreground. Reuse its last board frame while
+    // scene updates and effect cleanup continue to run underneath.
+    const staticBackdrop = this.container.hasAttribute('data-static-backdrop');
+    if (!staticBackdrop || !this.backdropPainted) {
+      this.updateCloudVisibility();
+      this.renderer.render(this.scene, this.camera);
+    }
+    this.backdropPainted = staticBackdrop;
     if (shakeOffset) this.camera.position.sub(shakeOffset);
   }
 }

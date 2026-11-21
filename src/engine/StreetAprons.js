@@ -126,6 +126,6 @@ export function createStreetAprons(map){
   const ripples=new THREE.CanvasTexture(waterCanvas);ripples.colorSpace=THREE.SRGBColorSpace;
   ripples.wrapS=ripples.wrapT=THREE.RepeatWrapping;ripples.repeat.set(18,18);
   const sea=new THREE.Mesh(new THREE.PlaneGeometry(360,360),new THREE.MeshStandardMaterial({map:ripples,roughness:.65}));
-  sea.rotation.x=-Math.PI/2;sea.position.y=-.62;island.add(sea);
+  sea.name='island-fork-sea';sea.rotation.x=-Math.PI/2;sea.position.y=-.62;island.add(sea);
   return island;
 }

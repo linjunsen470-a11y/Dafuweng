@@ -54,7 +54,8 @@ export class BankUI {
       const numberInput = overlay.querySelector('.bank-amount-display input');
       const rangeInput = overlay.querySelector('.bank-amount-range');
       const finish = value => {
-        if (!this.overlay) return;
+        if (this.overlay !== overlay) return;
+        this.cancel = null;
         this.overlay = null;
         overlay.classList.remove('is-visible');
         setTimeout(() => overlay.remove(), 180);
@@ -129,22 +130,27 @@ export class BankUI {
       overlay.querySelector('.bank-confirm').onclick = () => {
         const preview = getBankTransferPreview(state, player, direction, amount);
         if (!preview.enabled) return;
-        overlay.querySelector('.bank-center').classList.add('is-transferring');
+        const counter = overlay.querySelector('.bank-center');
+        if (counter.inert) return;
+        counter.inert = true;
+        counter.classList.add('is-transferring');
+        const decision = { direction, amount: preview.effectiveAmount };
         this.audioManager?.playCoinSound?.(preview.effectiveAmount);
-        setTimeout(() => finish({ direction, amount: preview.effectiveAmount }), 220);
+        setTimeout(() => finish(decision), 220);
       };
       overlay.onclick = event => { if (event.target === overlay) finish(null); };
 
       document.body.appendChild(overlay);
       this.overlay = overlay;
+      this.cancel = () => finish(null);
       render();
       requestAnimationFrame(() => overlay.classList.add('is-visible'));
     });
   }
 
   close() {
-    if (!this.overlay) return;
-    this.overlay.remove();
-    this.overlay = null;
+    const overlay = this.overlay;
+    this.cancel?.();
+    overlay?.remove();
   }
 }

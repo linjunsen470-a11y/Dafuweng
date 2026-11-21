@@ -154,11 +154,11 @@
 :where(.modal) :is(.economic-player-avatar, .debt-player-portrait, .auction-bidder-avatar, .magic-target-avatar) {
   background-color: var(--parchment);
 }
-.map-inspector, .map-inspector header, .map-inspector button, .map-inspector select {
-  color: var(--ink); background: var(--paper); border-color: var(--caramel);
+.pause-actions .speed-options:has(#ai-pace) {
+  display: grid;
+  grid-template-columns: 1fr auto;
 }
-.map-inspector :is(label, h3, .inspection-path-note) { color: var(--muted-ink); }
-
+.pause-actions .speed-options:has(#ai-pace) label:first-child { grid-column: 1 / -1; }
 @media (max-width: 620px) {
   .asset-table thead {
     position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%);

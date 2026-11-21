@@ -16,3 +16,39 @@ it('cleans keyboard handlers even when the briefing is skipped before starting',
  document.body.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true}));expect(vi.getTimerCount()).toBe(0);expect(document.querySelector('.minigame-modal')).toBe(null);
  const next=ui.play('SKY_COINS');expect(document.activeElement).toBe(document.querySelector('.minigame-start'));ui.activeFinish();expect(await next).toBe(0);
 });
+
+it('lets Escape finish the active game through the application modal coordinator', async () => {
+  vi.useFakeTimers();
+  const { ModalCoordinator } = await import('../../src/ui/ModalCoordinator.js');
+  const coordinator = new ModalCoordinator();
+  try {
+    const done = new MinigameUI().play('SKY_COINS');
+    coordinator.sync();
+    document.querySelector('.minigame-start').click();
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    expect(document.querySelector('.minigame-claim').textContent).toContain('0 点券');
+    document.querySelector('.minigame-claim').click();
+    await expect(done).resolves.toBe(0);
+  } finally {
+    coordinator.observer.disconnect();
+    document.removeEventListener('keydown', coordinator.onKeydown, true);
+  }
+});
+
+it('keeps the coin in reach when rendering resumes after a long frame', async () => {
+  vi.useFakeTimers();
+  const { launchSkyCoinsArcade } = await import('../../src/ui/MinigameCanvas.js');
+  const stage = document.createElement('div');
+  const timers = [];
+  launchSkyCoinsArcade({
+    stage, progress: document.createElement('span'), onKey: () => {},
+    every: callback => timers.push(callback)
+  });
+  const coin = stage.querySelector('.kind-coin');
+  const start = parseFloat(coin.style.top);
+  await vi.advanceTimersByTimeAsync(1500);
+  timers[0]();
+  expect(stage.contains(coin)).toBe(true);
+  expect(parseFloat(coin.style.top)).toBeGreaterThan(start);
+  expect(parseFloat(coin.style.top) - start).toBeLessThan(5);
+});

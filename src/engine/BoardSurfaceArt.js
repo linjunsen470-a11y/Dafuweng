@@ -132,7 +132,7 @@ function landscapePaper(){
   return detailAtlas;
 }
 
-const waterColors=new Set(['73a99b','9cc4ac','52adaa','6ba7a0','77afa0']);
+const waterColors=new Set(['73a99b','9cc4ac','52adaa','6ba7a0','77afa0','4bbcbc']);
 export const surfaceTime={value:0};
 function finishMaterial(material,roof,terrain=false){
   if(!material?.isMeshStandardMaterial || material.userData.roofFinish)return;

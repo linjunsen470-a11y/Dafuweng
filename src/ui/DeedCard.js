@@ -1,51 +1,54 @@
-import { cityPortrait } from './CityPortrait.js';
+import { formatDeedMoney } from './MapTileDetails.js';
 
-export function renderDeed(info, name) {
-  const card = document.createElement('article');
-  card.className = 'deed-card';
-  card.style.setProperty('--district',info.deed?.color || '#dbab53');
-  const heading=document.createElement('header');
-  heading.textContent=info.deed?.district || '棋盘地标';
-  const title=document.createElement('h3');
-  title.textContent=info.title;
-  card.append(heading,title);
-  if (info.deed) {
-    const d=info.deed;
-    const owner=document.createElement('div');
-    owner.className='deed-owner';
-    const avatar=document.createElement('i');
-    if (d.portrait) avatar.style.backgroundImage='url("'+d.portrait+'")';
-    else avatar.textContent=d.avatar || '🏳️';
-    owner.append(avatar, d.owner || '待购土地');
-    const level=document.createElement('b');
-    level.textContent=d.icon+' Lv.'+d.level;
-    owner.append(level);
-    card.append(owner);
-  }
-  for (const line of info.lines.filter((line,i)=>i>0 || !info.deed || !line.includes('地产') && !line.includes('LV '))) {
-    if (line.startsWith('牌价含') || line.startsWith('自己停留')) continue;
-    const row=document.createElement('p');
-    row.textContent=line;
-    if (/连片|垄断/.test(line)) row.className='deed-chain';
-    card.append(row);
-  }
-  if (info.deed?.next != null) {
-    const row=document.createElement('p');
-    row.textContent='升级后预计租金 $'+info.deed.next.toLocaleString();
-    card.append(row);
-  }
-  if (name) {
-    const occupant=document.createElement('small');
-    occupant.textContent='此处有 '+name;
-    card.append(occupant);
-  }
-  return card;
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+  node.className = className;
+  if (text != null) node.textContent = text;
+  return node;
 }
 
-export function deedDetails(model, owner, level, mapId, standard) {
-  return {
-    district:model.districtName,color:model.districtColor,icon:model.buildingIcon,
-    level,owner:owner?.name,avatar:owner?.avatar,portrait:cityPortrait(owner,mapId),
-    next: standard && level+1 < model.rentGrowth.length ? model.rentGrowth[level+1].value : null
-  };
+function ownerRow(deed) {
+  const row = element('div', 'deed-owner');
+  const portrait = element('i', 'deed-portrait');
+  portrait.setAttribute('aria-hidden', 'true');
+  if (deed.portrait) {
+    portrait.style.backgroundImage = 'url("' + deed.portrait + '")';
+    if (deed.atlasPosition) {
+      portrait.style.backgroundSize = '400% 300%';
+      portrait.style.backgroundPosition = deed.atlasPosition;
+    }
+  } else portrait.textContent = deed.avatar || '⚑';
+  const name = element('span', 'deed-owner-name', deed.owner ? '地主 · ' + deed.owner : '无主地产');
+  row.append(portrait, name);
+  return row;
+}
+
+export function renderDeed(info, occupant) {
+  const card = element('article', 'deed-card');
+  card.dataset.tileId = String(info.id);
+  const deed = info.deed;
+  card.style.setProperty('--district', deed?.color || '#dbab53');
+  const heading = element('div', 'deed-heading');
+  heading.append(element('span', 'deed-district', deed?.district || '棋盘地标'),
+    element('span', 'deed-number', '第 ' + info.id + ' 格'));
+  card.append(heading, element('h3', 'deed-title', info.name));
+  if (deed) {
+    const owner = ownerRow(deed);
+    owner.append(element('b', 'deed-level', `${deed.icon} Lv.${deed.level}`));
+    const stats = element('div', 'deed-stats');
+    const rent = element('div', 'deed-rent');
+    rent.append(element('small', '', deed.rentLabel),
+      element('strong', '', deed.rent == null ? '按补给结算' : formatDeedMoney(deed.rent)));
+    const chain = element('div', 'deed-chain');
+    chain.append(element('small', '', '街区加成'),
+      element('b', '', deed.multiplier > 1 ? deed.chainLabel + ' ×' + deed.multiplier : deed.chainLabel));
+    if (deed.multiplier > 1) chain.classList.add('active');
+    stats.append(rent, chain);
+    card.append(owner, stats);
+    if (deed.price != null) card.append(element('p', 'deed-quote', '当前购价 ' + formatDeedMoney(deed.price)));
+    if (deed.next != null) card.append(element('p', 'deed-quote', `升至 Lv.${deed.level + 1} 预计租金 ${formatDeedMoney(deed.next)}`));
+  }
+  for (const line of info.notes) card.append(element('p', 'deed-note', line));
+  if (occupant) card.append(element('small', 'deed-note', '此处有 ' + occupant));
+  return card;
 }

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { surfaceTime } from './BoardSurfaceArt.js';
 
 // Static fittings are instanced by material; the walk stays behind the numbered lots.
 export function createHarborPromenade() {
@@ -40,6 +41,16 @@ export function createHarborPromenade() {
     if (color==='#ffe3a2') {
       material.emissive.set('#ffb450');
       material.emissiveIntensity=.1;
+      // Offset the glow along the quay without splitting its seven bulbs into seven draws.
+      material.onBeforeCompile = shader => {
+        shader.uniforms.tide = surfaceTime;
+        shader.vertexShader = 'uniform float tide; varying float lampGlow;\n' + shader.vertexShader.replace(
+          '#include <begin_vertex>', '#include <begin_vertex>\nlampGlow = .91 + .09 * sin(tide * 1.3 + instanceMatrix[3].x * .21);'
+        );
+        shader.fragmentShader = 'varying float lampGlow;\n' + shader.fragmentShader.replace(
+          '#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance *= lampGlow;'
+        );
+      };
       mesh.userData.isPromenadeLamp=true;
     }
     items.forEach(([x,y,z,w,h,d],index)=>{

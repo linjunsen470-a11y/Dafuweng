@@ -4,7 +4,9 @@
 @import url('./setup-lobby.css');
 @import url('./hud-layout.css');
 @import url('./board-performances.css');
+@import url('./deed-card.css');
 @import url('./richman4-polish.css');
+@import url('./bank-arcade.css');
 
 :root {
   --cream: #fff1cf;
@@ -109,6 +111,7 @@
   :where(.modal, .news-flash-overlay, .card-acquisition, .presentation-impact),
   :where(.modal, .news-flash-overlay, .card-acquisition, .presentation-impact) * {
     animation-duration: .01ms;
+    animation-iteration-count: 1;
     transition-duration: .01ms;
   }
 }

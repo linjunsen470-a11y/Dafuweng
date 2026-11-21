@@ -3,6 +3,7 @@
 #setup-screen::after { background:linear-gradient(0deg,#70533166,transparent 60%); box-shadow:none; }
 #setup-screen .setup-atmosphere { display:none; }
 #setup-screen .setup-title-stage,.setup-box { animation:none; }
+.setup-title-stage .logo-area { grid-area:auto; }
 #setup-screen .setup-map-showcase,#setup-screen .setup-box {
   border:2px solid var(--caramel); background:var(--panel-paint); box-shadow:var(--panel-shadow); backdrop-filter:none;
 }

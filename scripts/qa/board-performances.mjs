@@ -2,10 +2,12 @@ import assert from 'node:assert/strict';
 import {mkdir} from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import {createServer} from 'vite';
+import { executablePath } from './browser-path.mjs';
 
 const output='/tmp/dafuweng-qa';
 await mkdir(output,{recursive:true});
-const server=await createServer({cacheDir:'node_modules/.vite-performance-qa',plugins:[{
+process.env.TMPDIR = output;
+const server=await createServer({cacheDir:output+'/vite-performance-qa',plugins:[{
   name:'observe-performances',transform(code,id) {
     if(id.endsWith('/src/main.js')) return code.replace('new GameController();','window.gameQA=new GameController();');
   }
@@ -13,14 +15,14 @@ const server=await createServer({cacheDir:'node_modules/.vite-performance-qa',pl
 await server.listen();
 let browser;
 try {
-  browser=await puppeteer.launch({executablePath:process.env.BROWSER_PATH || '/usr/bin/chromium',
+  browser=await puppeteer.launch({executablePath,
     args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   for(const [width,height] of [[1440,900],[390,844]]) {
     const mobile=width===390, context=await browser.createBrowserContext(), page=await context.newPage();
     page.setDefaultTimeout(65000);
     const errors=[];
     page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
-    page.on('pageerror',e=>errors.push(e.message));
+    page.on('pageerror',e=>{errors.push(e.message); console.error(e);});
     await page.setViewport({width,height,isMobile:mobile,hasTouch:mobile});
     const press=selector=>mobile?page.tap(selector):page.click(selector);
     await page.evaluateOnNewDocument(() => {
@@ -31,7 +33,7 @@ try {
         }
       }).observe(document, {subtree:true, attributes:true, attributeFilter:['max','value']});
     });
-    await page.goto(server.resolvedUrls.local[0]);
+    await page.goto(server.resolvedUrls.local[0], {waitUntil:'domcontentloaded'});
     await page.waitForFunction(()=>window.gameQA);
     await press('#start-game-btn');
     await page.waitForSelector('[data-skip]');
@@ -40,7 +42,7 @@ try {
     assert.ok(await page.evaluate(() => window.modelProgress), 'model progress reported');
     await press('#btn-toggle-audio');
     assert.equal(await page.evaluate(()=>localStorage.getItem('fortune-empire:audio-muted')),'1');
-    await page.reload();
+    await page.reload({waitUntil:'domcontentloaded'});
     await page.waitForFunction(()=>window.gameQA?.audioManager.muted === true);
     await press('#start-game-btn');
     await page.waitForFunction(()=>gameQA.pawnManager.pawns.length > 0 &&
@@ -51,12 +53,16 @@ try {
       const g=window.gameQA;
       window.opening=g.gameState.createSnapshot();
       window.eventsQA=[];
-      const names=new Set(['rent-flight','cartoon-blast','property-celebration','barrier-brake','direction-arrow']);
+      g.gameEngine.subscribe(event=>{if(event.type==='TURN_CHANGED') window.turnAdvanced=true;});
+      const names=new Set(['rent-flight','cartoon-blast','property-celebration','barrier-brake','direction-arrow','clinic-pickup']);
       const scene=g.scene3D.scene, add=scene.add;
       scene.add=function(...objects) {
         for(const group of objects) if(names.has(group.name)) {
           const resources=new Set();
           group.traverse(mesh=>{
+            // The passenger borrows the pawn's GLB. Only the siren sprite owns
+            // these two allocations, both of which must expire with the van.
+            if(group.name==='clinic-pickup' && !(mesh.isSprite && mesh.parent===group)) return;
             if(mesh.isInstancedMesh) resources.add(mesh);
             if(mesh.geometry) resources.add(mesh.geometry);
             if(mesh.material) resources.add(mesh.material);
@@ -67,13 +73,19 @@ try {
         }
         return add.apply(this,objects);
       };
-      // Only the rare landing/ownership arrangements use V11 snapshots.
+      // Rare arrangements all use the opening map and cast. Restore the V11 state
+      // and synchronize its existing meshes without streaming the same board again.
       window.scenario=(tile,phase,edit)=>{
         const snapshot=structuredClone(opening);
         snapshot.players[0].currentTile=tile;
         snapshot.phase=phase;
         edit?.(snapshot);
-        g.restoreGame(snapshot);
+        g.presentationUI.clear();
+        g.boardEffects.clear();
+        g.gameEngine.restore(snapshot);
+        g.pawnManager.syncFromGameState(g.gameState);
+        g.syncBoardAssets(true);
+        g.uiRenderer.renderHUD();
       };
     });
     const hit=await page.evaluate(()=>{
@@ -120,11 +132,25 @@ try {
     },{},before);
     await press('[data-player-id="0"]');
     // The normal controller performs the roll, walk, purchase, and end-turn transition.
-    await page.evaluate(()=>gameQA.dialogUI.showRemoteDice(value=>gameQA.handleCardUsage('REMOTE_DICE',0,value)));
+    const remote = '#tray-cards [data-key="CARD:REMOTE_DICE"]';
+    if (mobile) {
+      const point = await page.$eval(remote, button => {
+        const rect = button.getBoundingClientRect();
+        return {x:rect.x + rect.width/2, y:rect.y + rect.height/2};
+      });
+      const input = await page.createCDPSession();
+      const start = Date.now()/1000;
+      // A fast physical tap, even if software rendering delays the CDP replies.
+      await input.send('Input.dispatchTouchEvent', {type:'touchStart', touchPoints:[point], timestamp:start});
+      await input.send('Input.dispatchTouchEvent', {type:'touchEnd', touchPoints:[], timestamp:start + .08});
+      await input.detach();
+    } else await press(remote);
+    await page.waitForSelector('#modal-remote-dice:not(.hidden)');
     await press('.dice-choice-btn[data-val="1"]');
     await page.waitForSelector('#modal-land:not(.hidden)');
     await press('#btn-land-buy');
-    await page.waitForFunction(()=>gameQA.gameState.propertyManager.getProperty(1)?.owner===0);
+    await page.waitForFunction(()=>gameQA.gameState.propertyManager.getProperty(1)?.owner===0 && window.turnAdvanced, {polling:100});
+    console.log(width, 'Opening purchase completed and turn advanced');
     await page.evaluate(()=>{
       scenario(1,'LANDING_ACTION',s=>{s.properties.find(([id])=>id===1)[1].owner=0;});
       if(!gameQA.upgradeLand(1,gameQA.gameState.players[0]).success) throw Error('upgrade failed');
@@ -132,13 +158,23 @@ try {
       const r=gameQA.gameEngine.execute({type:'SETTLE_RENT',playerId:0,payload:{tileId:1}});
       if(!(r.amount>0) || document.querySelectorAll('.board-speech').length!==2) throw Error('rent bubbles missing');
     });
-    await page.waitForFunction(()=>gameQA.boardEffects.active.size===0);
-    await page.evaluate(()=>{
+    await page.waitForFunction(()=>gameQA.boardEffects.active.size===0, {polling:100});
+    console.log(width, 'Rent effects finished');
+    await page.evaluate(async()=>{
       const id=gameQA.gameState.mapDefinition.tiles.find(t=>t.type==='CHANCE').id;
       scenario(id,'LANDING_ACTION',s=>{s.rngState=42;});
-      void gameQA.handleTileArrival(id);
+      // Observe the timed flip before starting the landing, even on a slow GPU.
+      window.chanceFlipped = false;
+      const observer = new MutationObserver(() => {
+        if (document.querySelector('.chance-reveal-overlay.is-revealed')) {
+          window.chanceFlipped = true;
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
+      await gameQA.handleTileArrival(id);
     });
-    await page.waitForSelector('.chance-reveal-overlay.is-revealed');
+    await page.waitForFunction(()=>window.chanceFlipped, {polling:100});
     await page.waitForSelector('.chance-reveal-overlay',{hidden:true});
     await page.evaluate(()=>{
       scenario(0,'PRE_ROLL_ACTION',s=>{s.players[0].cards.push('MISSILE');s.players[1].currentTile=6;});
@@ -146,7 +182,7 @@ try {
       run('USE_CARD',{cardId:'TURN_AROUND',targetId:1});
       run('USE_CARD',{cardId:'MISSILE',targetId:6});
     });
-    await page.waitForFunction(()=>!gameQA.pendingPickup && !gameQA.boardEffects.active.size);
+    await page.waitForFunction(()=>!gameQA.pendingPickup && !gameQA.boardEffects.active.size, {polling:100});
     const result=await page.evaluate(async()=>{
       scenario(0,'PRE_ROLL_ACTION');
       const g=gameQA,command=(type,payload)=>{const r=g.gameEngine.execute({type,payload});if(!r.success)throw Error(r.reason);return r;};
@@ -161,11 +197,13 @@ try {
       const quiet=eventsQA.length===count && !g.boardEffects.active.size;
       const names=eventsQA.map(e=>e.name);
       const leaked=eventsQA.filter(e=>e.released!==e.total);
-      return {active,quiet,names,leaked,overflow:document.documentElement.scrollWidth-innerWidth};
+      const siren=eventsQA.find(e=>e.name==='clinic-pickup');
+      return {active,quiet,names,leaked,siren,overflow:document.documentElement.scrollWidth-innerWidth};
     });
     assert.ok(result.active && result.quiet);
     for(const name of ['rent-flight','cartoon-blast','property-celebration','barrier-brake','direction-arrow']) assert.ok(result.names.includes(name),name);
     assert.deepEqual(result.leaked,[]);
+    assert.deepEqual(result.siren,{name:'clinic-pickup',total:2,released:2});
     assert.equal(result.overflow,0);
     assert.deepEqual(errors,[]);
     console.log(width+'×'+height,JSON.stringify(result));

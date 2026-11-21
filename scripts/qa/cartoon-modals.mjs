@@ -2,38 +2,56 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import { createServer } from 'vite';
+import { executablePath } from './browser-path.mjs';
 
 const output = '/tmp/dafuweng-qa';
 await mkdir(output, { recursive: true });
-const server = await createServer({ server: { host: '127.0.0.1', port: 0, hmr: false } });
+process.env.TMPDIR = output;
+const server = await createServer({
+  cacheDir: output + '/vite-cartoon-modals',
+  server: { host: '127.0.0.1', port: 0, hmr: false, watch: null }
+});
 await server.listen();
 let browser;
 try {
   browser = await puppeteer.launch({
-    executablePath: process.env.CHROME_PATH || '/usr/bin/chromium',
+    executablePath,
     args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader']
   });
   for (const [width, height] of [[1440, 900], [390, 844]]) {
     const mobile = width === 390;
     const context = await browser.createBrowserContext();
     const page = await context.newPage();
+    page.setDefaultTimeout(120000);
     const errors = [];
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('pageerror', error => errors.push(error.message));
     await page.setViewport({ width, height, isMobile: mobile, hasTouch: mobile });
-    const press = async selector => {
+    const press = async (selector, observedArt) => {
       await page.waitForSelector(selector, { visible: true });
       await page.$eval(selector, el => el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
-      await page.waitForFunction(selector => {
+      const hitPoint = await page.waitForFunction(selector => {
         const el = document.querySelector(selector);
         const rect = el.getBoundingClientRect();
-        const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
-        return el.contains(hit) && !el.closest('.modal-box')?.getAnimations().some(animation => animation.playState === 'running');
-      }, {}, selector);
-      if (mobile) await page.tap(selector);
-      else await page.click(selector);
+        const x = rect.x + rect.width / 2, y = rect.y + rect.height / 2;
+        if (el.contains(document.elementFromPoint(x, y)) && !el.closest('.modal-box')?.getAnimations().some(animation => animation.playState === 'running')) {
+          return { x, y };
+        }
+      }, { polling: 75 }, selector);
+      const { x, y } = await hitPoint.jsonValue();
+      await hitPoint.dispose();
+      // Capture the art before native input returns, even on a slow software GPU.
+      const [source] = await Promise.all([
+        observedArt && page.waitForFunction(image => document.querySelector(image)?.getAttribute('src'), { polling: 'mutation' }, observedArt),
+        mobile ? page.touchscreen.tap(x, y) : page.mouse.click(x, y)
+      ]);
+      if (observedArt) {
+        assert.equal(await source.jsonValue(), '/assets/item_motor.svg');
+        await source.dispose();
+      }
     };
     await page.goto(server.resolvedUrls.local[0]);
+    await page.waitForSelector('#character-roster [data-profile]');
     await press('#start-game-btn');
     await press('.onboarding-guide [data-skip]');
     await page.waitForSelector('#btn-roll:enabled', { visible: true });
@@ -82,10 +100,7 @@ try {
       assert.ok(layout.paint.includes('255, 251, 235'), name + ' paper panel');
       await page.screenshot({ path: output + '/' + name + '-' + width + '.png' });
       if (name === 'shop') {
-        await press('#shop-card-grid [data-entry-key="ITEM:MOTOR"] .strategy-primary');
-        await page.waitForSelector('.card-acquisition.is-visible');
-        const art = await page.$eval('.card-acquisition-art', image => image.getAttribute('src'));
-        assert.equal(art, '/assets/item_motor.svg');
+        await press('#shop-card-grid [data-entry-key="ITEM:MOTOR"] .strategy-primary', '.card-acquisition.is-visible .card-acquisition-art');
         await page.waitForSelector('.card-acquisition', { hidden: true });
       }
       await press(close);
@@ -98,8 +113,7 @@ try {
     await page.waitForSelector(entry);
     const reducedDuration = await page.$eval('#modal-inventory .modal-box', box => parseFloat(getComputedStyle(box).animationDuration));
     assert.ok(reducedDuration < .001, 'Reduced motion must suppress the spring');
-    await press(entry + ' .strategy-primary');
-    await page.waitForSelector('.presentation-impact-card[src="/assets/item_motor.svg"]');
+    await press(entry + ' .strategy-primary', '.presentation-impact-card');
     await page.waitForSelector('.presentation-impact-card', { hidden: true });
     assert.equal(await page.$eval('#dice-count-select', select => select.value), '2');
     await press('[data-dice="1"]');

@@ -1,5 +1,4 @@
 import { WorldAmbience, arcadePinwheel } from './WorldAmbience.js';
-import { quietMotion } from './EffectTimeline.js';
 import {connectingStreet} from './ConnectingStreets.js';
 import {streetYard} from './VacantStreetYards.js';
 import {finishRoofs,finishLandscape,surfaceTexture} from './BoardSurfaceArt.js';
@@ -24,19 +23,20 @@ import { createCityGround, createTerraceOrchards } from './CityGround.js';
 import { createHospitalClinic } from './HospitalStreet.js';
 import { isOldTownHome } from './OldTownStreet.js';
 import { isCivicHome } from './CivicStreet.js';
-import { harborTileStyle, harborForkDirections } from './HarborBoardStyle.js';
+import { createRoadNetwork } from './RoadNetwork.js';
+import { harborTileStyle } from './HarborBoardStyle.js';
 import { HarborStreets, isHarborHome, facingRoad } from './HarborStreets.js';
 import { harborFacility, facilityFacing } from './HarborFacilities.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { BOARD_TILES, COLOR_GROUPS, TileType, isPropertyTile } from '../game/BoardData.js';
-import { getBoardThemeProfile, getTileVisualSpec } from '../game/BoardVisualRules.js';
+import { getTileVisualSpec } from '../game/BoardVisualRules.js';
 
 export class BoardBuilder {
   constructor(scene3D) {
     this.scene3D = scene3D;
     this.ambience = new WorldAmbience(this);
-    this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.motionPreference = scene3D.motionPreference ?? window.matchMedia('(prefers-reduced-motion: reduce)');
     this.tileMeshes = [];
     this.tilePositions = [];
     this.buildingMeshes = new Map();
@@ -337,10 +337,11 @@ export class BoardBuilder {
     this.baseMesh?.material.color.set(island ? '#a4d7c2' : '#ffe6b6');
     this.borderMesh?.material.color.set(island ? '#00d2d3' : '#ffaa00');
     this.scene3D.configureForMap?.(mapDefinition);
+    if (this.scene3D.timeOfDay !== 'DAY') this.setNightMode(true);
   }
 
   clearDynamicMap() {
-    this.ambience?.windows.clear();
+    this.ambience?.clearMap();
     this.tileMeshes.forEach(mesh => {
       if (!mesh) return;
       this.scene3D.scene.remove(mesh);
@@ -379,97 +380,23 @@ export class BoardBuilder {
   }
 
   disposeObject(object) {
+    const resources = new Set();
     object?.traverse?.(child => {
-      child.geometry?.dispose?.();
+      if (child.isInstancedMesh) resources.add(child);
+      if (child.geometry) resources.add(child.geometry);
       const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.filter(Boolean).forEach(material => {
-        if (material.map?.isCanvasTexture && !material.map.userData?.sharedBoardTexture) material.map.dispose();
-        material.dispose?.();
-      });
+      for (const material of materials) {
+        if (!material) continue;
+        if (material.map?.isCanvasTexture && !material.map.userData?.sharedBoardTexture) resources.add(material.map);
+        resources.add(material);
+      }
     });
+    for (const resource of resources) resource.dispose?.();
   }
 
   createRoadNetwork(mapDefinition) {
-    const roadWidth = mapDefinition.roadWidth || Math.max(2.8, (mapDefinition.tileSize || 4.4) * 0.82);
-    const profile = getBoardThemeProfile(mapDefinition.theme);
-    const group = new THREE.Group();
-    group.name = `roads-${mapDefinition.id}`;
-    const roadMaterial = new THREE.MeshStandardMaterial({
-      color: '#ffffff', map:surfaceTexture(mapDefinition.id,'road'), roughness: 0.88, metalness: 0.03
-    });
-    const shoulderMaterial = new THREE.MeshStandardMaterial({ color: profile.shoulder, roughness: 0.74, metalness: 0.06 });
-    const pavement=hasClassicFrontages(mapDefinition)?new THREE.MeshStandardMaterial({color:'#cfb18b',roughness:.96}):null;
-    if(pavement){
-      pavement.map=surfaceTexture(mapDefinition.id,'pave');pavement.color.set('#ffffff');
-    }
-    const laneMaterials = new Map();
-    const seen = new Set();
-    let segmentCount = 0;
-    mapDefinition.tiles.forEach(tile => {
-      (tile.next || []).forEach(nextId => {
-        const key = [tile.id, nextId].sort((a, b) => a - b).join(':');
-        if (seen.has(key)) return;
-        seen.add(key);
-        const next = mapDefinition.tiles.find(item => item.id === nextId);
-        if (!tile.position || !next?.position) return;
-        const dx = next.position.x - tile.position.x;
-        const dz = next.position.z - tile.position.z;
-        const length = Math.hypot(dx, dz);
-        const angle = Math.atan2(dx, dz);
-        const midpoint = { x: (tile.position.x + next.position.x) / 2, z: (tile.position.z + next.position.z) / 2 };
-        const visual = getTileVisualSpec(mapDefinition, tile);
-        if (!laneMaterials.has(visual.lane)) {
-          laneMaterials.set(visual.lane, new THREE.MeshBasicMaterial({
-            color: visual.lane, transparent: true, opacity: 0.72, depthWrite: false
-          }));
-        }
-        function alignPaving(geo,span){
-          const uv=geo.attributes.uv,vertices=geo.attributes.position;
-          for(let i=0;i<vertices.count;i++){
-            const x=vertices.getX(i),z=vertices.getZ(i);
-            uv.setXY(i,(midpoint.x+x*Math.cos(angle)+z*Math.sin(angle))/span,(midpoint.z+z*Math.cos(angle)-x*Math.sin(angle))/span);
-          }
-        }
-        if(pavement){
-          const sidewalk=new THREE.Mesh(new THREE.BoxGeometry(roadWidth+4.4,.20,length+.45),pavement);
-          // World-aligned paving bonds continue through oblique road joins.
-          alignPaving(sidewalk.geometry,4.6);
-          sidewalk.position.set(midpoint.x,-.035,midpoint.z);sidewalk.rotation.y=angle;sidewalk.receiveShadow=true;group.add(sidewalk);
-        }
-        const shoulder = new THREE.Mesh(new THREE.BoxGeometry(roadWidth + 0.7, 0.12, length + 0.35), shoulderMaterial);
-        shoulder.position.set(midpoint.x, 0.035, midpoint.z);
-        shoulder.rotation.y = angle;
-        shoulder.receiveShadow = true;
-        group.add(shoulder);
-        const road = new THREE.Mesh(new THREE.BoxGeometry(roadWidth, 0.16, length + 0.22), roadMaterial);
-        alignPaving(road.geometry,4);
-        road.position.set(midpoint.x, 0.12, midpoint.z);
-        road.rotation.y = angle;
-        road.receiveShadow = true;
-        group.add(road);
-        const lane = new THREE.Mesh(new THREE.BoxGeometry(Math.max(0.07, roadWidth * 0.035), 0.035, Math.max(0.3, length * 0.6)), laneMaterials.get(visual.lane));
-        lane.position.set(midpoint.x, 0.222, midpoint.z);
-        lane.rotation.y = angle;
-        lane.userData.isDistrictLane = true;
-        lane.userData.districtId = visual.districtId;
-        group.add(lane);
-        segmentCount++;
-      });
-    });
-    for (const direction of harborForkDirections(mapDefinition)) {
-      const {x,z,dx,dz} = direction;
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute([
-        x + dx * .35, .255, z + dz * .35,
-        x - dx * .25 + dz * .24, .255, z - dz * .25 - dx * .24,
-        x - dx * .25 - dz * .24, .255, z - dz * .25 + dx * .24
-      ], 3));
-      const arrow = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:'#fff2be',side:THREE.DoubleSide}));
-      arrow.userData.forkDirection = direction;
-      group.add(arrow);
-    }
-    group.userData.segmentCount = segmentCount;
-    group.userData.detailCount = segmentCount;
+    const group = createRoadNetwork(mapDefinition);
+    const { segmentCount } = group.userData;
     this.scene3D.scene.add(group);
     this.roadGroup = group;
     if (this.scene3D.container) {
@@ -493,9 +420,7 @@ export class BoardBuilder {
       group.streetOccluders=(group.streetOccluders || []).concat(connection.children.filter(child=>child.userData.streetOccluder));
     }
     if(hasClassicFrontages(mapDefinition))group.add(createStreetAprons(mapDefinition));
-    this.harborWaves = [];
-    this.harborFerries = [];
-    this.harborGulls = null;
+    this.ambience.addScenery(group, mapDefinition);
     if (mapDefinition.id === 'fortune-crossroads') group.add(createCrossroadsGarden(mapDefinition,this.halfBoard));
     if (mapDefinition.theme !== 'GRAND_BAY') {
       this.mapEnvironmentGroup = group;
@@ -510,43 +435,6 @@ export class BoardBuilder {
     group.add(createHarborPromenade(),this.harborGulls);
     const districtGround = createCityGround(mapDefinition);
     if (districtGround) group.add(finishLandscape(districtGround), createTerraceOrchards());
-
-    const ocean = new THREE.Mesh(
-      new THREE.PlaneGeometry(600, 600),
-      new THREE.MeshStandardMaterial({
-        color: '#2396bb', roughness: 0.28, metalness: 0.12,
-        transparent: true, opacity: 0.94
-      })
-    );
-    this.waterTime = {value:0};
-    ocean.material.onBeforeCompile = shader => {
-      shader.uniforms.waterTime = this.waterTime;
-      shader.vertexShader = 'varying vec2 seaPoint;\n' + shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nseaPoint = position.xy;');
-      shader.fragmentShader = 'varying vec2 seaPoint; uniform float waterTime;\n' + shader.fragmentShader.replace('#include <color_fragment>', `
-        #include <color_fragment>
-        float curve = seaPoint.y*2.9 + 1.4*sin(seaPoint.x*.37 + waterTime*.5) + waterTime;
-        float crest = smoothstep(.93,.999,sin(curve)) * smoothstep(.1,.85,sin(seaPoint.x*.8 + seaPoint.y*.31));
-        diffuseColor.rgb = mix(diffuseColor.rgb,vec3(.52,.92,.89),crest*.38);
-      `);
-    };
-    ocean.rotation.x = -Math.PI / 2;
-    // Surround the island below land and playable surfaces; never overlay property pads.
-    ocean.name = 'island-sea';
-    ocean.position.set(0, COAST_WATER_Y, -3);
-    group.add(ocean);
-
-    [-56, -20, 18, 55].forEach((x, index) => {
-      const wave = new THREE.Mesh(
-        new THREE.PlaneGeometry(26, 0.34),
-        new THREE.MeshBasicMaterial({ color: '#bff6ff', transparent: true, opacity: 0.34, depthWrite: false })
-      );
-      wave.rotation.x = -Math.PI / 2;
-      wave.position.set(x, COAST_WATER_Y + 0.02 + index * 0.002, 49 + index * 4.8);
-      wave.userData.originX = x;
-      wave.userData.speed = 0.65 + index * 0.12;
-      group.add(wave);
-      this.harborWaves.push(wave);
-    });
 
     const trunkMaterial = new THREE.MeshBasicMaterial({ color: '#76543b' });
     const leafMaterial = new THREE.MeshStandardMaterial({color:'#66ac52',roughness:1,flatShading:true});
@@ -613,15 +501,6 @@ export class BoardBuilder {
       group.add(ferry);
       this.harborFerries.push(ferry);
     });
-    const lighthouse = new THREE.Group();
-    const lighthouseBody = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.1, 5.5, 16), new THREE.MeshBasicMaterial({ color: '#f4f4ea' }));
-    lighthouseBody.position.y = 2.75;
-    const lighthouseTop = new THREE.Mesh(new THREE.ConeGeometry(1.15, 1.1, 16), new THREE.MeshBasicMaterial({ color: '#e65353' }));
-    lighthouseTop.position.y = 6.05;
-    lighthouse.add(lighthouseBody, lighthouseTop);
-    lighthouse.position.set(60, 0, 37);
-    group.add(lighthouse);
-
     if (this.harborArt?.prefabs) group.add(this.harborArt.streets(mapDefinition));
     this.scene3D.scene.add(group);
     this.mapEnvironmentGroup = group;
@@ -1318,9 +1197,8 @@ export class BoardBuilder {
   }
 
   animateMapLandmarks() {
-    this.ambience.update();
-    if (quietMotion()) return;
-    const time = performance.now() * 0.0018;
+    if (!this.ambience.update()) return;
+    const time = this.ambience.time * 1.8;
     this.specialTileMeshes.forEach(group => {
       if (isPropertyTile({ type: group.userData.tileType }) || group.userData.isStaticFacility) return;
       group.position.y = group.userData.baseY + Math.sin(time + group.userData.phase) * 0.16;
@@ -1376,17 +1254,6 @@ export class BoardBuilder {
     fountainRing.position.y = 0.8;
     centerGroup.add(fountainRing);
 
-    this.fountainDrops = [];
-    for (let i = 0; i < 12; i++) {
-      const drop = new THREE.Mesh(
-        new THREE.SphereGeometry(0.09, 8, 8),
-        new THREE.MeshBasicMaterial({ color: '#dff9ff', transparent: true, opacity: 0.85 })
-      );
-      drop.userData.phase = (i / 12) * Math.PI * 2;
-      centerGroup.add(drop);
-      this.fountainDrops.push(drop);
-    }
-
     // 旋转双金币雕塑
     const coinMat = new THREE.MeshStandardMaterial({ color: '#ffaa00', metalness: 0.9, roughness: 0.15 });
 
@@ -1424,21 +1291,6 @@ export class BoardBuilder {
 
     this.scene3D.scene.add(centerGroup);
     this.centralDecorationGroup = centerGroup;
-
-    this.scene3D.addUpdatable({
-      update: () => {
-        if (quietMotion()) return;
-        if (this.centerCoinsGroup) {
-          this.centerCoinsGroup.rotation.y += 0.012;
-        }
-        const time = performance.now() * 0.0022;
-        this.fountainDrops?.forEach((drop, index) => {
-          const phase = (time + drop.userData.phase) % (Math.PI * 2);
-          const radius = 1.2 + Math.sin(phase) * 1.8;
-          drop.position.set(Math.cos(index / 12 * Math.PI * 2) * radius, 1.1 + Math.abs(Math.sin(phase)) * 2.6, Math.sin(index / 12 * Math.PI * 2) * radius);
-        });
-      }
-    });
   }
 
   createWindmill() {
@@ -1577,21 +1429,12 @@ export class BoardBuilder {
       cabin.position.set(-0.1, 0.8, 0);
       car.add(cabin);
 
+      const angle = i * Math.PI / 2, radius = this.halfBoard * 1.3;
+      car.position.set(Math.cos(angle) * radius, -.4, Math.sin(angle) * radius);
+      car.rotation.y = -angle + Math.PI / 2;
       this.scene3D.scene.add(car);
-      this.cars.push({ mesh: car, angle: (i / 4) * Math.PI * 2, radius: this.halfBoard * 1.3 });
+      this.cars.push({ mesh: car, angle, radius });
     }
-
-    this.scene3D.addUpdatable({
-      update: () => {
-        this.cars.forEach(carObj => {
-          carObj.angle += 0.008;
-          const x = Math.cos(carObj.angle) * carObj.radius;
-          const z = Math.sin(carObj.angle) * carObj.radius;
-          carObj.mesh.position.set(x, -0.4, z);
-          carObj.mesh.rotation.y = -carObj.angle + Math.PI / 2;
-        });
-      }
-    });
   }
 
   updateBuildingMesh(tileIndex, level, ownerColor = null, buildingType = null, refresh = false, purchased = false) {
