@@ -1196,14 +1196,16 @@ export class GameEngine {
   }
 
   bankTransfer(player, direction, amount) {
-    if (!['DEPOSIT', 'WITHDRAW'].includes(direction)) return { success: false, reason: '银行操作无效' };
+    if (!['DEPOSIT', 'WITHDRAW', 'LOAN', 'REPAY_LOAN'].includes(direction)) return { success: false, reason: '银行操作无效' };
     const preview = getBankTransferPreview(this.state, player, direction, amount);
     if (!preview.enabled) return { success: false, reason: preview.reason };
     player.cash = preview.cashAfter;
     player.deposit = preview.depositAfter;
+    if (direction === 'LOAN' || direction === 'REPAY_LOAN') player.loan = preview.loanAfter;
     this.state.assetRevision++;
-    this.state.addLog(`🏦 ${player.name} ${direction === 'DEPOSIT' ? '存入' : '取出'} $${preview.amount.toLocaleString()}，预计下期利息 $${preview.projectedInterest.toLocaleString()}。`, 'accent');
-    return { success: true, type: 'BANK_TRANSFERRED', direction, amount: preview.amount, cash: player.cash, deposit: player.deposit, projectedInterest: preview.projectedInterest, risk: preview.risk.id };
+    const label = { DEPOSIT: '存入', WITHDRAW: '取出', LOAN: '办理应急贷款', REPAY_LOAN: '偿还银行贷款' }[direction];
+    this.state.addLog(`🏦 ${player.name} ${label} $${preview.amount.toLocaleString()}${direction === 'LOAN' ? `（当前贷款 $${(player.loan || 0).toLocaleString()}）` : `，预计下期利息 $${preview.projectedInterest.toLocaleString()}`}。`, 'accent');
+    return { success: true, type: 'BANK_TRANSFERRED', direction, amount: preview.amount, cash: player.cash, deposit: player.deposit, loan: player.loan || 0, projectedInterest: preview.projectedInterest, risk: preview.risk.id };
   }
 
   buyLottery(player, numbers) {

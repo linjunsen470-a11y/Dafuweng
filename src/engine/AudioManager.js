@@ -1,4 +1,4 @@
-import { mallet, playSceneSound } from './SoundBank.js';
+import { mallet, playSceneSound, preloadCoreSamples, playSampledSFX, startSampledBGM } from './SoundBank.js';
 import { CharacterVoice } from './CharacterVoice.js';
 /**
  * Original procedural soundtrack and sound-design system.
@@ -91,6 +91,7 @@ export class AudioManager {
       this.musicFilter.connect(this.masterCompressor);
       this.sfxGain.connect(this.masterCompressor);
       this.masterCompressor.connect(this.ctx.destination);
+      preloadCoreSamples(this);
     }
     if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
     return true;
@@ -175,7 +176,7 @@ export class AudioManager {
 
   playMapTheme(themeId = 'city-day') {
     if (!this.init()) return false;
-    if (this.currentTheme === themeId && this.musicTimer) return true;
+    if (this.currentTheme === themeId && (this.musicTimer || this.activeMusicNodes.size > 0)) return true;
     this.stopMusic();
     this.currentTheme = themeId;
     this.musicBar = 0;
@@ -187,6 +188,7 @@ export class AudioManager {
     };
     pulse();
     this.musicTimer = globalThis.setInterval(pulse, barMilliseconds);
+    startSampledBGM(this, themeId);
     return true;
   }
 
@@ -336,23 +338,27 @@ export class AudioManager {
 
   playSceneSound(kind) { return playSceneSound(this,kind); }
 
-  playBoardCue(kind,combo=0) {
-    if(this.muted || !this.init())return false;
-    const now=this.ctx.currentTime;
-    if(kind==='clinic') {
-      [660,880,660,880].forEach((hz,i)=>this.scheduleTone(hz,now+i*.13,.11,{type:'triangle',volume:.045,release:.045}));
-    } else if(kind==='hit' || kind==='miss') {
-      const base=kind==='hit'?480+Math.min(combo,8)*32:220;
-      this.scheduleTone(base,now,.06,{type:'triangle',volume:.07});
-      this.scheduleTone(base*(kind==='hit'?1.5:.77),now+.055,.08,{type:'sine',volume:.06});
+  playBoardCue(kind, combo = 0) {
+    if (this.muted || !this.init()) return false;
+    if (kind === 'clinic' && playSampledSFX(this, 'ambulance', { volume: 0.72 })) return true;
+    if (kind === 'step' && playSampledSFX(this, 'step', { volume: 0.42, rate: 0.94 + Math.random() * 0.14 })) return true;
+    if (kind === 'motor' && playSampledSFX(this, 'step', { volume: 0.46, rate: 0.72 })) return true;
+    const now = this.ctx.currentTime;
+    if (kind === 'clinic') {
+      [660, 880, 660, 880].forEach((hz, i) => this.scheduleTone(hz, now + i * 0.13, 0.11, { type: 'triangle', volume: 0.045, release: 0.045 }));
+    } else if (kind === 'hit' || kind === 'miss') {
+      const base = kind === 'hit' ? 480 + Math.min(combo, 8) * 32 : 220;
+      this.scheduleTone(base, now, 0.06, { type: 'triangle', volume: 0.07 });
+      this.scheduleTone(base * (kind === 'hit' ? 1.5 : 0.77), now + 0.055, 0.08, { type: 'sine', volume: 0.06 });
     } else {
-      this.scheduleTone(kind==='motor'?94:155,now,.055,{type:kind==='motor'?'triangle':'sine',volume:.04,release:.03});
+      this.scheduleTone(kind === 'motor' ? 94 : 155, now, 0.055, { type: kind === 'motor' ? 'triangle' : 'sine', volume: 0.04, release: 0.03 });
     }
     return true;
   }
 
   playClick() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'click', { volume: 0.48 })) return true;
     const now = this.ctx.currentTime;
     this.scheduleTone(720, now, 0.055, { type: 'sine', volume: 0.09, release: 0.035 });
     this.scheduleTone(420, now + 0.018, 0.045, { type: 'triangle', volume: 0.045, release: 0.025 });
@@ -361,6 +367,7 @@ export class AudioManager {
 
   playConfirm() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'buy', { volume: 0.62 })) return true;
     const now = this.ctx.currentTime;
     [659.25, 830.61, 987.77].forEach((frequency, index) => this.scheduleTone(frequency, now + index * 0.055, 0.16, { type: 'sine', volume: 0.09, release: 0.1 }));
     return true;
@@ -368,6 +375,7 @@ export class AudioManager {
 
   playDanger() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'bad_god', { volume: 0.66 })) return true;
     const now = this.ctx.currentTime;
     [196, 164.81].forEach((frequency, index) => this.scheduleTone(frequency, now + index * 0.15, 0.22, { type: 'sawtooth', volume: 0.075, attack: 0.012, release: 0.12 }));
     return true;
@@ -382,6 +390,7 @@ export class AudioManager {
 
   playDiceRoll() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'dice', { volume: 0.78 })) return true;
     const now = this.ctx.currentTime;
     [0, 0.07, 0.15, 0.24].forEach((offset, index) => {
       this.scheduleNoise(now + offset, 0.075, { volume: 0.085 - index * 0.012, highpass: 480, lowpass: 2400 });
@@ -390,8 +399,10 @@ export class AudioManager {
     return true;
   }
 
-  playCoinSound() {
+  playCoinSound(amount = 0) {
     if (this.muted || !this.init()) return false;
+    const key = amount >= 1500 ? 'big_cash' : 'coin';
+    if (playSampledSFX(this, key, { volume: amount >= 1500 ? 0.84 : 0.72 })) return true;
     const now = this.ctx.currentTime;
     [987.77, 1318.51, 1567.98].forEach((frequency, index) => this.scheduleTone(frequency, now + index * 0.065, 0.24, { type: 'sine', volume: 0.11 - index * 0.018, release: 0.17 }));
     return true;
@@ -399,6 +410,7 @@ export class AudioManager {
 
   playBuildSound() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'upgrade', { volume: 0.78 })) return true;
     const now = this.ctx.currentTime;
     this.scheduleNoise(now, 0.16, { volume: 0.06, highpass: 180, lowpass: 900 });
     [261.63, 329.63, 392, 523.25].forEach((frequency, index) => this.scheduleTone(frequency, now + 0.07 + index * 0.07, 0.25, { type: 'triangle', volume: 0.095, release: 0.16 }));
@@ -407,6 +419,7 @@ export class AudioManager {
 
   playCardSpell() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'card', { volume: 0.76 })) return true;
     const now = this.ctx.currentTime;
     [440, 554.37, 659.25, 880, 1108.73].forEach((frequency, index) => this.scheduleTone(frequency, now + index * 0.045, 0.3, { type: index % 2 ? 'triangle' : 'sine', volume: 0.07, release: 0.21, detune: index * 2 }));
     return true;
@@ -414,6 +427,7 @@ export class AudioManager {
 
   playBankruptSound() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'bad_god', { volume: 0.85 })) return true;
     const now = this.ctx.currentTime;
     [293.66, 261.63, 220, 146.83].forEach((frequency, index) => this.scheduleTone(frequency, now + index * 0.14, 0.42, { type: index === 3 ? 'sawtooth' : 'triangle', volume: 0.09, release: 0.28 }));
     return true;
@@ -421,6 +435,7 @@ export class AudioManager {
 
   playVictory() {
     if (this.muted || !this.init()) return false;
+    if (playSampledSFX(this, 'victory', { volume: 0.88 })) return true;
     const now = this.ctx.currentTime;
     [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((frequency, index) => this.scheduleTone(frequency, now + index * 0.11, index === 4 ? 0.8 : 0.36, { type: 'triangle', volume: 0.12, release: index === 4 ? 0.58 : 0.22 }));
     [523.25, 659.25, 783.99].forEach(frequency => this.scheduleTone(frequency, now + 0.44, 0.9, { type: 'sine', volume: 0.055, attack: 0.08, release: 0.62 }));

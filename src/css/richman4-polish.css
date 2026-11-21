@@ -1,0 +1,451 @@
+/* Richman 4 commercial cartoon polish layer — warm tactile controls, hero lobby,
+   expressive character dialogue, illustrated hand cards & arcade stage styling. */
+
+:root {
+  --r4-font: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei Rounded", "Microsoft YaHei", system-ui, sans-serif;
+  --r4-gold-btn: linear-gradient(180deg, #ffe87c 0%, #ffb732 58%, #f28c18 100%);
+  --r4-gold-edge: #9b5110;
+  --r4-card-shadow: 0 4px 0 #b47a3f, 0 8px 18px rgba(78, 46, 18, 0.22);
+}
+
+body {
+  font-family: var(--r4-font);
+}
+
+/* 1. Hero Lobby — restore sunny island key-art backdrop & expressive character stage */
+#setup-screen {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 248, 214, 0.36), transparent 52%),
+    linear-gradient(135deg, rgba(255, 241, 207, 0.56), rgba(255, 224, 168, 0.68)),
+    url('/assets/fortune-empire-title-hero-v2.png') center / cover no-repeat;
+}
+
+#setup-screen .setup-box {
+  border: 3px solid #a96a30;
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgba(255, 252, 240, 0.96), rgba(255, 240, 204, 0.95));
+  box-shadow: inset 0 0 0 3px #fffdf2, 0 6px 0 #8d5424, 0 22px 48px rgba(64, 34, 12, 0.32);
+}
+
+#setup-screen .logo-area h1 {
+  color: #fffef4;
+  text-shadow: 0 4px 0 #8d4916, 0 8px 20px rgba(72, 34, 6, 0.45);
+  letter-spacing: 0.04em;
+}
+
+#setup-screen .logo-area h1 span {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--r4-gold-btn);
+  color: #5c2a06;
+  border: 2px solid #fff8dc;
+  box-shadow: 0 3px 0 #8c4812;
+  text-shadow: none;
+}
+
+#character-preview {
+  border: 2px solid color-mix(in srgb, var(--portrait-color, #d48c3a) 55%, #b37c47);
+  border-radius: 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 4px 10px rgba(96, 56, 22, 0.14);
+}
+
+#character-preview i {
+  width: 112px;
+  border-radius: 14px 0 0 14px;
+  background-size: cover;
+  background-position: center top;
+}
+
+.preview-title-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--portrait-color, #ffaa00) 22%, #fff8dc);
+  border: 1px solid color-mix(in srgb, var(--portrait-color, #ffaa00) 55%, #b37c47);
+  color: #5c3214;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.preview-quote {
+  margin: 4px 0 6px;
+  padding: 4px 9px;
+  border-radius: 10px;
+  background: #fffdf5;
+  border: 1px dashed #d6a566;
+  color: #6b401e;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.preview-skill {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px;
+  line-height: 1.35;
+}
+
+#character-roster button {
+  transition: transform 140ms ease, box-shadow 140ms ease;
+  box-shadow: 0 2px 0 #d4af7a;
+}
+
+#character-roster button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #b88547;
+}
+
+#character-roster i {
+  background-size: cover;
+  background-position: center top;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.65);
+}
+
+#setup-screen #start-game-btn {
+  background: var(--r4-gold-btn);
+  color: #4a2305;
+  border: 2px solid #8f4b10;
+  border-radius: 16px;
+  font-weight: 900;
+  font-size: 1.12rem;
+  letter-spacing: 0.04em;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.65), 0 5px 0 var(--r4-gold-edge), 0 10px 22px rgba(122, 62, 14, 0.3);
+}
+
+#setup-screen #start-game-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+#setup-screen #start-game-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--r4-gold-edge);
+}
+
+/* 2. Main HUD — Richman 4 glossy Roll button, illustrated hand tray & warm minimap */
+.hud-layer #minimap-canvas {
+  background: #99c9c4;
+  border: 2px solid #c9995b;
+  border-radius: 10px;
+}
+
+.hud-layer #btn-roll {
+  background: var(--r4-gold-btn);
+  color: #4b2405;
+  border: 2px solid #9a5312;
+  border-radius: 13px;
+  min-height: 44px;
+  font-weight: 900;
+  font-size: 13px;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.65), 0 4px 0 var(--r4-gold-edge), 0 6px 14px rgba(126, 65, 14, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+.hud-layer #btn-roll:enabled:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.05);
+}
+
+.hud-layer #btn-roll:enabled:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 1px 0 var(--r4-gold-edge);
+}
+
+@keyframes r4-roll-pulse {
+  0%, 100% { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.65), 0 4px 0 var(--r4-gold-edge), 0 0 0 0 rgba(255, 187, 51, 0.55); }
+  50% { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.75), 0 4px 0 var(--r4-gold-edge), 0 0 0 8px rgba(255, 187, 51, 0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion, .skip-ai-motion) .hud-layer #btn-roll.roll-ready {
+    animation: r4-roll-pulse 1.9s ease-in-out infinite;
+  }
+}
+
+/* Tactile illustrated hand cards — compact at rest (HUD budget safe), pops up big on hover */
+#tray-cards {
+  padding-top: 4px;
+  overflow-y: visible;
+}
+
+#tray-cards button {
+  width: 58px;
+  padding: 2px 2px 3px;
+  border: 2px solid #b57c3f;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #fffdf4, #ffefc2);
+  box-shadow: 0 3px 0 #b0783c;
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 160ms ease, border-color 140ms ease;
+}
+
+#tray-cards img {
+  width: 100%;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+#tray-cards span {
+  font-size: 9.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 54px;
+}
+
+#tray-cards b {
+  padding: 0 4px;
+  font-size: 9px;
+  border: 1px solid #9d5e24;
+  color: #4e2706;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion, .skip-ai-motion) #tray-cards button:not([aria-disabled="true"]):hover {
+    transform: translateY(-9px) scale(1.16) rotate(-1.5deg);
+    z-index: 6;
+    border-color: #d97a16;
+    box-shadow: 0 6px 0 #a35a14, 0 12px 20px rgba(82, 42, 10, 0.3);
+  }
+}
+
+/* Cash delta flash animation on player HUD cards */
+@keyframes cash-flash-up {
+  0% { transform: scale(1); color: #176647; }
+  35% { transform: scale(1.14); color: #0e8a4e; text-shadow: 0 0 10px rgba(46, 213, 115, 0.55); }
+  100% { transform: scale(1); color: #176647; }
+}
+
+@keyframes cash-flash-down {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); color: #c0392b; }
+  55% { transform: translateX(3px); color: #c0392b; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion, .skip-ai-motion) .hud-layer .cash-display.is-up {
+    animation: cash-flash-up 560ms ease-out;
+  }
+  html:not(.reduce-motion, .skip-ai-motion) .hud-layer .cash-display.is-down {
+    animation: cash-flash-down 420ms ease-out;
+  }
+}
+
+/* 3. Fix self-sabotaging performance overlays: let characters actually speak & shine! */
+.presentation-layer:has(.presentation-toast.is-visible) .character-reaction {
+  visibility: visible !important;
+}
+
+.character-reaction,
+.character-reaction.is-visible {
+  bottom: 132px;
+  right: 16px;
+  width: min(290px, 74vw);
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 2.5px solid #ad6c2e;
+  border-radius: 18px 18px 4px 18px;
+  background: linear-gradient(155deg, #fffdf4, #ffebc0);
+  box-shadow: var(--r4-card-shadow);
+}
+
+.character-reaction-portrait {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 2px solid #fffaf0;
+  box-shadow: 0 2px 6px rgba(90, 50, 18, 0.25);
+  background-size: cover;
+  background-position: center top;
+}
+
+.character-reaction strong {
+  color: #4c270f;
+  font-size: 13.5px;
+  line-height: 1.38;
+}
+
+/* Upgraded 3D pawn speech bubbles with avatar portrait */
+.board-speech {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: auto;
+  min-width: 148px;
+  max-width: 224px;
+  padding: 6px 10px;
+  border: 2.5px solid #a86428;
+  border-radius: 16px 16px 16px 3px;
+  background: linear-gradient(160deg, #fffdf6, #ffefc7);
+  box-shadow: 0 4px 0 #8d5628, 0 8px 18px rgba(68, 36, 12, 0.28);
+}
+
+.board-speech.is-major {
+  border-color: #d47a0f;
+  box-shadow: 0 4px 0 #a35a0c, 0 0 22px rgba(255, 206, 72, 0.6);
+}
+
+.board-speech-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid #fff9e6;
+  box-shadow: 0 1px 4px rgba(80, 42, 12, 0.25);
+  flex: none;
+}
+
+.board-speech > div {
+  display: grid;
+  gap: 1px;
+}
+
+.board-speech b {
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.board-speech span {
+  font-size: 11px;
+  color: #6b4322;
+  line-height: 1.25;
+}
+
+/* Comic screen flash for missile/nuke explosions */
+@keyframes vfx-flash-fade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.vfx-comic-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  pointer-events: none;
+  animation: vfx-flash-fade 240ms ease-out forwards;
+}
+
+/* 4. Upgraded 4-tab Bank Counter & Real-Time Catch-Coins Arcade Stage */
+.bank-direction-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.bank-direction-tabs button {
+  padding: 8px 4px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.sky-coins-stage.is-arcade-canvas {
+  position: relative;
+  overflow: hidden;
+  min-height: 270px;
+  border-radius: 16px;
+  border: 2px solid #c58a47;
+  user-select: none;
+  touch-action: none;
+}
+
+.sky-arcade-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sky-arcade-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.sky-coins-stage.is-arcade-canvas .sky-object {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #fff7d6;
+  background: radial-gradient(circle at 35% 30%, #fffdf0, #ffd452 65%, #e89b1c);
+  box-shadow: 0 4px 10px rgba(88, 52, 12, 0.28);
+  font-size: 24px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.sky-coins-stage.is-arcade-canvas .sky-object.kind-bomb {
+  background: radial-gradient(circle at 35% 30%, #7d8597, #2c3140 70%, #171923);
+  border-color: #ff6b6b;
+}
+
+.sky-basket {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 2.5px solid #9d5b1e;
+  background: linear-gradient(180deg, #fff5cc, #ffcb57);
+  box-shadow: 0 4px 0 #8d4d16, 0 8px 16px rgba(72, 38, 12, 0.25);
+  pointer-events: none;
+  font-weight: 900;
+  color: #542c0c;
+  transition: transform 90ms ease;
+}
+
+.sky-basket span { font-size: 22px; }
+.sky-basket b { font-size: 12px; }
+.sky-basket.is-catch { transform: translateX(-50%) scale(1.16); background: linear-gradient(180deg, #e7ffcf, #98e67e); }
+.sky-basket.is-hit { transform: translateX(-50%) scale(0.9) rotate(-6deg); background: linear-gradient(180deg, #ffd4d4, #ff7b7b); }
+
+.passing-bank-pill {
+  position: fixed;
+  left: 50%;
+  bottom: 132px;
+  transform: translateX(-50%);
+  z-index: 42;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 2.5px solid #9d5b1e;
+  border-radius: 999px;
+  background: var(--r4-gold-btn);
+  color: #4b2405;
+  box-shadow: 0 4px 0 #8d4d16, 0 10px 24px rgba(80, 42, 10, 0.3);
+  cursor: pointer;
+  animation: paper-pop 280ms ease-out;
+}
+.passing-bank-pill span { font-size: 22px; }
+.passing-bank-pill div { display: grid; text-align: left; }
+.passing-bank-pill strong { font-size: 13px; font-weight: 900; }
+.passing-bank-pill small { font-size: 11px; color: #6c380d; }
+
+@media (max-width: 820px) {
+  .character-reaction,
+  .character-reaction.is-visible {
+    bottom: 122px;
+    right: 8px;
+    width: min(240px, 78vw);
+    grid-template-columns: 40px 1fr;
+    padding: 6px 8px;
+  }
+  .character-reaction-portrait { width: 40px; height: 40px; }
+  .bank-direction-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #tray-cards button { width: 50px; }
+  #tray-cards img { height: 34px; }
+}

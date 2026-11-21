@@ -87,7 +87,7 @@ export class NewsUI {
     overlay.innerHTML = `
       <div class="glass-card modal-box news-history-box" role="dialog" aria-modal="true" aria-labelledby="news-history-title">
         <div class="modal-header">
-          <div><span class="minigame-kicker">FORTUNE CITY ARCHIVE</span><h2 id="news-history-title">📰 城市新闻档案</h2></div>
+          <div><span class="minigame-kicker">大富翁日报 · 往期号外</span><h2 id="news-history-title">📰 城市新闻档案</h2></div>
           <button type="button" class="close-btn news-history-close" aria-label="关闭新闻历史">✕</button>
         </div>
         <p class="news-history-summary"></p>

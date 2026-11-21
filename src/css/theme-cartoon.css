@@ -4,6 +4,7 @@
 @import url('./setup-lobby.css');
 @import url('./hud-layout.css');
 @import url('./board-performances.css');
+@import url('./richman4-polish.css');
 
 :root {
   --cream: #fff1cf;

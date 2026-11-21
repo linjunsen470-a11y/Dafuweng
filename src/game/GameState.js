@@ -654,13 +654,15 @@ export class GameState {
       buildingValue += (tile.buildCost || 0) * prop.level;
     });
     const deposit = Math.round(player.deposit || 0);
+    const loan = Math.round(player.loan || 0);
     const commercialValue = this.companyManager.companies
       .filter(company => company.chairmanId === player.id)
       .reduce((sum, company) => sum + Math.max(0, Math.round(company.treasury * 0.1)), 0);
-    const total = Math.round(player.cash + deposit + stockValue + landValue + buildingValue + commercialValue);
+    const total = Math.round(player.cash + deposit + stockValue + landValue + buildingValue + commercialValue - loan);
     return {
       cash: Math.round(player.cash),
       deposit,
+      loan,
       stockValue: Math.round(stockValue),
       landValue: Math.round(landValue),
       buildingValue: Math.round(buildingValue),

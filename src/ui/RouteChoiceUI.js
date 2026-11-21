@@ -12,7 +12,7 @@ export class RouteChoiceUI {
       const overlay = document.createElement('div');
       overlay.className = 'modal route-choice-overlay';
       overlay.innerHTML = `<section class="route-choice" role="dialog" aria-modal="true" aria-labelledby="route-choice-title">
-        <header class="route-choice-header"><div><span>TACTICAL NAVIGATION · ${remainingSteps} STEPS</span><h2 id="route-choice-title">🧭 岔路战术导航</h2><p>${player.name}，前方路线会影响本次移动的实际落点与沿途遭遇</p></div><div class="route-choice-legend"><span><i class="good"></i>收益</span><span><i class="danger"></i>风险</span></div></header>
+        <header class="route-choice-header"><div><span>前方岔路 · 剩余 ${remainingSteps} 步</span><h2 id="route-choice-title">🧭 岔路方向选择</h2><p>${player.name}，挑一条好走的路线避开对手豪宅吧！</p></div><div class="route-choice-legend"><span><i class="good"></i>收益</span><span><i class="danger"></i>风险</span></div></header>
         <div class="route-choice-list">${plans.map((plan, index) => `<button type="button" class="route-plan ${plan.recommended ? 'recommended' : ''}" data-route="${plan.optionId}" style="--route:${index ? '#c084fc' : '#38bdf8'}">
           <header><span>ROUTE ${String.fromCharCode(65 + index)}</span>${plan.recommended ? '<b>AI 推荐</b>' : ''}<em class="${plan.tone}">${plan.label}</em></header>
           <div class="route-plan-destination"><i>${plan.destinationIcon}</i><div><small>预计实际落点</small><strong>${plan.destinationName}</strong><span>${plan.outcome}</span></div></div>

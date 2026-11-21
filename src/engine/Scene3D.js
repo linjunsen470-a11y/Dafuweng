@@ -124,10 +124,32 @@ export class Scene3D {
     this.baseAmbientIntensity = ambientLight.intensity;
 
     // 补光（蓝浅光增加立体感）
-    const fillLight = new THREE.DirectionalLight('#b9e8ff', 0.5);
+    const fillLight = new THREE.DirectionalLight('#b9e8ff', 0.62);
     fillLight.position.set(-20, 20, -20);
     this.scene.add(fillLight);
     this.fillLight = fillLight;
+
+    // 温暖卡通漫反射环境贴图，让建筑、骰子、金币呈现饱满玩具光泽
+    try {
+      const pmrem = new THREE.PMREMGenerator(this.renderer);
+      const envScene = new THREE.Scene();
+      envScene.background = new THREE.Color('#d6eef8');
+      const warmBall = new THREE.Mesh(
+        new THREE.SphereGeometry(4, 8, 8),
+        new THREE.MeshBasicMaterial({ color: '#fff5d4' })
+      );
+      warmBall.position.set(-10, 14, 10);
+      const skyDome = new THREE.Mesh(
+        new THREE.SphereGeometry(12, 8, 8),
+        new THREE.MeshBasicMaterial({ color: '#9ed8f5', side: THREE.BackSide })
+      );
+      envScene.add(warmBall, skyDome);
+      const target = pmrem.fromScene(envScene, 0.04);
+      this.scene.environment = target.texture;
+      warmBall.geometry.dispose(); warmBall.material.dispose();
+      skyDome.geometry.dispose(); skyDome.material.dispose();
+      pmrem.dispose();
+    } catch {}
   }
 
   setupClouds() {

@@ -129,8 +129,8 @@ export class SetupScreenUI {
     });
     const voice = CHARACTER_VOICES[profile.id];
     this.preview.style.setProperty('--portrait-color', profile.color);
-    this.preview.innerHTML = `<i aria-hidden="true"></i><div><small>${voice?.title || '城市投资人'}</small>
-      <h3>${profile.name}</h3><p>${voice?.gain[0] || ''}</p><strong>${profile.skillName}</strong> ${profile.skillDesc}</div>`;
+    this.preview.innerHTML = `<i aria-hidden="true"></i><div><span class="preview-title-pill">${voice?.title || '城市投资人'}</span>
+      <h3>${profile.name}</h3><p class="preview-quote">“${voice?.win?.[0] || voice?.gain?.[0] || ''}”</p><div class="preview-skill"><strong>⚡ ${profile.skillName}</strong> <span>${profile.skillDesc}</span></div></div>`;
     paintPortrait(this.preview.firstElementChild, profile, this.map.value);
     [...this.roster.children].forEach((button, index) => {
       const p = PLAYER_PROFILES[index];
