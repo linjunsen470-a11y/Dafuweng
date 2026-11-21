@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 // Each original 256px painted sample is reused across its whole district.
 const styles={
-  'grand-bay': {roof:'slate',pave:'setts',plot:'wharf',stone:'#bdb3a0',road:'#687977'},
-  'island-fork': {roof:'metal',pave:'coral',plot:'wharf',stone:'#d6b58c',road:'#668483'},
-  'taiwan-loop': {roof:'pan',pave:'brick',plot:'tea',stone:'#d2ad89',road:'#838079'},
-  'fortune-crossroads': {roof:'shake',pave:'setts',plot:'meadow',stone:'#c2b495',road:'#748070'},
-  'city-loop': {roof:'metal',pave:'metro',plot:'plaza',stone:'#c9c6bd',road:'#637782'}
+  'grand-bay': {roof:'slate',pave:'setts',plot:'wharf',stone:'#d8cdb4',road:'#3c4752'},
+  'island-fork': {roof:'metal',pave:'coral',plot:'wharf',stone:'#dfd0b4',road:'#3a4d54'},
+  'taiwan-loop': {roof:'pan',pave:'brick',plot:'tea',stone:'#dcc7a8',road:'#474b52'},
+  'fortune-crossroads': {roof:'shake',pave:'setts',plot:'meadow',stone:'#d5cbb0',road:'#3e4c4a'},
+  'city-loop': {roof:'metal',pave:'metro',plot:'plaza',stone:'#d8d5cc',road:'#374350'}
 };
 const textures=new Map();
 export const streetArt=id=>styles[id]||styles['grand-bay'];
@@ -42,15 +42,26 @@ export function surfaceTexture(id,kind){
       if(shake || metal)stroke(c,[[x+w*.25,y+4],[x+w*.26,y+h*(.48+v*.4)]],'rgba(99,83,62,.27)',1.2);
       if(metal)wash(c,x+3,y,2,h,true,.84);
     }
-  }else if(kind==='pave' || kind==='road'){
-    const road=kind==='road',setts=style.pave==='setts',metro=style.pave==='metro';
+  }else if(kind==='road'){
+    // Clean, tactile cartoon asphalt with fine aggregate grain so tiles and arrows pop.
+    for(let row=0;row<8;row++)for(let col=0;col<8;col++){
+      const v=variation(row*13+col*7);
+      wash(c,col*32,row*32,32,32,v>.5,.035+v*.045);
+    }
+    for(let i=0;i<680;i++){
+      const x=variation(i*1.7+11)*256,y=variation(i*2.3+97)*256;
+      c.fillStyle=i%3?'rgba(255,248,225,.09)':'rgba(18,24,30,.18)';
+      c.fillRect(x,y,2,2);
+    }
+  }else if(kind==='pave'){
+    const setts=style.pave==='setts',metro=style.pave==='metro';
     const h=metro?64:32,w=setts?32:64;
     for(let row=0;row<256/h;row++)for(let col=-1;col<=256/w;col++){
       const x=col*w+(metro?0:(row&1)*w/2),y=row*h,v=variation(row*9+(col+9)%8);
       wash(c,x+1,y+1,w-2,h-2,v>.43,.06+v*.12);
-      stroke(c,[[x+1,y+h-1],[x+1,y+1],[x+w,y+1]],road?'rgba(31,42,46,.26)':'rgba(90,69,56,.43)',road?2:2.7);
-      stroke(c,[[x+4,y+4],[x+w-3,y+4]],'rgba(254,242,205,.48)',road?1:2);
-      if(!road && (setts || style.pave==='coral'))stroke(c,[[x+w-8,y+2],[x+w-2,y+7]],'rgba(112,93,77,.34)',1.7);
+      stroke(c,[[x+1,y+h-1],[x+1,y+1],[x+w,y+1]],'rgba(90,69,56,.43)',2.7);
+      stroke(c,[[x+4,y+4],[x+w-3,y+4]],'rgba(254,242,205,.48)',2);
+      if(setts || style.pave==='coral')stroke(c,[[x+w-8,y+2],[x+w-2,y+7]],'rgba(112,93,77,.34)',1.7);
     }
   }else{
     const wharf=style.plot==='wharf',plaza=style.plot==='plaza';
