@@ -248,14 +248,30 @@ function drawSpecialTile(ctx, tileData, specLabel) {
   ctx.fillText(label, 192, 288);
 }
 
+const specialTileTextureCache = new Map();
+
 // Creates a high-contrast Richman-4 style board tile material usable on all 5 maps.
 export function createRichTileMaterial(tileData, mapDefinition, { ownerColor = null, level = 0, anisotropy = 4 } = {}) {
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 384;
-  const ctx = canvas.getContext('2d');
   const spec = harborTileStyle(tileData);
   const visual = getTileVisualSpec(mapDefinition, tileData);
   const districtColor = (tileData.group && COLOR_GROUPS[tileData.group]?.color) || visual.accent;
+  const clampedAniso = Math.min(4, anisotropy || 4);
+
+  const isSpecial = tileData.type !== TileType.ROAD && !isPropertyTile(tileData);
+  const specialKey = isSpecial ? `${tileData.type}|${tileData.id === 30 && spec.label === '老城' ? '老城' : ''}` : null;
+  if (specialKey && specialTileTextureCache.has(specialKey)) {
+    return new THREE.MeshStandardMaterial({
+      map: specialTileTextureCache.get(specialKey),
+      alphaTest: 0.35,
+      roughness: 0.42,
+      metalness: 0.04
+    });
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(256 / 384, 256 / 384);
 
   if (tileData.type === TileType.ROAD) {
     drawRoadMedallion(ctx, tileData);
@@ -267,7 +283,11 @@ export function createRichTileMaterial(tileData, mapDefinition, { ownerColor = n
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = anisotropy;
+  texture.anisotropy = clampedAniso;
+  if (specialKey) {
+    texture.userData.sharedBoardTexture = true;
+    specialTileTextureCache.set(specialKey, texture);
+  }
   return new THREE.MeshStandardMaterial({
     map: texture,
     alphaTest: 0.35,

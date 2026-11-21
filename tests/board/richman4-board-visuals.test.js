@@ -61,9 +61,13 @@ describe('Richman 4 board path, tile art, and property building visuals', () => 
 
       for (const mat of [vacantMat, ownedNumMat, ownedHexMat, roadMat, bankMat]) {
         expect(mat.map?.isCanvasTexture).toBe(true);
-        mat.map.dispose();
+        if (!mat.map.userData?.sharedBoardTexture) mat.map.dispose();
         mat.dispose();
       }
+      // Verify special tile textures are cached & shared across identical tile types.
+      const bankMat2 = createRichTileMaterial(bankTile, GRAND_BAY_MAP);
+      expect(bankMat2.map).toBe(bankMat.map);
+      bankMat2.dispose();
     } finally {
       spy.mockRestore();
     }
@@ -89,9 +93,14 @@ describe('Richman 4 board path, tile art, and property building visuals', () => 
       }
 
       const vacant = buildRichVacantLot(GRAND_BAY_MAP.tiles[1], '#18a0ae');
-      expect(vacant.children.length).toBeGreaterThan(4);
+      let vacantMeshes = 0;
+      vacant.traverse(node => { if (node.isMesh) vacantMeshes++; });
+      expect(vacantMeshes).toBeLessThanOrEqual(6);
 
       const platform = createOwnerBasePlatform('#ff5e7e', false);
+      let platformMeshes = 0;
+      platform.traverse(node => { if (node.isMesh) platformMeshes++; });
+      expect(platformMeshes).toBe(4);
       const plinth = platform.children.find(c => c.userData?.isOwnerLight);
       expect(plinth.material.color.getHexString()).not.toBe('0a1a28');
 

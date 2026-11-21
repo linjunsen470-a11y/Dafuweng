@@ -1,5 +1,12 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { createPropertyBadgeSprite, createVacantSignboard } from './PropertyBadges.js';
+
+function mergeParts(parts) {
+  const merged = mergeGeometries(parts);
+  for (const part of parts) part.dispose();
+  return merged;
+}
 
 function addBox(parent, w, h, d, mat, x, y, z, shadow = true) {
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
@@ -12,15 +19,20 @@ function addBox(parent, w, h, d, mat, x, y, z, shadow = true) {
 
 function addWindowsGrid(parent, floors, width, startY, stepY, zFront, mat) {
   const cols = width >= 2.3 ? [-0.72, 0, 0.72] : [-0.48, 0.48];
+  const parts = [];
   for (let f = 0; f < floors; f++) {
     const y = startY + f * stepY;
     for (const x of cols) {
-      const win = addBox(parent, 0.34, 0.36, 0.06, mat, x, y, zFront, false);
-      win.userData.isWindow = true;
-      const backWin = addBox(parent, 0.34, 0.36, 0.06, mat, x, y, -zFront, false);
-      backWin.userData.isWindow = true;
+      const front = new THREE.BoxGeometry(0.34, 0.36, 0.06);
+      front.translate(x, y, zFront);
+      const back = new THREE.BoxGeometry(0.34, 0.36, 0.06);
+      back.translate(x, y, -zFront);
+      parts.push(front, back);
     }
   }
+  const mesh = new THREE.Mesh(mergeParts(parts), mat);
+  mesh.userData.isWindow = true;
+  parent.add(mesh);
 }
 
 function addOwnerFlag(parent, ownerColor, x, baseY, z, height = 1.55) {
@@ -31,7 +43,7 @@ function addOwnerFlag(parent, ownerColor, x, baseY, z, height = 1.55) {
   pole.position.set(x, baseY + height * 0.5, z);
   pole.userData.isOwnerBeacon = true;
   const finial = new THREE.Mesh(
-    new THREE.SphereGeometry(0.09, 10, 8),
+    new THREE.SphereGeometry(0.09, 8, 6),
     new THREE.MeshStandardMaterial({ color: '#ffd447', metalness: 0.6, roughness: 0.25 })
   );
   finial.position.set(x, baseY + height + 0.04, z);
@@ -51,7 +63,7 @@ function addOwnerFlag(parent, ownerColor, x, baseY, z, height = 1.55) {
   parent.add(pole, finial, flag);
 }
 
-// Clean, joyful Richman-4 vacant lot with green lawn/plaza, white corner fence, and wooden FOR SALE sign.
+// Clean, joyful Richman-4 vacant lot with batched trim, corner pickets, bushes, and wooden FOR SALE sign.
 export function buildRichVacantLot(tile, districtColor) {
   const group = new THREE.Group();
   const isBig = Boolean(tile.large);
@@ -65,26 +77,27 @@ export function buildRichVacantLot(tile, districtColor) {
   const base = addBox(group, w, 0.14, d, baseMat, 0, 0.07, 0, false);
   base.receiveShadow = true;
 
-  // Crisp district-colored lot edging
-  const trimMat = new THREE.MeshStandardMaterial({ color: districtColor || '#e2a13f', roughness: 0.48 });
-  addBox(group, w + 0.12, 0.09, 0.12, trimMat, 0, 0.13, d * 0.5, false);
-  addBox(group, w + 0.12, 0.09, 0.12, trimMat, 0, 0.13, -d * 0.5, false);
-  addBox(group, 0.12, 0.09, d, trimMat, w * 0.5, 0.13, 0, false);
-  addBox(group, 0.12, 0.09, d, trimMat, -w * 0.5, 0.13, 0, false);
+  const trimParts = [
+    new THREE.BoxGeometry(w + 0.12, 0.09, 0.12).translate(0, 0.13, d * 0.5),
+    new THREE.BoxGeometry(w + 0.12, 0.09, 0.12).translate(0, 0.13, -d * 0.5),
+    new THREE.BoxGeometry(0.12, 0.09, d).translate(w * 0.5, 0.13, 0),
+    new THREE.BoxGeometry(0.12, 0.09, d).translate(-w * 0.5, 0.13, 0)
+  ];
+  group.add(new THREE.Mesh(mergeParts(trimParts), new THREE.MeshStandardMaterial({ color: districtColor || '#e2a13f', roughness: 0.48 })));
 
-  // Cute white picket corners & corner bushes
-  const fenceMat = new THREE.MeshStandardMaterial({ color: '#fff8e8', roughness: 0.6 });
-  const bushMat = new THREE.MeshStandardMaterial({ color: '#4caf50', roughness: 0.78 });
+  const postParts = [];
+  const bushParts = [];
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
-      addBox(group, 0.12, 0.42, 0.12, fenceMat, sx * (w * 0.43), 0.28, sz * (d * 0.43));
-      const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(0.24, 0), bushMat);
-      bush.position.set(sx * (w * 0.34), 0.26, sz * (d * 0.34));
-      group.add(bush);
+      postParts.push(new THREE.BoxGeometry(0.12, 0.42, 0.12).translate(sx * (w * 0.43), 0.28, sz * (d * 0.43)));
+      bushParts.push(new THREE.DodecahedronGeometry(0.24, 0).translate(sx * (w * 0.34), 0.26, sz * (d * 0.34)));
     }
   }
+  group.add(
+    new THREE.Mesh(mergeParts(postParts), new THREE.MeshStandardMaterial({ color: '#fff8e8', roughness: 0.6 })),
+    new THREE.Mesh(mergeParts(bushParts), new THREE.MeshStandardMaterial({ color: '#4caf50', roughness: 0.78 }))
+  );
 
-  // Prominent tilted wooden signboard showing district color + price
   const sign = createVacantSignboard(tile, districtColor);
   sign.position.set(0, 0.12, 0.12);
   group.add(sign);
@@ -99,42 +112,24 @@ export function buildRichPropertyStructure({ level, ownerColor, buildingType, la
   const creamWall = new THREE.MeshStandardMaterial({ color: '#fff8ea', roughness: 0.48 });
   const trimMat = new THREE.MeshStandardMaterial({ color: '#f3d7a0', roughness: 0.52 });
   const woodMat = new THREE.MeshStandardMaterial({ color: '#8f5932', roughness: 0.7 });
-  const windowMat = new THREE.MeshStandardMaterial({
-    color: '#dff6ff',
-    emissive: '#ffd269',
-    emissiveIntensity: 0.35,
-    roughness: 0.18
-  });
-  const glassMat = new THREE.MeshPhysicalMaterial({
-    color: '#67d8f7',
-    roughness: 0.1,
-    metalness: 0.15,
-    clearcoat: 0.85,
-    emissive: '#0e526b',
-    emissiveIntensity: 0.25
-  });
+  const windowMat = new THREE.MeshStandardMaterial({ color: '#dff6ff', emissive: '#ffd269', emissiveIntensity: 0.35, roughness: 0.18 });
+  const glassMat = new THREE.MeshPhysicalMaterial({ color: '#67d8f7', roughness: 0.1, metalness: 0.15, clearcoat: 0.85, emissive: '#0e526b', emissiveIntensity: 0.25 });
 
   let topHeight = 1.6;
-
   if (buildingType === 'PARK') {
-    const lawn = new THREE.Mesh(new THREE.CylinderGeometry(1.75, 1.85, 0.22, 24), new THREE.MeshStandardMaterial({ color: '#58c95d', roughness: 0.8 }));
+    const lawn = new THREE.Mesh(new THREE.CylinderGeometry(1.75, 1.85, 0.22, 20), new THREE.MeshStandardMaterial({ color: '#58c95d', roughness: 0.8 }));
     lawn.position.y = 0.22;
-    const basin = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.85, 0.34, 20), trimMat);
+    const basin = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.85, 0.34, 16), trimMat);
     basin.position.y = 0.44;
-    const water = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.08, 20), glassMat);
+    const water = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.08, 16), glassMat);
     water.position.y = 0.62;
-    const spire = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.9, 12), roofMat);
+    const spire = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.9, 10), roofMat);
     spire.position.y = 1.05;
-    group.add(lawn, basin, water, spire);
-    const leafMat = new THREE.MeshStandardMaterial({ color: '#2ea44f', roughness: 0.72 });
-    for (const [tx, tz] of [[-1.15, -0.75], [1.15, -0.75], [-1.05, 0.82], [1.05, 0.82]]) {
-      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 0.72, 8), woodMat);
-      trunk.position.set(tx, 0.64, tz);
-      const crown = new THREE.Mesh(new THREE.DodecahedronGeometry(0.46, 1), leafMat);
-      crown.position.set(tx, 1.18, tz);
-      crown.castShadow = true;
-      group.add(trunk, crown);
-    }
+    const spots = [[-1.15, -0.75], [1.15, -0.75], [-1.05, 0.82], [1.05, 0.82]];
+    const trunks = new THREE.Mesh(mergeParts(spots.map(([x, z]) => new THREE.CylinderGeometry(0.09, 0.12, 0.72, 8).translate(x, 0.64, z))), woodMat);
+    const crowns = new THREE.Mesh(mergeParts(spots.map(([x, z]) => new THREE.DodecahedronGeometry(0.46, 0).translate(x, 1.18, z))), new THREE.MeshStandardMaterial({ color: '#2ea44f', roughness: 0.72 }));
+    crowns.castShadow = true;
+    group.add(lawn, basin, water, spire, trunks, crowns);
     topHeight = 2.05;
   } else if (buildingType === 'GAS_STATION') {
     addBox(group, 3.6, 0.34, 2.5, roofMat, 0, 2.15, 0);

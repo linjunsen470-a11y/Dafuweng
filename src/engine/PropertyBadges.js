@@ -1,7 +1,14 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 const badgeTextureCache = new Map();
 const signTextureCache = new Map();
+
+function mergeTranslated(parts) {
+  const merged = mergeGeometries(parts);
+  for (const part of parts) part.dispose();
+  return merged;
+}
 
 const COMMERCIAL_LABELS = {
   MALL: '🏬 商场',
@@ -146,21 +153,18 @@ function getVacantSignTexture(districtColor, price, isBig) {
 export function createVacantSignboard(tile, districtColor) {
   const group = new THREE.Group();
   const woodMat = new THREE.MeshStandardMaterial({ color: '#8f592c', roughness: 0.76 });
-  for (const x of [-0.52, 0.52]) {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 1.02, 8), woodMat);
-    post.position.set(x, 0.51, 0);
-    post.castShadow = true;
-    group.add(post);
-  }
+  const woodParts = [
+    new THREE.CylinderGeometry(0.055, 0.065, 1.02, 8).translate(-0.52, 0.51, 0),
+    new THREE.CylinderGeometry(0.055, 0.065, 1.02, 8).translate(0.52, 0.51, 0),
+    new THREE.BoxGeometry(1.74, 0.98, 0.08).translate(0, 1.06, 0)
+  ];
+  const frame = new THREE.Mesh(mergeTranslated(woodParts), woodMat);
+
+  const frontFace = new THREE.PlaneGeometry(1.68, 0.92).translate(0, 1.06, 0.045);
+  const backFace = new THREE.PlaneGeometry(1.68, 0.92).rotateY(Math.PI).translate(0, 1.06, -0.045);
   const boardTex = getVacantSignTexture(districtColor, tile.price, tile.large);
-  const boardFace = new THREE.MeshBasicMaterial({ map: boardTex });
-  const board = new THREE.Mesh(
-    new THREE.BoxGeometry(1.72, 0.96, 0.12),
-    [woodMat, woodMat, woodMat, woodMat, boardFace, boardFace]
-  );
-  board.position.set(0, 1.06, 0);
-  board.castShadow = true;
-  group.add(board);
+  const faces = new THREE.Mesh(mergeTranslated([frontFace, backFace]), new THREE.MeshBasicMaterial({ map: boardTex }));
+  group.add(frame, faces);
   return group;
 }
 
@@ -187,7 +191,7 @@ export function createOwnerBasePlatform(ownerColor, large = false) {
   plinth.userData.isOwnerLight = true;
   group.add(plinth);
 
-  // Crisp saturated owner-color border bars around all four sides
+  // Merged owner-color border frame (1 draw call instead of 4)
   const borderMat = new THREE.MeshStandardMaterial({
     color: accent,
     roughness: 0.36,
@@ -196,34 +200,31 @@ export function createOwnerBasePlatform(ownerColor, large = false) {
     emissiveIntensity: 0.28
   });
   const t = 0.18;
-  const bars = [
+  const barParts = [
     [0, sizeZ * 0.5 - t * 0.5, sizeX, t],
     [0, -sizeZ * 0.5 + t * 0.5, sizeX, t],
     [sizeX * 0.5 - t * 0.5, 0, t, sizeZ - t * 2],
     [-sizeX * 0.5 + t * 0.5, 0, t, sizeZ - t * 2]
-  ];
-  for (const [x, z, w, d] of bars) {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(w, 0.18, d), borderMat);
-    bar.position.set(x, 0.11, z);
-    bar.userData.isOwnerBeacon = true;
-    group.add(bar);
-  }
+  ].map(([x, z, w, d]) => new THREE.BoxGeometry(w, 0.18, d).translate(x, 0.11, z));
+  const borderMesh = new THREE.Mesh(mergeTranslated(barParts), borderMat);
+  borderMesh.userData.isOwnerBeacon = true;
+  group.add(borderMesh);
 
-  // Four charming lantern bollards at the corners with owner-colored caps
-  const postMat = new THREE.MeshStandardMaterial({ color: '#fff8e7', roughness: 0.5 });
-  const capMat = new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.92 });
+  // Merged corner lantern posts & caps (2 draw calls instead of 8)
+  const postParts = [];
+  const capParts = [];
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       const px = sx * (sizeX * 0.45);
       const pz = sz * (sizeZ * 0.45);
-      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 0.48, 8), postMat);
-      post.position.set(px, 0.32, pz);
-      post.userData.isOwnerBeacon = true;
-      const cap = new THREE.Mesh(new THREE.SphereGeometry(0.11, 10, 8), capMat);
-      cap.position.set(px, 0.58, pz);
-      cap.userData.isOwnerBeacon = true;
-      group.add(post, cap);
+      postParts.push(new THREE.CylinderGeometry(0.08, 0.1, 0.48, 8).translate(px, 0.32, pz));
+      capParts.push(new THREE.SphereGeometry(0.11, 8, 6).translate(px, 0.58, pz));
     }
   }
+  const posts = new THREE.Mesh(mergeTranslated(postParts), new THREE.MeshStandardMaterial({ color: '#fff8e7', roughness: 0.5 }));
+  posts.userData.isOwnerBeacon = true;
+  const caps = new THREE.Mesh(mergeTranslated(capParts), new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.92 }));
+  caps.userData.isOwnerBeacon = true;
+  group.add(posts, caps);
   return group;
 }
