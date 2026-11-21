@@ -78,7 +78,7 @@ export function showClinicPickup(view, pawn, points, handBack) {
         cancelAnimationFrame(raf);
         const ownsCamera = view.followedObject === van;
         if (ownsCamera) view.stopFollowing({settle:false});
-        pawn.mesh.visible=wasVisible;
+        pawn.mesh.visible = pawn.mesh.userData.isConfined ? false : wasVisible;
         van.removeFromParent();
         mixer?.stopAllAction();mixer?.uncacheRoot(rider);
         cube.dispose(); wheel.dispose(); paints.forEach(material => material.dispose());
